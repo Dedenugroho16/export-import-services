@@ -14,7 +14,7 @@
                 <!-- Add a larger margin-bottom to push the card further down -->
                 <div class="card mb-5">
                     <div class="card-header bg-primary text-white shadow-sm p-3">
-                        <h3 class="card-title">Clients</h3>
+                        <h3 class="card-title">Client</h3>
                     </div>
 
                     <div class="card-body">
