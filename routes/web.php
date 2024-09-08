@@ -1,13 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ConsigneeController;
 
-// Rute untuk halaman dashboard
-Route::get('/', function () {
-    return view('dashboard');
-});
+// Dashboard Routes
+Route::get('/', [DashboardController::class, 'index']);
 
-// Rute untuk halaman clients
-Route::get('/clients', function () {
-    return view('clients');
-});
+// Client Routes
+Route::get('/client', [ClientController::class, 'index']);
+
+// Consignee Route
+Route::get('/consignee', [ConsigneeController::class, 'index']);

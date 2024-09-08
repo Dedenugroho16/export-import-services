@@ -5,16 +5,16 @@
     <div class="container-xl">
         <!-- Dashboard Header -->
         <div class="mb-4">
-            <h1 class="text-dark">Client</h1>
+            <h1 class="text-dark">Consignee</h1>
         </div>
 
-        <!-- Clients Section -->
+        <!-- Consignees Section -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <!-- Add a larger margin-bottom to push the card further down -->
                 <div class="card mb-5">
-                    <div class="card-header">
-                        <h3 class="card-title">Clients</h3>
+                    <div class="card-header bg-primary text-white shadow-sm p-3">
+                        <h3 class="card-title">Consignee</h3>
                     </div>
 
                     <div class="card-body">
@@ -24,32 +24,26 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Parent</th>
                                         <th>Name</th>
                                         <th>Address</th>
-                                        <th>PO Box</th>
                                         <th>Tel</th>
-                                        <th>Fax</th>
+                                        <th>ID Client</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>Parent A</td>
                                         <td>Client One</td>
                                         <td>123 Main St, City</td>
-                                        <td>12345</td>
                                         <td>(123) 456-7890</td>
-                                        <td>(123) 456-7891</td>
+                                        <td>1001</td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
-                                        <td>Parent B</td>
                                         <td>Client Two</td>
                                         <td>456 Elm St, City</td>
-                                        <td>67890</td>
                                         <td>(098) 765-4321</td>
-                                        <td>(098) 765-4322</td>
+                                        <td>1002</td>
                                     </tr>
                                     <!-- Add more rows as needed -->
                                 </tbody>
