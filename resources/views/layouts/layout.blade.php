@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
   <title>Dashboard</title>
   <!-- CSS files -->
-  <link href="./dist/css/tabler.min.css?1692870487" rel="stylesheet"/>
-  <link href="./dist/css/tabler-flags.min.css?1692870487" rel="stylesheet"/>
-  <link href="./dist/css/tabler-payments.min.css?1692870487" rel="stylesheet"/>
-  <link href="./dist/css/tabler-vendors.min.css?1692870487" rel="stylesheet"/>
-  <link href="./dist/css/demo.min.css?1692870487" rel="stylesheet"/>
+  <link href="{{ asset('dist/css/tabler.min.css') }}" rel="stylesheet"/>
+  <link href="{{ asset('dist/css/tabler-flags.min.css') }}" rel="stylesheet"/>
+  <link href="{{ asset('dist/css/tabler-payments.min.css') }}" rel="stylesheet"/>
+  <link href="{{ asset('dist/css/tabler-vendors.min.css') }}" rel="stylesheet"/>
+  <link href="{{ asset('dist/css/demo.min.css') }}" rel="stylesheet"/>
   <style>
     @import url('https://rsms.me/inter/inter.css');
     :root {
@@ -53,13 +53,13 @@
         </button>
         <h1 class="navbar-brand navbar-brand-autodark">
           <a href=".">
-            <img src="./static/logo.svg" width="110" height="32" alt="Tabler" class="navbar-brand-image">
+            <img src="{{ asset('static/logo.svg') }}" width="110" height="32" alt="Tabler" class="navbar-brand-image">
           </a>
         </h1>
         <div class="collapse navbar-collapse" id="sidebar-menu">
           <ul class="navbar-nav pt-lg-3">
             <li class="nav-item">
-              <a class="nav-link" href="./">
+            <a class="nav-link" href="{{ route('home') }}">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -74,7 +74,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url('/client') }}">
+            <a class="nav-link" href="{{ route('clients.index') }}">
                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -83,7 +83,7 @@
                   </svg>
                 </span>
                 <span class="nav-link-title">
-                  Client
+                  Clients
                 </span>
               </a>
             </li>
@@ -183,6 +183,6 @@
   </div>
 
   <!-- JS files -->
-  <script src="./dist/js/tabler.min.js?1692870487"></script>
+  <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
 </body>
 </html>
