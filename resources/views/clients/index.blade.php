@@ -7,7 +7,7 @@
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <h1 class="text-dark">Clients</h1>
             <a href="{{ route('clients.create') }}" class="btn text-white" style="background-color: #182433;">
-                Tambah Client
+                Add Clients
             </a>
         </div>
 
