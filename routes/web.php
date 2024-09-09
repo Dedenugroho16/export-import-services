@@ -7,6 +7,7 @@ use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\ConsigneeController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DetailProductController;
+use App\Http\Controllers\ProductsController;
 
 // Dashboard Routes
 Route::get('/', [DashboardController::class, 'index'])->name('home');
@@ -23,12 +24,14 @@ Route::delete('/clients/{id}', [ClientsController::class, 'destroy'])->name('cli
 // Consignee Route
 Route::get('/consignee', [ConsigneeController::class, 'index']);
 
+// Product Route
+Route::resource('products', ProductsController::class);
 
 // Commodity Route
 Route::resource('commodities', CommoditiesController::class);
 
-// Country Route
-Route::get('/countries', [CountryController::class, 'index']);
-
 // Detail Products Route
 Route::resource('detail-products', DetailProductController::class);
+
+// Country Route
+Route::get('/countries', [CountryController::class, 'index']);
