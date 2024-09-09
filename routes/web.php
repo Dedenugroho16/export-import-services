@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\ConsigneeController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DetailProductController;
 
 // Dashboard Routes
 Route::get('/', [DashboardController::class, 'index'])->name('home');
@@ -19,3 +22,13 @@ Route::delete('/clients/{id}', [ClientsController::class, 'destroy'])->name('cli
 
 // Consignee Route
 Route::get('/consignee', [ConsigneeController::class, 'index']);
+
+
+// Commodity Route
+Route::resource('commodities', CommoditiesController::class);
+
+// Country Route
+Route::get('/countries', [CountryController::class, 'index']);
+
+// Detail Products Route
+Route::resource('detail-products', DetailProductController::class);
