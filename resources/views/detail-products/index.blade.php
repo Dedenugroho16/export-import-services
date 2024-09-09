@@ -51,13 +51,13 @@
                                         <td class="text-center">{{ $detailProduct->color }}</td>
                                         <td class="text-center">{{ $detailProduct->price }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('detail-products.show', $detailProduct->id_product) }}" class="btn btn-info btn-sm text-white" title="Show">
+                                            <a href="{{ route('detail-products.show', $detailProduct->id) }}" class="btn btn-info btn-sm text-white" title="Show">
                                                 Show
                                             </a>
-                                            <a href="{{ route('detail-products.edit', $detailProduct->id_product) }}" class="btn btn-warning btn-sm text-white" title="Edit">
+                                            <a href="{{ route('detail-products.edit', $detailProduct->id) }}" class="btn btn-warning btn-sm text-white" title="Edit">
                                                 Edit
                                             </a>
-                                            <form action="{{ route('detail-products.destroy', $detailProduct->id_product) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this detail product?')">
+                                            <form action="{{ route('detail-products.destroy', $detailProduct->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this detail product?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm text-white" title="Delete">
