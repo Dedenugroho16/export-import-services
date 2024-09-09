@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CommoditiesController;
-use App\Http\Controllers\ConsigneeController;
+use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\ProductsController;
@@ -12,17 +12,11 @@ use App\Http\Controllers\ProductsController;
 // Dashboard Routes
 Route::get('/', [DashboardController::class, 'index'])->name('home');
 
-// Client Routes
-Route::get('/clients', [ClientsController::class, 'index'])->name('clients.index'); // Index
-Route::get('/clients/create', [ClientsController::class, 'create'])->name('clients.create'); // Create
-Route::post('/clients', [ClientsController::class, 'store'])->name('clients.store'); // Store
-Route::get('/clients/{id}', [ClientsController::class, 'show'])->name('clients.show')->where('id', '[0-9]+'); // Show
-Route::get('/clients/{id}/edit', [ClientsController::class, 'edit'])->name('clients.edit')->where('id', '[0-9]+'); // Edit
-Route::put('/clients/{id}', [ClientsController::class, 'update'])->name('clients.update')->where('id', '[0-9]+'); // Update
-Route::delete('/clients/{id}', [ClientsController::class, 'destroy'])->name('clients.destroy')->where('id', '[0-9]+'); // Destroy
+// Client Routes using resource
+Route::resource('clients', ClientsController::class);
 
-// Consignee Route
-Route::get('/consignee', [ConsigneeController::class, 'index']);
+// Consignee Routes using resource
+Route::resource('consignees', ConsigneesController::class);
 
 // Product Route
 Route::resource('products', ProductsController::class);
