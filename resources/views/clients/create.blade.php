@@ -46,8 +46,8 @@
                                 <input type="text" id="fax" name="fax" class="form-control">
                             </div>
                             <div class="text-end">
-                                <button type="submit" class="btn text-white" style="background-color: #182433;">Create</button>
                                 <a href="{{ route('clients.index') }}" class="btn btn-secondary">Back</a>
+                                <button type="submit" class="btn text-white" style="background-color: #182433;">Add Clients</button>
                             </div>
                         </form>
                     </div>
