@@ -4,8 +4,12 @@
 <div class="page-body">
     <div class="container-xl">
         <!-- Dashboard Header -->
-        <div class="mb-4">
+        <!-- Dashboard Header and Add Detail Product Button -->
+        <div class="mb-4 d-flex justify-content-between align-items-center">
             <h1 class="text-dark">Countries</h1>
+            <a href="{{ route('countries.create') }}" class="btn text-white" style="background-color: #182433;">
+                Add Country
+            </a>            
         </div>
 
         <!-- Display Success Message -->

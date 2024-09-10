@@ -28,4 +28,4 @@ Route::resource('commodities', CommoditiesController::class);
 Route::resource('detail-products', DetailProductController::class);
 
 // Country Route
-Route::get('/countries', [CountryController::class, 'index']);
+Route::resource('countries', CountryController::class);
