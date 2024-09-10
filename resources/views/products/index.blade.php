@@ -10,14 +10,6 @@
                 Add Product
             </a>
         </div>
-
-        <!-- Display Success Message -->
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <!-- Products Section -->
         <div class="row row-deck row-cards">
             <div class="col-12">
@@ -26,6 +18,21 @@
                         <h3 class="card-title">Products</h3>
                     </div>
                     <div class="card-body">
+                        <!-- Display notifications -->
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+                        <!-- Table Starts Here -->
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap">
                                 <thead>
@@ -33,6 +40,7 @@
                                         <th class="text-center">ID</th>
                                         <th class="text-center">Code</th>
                                         <th class="text-center">Name</th>
+                                        <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,6 +69,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <!-- Table ends here -->
                     </div>
                 </div>
             </div>
