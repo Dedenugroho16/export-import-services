@@ -13,7 +13,7 @@ class AuthController extends Controller
     {
         // Validate
         $fields = $request->validate([
-            'username' => ['required', 'max:255'],
+            'name' => ['required', 'max:255'],
             'email' => ['required', 'max:255', 'email', 'unique:users'],
             'password' => ['required', 'min:3', 'confirmed']
         ]);
@@ -25,7 +25,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         // Redirect
-        return redirect()->route('dashboard');
+        return redirect()->route('home');
     }
 
     // Login User
@@ -39,7 +39,7 @@ class AuthController extends Controller
 
         // Try to login the user
         if (Auth::attempt($fields, $request->remember)) {
-            return redirect()->intended('dashboard');
+            return redirect()->intended('home');
         } else {
             return back()->withErrors([
                 'failed' => 'The provided credentials do not match our records.'

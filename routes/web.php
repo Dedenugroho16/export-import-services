@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClientsController;
@@ -9,8 +10,8 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\ProductsController;
 
-// Dashboard Routes
-Route::get('/', [DashboardController::class, 'index'])->name('home');
+// Dashboard Routes (hanya bisa diakses jika sudah login)
+Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
 
 // Client Routes using resource
 Route::resource('clients', ClientsController::class);
@@ -29,3 +30,14 @@ Route::resource('detail-products', DetailProductController::class);
 
 // Country Route
 Route::resource('countries', CountryController::class);
+
+// Logout Route
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Register Route (Hanya untuk tamu)
+Route::view('/register', 'auth.register')->name('register')->middleware('guest');
+Route::post('/register', [AuthController::class, 'register'])->middleware('guest');
+
+// Login Routes (Hanya untuk tamu)
+Route::view('/login', 'auth.login')->name('login')->middleware('guest');
+Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
