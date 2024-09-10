@@ -27,9 +27,14 @@ class ProductsController extends Controller
         $request->validate([
             'code' => 'required|string|max:255',
             'name' => 'required|string|max:255',
+            'abbreviation' => 'nullable|string|max:255', // Make it nullable if it's not required
         ]);
 
-        Product::create($request->all());
+        Product::create([
+            'code' => $request->input('code'),
+            'name' => $request->input('name'),
+            'abbreviation' => $request->input('abbreviation'),
+        ]);
 
         return redirect()->route('products.index')
                          ->with('success', 'Product created successfully.');
@@ -53,9 +58,14 @@ class ProductsController extends Controller
         $request->validate([
             'code' => 'required|string|max:255',
             'name' => 'required|string|max:255',
+            'abbreviation' => 'nullable|string|max:255',
         ]);
 
-        $product->update($request->all());
+        $product->update([
+            'code' => $request->input('code'),
+            'name' => $request->input('name'),
+            'abbreviation' => $request->input('abbreviation'),
+        ]);
 
         return redirect()->route('products.index')
                          ->with('success', 'Product updated successfully.');

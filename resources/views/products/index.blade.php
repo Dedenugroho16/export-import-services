@@ -40,6 +40,7 @@
                                         <th class="text-center">ID</th>
                                         <th class="text-center">Code</th>
                                         <th class="text-center">Name</th>
+                                        <th class="text-center">Abbreviation</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -49,6 +50,7 @@
                                         <td class="text-center">{{ $product->id }}</td>
                                         <td class="text-center">{{ $product->code }}</td>
                                         <td class="text-center">{{ $product->name }}</td>
+                                        <td class="text-center">{{ $product->abbreviation }}</td>
                                         <td class="text-center">
                                             <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm text-white" title="Show">
                                                 Show

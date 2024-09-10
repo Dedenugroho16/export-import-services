@@ -9,21 +9,18 @@ class Product extends Model
 {
     use HasFactory;
 
+    // Add 'abbreviation' to the fillable property
     protected $fillable = [
         'code',
         'name',
+        'abbreviation',
     ];
 
-    // public function transactions()
-    // {
-    //     return $this->hasMany(Transaction::class, 'id_product');
-    // }
-
-        public function transactions()
+    // Define relationships
+    public function transactions()
     {
         return $this->belongsToMany(Transaction::class, 'detail_transactions', 'id_product', 'id_transaction');
     }
-
 
     public function detailProducts()
     {
