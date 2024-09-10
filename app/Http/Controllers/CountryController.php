@@ -9,10 +9,28 @@ class CountryController extends Controller
 {
     public function index()
     {
-        // Mengambil semua data dari tabel 'countries'
         $countries = Country::all();
-
-        // Mengirim data ke view
         return view('countries.index', compact('countries'));
     }
+
+    public function create()
+    {
+        return view('countries.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:10',
+        ]);
+
+        Country::create([
+            'name' => $request->name,
+            'code' => $request->code,
+        ]);
+        
+        return redirect()->route('countries.index')->with('success', 'Country added successfully.');
+    }
 }
+

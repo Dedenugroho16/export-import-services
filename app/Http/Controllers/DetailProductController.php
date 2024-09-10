@@ -3,28 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailProduct;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class DetailProductController extends Controller
 {
-    // Display a listing of the resource.
     public function index()
     {
-        $detailProducts = DetailProduct::all();
-        return view('detail_products.index', compact('detailProducts'));
+        $detailProducts = DetailProduct::with('product')->get();
+        return view('detail-products.index', compact('detailProducts'));
     }
 
-    // Show the form for creating a new resource.
+    // Method untuk menampilkan form tambah detail produk
     public function create()
     {
-        return view('detail_products.create');
+        $products = Product::all();
+        return view('detail-products.create', compact('products'));
     }
 
-    // Store a newly created resource in storage.
+    // Method untuk menyimpan detail produk baru
     public function store(Request $request)
     {
         $request->validate([
-            'id_product' => 'required|integer',
+            'id_product' => 'required|exists:products,id',
             'name' => 'required|string|max:255',
             'pcs' => 'required|integer',
             'dimension' => 'required|string|max:255',
@@ -35,28 +36,28 @@ class DetailProductController extends Controller
 
         DetailProduct::create($request->all());
 
-        return redirect()->route('detail-products.index')->with('success', 'Detail Product created successfully.');
+        return redirect()->route('detail-products.index')
+                         ->with('success', 'Detail Product created successfully.');
     }
 
-    // Display the specified resource.
-    public function show($id)
+    public function show(DetailProduct $detailProduct)
     {
-        $detailProduct = DetailProduct::findOrFail($id);
-        return view('detail_products.show', compact('detailProduct'));
+        return view('detail-products.show', compact('detailProduct'));
     }
 
-    // Show the form for editing the specified resource.
-    public function edit($id)
+
+    // Method untuk menampilkan form edit detail produk
+    public function edit(DetailProduct $detailProduct)
     {
-        $detailProduct = DetailProduct::findOrFail($id);
-        return view('detail_products.edit', compact('detailProduct'));
+        $products = Product::all();
+        return view('detail-products.edit', compact('detailProduct', 'products'));
     }
 
-    // Update the specified resource in storage.
-    public function update(Request $request, $id)
+    // Method untuk memperbarui detail produk
+    public function update(Request $request, DetailProduct $detailProduct)
     {
         $request->validate([
-            'id_product' => 'required|integer',
+            'id_product' => 'required|exists:products,id',
             'name' => 'required|string|max:255',
             'pcs' => 'required|integer',
             'dimension' => 'required|string|max:255',
@@ -65,19 +66,16 @@ class DetailProductController extends Controller
             'price' => 'required|numeric',
         ]);
 
-        $detailProduct = DetailProduct::findOrFail($id);
         $detailProduct->update($request->all());
 
-        return redirect()->route('detail-products.index')->with('success', 'Detail Product updated successfully.');
+        return redirect()->route('detail-products.index')
+                         ->with('success', 'Detail Product updated successfully.');
     }
 
-    // Remove the specified resource from storage.
-    public function destroy($id)
+    public function destroy(DetailProduct $detailProduct)
     {
-        $detailProduct = DetailProduct::findOrFail($id);
         $detailProduct->delete();
-
         return redirect()->route('detail-products.index')->with('success', 'Detail Product deleted successfully.');
     }
+    
 }
-
