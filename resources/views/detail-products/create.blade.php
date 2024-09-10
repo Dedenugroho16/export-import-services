@@ -28,8 +28,11 @@
                             <div class="mb-3">
                                 <label for="id_product" class="form-label">Product</label>
                                 <select name="id_product" id="id_product" class="form-control" required>
+                                    <option value="">Select Product</option>
                                     @foreach($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                        <option value="{{ $product->id }}" {{ old('id_product') == $product->id ? 'selected' : '' }}>>
+                                            {{ $product->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>

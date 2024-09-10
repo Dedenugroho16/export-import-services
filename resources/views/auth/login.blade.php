@@ -51,6 +51,12 @@
 
                 </div>
             </div>
+              {{-- Notifikasi Login Gagal --}}
+                @if($errors->has('failed'))
+                <div class="alert alert-danger">
+                    {{ $errors->first('failed') }}
+                </div>
+              @endif
               <div class="mb-2">
                 <label class="form-check">
                   <input type="checkbox" class="form-check-input"/>
