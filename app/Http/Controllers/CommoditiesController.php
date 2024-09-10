@@ -51,6 +51,6 @@ class CommoditiesController extends Controller
     public function destroy(Commodity $commodity)
     {
         $commodity->delete();
-        return redirect()->route('commodities.index')->with('success', 'Commodity deleted successfully.');
+        return redirect()->route('commodities.index')->with('error', 'Commodity deleted successfully.');
     }
 }

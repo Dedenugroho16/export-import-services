@@ -14,14 +14,14 @@ class DetailProductController extends Controller
         return view('detail-products.index', compact('detailProducts'));
     }
 
-    // Method untuk menampilkan form tambah detail produk
+    // Method for displaying the form to add new detail product
     public function create()
     {
         $products = Product::all();
         return view('detail-products.create', compact('products'));
     }
 
-    // Method untuk menyimpan detail produk baru
+    // Method for storing new detail product
     public function store(Request $request)
     {
         $request->validate([
@@ -45,15 +45,14 @@ class DetailProductController extends Controller
         return view('detail-products.show', compact('detailProduct'));
     }
 
-
-    // Method untuk menampilkan form edit detail produk
+    // Method for displaying the edit form
     public function edit(DetailProduct $detailProduct)
     {
         $products = Product::all();
         return view('detail-products.edit', compact('detailProduct', 'products'));
     }
 
-    // Method untuk memperbarui detail produk
+    // Method for updating the detail product
     public function update(Request $request, DetailProduct $detailProduct)
     {
         $request->validate([
@@ -75,7 +74,7 @@ class DetailProductController extends Controller
     public function destroy(DetailProduct $detailProduct)
     {
         $detailProduct->delete();
-        return redirect()->route('detail-products.index')->with('success', 'Detail Product deleted successfully.');
+
+        return redirect()->route('detail-products.index')->with('error', 'Detail Product deleted successfully.');
     }
-    
 }
