@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientsController;
-use App\Http\Controllers\CommoditiesController;
-use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CountryController;
-use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ConsigneesController;
+use App\Http\Controllers\CommoditiesController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\DetailProductController;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
@@ -30,6 +31,9 @@ Route::resource('detail-products', DetailProductController::class);
 
 // Country Route
 Route::resource('countries', CountryController::class);
+
+// Transaction Route
+Route::resource('transaction', TransactionController::class);
 
 // Logout Route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
