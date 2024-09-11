@@ -68,8 +68,8 @@
                             </div>
 
                             <div class="text-end">
-                                <button type="submit" class="btn text-white" style="background-color: #182433;">Create</button>
                                 <a href="{{ route('detail-products.index') }}" class="btn btn-secondary">Back</a>
+                                <button type="submit" class="btn text-white" style="background-color: #182433;">Create</button>
                             </div>
                         </form>
                     </div>
