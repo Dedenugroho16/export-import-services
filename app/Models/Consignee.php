@@ -10,4 +10,10 @@ class Consignee extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'address', 'tel', 'id_client'];
+
+    // Relasi belongsTo ke model Client
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'id_client');
+    }
 }

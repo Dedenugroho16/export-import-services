@@ -93,9 +93,15 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="consignee">Consignee</label>
-                                                    <input type="text" id="consignee" class="form-control"
-                                                        placeholder="Enter consignee name">
+                                                    <label for="client">Client</label>
+                                                    <select class="form-control client" id="client">
+                                                        @foreach ($clients as $client)
+                                                            <option value="{{ $client->id }}"
+                                                                {{ old('id_client') == $client->id ? 'selected' : '' }}>
+                                                                {{ $client->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -107,9 +113,15 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="client">Client</label>
-                                                    <input type="text" id="client" class="form-control"
-                                                        placeholder="Enter client name">
+                                                    <label for="consignee">Consignee</label>
+                                                    <select class="form-control consignee" id="consignee" name="states[]" multiple="multiple">
+                                                        @foreach ($consignees as $consignee)
+                                                            <option value="{{ $consignee->id }}"
+                                                                {{ old('id_consignee') == $consignee->id ? 'selected' : '' }}>
+                                                                {{ $consignee->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -349,13 +361,25 @@
                             </form>
 
                             <!-- Tombol Submit -->
-                                <div class="card-body text-end">
-                                    <button type="submit" class="btn btn-primary">Submit Invoice</button>
-                                </div>
+                            <div class="card-body text-end">
+                                <button type="submit" class="btn btn-primary">Submit Invoice</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // select2 consignee
+        $(document).ready(function() {
+            $('#consignee').select2();
+        });
+
+        // select2 client
+        $(document).ready(function() {
+            $('#client').select2();
+        });
+    </script>
 @endsection

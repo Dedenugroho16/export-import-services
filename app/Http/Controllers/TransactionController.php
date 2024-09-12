@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
+use App\Models\Consignee;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -19,7 +21,9 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        return view('transaction.create');
+        $consignees = Consignee::all();
+        $clients = Client::all();
+        return view('transaction.create', compact('consignees', 'clients'));
     }
 
     /**

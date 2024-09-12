@@ -34,6 +34,8 @@ Route::resource('countries', CountryController::class);
 
 // Transaction Route
 Route::resource('transaction', TransactionController::class);
+// Get Client
+Route::get('/get-clients/{consigneeId}', [ClientController::class, 'getClientsByConsignee']);
 
 // Logout Route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
