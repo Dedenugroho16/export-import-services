@@ -30,8 +30,8 @@
                                 <input type="text" id="name" name="name" class="form-control" required>
                             </div>
                             <div class="text-end">
-                                <button type="submit" class="btn text-white" style="background-color: #182433;">Create</button>
                                 <a href="{{ route('commodities.index') }}" class="btn btn-secondary">Back</a>
+                                <button type="submit" class="btn text-white" style="background-color: #182433;">Create</button>
                             </div>
                         </form>
                     </div>

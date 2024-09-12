@@ -72,8 +72,8 @@
 
                             <!-- Submit Button -->
                             <div class="text-end">
-                                <button type="submit" class="btn text-white" style="background-color: #182433;">Add Consignee</button>
                                 <a href="{{ route('consignees.index') }}" class="btn btn-secondary">Back</a>
+                                <button type="submit" class="btn text-white" style="background-color: #182433;">Create</button>
                             </div>
                         </form>
                         <!-- End of Form -->
