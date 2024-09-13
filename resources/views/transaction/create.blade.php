@@ -24,6 +24,8 @@
                             @endif
 
                             <form>
+                                @csrf
+
                                 {{-- Bagian 1 --}}
                                 <div class="row">
                                     <div class="col-md-12">
@@ -95,11 +97,9 @@
                                                 <div class="form-group">
                                                     <label for="client">Client</label>
                                                     <select class="form-control client" id="client">
+                                                        <option value="">Pilih Client</option>
                                                         @foreach ($clients as $client)
-                                                            <option value="{{ $client->id }}"
-                                                                {{ old('id_client') == $client->id ? 'selected' : '' }}>
-                                                                {{ $client->name }}
-                                                            </option>
+                                                            <option value="{{ $client->id }}">{{ $client->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -114,10 +114,11 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="consignee">Consignee</label>
-                                                    <select class="form-control consignee" id="consignee" name="states[]" multiple="multiple">
+                                                    <select class="form-control consignee" id="consignee" name="consignee[]"
+                                                        multiple="multiple">
                                                         @foreach ($consignees as $consignee)
                                                             <option value="{{ $consignee->id }}"
-                                                                {{ old('id_consignee') == $consignee->id ? 'selected' : '' }}>
+                                                                data-id-client="{{ $consignee->id_client }}">
                                                                 {{ $consignee->name }}
                                                             </option>
                                                         @endforeach
@@ -372,14 +373,35 @@
     </div>
 
     <script>
-        // select2 consignee
         $(document).ready(function() {
-            $('#consignee').select2();
-        });
-
-        // select2 client
-        $(document).ready(function() {
+            // Inisialisasi Select2 untuk kedua dropdown
             $('#client').select2();
+            $('#consignee').select2({
+                placeholder: "Pilih consignee",
+                allowClear: true
+            });
+
+            // Ketika client dipilih
+            $('#client').on('change', function() {
+                var clientId = $(this).val(); // Dapatkan id client yang dipilih
+                // console.log('Client selected: ', clientId);
+
+                // Reset opsi yang ada dan tandai opsi yang cocok dengan id_client
+                $('#consignee option').each(function() {
+                    var option = $(this);
+                    var idClientOption = option.data(
+                        'id-client'); // Ambil data-id-client dari tiap option
+
+                    if (idClientOption == clientId) {
+                        option.prop('selected', true); // Pilih opsi yang sesuai
+                    } else {
+                        option.prop('selected', false); // Hapus seleksi dari opsi yang tidak cocok
+                    }
+                });
+
+                // Update Select2
+                $('#consignee').trigger('change');
+            });
         });
     </script>
 @endsection
