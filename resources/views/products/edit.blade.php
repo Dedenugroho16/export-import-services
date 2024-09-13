@@ -42,6 +42,15 @@
                                 @enderror
                             </div>
 
+                            <!-- Abbreviation Field -->
+                            <div class="mb-3">
+                                <label for="abbreviation" class="form-label">Product Abbreviation</label>
+                                <input type="text" id="abbreviation" name="abbreviation" class="form-control" value="{{ old('abbreviation', $product->abbreviation) }}" required>
+                                @error('abbreviation')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="text-end">
                                 <a href="{{ route('products.index') }}" class="btn btn-secondary">Back</a>
                                 <button type="submit" class="btn text-white" style="background-color: #182433;">Update Product</button>
