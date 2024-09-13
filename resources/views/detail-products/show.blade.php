@@ -36,7 +36,7 @@
                                     Delete
                                 </button>
                             </form>
-                            <a href="{{ route('detail-products.index') }}" class="btn btn-secondary">Back</a>
+                            <a href="{{ route('products.index') }}" class="btn btn-secondary">Back</a>
                         </div>
                     </div>
                 </div>
