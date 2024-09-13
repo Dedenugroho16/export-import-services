@@ -5,7 +5,6 @@
     <div class="container-xl">
         <!-- Dashboard Header and Add Detail Product Button -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
-            <h1 class="text-dark">Detail Products</h1>
             <a href="{{ route('detail-products.create') }}" class="btn text-white" style="background-color: #182433;">
                 Add Detail Product
             </a>

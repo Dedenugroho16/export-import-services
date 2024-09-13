@@ -4,12 +4,7 @@
 <div class="page-body">
     <div class="container-xl">
         <!-- Dashboard Header -->
-        <div class="mb-4 d-flex justify-content-between align-items-center">
-            <h1 class="text-dark">Dashboard</h1>
-            <form action="{{ route('logout') }}" method="post">
-                @csrf
-                <button class="btn text-white" style="background-color: #182433;">Logout</button>
-            </form>            
+        <div class="mb-4 d-flex justify-content-between align-items-center">        
         </div>
 
         <!-- Invoices Section -->

@@ -4,7 +4,6 @@
 <div class="page-body">
     <div class="container-xl">
         <div class="mb-4 d-flex justify-content-between align-items-center">
-            <h1 class="text-dark">Consignees</h1>
             <a href="{{ route('consignees.create') }}" class="btn text-white" style="background-color: #182433;">
                 Add Consignee
             </a>
