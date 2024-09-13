@@ -26,6 +26,16 @@ class TransactionController extends Controller
         return view('transaction.create', compact('consignees', 'clients'));
     }
 
+    // method get Consignee
+    public function getConsignees($clientId)
+    {
+        // Ambil consignee berdasarkan client_id
+        $consignees = Consignee::where('id_client', $clientId)->pluck('name', 'id');
+
+        // Kembalikan response dalam bentuk JSON
+        return response()->json($consignees);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
