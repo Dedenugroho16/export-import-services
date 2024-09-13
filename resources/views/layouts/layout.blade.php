@@ -105,7 +105,7 @@
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
-                                    Clients
+                                    Client
                                 </span>
                             </a>
                         </li>
@@ -121,7 +121,7 @@
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
-                                    Consignees
+                                    Consignee
                                 </span>
                             </a>
                         </li>
@@ -218,6 +218,61 @@
         </aside>
 
         <div class="page-wrapper">
+            <div class="mb-3">
+                <header class="navbar navbar-expand-md d-print-none" >
+                  <div class="container-xl">
+                    <h1 id="page-title" class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3" style="font-size: 1.5rem;">
+                        <a href=".">
+                          Dashboard
+                        </a>
+                      </h1>
+                    <div class="navbar-nav flex-row order-md-last">
+                      <div class="d-none d-md-flex">
+                        <div class="nav-item dropdown d-none d-md-flex me-3">
+                          <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1" aria-label="Show notifications">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/bell -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="grey" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg>
+                            <span class="badge bg-red"></span>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
+                            <div class="card">
+                              <div class="card-header">
+                                <h3 class="card-title">Last updates</h3>
+                              </div>
+                              <div class="list-group list-group-flush list-group-hoverable">
+                                <div class="list-group-item">
+                                  <div class="row align-items-center">
+                                    <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
+                                    <div class="col text-truncate">
+                                      <a href="#" class="text-body d-block">Example 1</a>
+                                      <div class="d-block text-secondary text-truncate mt-n1">
+                                        Change deprecated html tags to text decoration classes
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="nav-item dropdown">
+                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+                            <span class="avatar avatar-sm rounded-circle" style="background-image: url('https://www.gravatar.com/avatar/?d=mp'); border-radius: 50%;"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                          <a href="#" class="dropdown-item">Profile</a>
+                          <a href="./settings.html" class="dropdown-item">Settings</a>
+                          <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item">Logout</button>
+                        </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </header>
+              </div>
             <!-- Page body -->
             <div class="content">
                 @yield('content')
@@ -252,6 +307,37 @@
 
     <!-- JS files -->
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    // Daftar halaman dan judul yang sesuai
+    const pages = {
+        "/dashboard": "Dashboard",
+        "/clients": "Client",
+        "/consignees": "Consignee",
+        "/products": "Product",
+        "/commodities": "Commodity",
+        "/detail-products": "Detail Product",
+        "/countries": "Country",
+        "/transaction/create": "Transaction",
+        "/invoices": "Invoices",
+        "/settings": "Settings"
+    };
+
+    // Fungsi untuk mengubah teks berdasarkan URL saat ini
+    function updateTitle() {
+        const path = window.location.pathname;
+        const title = pages[path] || "Dashboard"; // Default ke "Dashboard"
+        document.getElementById("page-title").innerHTML = `<a href=".">${title}</a>`;
+    }
+
+    // Panggil fungsi saat halaman dimuat
+    updateTitle();
+
+    // Jika ada navigasi dinamis (tanpa refresh halaman), tambahkan pendengar perubahan URL
+    window.addEventListener("popstate", updateTitle);
+});
+
+    </script>
 </body>
 
 </html>

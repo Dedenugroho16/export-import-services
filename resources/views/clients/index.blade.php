@@ -5,9 +5,8 @@
     <div class="container-xl">
         <!-- Dashboard Header and Add Client Button -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
-            <h1 class="text-dark">Clients</h1>
             <a href="{{ route('clients.create') }}" class="btn text-white" style="background-color: #182433;">
-                Add Clients
+                Add Client
             </a>
         </div>
         <!-- Clients Section -->
