@@ -11,7 +11,9 @@ class ProductsController extends Controller
     // Display a listing of the products
     public function index()
     {
-        $products = Product::all();
+        // Ambil semua produk beserta detail produknya
+        $products = Product::with('detailProducts')->get();
+        
         return view('products.index', compact('products'));
     }
 
@@ -37,7 +39,7 @@ class ProductsController extends Controller
         ]);
 
         return redirect()->route('products.index')
-                         ->with('success', 'Product created successfully.');
+                         ->with('product_success', 'Product created successfully.');
     }
 
     // Display the specified product
@@ -68,7 +70,7 @@ class ProductsController extends Controller
         ]);
 
         return redirect()->route('products.index')
-                         ->with('success', 'Product updated successfully.');
+                         ->with('product_success', 'Product updated successfully.');
     }
 
     // Remove the specified product from storage
@@ -80,6 +82,6 @@ class ProductsController extends Controller
         DB::statement('ALTER TABLE products AUTO_INCREMENT = 1');
 
         return redirect()->route('products.index')
-                         ->with('error', 'Product deleted successfully.');
+                         ->with('product_error', 'Product deleted successfully.');
     }
 }
