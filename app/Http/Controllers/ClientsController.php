@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clients;
+use App\Helpers\IdHashHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -34,20 +35,24 @@ class ClientsController extends Controller
         return redirect()->route('clients.index')->with('success', 'Client created successfully.');
     }
 
-    public function show($id)
+    public function show($hash)
     {
+        $id = IdHashHelper::decode($hash);
         $client = Clients::findOrFail($id);
         return view('clients.show', compact('client'));
     }
 
-    public function edit($id)
+    public function edit($hash)
     {
+        $id = IdHashHelper::decode($hash);
         $client = Clients::findOrFail($id);
         return view('clients.edit', compact('client'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $hash)
     {
+        $id = IdHashHelper::decode($hash);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
@@ -62,8 +67,9 @@ class ClientsController extends Controller
         return redirect()->route('clients.index')->with('success', 'Client updated successfully.');
     }
 
-    public function destroy($id)
+    public function destroy($hash)
     {
+        $id = IdHashHelper::decode($hash);
         $client = Clients::findOrFail($id);
         $client->delete();
 

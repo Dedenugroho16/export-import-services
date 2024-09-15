@@ -45,13 +45,14 @@
                                         <td class="text-center">{{ $commodity->id }}</td>
                                         <td class="text-center">{{ $commodity->name }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('commodities.show', $commodity->id) }}" class="btn btn-info btn-sm text-white" title="Show">
+                                            <!-- Use full namespace for IdHashHelper -->
+                                            <a href="{{ route('commodities.show', \App\Helpers\IdHashHelper::encode($commodity->id)) }}" class="btn btn-info btn-sm text-white" title="Show">
                                                 Show
                                             </a>
-                                            <a href="{{ route('commodities.edit', $commodity->id) }}" class="btn btn-warning btn-sm text-white" title="Edit">
+                                            <a href="{{ route('commodities.edit', \App\Helpers\IdHashHelper::encode($commodity->id)) }}" class="btn btn-warning btn-sm text-white" title="Edit">
                                                 Edit
                                             </a>
-                                            <form action="{{ route('commodities.destroy', $commodity->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this commodity?')">
+                                            <form action="{{ route('commodities.destroy', \App\Helpers\IdHashHelper::encode($commodity->id)) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this commodity?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm text-white" title="Delete">

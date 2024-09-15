@@ -16,6 +16,10 @@ Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware
 
 // Client Routes using resource
 Route::resource('clients', ClientsController::class);
+//Route::get('/clients/{uuid}', [ClientsController::class, 'show']);
+Route::get('/clients/{token}', [ClientsController::class, 'show']);
+Route::get('/clients/{hash}/edit', [ClientsController::class, 'edit'])->name('clients.edit');
+Route::put('/clients/{hash}', [ClientsController::class, 'update'])->name('clients.update');
 
 // Consignee Routes using resource
 Route::resource('consignees', ConsigneesController::class);
@@ -25,6 +29,11 @@ Route::resource('products', ProductsController::class);
 
 // Commodity Route
 Route::resource('commodities', CommoditiesController::class);
+Route::get('commodities/{hash}', [CommoditiesController::class, 'show'])->name('commodities.show');
+Route::get('commodities/{hash}/edit', [CommoditiesController::class, 'edit'])->name('commodities.edit');
+Route::put('commodities/{hash}', [CommoditiesController::class, 'update'])->name('commodities.update');
+Route::delete('commodities/{hash}', [CommoditiesController::class, 'destroy'])->name('commodities.destroy');
+
 
 // Detail Products Route
 Route::resource('detail-products', DetailProductController::class);

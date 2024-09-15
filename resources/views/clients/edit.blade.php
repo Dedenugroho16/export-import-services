@@ -24,7 +24,7 @@
                         @endif
 
                         <!-- Edit Form -->
-                        <form action="{{ route('clients.update', $client->id) }}" method="POST">
+                        <form action="{{ route('clients.update', \App\Helpers\IdHashHelper::encode($client->id)) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">

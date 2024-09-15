@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commodity;
+use App\Helpers\IdHashHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CommoditiesController extends Controller
 {
@@ -28,29 +30,43 @@ class CommoditiesController extends Controller
         return redirect()->route('commodities.index')->with('success', 'Commodity created successfully.');
     }
 
-    public function show(Commodity $commodity)
+    public function show($hash)
     {
+        $id = IdHashHelper::decode($hash);
+        $commodity = Commodity::findOrFail($id);
         return view('commodities.show', compact('commodity'));
     }
 
-    public function edit(Commodity $commodity)
+    public function edit($hash)
     {
+        $id = IdHashHelper::decode($hash);
+        $commodity = Commodity::findOrFail($id);
         return view('commodities.edit', compact('commodity'));
     }
 
-    public function update(Request $request, Commodity $commodity)
+    public function update(Request $request, $hash)
     {
+        $id = IdHashHelper::decode($hash);
+
         $request->validate([
             'name' => 'required|max:255',
         ]);
 
+        $commodity = Commodity::findOrFail($id);
         $commodity->update($request->all());
+
         return redirect()->route('commodities.index')->with('success', 'Commodity updated successfully.');
     }
 
-    public function destroy(Commodity $commodity)
+    public function destroy($hash)
     {
+        $id = IdHashHelper::decode($hash);
+        $commodity = Commodity::findOrFail($id);
         $commodity->delete();
+
+        // Reset AUTO_INCREMENT to 1 after delete
+        DB::statement('ALTER TABLE commodities AUTO_INCREMENT = 1');
+
         return redirect()->route('commodities.index')->with('error', 'Commodity deleted successfully.');
     }
 }
