@@ -56,12 +56,10 @@
                                         <td class="text-center">{{ $client->tel }}</td>
                                         <td class="text-center">{{ $client->fax }}</td>
                                         <td class="text-center">
-                                        <a href="{{ url('/clients/' . App\Helpers\IdHashHelper::encode($client->id)) }}" class="btn btn-info btn-sm text-white" title="Show"> Show</a>
-                                        <a href="{{ url('/clients/' . \App\Helpers\IdHashHelper::encode($client->id) . '/edit') }}" class="btn btn-warning btn-sm text-white" title="Edit">
-                                            Edit
-                                        </a>
+                                            <a href="{{ url('/clients/' . App\Helpers\IdHashHelper::encode($client->id)) }}" class="btn btn-info btn-sm text-white" title="Show">Show</a>
+                                            <a href="{{ url('/clients/' . App\Helpers\IdHashHelper::encode($client->id) . '/edit') }}" class="btn btn-warning btn-sm text-white" title="Edit">Edit</a>
 
-                                            <form action="{{ route('clients.destroy', $client->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this client?')">
+                                            <form action="{{ route('clients.destroy', App\Helpers\IdHashHelper::encode($client->id)) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this client?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm text-white" title="Delete">
