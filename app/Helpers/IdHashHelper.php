@@ -4,11 +4,12 @@ namespace App\Helpers;
 
 class IdHashHelper
 {
-    private static $salt = 'your-salt-string';
+    private static $salt = 'your-unique-salt-string';
 
     public static function encode($id)
     {
-        return base64_encode($id . self::$salt);
+        $stringToEncode = $id . self::$salt;
+        return base64_encode($stringToEncode);
     }
 
     public static function decode($hash)
