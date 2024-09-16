@@ -3,13 +3,30 @@
 @section('content')
 <div class="page-body">
     <div class="container-xl mb-5">
-        <!-- Dashboard Header and Add Product Button -->
-        <div class="mb-4 d-flex justify-content-between align-items-center">
-            <a href="{{ route('products.create') }}" class="btn btn-primary">
-                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
-                Produk
-            </a>
-        </div>
+        <!-- Dashboard Header and Add Product & Detail Product Button -->
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <div class="d-flex gap-3">
+                    <!-- Button Produk -->
+                    <a href="{{ route('products.create') }}" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 5l0 14"/>
+                            <path d="M5 12l14 0"/>
+                        </svg>
+                        Produk
+                    </a>
+
+                    <!-- Button Detail Produk -->
+                    <a href="{{ route('detail-products.create') }}" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 5l0 14"/>
+                            <path d="M5 12l14 0"/>
+                        </svg>
+                        Detail Produk
+                    </a>
+                </div>
+            </div>
         <!-- Products Section -->
         <div class="row row-deck row-cards">
             <div class="col-12">
@@ -17,7 +34,7 @@
                     <div class="card-body">
 
                         <!-- Success Message for Deleting, Editing, or Adding Client -->
-                        @if (session('product_success'))
+                        @if (session('success'))
                             <div class="alert alert-important alert-success alert-dismissible" role="alert">
                                 <div class="d-flex">
                                     <div>
@@ -25,7 +42,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
                                     </div>
                                     <div>
-                                        {{ session('product_success') }}
+                                        {{ session('success') }}
                                     </div>
                                 </div>
                                 <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
@@ -72,9 +89,8 @@
                                                     </button>
                                                 </form>
                                                 </div>
+                                                <a href="{{ route('product.details', $product->id) }}" class="btn btn-warning">Detail</a>
                                             </td>
-                                            <td class="text-center">
-                                                <a href="{{ route('product.details', $product->id) }}" class="btn btn-info">Details</a>
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -38,12 +38,12 @@
                                 <label for="tel" class="form-label">Telepon</label>
                                 <input type="text" id="tel" name="tel" class="form-control" value="{{ old('tel', $client->tel) }}" required>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-5">
                                 <label for="fax" class="form-label">Fax</label>
                                 <input type="text" id="fax" name="fax" class="form-control" value="{{ old('fax', $client->fax) }}">
                             </div>
                             <div class="text-end">
-                                <a href="{{ route('clients.index') }}" class="btn btn-outline-primary">Back</a>
+                                <a href="{{ route('clients.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </div>
                         </form>

@@ -155,7 +155,7 @@
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
-                                    Commodity
+                                    Komoditas
                                 </span>
                             </a>
                         </li>
@@ -173,7 +173,7 @@
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
-                                    Country
+                                    Negara
                                 </span>
                             </a>
                         </li>
@@ -191,7 +191,7 @@
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
-                                    Transaction
+                                    Transaksi
                                 </span>
                             </a>
                         </li>
@@ -299,9 +299,9 @@
         "/consignees": "Consignee",
         "/products": "Produk",
         "/commodities": "Commoditas",
-        "/detail-products": "Detail Product",
-        "/countries": "Country",
-        "/transaction/create": "Transaction",
+        "/detail-products": "Detail Produk",
+        "/countries": "Negara",
+        "/transaction/create": "Transaksi",
         "/invoices": "Invoices",
         "/settings": "Settings"
     };
@@ -309,10 +309,11 @@
     const dynamicPages = {
         "/clients": "Client",
         "/consignees": "Consignee",
-        "/commodities": "Commodity",
-        "/products": "Product",
-        "/detail-products": "Detail Product",
-        "/transaction": "Transaction"
+        "/commodities": "Komoditas",
+        "/products": "Produk",
+        "/detail-products": "Detail Produk",
+        "/countries": "Negara",
+        "/transaction": "Transaksi"
     };
 
     const updateTitle = () => {

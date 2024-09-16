@@ -32,5 +32,13 @@ class CountryController extends Controller
         
         return redirect()->route('countries.index')->with('success', 'Country added successfully.');
     }
+
+    public function destroy($id)
+    {
+        $country = Country::findOrFail($id);
+        $country->delete();
+
+        return redirect()->route('countries.index')->with('success', 'Negara berhasil di hapus.');
+    }
 }
 

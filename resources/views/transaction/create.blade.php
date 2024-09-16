@@ -3,17 +3,12 @@
 @section('content')
     <div class="page-body">
         <div class="container-xl">
-            <!-- Dashboard Header -->
-            <div class="mb-1 d-flex justify-content-between align-items-center">
-                <h1 class="text-dark">Add New Product</h1>
-            </div>
-
             <!-- Form Section -->
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card mb-5">
                         <div class="card-header text-white shadow-sm p-3" style="background-color: #182433;">
-                            <h3 class="card-title">Product Form</h3>
+                            <h3 class="card-title">Form Transaksi</h3>
                         </div>
                         <div class="card-body">
                             <!-- Display Success Message -->

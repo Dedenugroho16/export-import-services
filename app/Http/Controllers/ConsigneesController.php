@@ -78,6 +78,13 @@ class ConsigneesController extends Controller
         return redirect()->route('consignees.index')->with('success', 'Consignee updated successfully.');
     }
 
+    public function show($id)
+    {
+        $consignee = Consignee::with('client')->findOrFail($id);
+        return view('consignees.show', compact('consignee'));
+    }
+
+
     // Method destroy untuk menghapus consignee
     public function destroy($id)
     {

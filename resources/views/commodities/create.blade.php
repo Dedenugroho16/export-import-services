@@ -3,35 +3,42 @@
 @section('content')
 <div class="page-body">
     <div class="container-xl">
-        <!-- Dashboard Header -->
-        <div class="mb-4 d-flex justify-content-between align-items-center">
-            <h1 class="text-dark">Add New Commodity</h1>
-        </div>
-
         <!-- Form Section -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-header text-white shadow-sm p-3" style="background-color: #182433;">
-                        <h3 class="card-title">Commodity Form</h3>
+                        <h3 class="card-title">Tambah Data Komoditas</h3>
                     </div>
                     <div class="card-body">
                         <!-- Display Success Message -->
                         @if (session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
+                            <div class="alert alert-important alert-success alert-dismissible" role="alert">
+                                <div class="d-flex">
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                    </div>
+                                    <div>
+                                        {{ session('success') }}
+                                    </div>
+                                </div>
+                                <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
                             </div>
                         @endif
 
                         <form action="{{ route('commodities.store') }}" method="POST">
                             @csrf
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
+                            <div class="mb-5">
+                                <label for="name" class="form-label">Nama Komoditas</label>
                                 <input type="text" id="name" name="name" class="form-control" required>
                             </div>
                             <div class="text-end">
-                                <a href="{{ route('commodities.index') }}" class="btn btn-secondary">Back</a>
-                                <button type="submit" class="btn text-white" style="background-color: #182433;">Create</button>
+                                <a href="{{ route('commodities.index') }}" class="btn btn-outline-primary">
+                                    Kembali
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    Tambah
+                                </button>
                             </div>
                         </form>
                     </div>

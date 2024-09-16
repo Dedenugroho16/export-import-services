@@ -64,9 +64,7 @@ class CommoditiesController extends Controller
         $commodity = Commodity::findOrFail($id);
         $commodity->delete();
 
-        // Reset AUTO_INCREMENT to 1 after delete
-        DB::statement('ALTER TABLE commodities AUTO_INCREMENT = 1');
 
-        return redirect()->route('commodities.index')->with('error', 'Commodity deleted successfully.');
+        return redirect()->route('commodities.index')->with('success', 'Commodity deleted successfully.');
     }
 }

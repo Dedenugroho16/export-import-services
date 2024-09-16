@@ -32,7 +32,7 @@ class ClientsController extends Controller
 
         Clients::create($request->all());
 
-        return redirect()->route('clients.index')->with('success', 'Client created successfully.');
+        return redirect()->route('clients.index')->with('success', 'Data client berhasil ditambahkan.');
     }
 
     public function show($hash)
@@ -64,7 +64,7 @@ class ClientsController extends Controller
         $client = Clients::findOrFail($id);
         $client->update($request->all());
 
-        return redirect()->route('clients.index')->with('success', 'Client updated successfully.');
+        return redirect()->route('clients.index')->with('success', 'Data client berhasil di update.');
     }
 
     public function destroy($hash)
@@ -75,6 +75,6 @@ class ClientsController extends Controller
 
         DB::statement('ALTER TABLE clients AUTO_INCREMENT = 1');
 
-        return redirect()->route('clients.index')->with('error', 'Client deleted successfully.');
+        return redirect()->route('clients.index')->with('success', 'Data clien berhasil di hapus.');
     }
 }

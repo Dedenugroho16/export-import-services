@@ -50,7 +50,7 @@
                             </table>
                             
                             <div class="mt-4 d-flex justify-content-end">
-                                <a href="{{ route('detail-products.index') }}" class="btn btn-primary">Kembali</a>
+                                <a href="javascript:window.history.back();" class="btn btn-primary">Kembali</a>
                             </div>
                         </div>
                     </div>

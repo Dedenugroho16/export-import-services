@@ -64,7 +64,7 @@
                             </div>
 
                             <div class="text-end">
-                                <a href="{{ route('detail-products.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <a href="javascript:window.history.back();" class="btn btn-outline-primary">Kembali</a>
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </div>
                         </form>

@@ -36,8 +36,7 @@ class DetailProductController extends Controller
 
         DetailProduct::create($request->all());
 
-        return redirect()->route('products.index')
-                         ->with('success', 'Detail Product created successfully.');
+        return redirect()->route('products.index')->with('success', 'Detail produk berhasil ditambahkan.');
     }
 
     public function show(DetailProduct $detailProduct)
@@ -67,14 +66,13 @@ class DetailProductController extends Controller
 
         $detailProduct->update($request->all());
 
-        return redirect()->route('products.index')
-                         ->with('success', 'Detail Product updated successfully.');
+        return redirect()->route('products.index')->with('success', 'Detail produk berhasil di update.');
     }
 
     public function destroy(DetailProduct $detailProduct)
     {
         $detailProduct->delete();
 
-        return redirect()->route('products.index')->with('error', 'Detail Product deleted successfully.');
+        return redirect()->back()->with('success', 'Detail produk berhasili di hapus.');
     }
 }
