@@ -27,7 +27,7 @@
       <div class="container container-tight py-4">
         <div class="card card-md">
           <div class="card-body">
-            <h2 class="h2 text-center mb-4">Login to your account</h2>
+            <h2 class="h2 text-center mb-4">Masuk ke akun anda</h2>
             <form action="{{ route('login') }}" method="post" autocomplete="off">
             @csrf
             {{-- Email --}}
@@ -60,17 +60,17 @@
               <div class="mb-2">
                 <label class="form-check">
                   <input type="checkbox" class="form-check-input"/>
-                  <span class="form-check-label">Remember me on this device</span>
+                  <span class="form-check-label">Ingat saya di perangkat ini</span>
                 </label>
               </div>
               <div class="form-footer">
-                <button type="submit" class="btn btn-primary w-100">Sign in</button>
+                <button type="submit" class="btn btn-primary w-100">Masuk</button>
               </div>
             </form>
           </div>
         </div>
         <div class="text-center text-secondary mt-3">
-          Don't have account yet? <a href="{{ route('register') }}" tabindex="-1">Sign up</a>
+          Belum punya akun? <a href="{{ route('register') }}" tabindex="-1">Daftar</a>
         </div>
       </div>
     </div>

@@ -33,11 +33,11 @@
                 @submit.prevent="submit" autocomplete="off">
                 @csrf
                 <div class="card-body">
-                    <h2 class="h2 text-center mb-4">Create New Account</h2>
+                    <h2 class="h2 text-center mb-4">Buat akun baru</h2>
 
                     {{-- name --}}
                     <div class="mb-3">
-                        <label class="form-label" for="name">Name</label>
+                        <label class="form-label" for="name">Nama</label>
                         <input type="text" name="name" value="{{ old('name') }}"
                             class="form-control @error('name') is-invalid @enderror">
                         @error('name')
@@ -71,27 +71,19 @@
 
                     {{-- confirm password --}}
                     <div class="mb-3">
-                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                        <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
                         <div class="input-group input-group-flat">
                             <input type="password" name="password_confirmation"
                                 class="form-control @error('password_confirmation') is-invalid @enderror">
                         </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-check">
-                            <input type="checkbox" class="form-check-input" />
-                            <span class="form-check-label">Agree the <a href="./terms-of-service.html"
-                                    tabindex="-1">terms and policy</a>.</span>
-                        </label>
-                    </div>
                     <div class="form-footer">
-                        <button type="submit" class="btn btn-primary w-100">Create new account</button>
+                        <button type="submit" class="btn btn-primary w-100">Daftar</button>
                     </div>
                 </div>
             </form>
             <div class="text-center text-secondary mt-3">
-                Already have account? <a href="{{ route('login') }}" tabindex="-1">Sign in</a>
+                Sudah punya akun? <a href="{{ route('login') }}" tabindex="-1">Masuk</a>
             </div>
         </div>
     </div>

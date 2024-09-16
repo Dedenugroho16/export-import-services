@@ -39,7 +39,7 @@ class ProductsController extends Controller
         ]);
 
         return redirect()->route('products.index')
-                         ->with('product_success', 'Product created successfully.');
+                         ->with('product_success', 'Produk berhasil ditambahkan.');
     }
 
     // Display the specified product
@@ -70,7 +70,7 @@ class ProductsController extends Controller
         ]);
 
         return redirect()->route('products.index')
-                         ->with('product_success', 'Product updated successfully.');
+                         ->with('product_success', 'Produk berhasil di update');
     }
 
     // Remove the specified product from storage
@@ -78,10 +78,15 @@ class ProductsController extends Controller
     {
         $product->delete();
 
-        // Reset auto-increment for the products table
-        DB::statement('ALTER TABLE products AUTO_INCREMENT = 1');
+        return redirect()->route('products.index') ->with('product_success', 'Produk berhasil di hapus.');
+    }
 
-        return redirect()->route('products.index')
-                         ->with('product_error', 'Product deleted successfully.');
+    public function showDetails($id)
+    {
+        // Mengambil produk berdasarkan ID dan relasinya dengan detail product
+        $product = Product::with('detailProducts')->findOrFail($id);
+
+        // Kirim data produk dan detail produk ke view
+        return view('products.details', compact('product'));
     }
 }

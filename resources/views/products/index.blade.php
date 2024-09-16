@@ -5,42 +5,44 @@
     <div class="container-xl mb-5">
         <!-- Dashboard Header and Add Product Button -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
-            <a href="{{ route('products.create') }}" class="btn text-white" style="background-color: #182433;">
-                Add Product
+            <a href="{{ route('products.create') }}" class="btn btn-primary">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+                Produk
             </a>
         </div>
         <!-- Products Section -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
-                    <div class="card-header text-white shadow-sm p-3" style="background-color: #182433;">
-                        <h3 class="card-title">Products</h3>
-                    </div>
                     <div class="card-body">
-                        <!-- Display notifications -->
+
+                        <!-- Success Message for Deleting, Editing, or Adding Client -->
                         @if (session('product_success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('product_success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <div class="alert alert-important alert-success alert-dismissible" role="alert">
+                                <div class="d-flex">
+                                    <div>
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                    </div>
+                                    <div>
+                                        {{ session('product_success') }}
+                                    </div>
+                                </div>
+                                <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
                             </div>
                         @endif
 
-                        @if (session('product_error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('product_error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif
                         <!-- Table Starts Here -->
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">ID</th>
-                                        <th class="text-center">Code</th>
-                                        <th class="text-center">Name</th>
-                                        <th class="text-center">Abbreviation</th>
-                                        <th class="text-center">Action</th>
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Kode Produk</th>
+                                        <th class="text-center">Nama Produk</th>
+                                        <th class="text-center">Singkatan Produk</th>
+                                        <th class="text-center">Aksi</th>
+                                        <th class="text-center"><div></div></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,106 +53,31 @@
                                         <td class="text-center">{{ $product->name }}</td>
                                         <td class="text-center">{{ $product->abbreviation }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm text-white" title="Show">
-                                                Show
-                                            </a>
-                                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm text-white" title="Edit">
-                                                Edit
-                                            </a>
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm text-white" title="Delete">
+                                            <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                <a class="dropdown-item" href="{{ route('products.show', $product->id) }}">
+                                                    Show
+                                                </a>
+                                                <a class="dropdown-item" href="{{ route('products.edit', $product->id) }}">
+                                                    Edit
+                                                </a>
+                                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?')" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger" style=" border: none; background: none; display: block; width: 100%; text-align: left;">
                                                     Delete
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
+                                                    </button>
+                                                </form>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{{ route('product.details', $product->id) }}" class="btn btn-info">Details</a>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                         <!-- Table ends here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-        <div class="container-xl">
-        <!-- Dashboard Header and Add Detail Product Button -->
-        <div class="mb-4 d-flex justify-content-between align-items-center">
-            <a href="{{ route('detail-products.create') }}" class="btn text-white" style="background-color: #182433;">
-                Add Detail Product
-            </a>
-        </div>
-        <!-- Detail Products Section -->
-        <div class="row row-deck row-cards">
-            <div class="col-12">
-                <div class="card mb-5">
-                    <div class="card-header text-white shadow-sm p-3" style="background-color: #182433;">
-                        <h3 class="card-title">Detail Products</h3>
-                    </div>
-                    <div class="card-body">
-                    @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif
-
-                        @if (session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif
-                        <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">ID Product</th>
-                                        <th class="text-center">Name</th>
-                                        <th class="text-center">Pcs</th>
-                                        <th class="text-center">Dimension</th>
-                                        <th class="text-center">Type</th>
-                                        <th class="text-center">Color</th>
-                                        <th class="text-center">Price</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($products as $product)
-                                    @foreach($product->detailProducts as $detail)
-                                        <tr>
-                                            <td class="text-center">{{ $product->id }}</td>
-                                            <td class="text-center">{{ $detail->name }}</td>
-                                            <td class="text-center">{{ $detail->pcs }}</td>
-                                            <td class="text-center">{{ $detail->dimension }}</td>
-                                            <td class="text-center">{{ $detail->type }}</td>
-                                            <td class="text-center">{{ $detail->color }}</td>
-                                            <td class="text-center">{{ $detail->price }}</td>
-                                            <td class="text-center">
-                                                <a href="{{ route('detail-products.show', $detail->id) }}" class="btn btn-info btn-sm text-white" title="Show">
-                                                    Show
-                                                </a>
-                                                <a href="{{ route('detail-products.edit', $detail->id) }}" class="btn btn-warning btn-sm text-white" title="Edit">
-                                                    Edit
-                                                </a>
-                                                <form action="{{ route('detail-products.destroy', $detail->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm text-white" title="Delete">
-                                                        Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>

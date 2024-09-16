@@ -3,34 +3,35 @@
 @section('content')
 <div class="page-body">
     <div class="container-xl">
-        <!-- Dashboard Header -->
-        <div class="mb-4 d-flex justify-content-between align-items-center">
-            <h1 class="text-dark">Product Details</h1>
-        </div>
-
-        <!-- Product Details -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
-                    <div class="card-header text-white shadow-sm p-3" style="background-color: #182433;">
-                        <h3 class="card-title">Product Details</h3>
+                    <div class="card-header shadow-sm p-3">
+                        <h3 class="card-title">Informasi Produk</h3>
                     </div>
-                    <div class="card-body">
-                        <p><strong>ID:</strong> {{ $product->id }}</p>
-                        <p><strong>Code:</strong> {{ $product->code }}</p>
-                        <p><strong>Name:</strong> {{ $product->name }}</p>
 
-                        <!-- Action Buttons -->
-                        <div class="mt-4">
-                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning text-white">Edit</a>
-
-                            <!-- Delete Button -->
-                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger text-white">Delete</button>
-                            </form>
-                            <a href="{{ route('products.index') }}" class="btn btn-secondary">Back</a>
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>ID</th>
+                                        <td>{{ $product->id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Kode Produk</th>
+                                        <td>{{ $product->code }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nama Produk</th>
+                                        <td>{{ $product->name }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div class="mt-4 d-flex justify-content-end">
+                                <a href="{{ route('products.index') }}" class="btn btn-primary">Kembali</a>
+                            </div>
                         </div>
                     </div>
                 </div>

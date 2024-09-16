@@ -89,7 +89,7 @@
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
-                                    Home
+                                    Dashboard
                                 </span>
                             </a>
                         </li>
@@ -139,7 +139,7 @@
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
-                                    Product
+                                    Produk
                                 </span>
                             </a>
                         </li>
@@ -244,11 +244,11 @@
                             <span class="avatar avatar-sm rounded-circle" style="background-image: url('https://www.gravatar.com/avatar/?d=mp'); border-radius: 50%;"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                          <a href="#" class="dropdown-item">Profile</a>
-                          <a href="./settings.html" class="dropdown-item">Settings</a>
+                          <a href="#" class="dropdown-item">Profil</a>
+                          <a href="./settings.html" class="dropdown-item">Pengaturan</a>
                           <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="dropdown-item">Logout</button>
+                            <button type="submit" class="dropdown-item">Keluar</button>
                         </form>
                         </div>
                       </div>
@@ -297,8 +297,10 @@
         "/dashboard": "Dashboard",
         "/clients": "Client",
         "/consignees": "Consignee",
-        "/products": "Product",
-        "/commodities": "Commodity",
+        "/products": "Produk",
+        "/products/create": "Produk",
+        "/products/update": "Produk",
+        "/commodities": "Commoditas",
         "/detail-products": "Detail Product",
         "/countries": "Country",
         "/transaction/create": "Transaction",

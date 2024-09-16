@@ -56,3 +56,5 @@ Route::post('/register', [AuthController::class, 'register'])->middleware('guest
 // Login Routes (Hanya untuk tamu)
 Route::view('/login', 'auth.login')->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
+
+Route::get('/products/{id}/details', [ProductsController::class, 'showDetails'])->name('product.details');
