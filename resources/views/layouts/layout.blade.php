@@ -292,14 +292,12 @@
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-    // Daftar halaman dan judul yang sesuai
     const pages = {
+        "/": "Dashboard", // Default
         "/dashboard": "Dashboard",
         "/clients": "Client",
         "/consignees": "Consignee",
         "/products": "Produk",
-        "/products/create": "Produk",
-        "/products/update": "Produk",
         "/commodities": "Commoditas",
         "/detail-products": "Detail Product",
         "/countries": "Country",
@@ -308,21 +306,36 @@
         "/settings": "Settings"
     };
 
-    // Fungsi untuk mengubah teks berdasarkan URL saat ini
-    function updateTitle() {
+    const dynamicPages = {
+        "/clients": "Client",
+        "/consignees": "Consignee",
+        "/commodities": "Commodity",
+        "/products": "Product",
+        "/detail-products": "Detail Product",
+        "/transaction": "Transaction"
+    };
+
+    const updateTitle = () => {
         const path = window.location.pathname;
-        const title = pages[path] || "Dashboard"; // Default ke "Dashboard"
-        document.getElementById("page-title").innerHTML = `<a href=".">${title}</a>`;
-    }
 
-    // Panggil fungsi saat halaman dimuat
+        // Cek untuk path yang eksak terlebih dahulu
+        let title = pages[path] || pages["/"];
+
+        // Cek URL dinamis berdasarkan awalan
+        for (let prefix in dynamicPages) {
+            if (path.startsWith(prefix)) {
+                title = dynamicPages[prefix];
+                break;
+            }
+        }
+
+        document.querySelector("#page-title").innerHTML = `<a href=".">${title}</a>`;
+    };
+
     updateTitle();
-
-    // Jika ada navigasi dinamis (tanpa refresh halaman), tambahkan pendengar perubahan URL
     window.addEventListener("popstate", updateTitle);
-});
-
-    </script>
+    });
+</script>
 </body>
 
 </html>

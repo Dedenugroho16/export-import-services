@@ -5,19 +5,16 @@
     <div class="container-xl">
         <!-- Dashboard Header and Add Client Button -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
-            <a href="{{ route('clients.create') }}" class="btn text-white" style="background-color: #182433;">
-                Add Client
+            <a href="{{ route('clients.create') }}" class="btn btn-primary">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+                Client
             </a>
         </div>
         <!-- Clients Section -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
-                    <div class="card-header text-white shadow-sm p-3" style="background-color: #182433;">
-                        <h3 class="card-title">Clients</h3>
-                    </div>
                     <div class="card-body">
-
                         <!-- Success Message for Deleting, Editing, or Adding Client -->
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -37,11 +34,11 @@
                             <table class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">ID</th>
-                                        <th class="text-center">Name</th>
-                                        <th class="text-center">Address</th>
-                                        <th class="text-center">PO Box</th>
-                                        <th class="text-center">Tel</th>
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Nama</th>
+                                        <th class="text-center">Alamat</th>
+                                        <th class="text-center">PO BOX</th>
+                                        <th class="text-center">Telepon</th>
                                         <th class="text-center">Fax</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
@@ -50,25 +47,32 @@
                                     @foreach ($clients as $client)
                                     <tr>
                                         <td class="text-center">{{ $client->id }}</td>
-                                        <td class="text-center">{{ $client->name }}</td>
-                                        <td class="text-center">{{ $client->address }}</td>
+                                        <td>{{ $client->name }}</td>
+                                        <td class="text-truncate" style="max-width: 150px;">{{ $client->address }}</td>
                                         <td class="text-center">{{ $client->PO_BOX }}</td>
                                         <td class="text-center">{{ $client->tel }}</td>
                                         <td class="text-center">{{ $client->fax }}</td>
                                         <td class="text-center">
-                                        <a href="{{ url('/clients/' . App\Helpers\IdHashHelper::encode($client->id)) }}" class="btn btn-info btn-sm text-white" title="Show"> Show</a>
-                                        <a href="{{ url('/clients/' . \App\Helpers\IdHashHelper::encode($client->id) . '/edit') }}" class="btn btn-warning btn-sm text-white" title="Edit">
-                                            Edit
-                                        </a>
-
-                                            <form action="{{ route('clients.destroy', $client->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this client?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm text-white" title="Delete">
+                                            <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                <a class="dropdown-item" href="{{ url('/clients/' . App\Helpers\IdHashHelper::encode($client->id)) }}">
+                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                                                    Show
+                                                </a>
+                                                <a class="dropdown-item" href="{{ url('/clients/' . \App\Helpers\IdHashHelper::encode($client->id) . '/edit') }}">
+                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                                                    Edit
+                                                </a>
+                                                <form action="{{ route('clients.destroy', $client->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?')" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger" style=" border: none; background: none; display: block; width: 100%; text-align: left;">
+                                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
                                                     Delete
-                                                </button>
-                                            </form>
-                                        </td>
+                                                    </button>
+                                                </form>
+                                                </div>
+                                            </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
