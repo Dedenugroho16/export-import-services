@@ -18,61 +18,47 @@
                                 </div>
                             @endif
 
-                            <form>
-                                @csrf
-
-                                {{-- Bagian 1 --}}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card">
-                                            <div class="card-header d-flex justify-content-between">
-                                                <h4>INVOICE - NUMBER</h4>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-warning btn-sm"
-                                                        data-bs-toggle="modal" data-bs-target="#pendingPaymentModal">
-                                                        <i data-feather="search"></i> Transaksi Pending
-                                                    </button>
-                                                    <button type="button" class="btn btn-primary btn-sm"
-                                                        data-bs-toggle="modal" data-bs-target="#memberModal">
-                                                        <i data-feather="search"></i> Cari Pelanggan
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <div class="row">
-                                                            <div class="col-4">
-                                                                <p><strong>Date</strong></p>
-                                                            </div>
-                                                            <div class="col-3 text-center">
-                                                                <span>:</span>
-                                                            </div>
-                                                            <div class="col-5">
-                                                                <p>{{ date('d F Y') }}</p>
-                                                            </div>
+                            {{-- Bagian 1 --}}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">INVOICE - NUMBER</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <p><strong>Date</strong></p>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-4">
-                                                                <p><strong>Code</strong></p>
-                                                            </div>
-                                                            <div class="col-3 text-center">
-                                                                <span>:</span>
-                                                            </div>
-                                                            <div class="col-5">
-                                                                <p id="invoice_num">-</p>
-                                                            </div>
+                                                        <div class="col-3 text-center">
+                                                            <span>:</span>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-4">
-                                                                <p><strong>Number</strong></p>
-                                                            </div>
-                                                            <div class="col-3 text-center">
-                                                                <span>:</span>
-                                                            </div>
-                                                            <div class="col-5">
-                                                                <p id="invoice_num">-</p>
-                                                            </div>
+                                                        <div class="col-5">
+                                                            <p>{{ date('d F Y') }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <p><strong>Code</strong></p>
+                                                        </div>
+                                                        <div class="col-3 text-center">
+                                                            <span>:</span>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <p>-</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <p><strong>Number</strong></p>
+                                                        </div>
+                                                        <div class="col-3 text-center">
+                                                            <span>:</span>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <p>-</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -80,6 +66,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <form>
+                                @csrf
 
                                 <!-- Bagian 2: Consignee, Notify, Client -->
                                 <div class="card mt-3">
@@ -109,14 +99,8 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="consignee">Consignee</label>
-                                                    <select class="form-control consignee" id="consignee" name="consignee[]"
-                                                        multiple="multiple">
-                                                        @foreach ($consignees as $consignee)
-                                                            <option value="{{ $consignee->id }}"
-                                                                data-id-client="{{ $consignee->id_client }}">
-                                                                {{ $consignee->name }}
-                                                            </option>
-                                                        @endforeach
+                                                    <select class="form-control consignee" id="consignee">
+                                                        <option value="">Pilih Consignee</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -166,7 +150,17 @@
                                 {{-- bagian 4 --}}
                                 <div class="card mt-3">
                                     <div class="card-header d-flex justify-content-between">
-                                        <h4>DETAILS</h4>
+                                        <h3 class="card-title">DETAILS</h3>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#pendingPaymentModal">
+                                                <i data-feather="search"></i> Transaksi Pending
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#memberModal">
+                                                <i data-feather="search"></i> Cari Pelanggan
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -369,33 +363,37 @@
 
     <script>
         $(document).ready(function() {
-            // Inisialisasi Select2 untuk kedua dropdown
-            $('#client').select2();
-            $('#consignee').select2({
-                placeholder: "Pilih consignee",
-                allowClear: true
-            });
+            $('#client').select2(); // Menginisialisasi Select2 untuk client
+            $('#consignee').select2(); // Menginisialisasi Select2 untuk consignee
 
             // Ketika client dipilih
             $('#client').on('change', function() {
-                var clientId = $(this).val(); // Dapatkan id client yang dipilih
-                // console.log('Client selected: ', clientId);
+                var clientId = $(this).val(); // Ambil ID client yang dipilih
 
-                // Reset opsi yang ada dan tandai opsi yang cocok dengan id_client
-                $('#consignee option').each(function() {
-                    var option = $(this);
-                    var idClientOption = option.data(
-                        'id-client'); // Ambil data-id-client dari tiap option
+                if (clientId) {
+                    $.ajax({
+                        url: '/get-consignees/' + clientId, // Panggil route yang sudah kita buat
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            // Hapus semua opsi lama dari select consignee
+                            $('#consignee').empty();
 
-                    if (idClientOption == clientId) {
-                        option.prop('selected', true); // Pilih opsi yang sesuai
-                    } else {
-                        option.prop('selected', false); // Hapus seleksi dari opsi yang tidak cocok
-                    }
-                });
+                            // Tambahkan opsi baru berdasarkan consignees yang diterima
+                            $('#consignee').append('<option value="">Pilih Consignee</option>');
+                            $.each(data, function(key, consignee) {
+                                $('#consignee').append('<option value="' + consignee
+                                    .id + '">' + consignee.name + '</option>');
+                            });
 
-                // Update Select2
-                $('#consignee').trigger('change');
+                            // Refresh Select2 setelah data diperbarui
+                            $('#consignee').trigger('change');
+                        }
+                    });
+                } else {
+                    $('#consignee').empty();
+                    $('#consignee').append('<option value="">Pilih Consignee</option>');
+                }
             });
         });
     </script>
