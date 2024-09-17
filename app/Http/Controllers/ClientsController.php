@@ -73,8 +73,6 @@ class ClientsController extends Controller
         $client = Clients::findOrFail($id);
         $client->delete();
 
-        DB::statement('ALTER TABLE clients AUTO_INCREMENT = 1');
-
         return redirect()->route('clients.index')->with('success', 'Data clien berhasil di hapus.');
     }
 }

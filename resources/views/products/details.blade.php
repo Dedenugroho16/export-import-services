@@ -5,7 +5,7 @@
     <div class="container-xl">
         <!-- Page Header -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
-            <h2>Detail Produk: {{ $product->name }}</h2>
+            <h2>Detail produk : {{ $product->name }}</h2>
             <a href="{{ route('products.index') }}" class="btn btn-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -20,6 +20,19 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        @if (session('details_success'))
+                            <div class="alert alert-important alert-success alert-dismissible" role="alert">
+                                <div class="d-flex">
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                    </div>
+                                    <div>
+                                        {{ session('details_success') }}
+                                    </div>
+                                </div>
+                                <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                            </div>
+                        @endif
                         <div class="table-responsive">
                             <table class="table card-table table-bordered table-hover table-vcenter text-nowrap">
                                 <thead class="thead-dark">

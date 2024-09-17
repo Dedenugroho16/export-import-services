@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Consignee;
 use App\Models\Client;
-use App\Helpers\IdHashHelper; // Import the IdHashHelper for encoding/decoding
+use App\Helpers\IdHashHelper;
 use Illuminate\Http\Request;
 
 class ConsigneesController extends Controller

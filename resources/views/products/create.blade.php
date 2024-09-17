@@ -37,7 +37,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="abbreviation" class="form-label">Singkatan Produk</label>
-                                <input type="text" id="abbreviation" name="abbreviation" class="form-control" value="{{ old('abbreviation') }}">
+                                <input type="text" id="abbreviation" name="abbreviation" class="form-control" value="{{ old('abbreviation') }}" required>
                                 @error('abbreviation')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
