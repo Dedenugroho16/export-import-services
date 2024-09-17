@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Helpers\IdHashHelper; // Import the IdHashHelper for encoding/decoding
 
 class ProductsController extends Controller
 {
@@ -43,20 +43,32 @@ class ProductsController extends Controller
     }
 
     // Display the specified product
-    public function show(Product $product)
+    public function show($hash)
     {
+        // Decode the hash to get the product's ID
+        $id = IdHashHelper::decode($hash);
+        $product = Product::with('detailProducts')->findOrFail($id);
+
         return view('products.show', compact('product'));
     }
 
     // Show the form for editing the specified product
-    public function edit(Product $product)
+    public function edit($hash)
     {
+        // Decode the hash to get the product's ID
+        $id = IdHashHelper::decode($hash);
+        $product = Product::findOrFail($id);
+
         return view('products.edit', compact('product'));
     }
 
     // Update the specified product in storage
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $hash)
     {
+        // Decode the hash to get the product's ID
+        $id = IdHashHelper::decode($hash);
+        $product = Product::findOrFail($id);
+
         $request->validate([
             'code' => 'required|string|max:255',
             'name' => 'required|string|max:255',
@@ -74,16 +86,20 @@ class ProductsController extends Controller
     }
 
     // Remove the specified product from storage
-    public function destroy(Product $product)
+    public function destroy($hash)
     {
+        // Decode the hash to get the product's ID
+        $id = IdHashHelper::decode($hash);
+        $product = Product::findOrFail($id);
         $product->delete();
 
-        return redirect()->route('products.index') ->with('product_success', 'Produk berhasil di hapus.');
+        return redirect()->route('products.index')->with('product_success', 'Produk berhasil di hapus.');
     }
 
-    public function showDetails($id)
+    public function showDetails($hash)
     {
-        // Mengambil produk berdasarkan ID dan relasinya dengan detail product
+        // Decode the hash to get the product's ID
+        $id = IdHashHelper::decode($hash);
         $product = Product::with('detailProducts')->findOrFail($id);
 
         // Kirim data produk dan detail produk ke view
