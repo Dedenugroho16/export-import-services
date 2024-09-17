@@ -27,10 +27,10 @@ class TransactionController extends Controller
     }
 
     // method get Consignee
-    public function getConsignees($clientId)
+    public function getConsignees($client_id)
     {
-        // Ambil consignee berdasarkan client_id
-        $consignees = Consignee::where('id_client', $clientId)->pluck('name', 'id');
+        // Ambil consignees yang berelasi dengan client yang dipilih
+        $consignees = Consignee::where('id_client', $client_id)->get();
 
         // Kembalikan response dalam bentuk JSON
         return response()->json($consignees);
