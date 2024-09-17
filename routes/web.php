@@ -43,6 +43,11 @@ Route::delete('/commodities/{hash}', [CommoditiesController::class, 'destroy'])-
 
 // Detail Products Routes using resource
 Route::resource('detail-products', DetailProductController::class);
+Route::get('/detail-products/{hash}', [DetailProductController::class, 'show'])->name('detail-products.show');
+Route::get('/detail-products/{hash}/edit', [DetailProductController::class, 'edit'])->name('detail-products.edit');
+Route::put('/detail-products/{hash}', [DetailProductController::class, 'update'])->name('detail-products.update');
+Route::delete('/detail-products/{hash}', [DetailProductController::class, 'destroy'])->name('detail-products.destroy');
+
 
 // Country Routes using resource
 Route::resource('countries', CountryController::class);
