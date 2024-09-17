@@ -21,6 +21,9 @@
                         <form action="{{ route('detail-products.update', $hash) }}" method="POST">
                             @csrf
                             @method('PUT')
+
+                             <!-- Input hidden untuk menyimpan URL halaman sebelumnya -->
+                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
                             
                             <div class="mb-3">
                                 <label for="id_product" class="form-label">Produk</label>
