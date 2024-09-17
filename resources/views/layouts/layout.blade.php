@@ -12,6 +12,8 @@
     <link href="{{ asset('dist/css/tabler-payments.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('dist/css/tabler-vendors.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('dist/css/demo.min.css') }}" rel="stylesheet" />
+    <!-- Datatables -->
+    <link href="https://cdn.datatables.net/v/bs4/dt-2.1.6/datatables.min.css" rel="stylesheet">
     <style>
         @import url('https://rsms.me/inter/inter.css');
 
@@ -290,6 +292,8 @@
 
     <!-- JS files -->
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
+    <!-- Datatables -->
+    <script src="https://cdn.datatables.net/v/bs4/dt-2.1.6/datatables.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
     const pages = {

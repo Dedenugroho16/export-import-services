@@ -149,18 +149,8 @@
 
                                 {{-- bagian 4 --}}
                                 <div class="card mt-3">
-                                    <div class="card-header d-flex justify-content-between">
+                                    <div class="card-header">
                                         <h3 class="card-title">DETAILS</h3>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#pendingPaymentModal">
-                                                <i data-feather="search"></i> Transaksi Pending
-                                            </button>
-                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#memberModal">
-                                                <i data-feather="search"></i> Cari Pelanggan
-                                            </button>
-                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -299,8 +289,14 @@
 
                             <form>
                                 <div class="card mt-3">
-                                    <div class="card-header">
+                                    <div class="card-header d-flex justify-content-between">
                                         <h4>Transaction Details</h4>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#memberModal">
+                                                <i data-feather="search"></i> Cari Detail Produk
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
@@ -361,6 +357,42 @@
         </div>
     </div>
 
+    <div class="modal fade text-left" id="memberModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content modal-centered">
+                <div class="modal-header border-bottom bg-transparent">
+                    <h4 class="modal-title">Detail Produk</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 class="mb-2 mt-1">Data Detail Produk</h4>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover" id="myTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">ID</th>
+                                            <th class="text-center">Kode Produk</th>
+                                            <th class="text-center">Nama Produk</th>
+                                            <th class="text-center">Singkatan Produk</th>
+                                            <th class="text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                        aria-label="Close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             $('#client').select2(); // Menginisialisasi Select2 untuk client
@@ -396,5 +428,7 @@
                 }
             });
         });
+
+        let table = new DataTable('#myTable');
     </script>
 @endsection
