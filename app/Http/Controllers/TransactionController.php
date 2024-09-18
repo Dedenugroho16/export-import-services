@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Consignee;
 use Illuminate\Http\Request;
+use App\Models\DetailProduct;
+use Yajra\DataTables\Facades\DataTables;
+
 
 class TransactionController extends Controller
 {
@@ -35,6 +38,19 @@ class TransactionController extends Controller
         // Kembalikan response dalam bentuk JSON
         return response()->json($consignees);
     }
+
+    // MENGAMBIL DATA DETAIL PRODUCTS
+    public function getDetailProducts()
+{
+    $detailProducts = DetailProduct::all();
+    return datatables()->of($detailProducts)
+        ->addColumn('action', function ($row) {
+            $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
+            return $btn;
+        })
+        ->rawColumns(['action'])
+        ->make(true);
+}
 
     /**
      * Store a newly created resource in storage.
