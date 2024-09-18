@@ -156,131 +156,152 @@
                                         <div class="row">
                                             <!-- Kolom Sebelah Kiri -->
                                             <div class="col-6">
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Name of Product</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="productName">-</p>
+                                                        <select class="form-control product" id="product">
+                                                            <option value="">Pilih Product</option>
+                                                            @foreach ($products as $product)
+                                                                <option value="{{ $product->id }}">{{ $product->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Name of Commodity</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="commodityName">-</p>
+                                                        <select class="form-control commodity" id="commodity">
+                                                            <option value="">Pilih Commodity</option>
+                                                            @foreach ($commodities as $commodity)
+                                                                <option value="{{ $commodity->id }}">{{ $commodity->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Container</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="container">-</p>
+                                                        <input type="text" name="container" id="container"
+                                                            class="form-control" placeholder="Masukkan Container">
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Net Weight</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="netWeight">-</p>
+                                                        <input type="number" id="decimalInput" name="decimalInput"
+                                                            class="form-control" step="0.01"
+                                                            placeholder="Contoh: 123.45" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Gross Weight</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="grossWeight">-</p>
+                                                        <input type="number" id="decimalInput" name="decimalInput"
+                                                            class="form-control" step="0.01"
+                                                            placeholder="Contoh: 123.45" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Payment Term</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="paymentTerm">-</p>
+                                                        <input type="text" name="container" id="container"
+                                                            class="form-control" placeholder="Masukkan Payment term">
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <!-- Kolom Sebelah Kanan -->
                                             <div class="col-6">
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Stuffing Date</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="stuffingDate">-</p>
+                                                        <input type="date" name="stuffing_date" id="stuffing_date" class="form-control" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>BL Number</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="blNumber">-</p>
+                                                        <input type="text" name="bl_number" id="bl_number" class="form-control" placeholder="Masukkan BL Number" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Container Number</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="containerNumber">-</p>
+                                                        <input type="text" name="container_number" id="container_number" class="form-control" placeholder="Masukkan Container Number" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Seal Number</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="sealNumber">-</p>
+                                                        <input type="text" name="seal_number" id="seal_number" class="form-control" placeholder="Masukkan Seal Number" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Product NCM</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="productNcm">-</p>
+                                                        <input type="text" name="product_ncm" id="product_ncm" class="form-control" placeholder="Masukkan Product NCM" required>
                                                     </div>
-                                                </div>
+                                                </div>                                                
                                             </div>
                                         </div>
                                     </div>
@@ -399,6 +420,8 @@
         $(document).ready(function() {
             $('#client').select2(); // Menginisialisasi Select2 untuk client
             $('#consignee').select2(); // Menginisialisasi Select2 untuk consignee
+            $('#product').select2(); // Menginisialisasi Select2 untuk product
+            $('#commodity').select2(); // Menginisialisasi Select2 untuk commodity
 
             // Ketika client dipilih
             $('#client').on('change', function() {
@@ -432,56 +455,81 @@
         });
 
         // DATATABLES
-    //     $(document).ready(function() {
-    //     var table = $('#detailProductTable').DataTable({
-    //         processing: true,
-    //         serverSide: true,
-    //         ajax: "{{ route('get-detail-products') }}",
-    //         columns: [
-    //             { data: 'id', name: 'id' },
-    //             { data: 'name', name: 'name' },
-    //             { data: 'pcs', name: 'pcs' },
-    //             { data: 'dimension', name: 'dimension' },
-    //             { data: 'type', name: 'type' },
-    //             { data: 'color', name: 'color' },
-    //             { data: 'price', name: 'price' },
-    //             { data: 'action', name: 'action', orderable: false, searchable: false }
-    //         ]
-    //     });
+        //     $(document).ready(function() {
+        //     var table = $('#detailProductTable').DataTable({
+        //         processing: true,
+        //         serverSide: true,
+        //         ajax: "{{ route('get-detail-products') }}",
+        //         columns: [
+        //             { data: 'id', name: 'id' },
+        //             { data: 'name', name: 'name' },
+        //             { data: 'pcs', name: 'pcs' },
+        //             { data: 'dimension', name: 'dimension' },
+        //             { data: 'type', name: 'type' },
+        //             { data: 'color', name: 'color' },
+        //             { data: 'price', name: 'price' },
+        //             { data: 'action', name: 'action', orderable: false, searchable: false }
+        //         ]
+        //     });
 
-    //     // Load DataTables when modal is shown
-    //     $('#memberModal').on('shown.bs.modal', function () {
-    //         table.ajax.reload(null, false); // Reload data without resetting the table
-    //     });
-    // });
+        //     // Load DataTables when modal is shown
+        //     $('#memberModal').on('shown.bs.modal', function () {
+        //         table.ajax.reload(null, false); // Reload data without resetting the table
+        //     });
+        // });
 
-    $(document).ready(function() {
-        $('#detailProductTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('get-detail-products') }}",
-            columns: [
-                { data: 'id', name: 'id' },
-                { data: 'name', name: 'name' },
-                { data: 'pcs', name: 'pcs' },
-                { data: 'dimension', name: 'dimension' },
-                { data: 'type', name: 'type' },
-                { data: 'color', name: 'color' },
-                { data: 'price', name: 'price' },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ],
-            // Pengaturan styling
-            responsive: true,
-            autoWidth: false, // Tidak secara otomatis mengatur lebar kolom
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Cari produk...",
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri"
-            },
-            lengthMenu: [5, 10, 25, 50], // Menentukan jumlah data yang ditampilkan per halaman
-            pageLength: 10, // Jumlah default data yang ditampilkan
+        $(document).ready(function() {
+            $('#detailProductTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('get-detail-products') }}",
+                columns: [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'pcs',
+                        name: 'pcs'
+                    },
+                    {
+                        data: 'dimension',
+                        name: 'dimension'
+                    },
+                    {
+                        data: 'type',
+                        name: 'type'
+                    },
+                    {
+                        data: 'color',
+                        name: 'color'
+                    },
+                    {
+                        data: 'price',
+                        name: 'price'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                // Pengaturan styling
+                responsive: true,
+                autoWidth: false, // Tidak secara otomatis mengatur lebar kolom
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Cari produk...",
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri"
+                },
+                lengthMenu: [5, 10, 25, 50], // Menentukan jumlah data yang ditampilkan per halaman
+                pageLength: 10, // Jumlah default data yang ditampilkan
+            });
         });
-    });
     </script>
 @endsection

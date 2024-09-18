@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Product;
+use App\Models\Commodity;
 use App\Models\Consignee;
 use Illuminate\Http\Request;
 use App\Models\DetailProduct;
@@ -26,7 +28,9 @@ class TransactionController extends Controller
     {
         $consignees = Consignee::all();
         $clients = Client::all();
-        return view('transaction.create', compact('consignees', 'clients'));
+        $products = Product::all();
+        $commodities = Commodity::all();
+        return view('transaction.create', compact('consignees', 'clients', 'products', 'commodities'));
     }
 
     // method get Consignee
