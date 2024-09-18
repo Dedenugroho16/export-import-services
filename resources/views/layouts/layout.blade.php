@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
     <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/v/bs5/dt-2.1.6/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
     <style>
         @import url('https://rsms.me/inter/inter.css');
 
@@ -309,11 +309,20 @@
         </div>
     </div>
 
+    <script>
+        $(document).ready( function () {
+          $('#myTable').DataTable();
+        });
+      </script>
+
     <!-- JS files -->
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
 
     <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/datatables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const pages = {

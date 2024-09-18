@@ -31,7 +31,7 @@
                         @endif
                         <!-- Table Starts Here -->
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap">
+                            <table id="myTable" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
@@ -43,11 +43,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($consignees as $consignee)
+                                    @foreach($consignees as $consignee)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $consignee->name }}</td>
-                                        <td class="text-center text-truncate" style="max-width: 150px;">{{ $consignee->address }}</td>
+                                        <td class="text-truncate" style="max-width: 150px;">{{ $consignee->address }}</td>
                                         <td class="text-center">{{ $consignee->tel }}</td>
                                         <td class="text-center">{{ $consignee->id_client }}</td>
                                         <td class="text-center">
@@ -72,11 +72,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">No Consignees found.</td>
-                                    </tr>
-                                    @endforelse
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

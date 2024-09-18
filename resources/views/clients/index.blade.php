@@ -32,7 +32,7 @@
                         @endif
                         <!-- Table Starts Here -->
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap">
+                            <table id="myTable" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>

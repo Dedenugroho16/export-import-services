@@ -34,7 +34,7 @@
                             </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table card-table table-bordered table-hover table-vcenter text-nowrap">
+                            <table id="myTable" class="table card-table table-bordered table-hover table-vcenter text-nowrap">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th class="text-center">Nama</th>
