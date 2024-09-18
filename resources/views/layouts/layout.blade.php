@@ -12,8 +12,12 @@
     <link href="{{ asset('dist/css/tabler-payments.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('dist/css/tabler-vendors.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('dist/css/demo.min.css') }}" rel="stylesheet" />
-    <!-- Datatables -->
-    <link href="https://cdn.datatables.net/v/bs4/dt-2.1.6/datatables.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.1.6/datatables.min.css" rel="stylesheet">
     <style>
         @import url('https://rsms.me/inter/inter.css');
 
@@ -204,60 +208,75 @@
 
         <div class="page-wrapper">
             <div class="mb-3">
-                <header class="navbar navbar-expand-md d-print-none" >
-                  <div class="container-xl">
-                    <h1 id="page-title" class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3" style="font-size: 1.5rem;">
-                        <a href=".">
-                          Dashboard
-                        </a>
-                      </h1>
-                    <div class="navbar-nav flex-row order-md-last">
-                      <div class="d-none d-md-flex">
-                        <div class="nav-item dropdown d-none d-md-flex me-3">
-                          <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1" aria-label="Show notifications">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/bell -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="grey" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg>
-                            <span class="badge bg-red"></span>
-                          </a>
-                          <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
-                            <div class="card">
-                              <div class="card-header">
-                                <h3 class="card-title">Last updates</h3>
-                              </div>
-                              <div class="list-group list-group-flush list-group-hoverable">
-                                <div class="list-group-item">
-                                  <div class="row align-items-center">
-                                    <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
-                                    <div class="col text-truncate">
-                                      <a href="#" class="text-body d-block">Example 1</a>
-                                      <div class="d-block text-secondary text-truncate mt-n1">
-                                        Change deprecated html tags to text decoration classes
-                                      </div>
+                <header class="navbar navbar-expand-md d-print-none">
+                    <div class="container-xl">
+                        <h1 id="page-title"
+                            class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3"
+                            style="font-size: 1.5rem;">
+                            <a href=".">
+                                Dashboard
+                            </a>
+                        </h1>
+                        <div class="navbar-nav flex-row order-md-last">
+                            <div class="d-none d-md-flex">
+                                <div class="nav-item dropdown d-none d-md-flex me-3">
+                                    <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1"
+                                        aria-label="Show notifications">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/bell -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="grey"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+                                            <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+                                        </svg>
+                                        <span class="badge bg-red"></span>
+                                    </a>
+                                    <div
+                                        class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Last updates</h3>
+                                            </div>
+                                            <div class="list-group list-group-flush list-group-hoverable">
+                                                <div class="list-group-item">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto"><span
+                                                                class="status-dot status-dot-animated bg-red d-block"></span>
+                                                        </div>
+                                                        <div class="col text-truncate">
+                                                            <a href="#" class="text-body d-block">Example 1</a>
+                                                            <div class="d-block text-secondary text-truncate mt-n1">
+                                                                Change deprecated html tags to text decoration classes
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                  </div>
                                 </div>
-                              </div>
                             </div>
-                          </div>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link d-flex lh-1 text-reset p-0"
+                                    data-bs-toggle="dropdown" aria-label="Open user menu">
+                                    <span class="avatar avatar-sm rounded-circle"
+                                        style="background-image: url('https://www.gravatar.com/avatar/?d=mp'); border-radius: 50%;"></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                    <a href="#" class="dropdown-item">Profil</a>
+                                    <a href="./settings.html" class="dropdown-item">Pengaturan</a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">Keluar</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                      <div class="nav-item dropdown">
-                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                            <span class="avatar avatar-sm rounded-circle" style="background-image: url('https://www.gravatar.com/avatar/?d=mp'); border-radius: 50%;"></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                          <a href="#" class="dropdown-item">Profil</a>
-                          <a href="./settings.html" class="dropdown-item">Pengaturan</a>
-                          <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="dropdown-item">Keluar</button>
-                        </form>
-                        </div>
-                      </div>
                     </div>
-                  </div>
                 </header>
-              </div>
+            </div>
             <!-- Page body -->
             <div class="content">
                 @yield('content')
@@ -292,55 +311,56 @@
 
     <!-- JS files -->
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
-    <!-- Datatables -->
-    <script src="https://cdn.datatables.net/v/bs4/dt-2.1.6/datatables.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.6/datatables.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-    const pages = {
-        "/": "Dashboard", // Default
-        "/dashboard": "Dashboard",
-        "/clients": "Client",
-        "/consignees": "Consignee",
-        "/products": "Produk",
-        "/commodities": "Commoditas",
-        "/detail-products": "Detail Produk",
-        "/countries": "Negara",
-        "/transaction/create": "Transaksi",
-        "/invoices": "Invoices",
-        "/settings": "Settings"
-    };
+        document.addEventListener("DOMContentLoaded", function() {
+            const pages = {
+                "/": "Dashboard", // Default
+                "/dashboard": "Dashboard",
+                "/clients": "Client",
+                "/consignees": "Consignee",
+                "/products": "Produk",
+                "/commodities": "Commoditas",
+                "/detail-products": "Detail Produk",
+                "/countries": "Negara",
+                "/transaction/create": "Transaksi",
+                "/invoices": "Invoices",
+                "/settings": "Settings"
+            };
 
-    const dynamicPages = {
-        "/clients": "Client",
-        "/consignees": "Consignee",
-        "/commodities": "Komoditas",
-        "/products": "Produk",
-        "/detail-products": "Detail Produk",
-        "/countries": "Negara",
-        "/transaction": "Transaksi"
-    };
+            const dynamicPages = {
+                "/clients": "Client",
+                "/consignees": "Consignee",
+                "/commodities": "Komoditas",
+                "/products": "Produk",
+                "/detail-products": "Detail Produk",
+                "/countries": "Negara",
+                "/transaction": "Transaksi"
+            };
 
-    const updateTitle = () => {
-        const path = window.location.pathname;
+            const updateTitle = () => {
+                const path = window.location.pathname;
 
-        // Cek untuk path yang eksak terlebih dahulu
-        let title = pages[path] || pages["/"];
+                // Cek untuk path yang eksak terlebih dahulu
+                let title = pages[path] || pages["/"];
 
-        // Cek URL dinamis berdasarkan awalan
-        for (let prefix in dynamicPages) {
-            if (path.startsWith(prefix)) {
-                title = dynamicPages[prefix];
-                break;
-            }
-        }
+                // Cek URL dinamis berdasarkan awalan
+                for (let prefix in dynamicPages) {
+                    if (path.startsWith(prefix)) {
+                        title = dynamicPages[prefix];
+                        break;
+                    }
+                }
 
-        document.querySelector("#page-title").innerHTML = `<a href=".">${title}</a>`;
-    };
+                document.querySelector("#page-title").innerHTML = `<a href=".">${title}</a>`;
+            };
 
-    updateTitle();
-    window.addEventListener("popstate", updateTitle);
-    });
-</script>
+            updateTitle();
+            window.addEventListener("popstate", updateTitle);
+        });
+    </script>
 </body>
 
 </html>

@@ -369,17 +369,19 @@
                         <div class="col-md-12">
                             <h4 class="mb-2 mt-1">Data Detail Produk</h4>
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover" id="myTable">
+                                <table class="table table-striped table-hover" id="detailProductTable">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">ID</th>
-                                            <th class="text-center">Kode Produk</th>
-                                            <th class="text-center">Nama Produk</th>
-                                            <th class="text-center">Singkatan Produk</th>
-                                            <th class="text-center">Aksi</th>
+                                            <th>No</th>
+                                            <th>Product Name</th>
+                                            <th>Pcs</th>
+                                            <th>Dimension</th>
+                                            <th>Type</th>
+                                            <th>Color</th>
+                                            <th>Price</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
@@ -429,6 +431,57 @@
             });
         });
 
-        let table = new DataTable('#myTable');
+        // DATATABLES
+    //     $(document).ready(function() {
+    //     var table = $('#detailProductTable').DataTable({
+    //         processing: true,
+    //         serverSide: true,
+    //         ajax: "{{ route('get-detail-products') }}",
+    //         columns: [
+    //             { data: 'id', name: 'id' },
+    //             { data: 'name', name: 'name' },
+    //             { data: 'pcs', name: 'pcs' },
+    //             { data: 'dimension', name: 'dimension' },
+    //             { data: 'type', name: 'type' },
+    //             { data: 'color', name: 'color' },
+    //             { data: 'price', name: 'price' },
+    //             { data: 'action', name: 'action', orderable: false, searchable: false }
+    //         ]
+    //     });
+
+    //     // Load DataTables when modal is shown
+    //     $('#memberModal').on('shown.bs.modal', function () {
+    //         table.ajax.reload(null, false); // Reload data without resetting the table
+    //     });
+    // });
+
+    $(document).ready(function() {
+        $('#detailProductTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('get-detail-products') }}",
+            columns: [
+                { data: 'id', name: 'id' },
+                { data: 'name', name: 'name' },
+                { data: 'pcs', name: 'pcs' },
+                { data: 'dimension', name: 'dimension' },
+                { data: 'type', name: 'type' },
+                { data: 'color', name: 'color' },
+                { data: 'price', name: 'price' },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            // Pengaturan styling
+            responsive: true,
+            autoWidth: false, // Tidak secara otomatis mengatur lebar kolom
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Cari produk...",
+                lengthMenu: "Tampilkan _MENU_ entri",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri"
+            },
+            lengthMenu: [5, 10, 25, 50], // Menentukan jumlah data yang ditampilkan per halaman
+            pageLength: 10, // Jumlah default data yang ditampilkan
+        });
+    });
     </script>
 @endsection
