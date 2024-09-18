@@ -7,7 +7,7 @@
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
-                    <div class="card-header text-white shadow-sm p-3" style="background-color: #182433;">
+                <div class="card-header text-white shadow-sm p-3" style="background-color: #0054a6;">
                         <h3 class="card-title">Edit Produk</h3>
                     </div>
                     <div class="card-body">
@@ -18,7 +18,7 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('products.update', $product->id) }}" method="POST">
+                        <form action="{{ route('products.update', \App\Helpers\IdHashHelper::encode($product->id)) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">

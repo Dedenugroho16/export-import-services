@@ -4,45 +4,58 @@
 <div class="page-body">
     <div class="container-xl mb-5">
         <!-- Dashboard Header and Add Product & Detail Product Button -->
-            <div class="mb-4 d-flex justify-content-between align-items-center">
-                <div class="d-flex gap-3">
-                    <!-- Button Produk -->
-                    <a href="{{ route('products.create') }}" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M12 5l0 14"/>
-                            <path d="M5 12l14 0"/>
-                        </svg>
-                        Produk
-                    </a>
+        <div class="mb-4 d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-3">
+                <!-- Button Produk -->
+                <a href="{{ route('products.create') }}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M12 5l0 14"/>
+                        <path d="M5 12l14 0"/>
+                    </svg>
+                    Produk
+                </a>
 
-                    <!-- Button Detail Produk -->
-                    <a href="{{ route('detail-products.create') }}" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M12 5l0 14"/>
-                            <path d="M5 12l14 0"/>
-                        </svg>
-                        Detail Produk
-                    </a>
-                </div>
+                <!-- Button Detail Produk -->
+                <a href="{{ route('detail-products.create') }}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M12 5l0 14"/>
+                        <path d="M5 12l14 0"/>
+                    </svg>
+                    Detail Produk
+                </a>
             </div>
+        </div>
         <!-- Products Section -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-body">
 
-                        <!-- Success Message for Deleting, Editing, or Adding Client -->
-                        @if (session('success'))
+                        <!-- Success Message for Deleting, Editing, or Adding Product -->
+                        @if (session('product_success'))
                             <div class="alert alert-important alert-success alert-dismissible" role="alert">
                                 <div class="d-flex">
                                     <div>
-                                        <!-- Download SVG icon from http://tabler-icons.io/i/check -->
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
                                     </div>
                                     <div>
-                                        {{ session('success') }}
+                                        {{ session('product_success') }}
+                                    </div>
+                                </div>
+                                <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                            </div>
+                        @endif
+
+                        @if (session('details_success'))
+                            <div class="alert alert-important alert-success alert-dismissible" role="alert">
+                                <div class="d-flex">
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                    </div>
+                                    <div>
+                                        {{ session('details_success') }}
                                     </div>
                                 </div>
                                 <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
@@ -71,27 +84,27 @@
                                         <td class="text-center">{{ $product->abbreviation }}</td>
                                         <td class="text-center">
                                             <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="{{ route('products.show', $product->id) }}">
-                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                <a class="dropdown-item" href="{{ route('products.show', \App\Helpers\IdHashHelper::encode($product->id)) }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
                                                     Show
                                                 </a>
-                                                <a class="dropdown-item" href="{{ route('products.edit', $product->id) }}">
-                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                                                <a class="dropdown-item" href="{{ route('products.edit', \App\Helpers\IdHashHelper::encode($product->id)) }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
                                                     Edit
                                                 </a>
-                                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?')" style="display:inline;">
+                                                <form action="{{ route('products.destroy', \App\Helpers\IdHashHelper::encode($product->id)) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?')" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-danger" style=" border: none; background: none; display: block; width: 100%; text-align: left;">
-                                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                                                    Delete
+                                                    <button type="submit" class="dropdown-item text-danger" style="border: none; background: none; display: block; width: 100%; text-align: left;">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                                                        Delete
                                                     </button>
                                                 </form>
-                                                </div>
-                                                <a href="{{ route('product.details', $product->id) }}" class="btn btn-warning">Detail</a>
-                                            </td>
-                                        </tr>
+                                            </div>
+                                            <a href="{{ route('product.details', \App\Helpers\IdHashHelper::encode($product->id)) }}" class="btn btn-warning">Detail</a>
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>

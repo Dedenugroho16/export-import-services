@@ -8,7 +8,7 @@
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
-                    <div class="card-header text-white shadow-sm p-3" style="background-color: #182433;">
+                    <div class="card-header text-white shadow-sm p-3" style="background-color: #0054a6;">
                         <h3 class="card-title">Tambah Data Produk</h3>
                     </div>
                     <div class="card-body">
@@ -37,7 +37,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="abbreviation" class="form-label">Singkatan Produk</label>
-                                <input type="text" id="abbreviation" name="abbreviation" class="form-control" value="{{ old('abbreviation') }}">
+                                <input type="text" id="abbreviation" name="abbreviation" class="form-control" value="{{ old('abbreviation') }}" required>
                                 @error('abbreviation')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror

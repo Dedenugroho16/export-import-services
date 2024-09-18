@@ -6,16 +6,22 @@
         <!-- Dashboard Header and Add Detail Product Button -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="{{ route('detail-products.create') }}" class="btn btn-primary">
-                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 5l0 14" />
+                    <path d="M5 12l14 0" />
+                </svg>
                 Detail Produk
             </a>
         </div>
+        
         <!-- Detail Products Section -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-body">
-                    @if (session('success'))
+                        <!-- Success and Error Alerts -->
+                        @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -28,6 +34,8 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         @endif
+
+                        <!-- Data Table -->
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap">
                                 <thead>
@@ -44,35 +52,52 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($detailProducts as $detailProduct)
-                                    <tr>
-                                        <td class="text-center">{{ $detailProduct->id_product }}</td>
-                                        <td class="text-center">{{ $detailProduct->name }}</td>
-                                        <td class="text-center">{{ $detailProduct->pcs }}</td>
-                                        <td class="text-center">{{ $detailProduct->dimension }}</td>
-                                        <td class="text-center">{{ $detailProduct->type }}</td>
-                                        <td class="text-center">{{ $detailProduct->color }}</td>
-                                        <td class="text-center">{{ $detailProduct->price }}</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                              <a class="dropdown-item" href="{{ route('detail-products.show', $detailProduct->id) }}">
-                                                Show
-                                              </a>
-                                              <a class="dropdown-item" href="{{ route('detail-products.edit', $detailProduct->id) }}">
-                                                Edit
-                                              </a>   
-                                            </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <form action="{{ route('detail-products.destroy', $detailProduct->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this client?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-icon" aria-label="Button" title="Hapus">
-                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 25"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                                                </button>
-                                            </form>
-                                          </td>
-                                    </tr>
+                                        <tr>
+                                            <td class="text-center">{{ $detailProduct->id_product }}</td>
+                                            <td class="text-center">{{ $detailProduct->name }}</td>
+                                            <td class="text-center">{{ $detailProduct->pcs }}</td>
+                                            <td class="text-center">{{ $detailProduct->dimension }}</td>
+                                            <td class="text-center">{{ $detailProduct->type }}</td>
+                                            <td class="text-center">{{ $detailProduct->color }}</td>
+                                            <td class="text-center">{{ $detailProduct->price }}</td>
+                                            <td class="text-center">
+                                                <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <a class="dropdown-item" href="{{ route('detail-products.show', ['hash' => \App\Helpers\IdHashHelper::encode($detailProduct->id)]) }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right me-2">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                            <path d="M17 7l-10 10" />
+                                                            <path d="M8 7l9 0l0 9" />
+                                                        </svg>
+                                                        Show
+                                                    </a>
+                                                    <a class="dropdown-item" href="{{ route('detail-products.edit', ['hash' => \App\Helpers\IdHashHelper::encode($detailProduct->id)]) }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit me-2">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                                            <path d="M16 5l3 3" />
+                                                        </svg>
+                                                        Edit
+                                                    </a>
+                                                    <form action="{{ route('detail-products.destroy', ['hash' => \App\Helpers\IdHashHelper::encode($detailProduct->id)]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this detail product?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item text-danger" style="border: none; background: none; display: block; width: 100%; text-align: left;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash me-1">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                <path d="M4 7l16 0" />
+                                                                <path d="M10 11l0 6" />
+                                                                <path d="M14 11l0 6" />
+                                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                            </svg>
+                                                            Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
