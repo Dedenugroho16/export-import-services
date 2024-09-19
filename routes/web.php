@@ -16,6 +16,8 @@ Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware
 
 // Client Routes using resource
 Route::resource('clients', ClientsController::class);
+Route::get('clients', [ClientsController::class, 'index'])->name('clients.index');
+
 
 // Use id_hash for client routes
 Route::get('/clients/{hash}', [ClientsController::class, 'show'])->name('clients.show');

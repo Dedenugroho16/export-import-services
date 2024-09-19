@@ -55,6 +55,12 @@
             font-size: 1rem;
             font-weight: 500;
         }
+
+        .table td:nth-child(3), .table th:nth-child(3) {
+        max-width: 200px;
+        white-space: normal;
+        word-wrap: break-word;
+    }
     </style>
 
     {{-- JQuery --}}
@@ -309,11 +315,6 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready( function () {
-          $('#myTable').DataTable();
-        });
-      </script>
 
     <!-- JS files -->
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
