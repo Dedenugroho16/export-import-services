@@ -252,7 +252,8 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="date" name="stuffing_date" id="stuffing_date" class="form-control" required>
+                                                        <input type="date" name="stuffing_date" id="stuffing_date"
+                                                            class="form-control" required>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-2">
@@ -263,10 +264,12 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="text" name="bl_number" id="bl_number" class="form-control" placeholder="Masukkan BL Number" required>
+                                                        <input type="text" name="bl_number" id="bl_number"
+                                                            class="form-control" placeholder="Masukkan BL Number"
+                                                            required>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Container Number</strong></p>
@@ -275,10 +278,12 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="text" name="container_number" id="container_number" class="form-control" placeholder="Masukkan Container Number" required>
+                                                        <input type="text" name="container_number"
+                                                            id="container_number" class="form-control"
+                                                            placeholder="Masukkan Container Number" required>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Seal Number</strong></p>
@@ -287,10 +292,12 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="text" name="seal_number" id="seal_number" class="form-control" placeholder="Masukkan Seal Number" required>
+                                                        <input type="text" name="seal_number" id="seal_number"
+                                                            class="form-control" placeholder="Masukkan Seal Number"
+                                                            required>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Product NCM</strong></p>
@@ -299,9 +306,11 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="text" name="product_ncm" id="product_ncm" class="form-control" placeholder="Masukkan Product NCM" required>
+                                                        <input type="text" name="product_ncm" id="product_ncm"
+                                                            class="form-control" placeholder="Masukkan Product NCM"
+                                                            required>
                                                     </div>
-                                                </div>                                                
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -479,10 +488,16 @@
         // });
 
         $(document).ready(function() {
-            $('#detailProductTable').DataTable({
+            // Inisialisasi DataTables
+            var table = $('#detailProductTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('get-detail-products') }}",
+                ajax: {
+                    url: "{{ route('get-detail-products') }}", // Ganti dengan URL route kamu
+                    data: function(d) {
+                        d.id_product = $('#product').val(); // Kirim nilai id_product dari dropdown
+                    }
+                },
                 columns: [{
                         data: 'id',
                         name: 'id'
@@ -518,7 +533,6 @@
                         searchable: false
                     }
                 ],
-                // Pengaturan styling
                 responsive: true,
                 autoWidth: false, // Tidak secara otomatis mengatur lebar kolom
                 language: {
@@ -528,7 +542,12 @@
                     info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri"
                 },
                 lengthMenu: [5, 10, 25, 50], // Menentukan jumlah data yang ditampilkan per halaman
-                pageLength: 10, // Jumlah default data yang ditampilkan
+                pageLength: 10 // Jumlah default data yang ditampilkan
+            });
+
+            // Event ketika user memilih product
+            $('#product').change(function() {
+                table.ajax.reload(); // Reload DataTables dengan filter baru
             });
         });
     </script>

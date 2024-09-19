@@ -44,17 +44,25 @@ class TransactionController extends Controller
     }
 
     // MENGAMBIL DATA DETAIL PRODUCTS
-    public function getDetailProducts()
-{
-    $detailProducts = DetailProduct::all();
-    return datatables()->of($detailProducts)
-        ->addColumn('action', function ($row) {
-            $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
-            return $btn;
-        })
-        ->rawColumns(['action'])
-        ->make(true);
-}
+    public function getDetailProducts(Request $request)
+    {
+        // Query ke DetailProduct
+        $query = DetailProduct::query();
+
+        // Filter berdasarkan id_product jika ada
+        if ($request->has('id_product') && !empty($request->id_product)) {
+            $query->where('id_product', $request->id_product);
+        }
+
+        // $detailProducts = DetailProduct::all();
+        return datatables()->of($query)
+            ->addColumn('action', function ($row) {
+                $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
 
     /**
      * Store a newly created resource in storage.
