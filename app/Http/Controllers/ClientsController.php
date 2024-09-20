@@ -13,7 +13,7 @@ class ClientsController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Clients::select(['id', 'name', 'address', 'PO_BOX', 'tel', 'fax']);
+            $data = Clients::query(); // Gunakan query builder, bukan get()
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){

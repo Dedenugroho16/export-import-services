@@ -56,10 +56,16 @@
             font-weight: 500;
         }
 
+        .table td:nth-child(2), .table th:nth-child(2) {
+            max-width: 200px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
         .table td:nth-child(3), .table th:nth-child(3) {
-        max-width: 200px;
-        white-space: normal;
-        word-wrap: break-word;
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
     }
     </style>
 
