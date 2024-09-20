@@ -39,6 +39,7 @@
                                     <tr>
                                         <th class="text-center">Negara</th>
                                         <th class="text-center">Kode</th>
+                                        <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -62,7 +63,8 @@
             ajax: "{{ route('countries.index') }}",
             columns: [
                 { data: 'name', name: 'name', class: 'text-center' },
-                { data: 'code', name: 'code', class: 'text-center' }
+                { data: 'code', name: 'code', class: 'text-center' },
+                { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' } 
             ],
             language: {
                 lengthMenu: "Tampilkan _MENU_ entri",
