@@ -6,13 +6,47 @@ use App\Models\Consignee;
 use App\Models\Client;
 use App\Helpers\IdHashHelper;
 use Illuminate\Http\Request;
+use DataTables;
 
 class ConsigneesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $consignees = Consignee::all();
-        return view('consignees.index', compact('consignees'));
+        // Cek apakah request datang melalui AJAX (dari DataTables)
+        if ($request->ajax()) {
+            $consignees = Consignee::with('client')->select('consignees.*');
+            return DataTables::of($consignees)
+                ->addColumn('action', function($row){
+                    // Encode ID untuk keamanan
+                    $hashId = IdHashHelper::encode($row->id);
+
+                    // Generate action buttons
+                    $actionBtn = '
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Aksi
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="'.route('consignees.show', $hashId).'">Show</a>
+                                <a class="dropdown-item" href="'.route('consignees.edit', $hashId).'">Edit</a>
+                                <form action="'.route('consignees.destroy', $hashId).'" method="POST" onsubmit="return confirm(\'Are you sure?\')" style="display:inline;">
+                                    '.csrf_field().method_field('DELETE').'
+                                    <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>';
+                    
+                    return $actionBtn;
+                })
+                ->editColumn('id_client', function($row) {
+                    // Tampilkan nama client terkait, jika ada
+                    return $row->client ? $row->client->name : 'N/A';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('consignees.index');
     }
 
     public function create()
@@ -37,7 +71,6 @@ class ConsigneesController extends Controller
 
     public function edit($hash)
     {
-        // Decode the hash to get the consignee's ID
         $id = IdHashHelper::decode($hash);
         $consignee = Consignee::findOrFail($id);
         $clients = Client::all();
@@ -53,7 +86,6 @@ class ConsigneesController extends Controller
             'id_client' => 'required|exists:clients,id',
         ]);
 
-        // Decode the hash to get the consignee's ID
         $id = IdHashHelper::decode($hash);
         $consignee = Consignee::findOrFail($id);
         $consignee->update($request->all());
@@ -63,7 +95,6 @@ class ConsigneesController extends Controller
 
     public function show($hash)
     {
-        // Decode the hash to get the consignee's ID
         $id = IdHashHelper::decode($hash);
         $consignee = Consignee::with('client')->findOrFail($id);
         return view('consignees.show', compact('consignee'));
@@ -71,7 +102,6 @@ class ConsigneesController extends Controller
 
     public function destroy($hash)
     {
-        // Decode the hash to get the consignee's ID
         $id = IdHashHelper::decode($hash);
         $consignee = Consignee::findOrFail($id);
         $consignee->delete();
