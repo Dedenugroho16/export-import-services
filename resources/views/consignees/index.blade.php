@@ -3,24 +3,31 @@
 @section('content')
 <div class="page-body">
     <div class="container-xl">
-        <!-- Dashboard Header and Add Consignee Button -->
+        <!-- Header dan Tombol Tambah Consignee -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="{{ route('consignees.create') }}" class="btn btn-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-plus">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 5v14" />
+                    <path d="M5 12h14" />
+                </svg>
                 Consignee
             </a>
         </div>
-        <!-- Consignee Section -->
+        <!-- Section Tabel Consignee -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-body">
-                        <!-- Success Message for Deleting, Editing, or Adding Consignee -->
+                        <!-- Pesan Sukses (Tambah, Edit, Hapus Consignee) -->
                         @if (session('success'))
                         <div class="alert alert-important alert-success alert-dismissible" role="alert">
                             <div class="d-flex">
                                 <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M5 12l5 5l10 -10" />
+                                    </svg>
                                 </div>
                                 <div>
                                     {{ session('success') }}
@@ -29,9 +36,9 @@
                             <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
                         </div>
                         @endif
-                        <!-- Table Starts Here -->
+                        <!-- Tabel Consignee -->
                         <div class="table-responsive">
-                            <table id="myTable" class="table card-table table-vcenter text-nowrap">
+                            <table id="consigneeTable" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
@@ -43,11 +50,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Data akan diisi oleh DataTables secara otomatis -->
+                                    <!-- Data akan diisi oleh DataTables -->
                                 </tbody>
                             </table>
                         </div>
-                        <!-- Table ends here -->
+                        <!-- Tabel Berakhir -->
                     </div>
                 </div>
             </div>
@@ -55,16 +62,17 @@
     </div>
 </div>
 
+<!-- Script DataTables -->
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#myTable').DataTable({
-            processing: true, // Menampilkan indikator pemrosesan
-            serverSide: true, // Mengambil data dari server
-            ajax: "{{ route('consignees.index') }}", // Endpoint untuk mengambil data
+        $('#consigneeTable').DataTable({
+            processing: true, // Tetap menggunakan pemrosesan server-side
+            serverSide: true, 
+            ajax: "{{ route('consignees.index') }}", // URL untuk AJAX
             columns: [
                 { data: 'id', name: 'id', class: 'text-center' },
                 { data: 'name', name: 'name' },
-                { data: 'address', name: 'address', class: 'text-truncate', width: '150px' },
+                { data: 'address', name: 'address', class: 'text-center' },
                 { data: 'tel', name: 'tel', class: 'text-center' },
                 { data: 'id_client', name: 'id_client', class: 'text-center' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
@@ -81,10 +89,46 @@
                 search: "Cari:",
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
-            lengthMenu: [5, 10, 25, 50], // Pilihan jumlah entri yang ditampilkan per halaman
+            lengthMenu: [5, 10, 25, 50], // Opsi jumlah entri per halaman
             pageLength: 10 // Jumlah default entri per halaman
         });
     });
 </script>
+
+<!-- Script Validasi Form -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function (e) {
+            const inputs = form.querySelectorAll('input, select, textarea');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (input.required && !input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault(); // Stop form from submitting
+                alert('Harap isi semua field yang diperlukan.');
+            }
+        });
+    });
+});
+</script>
+
+<!-- CSS untuk membuat loading DataTables transparan -->
+<style>
+    /* Sembunyikan elemen loading DataTables */
+    div.dataTables_processing {
+        visibility: hidden; /* Buat loading tidak terlihat */
+        opacity: 0; /* Transparansi */
+    }
+</style>
 
 @endsection
