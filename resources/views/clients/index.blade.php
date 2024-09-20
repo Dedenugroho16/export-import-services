@@ -63,10 +63,6 @@
             processing: false,
             serverSide: true,
             ajax: "{{ route('clients.index') }}",
-            autoWidth: false,
-            columnDefs: [
-                { width: '200px', targets: 2 }, // Atur lebar kolom sesuai indeks
-                ],
                  columns: [
                     { data: 'id', name: 'id', class: 'text-center' },
                     { data: 'name', name: 'name'},
@@ -77,12 +73,20 @@
                     { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
                     ],
                     language: {
-                        lengthMenu: "Tampilkan _MENU_ entri", // _MENU_ akan digantikan dengan dropdown jumlah entri
-                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri" // _START_, _END_, dan _TOTAL_ akan digantikan dengan nilai dinamis
+                        lengthMenu: "Tampilkan _MENU_ entri",
+                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                        paginate: {
+                            first: "Pertama",
+                            last: "Terakhir",
+                            next: "Selanjutnya",
+                            previous: "Sebelumnya"
                         },
-                        lengthMenu: [5, 10, 25, 50], // Menentukan jumlah data yang ditampilkan per halaman
-                        pageLength: 10 // Jumlah default data yang ditampilkan
-                         });
+                        search: "Cari:",
+                        infoFiltered: "(disaring dari total _MAX_ entri)"
+                        },
+                        lengthMenu: [5, 10, 25, 50],
+                        pageLength: 10
+                        });
                     });
             </script>
 
