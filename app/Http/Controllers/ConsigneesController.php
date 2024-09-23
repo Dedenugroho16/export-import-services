@@ -6,7 +6,7 @@ use App\Models\Consignee;
 use App\Models\Client;
 use App\Helpers\IdHashHelper;
 use Illuminate\Http\Request;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 
 class ConsigneesController extends Controller
 {
@@ -23,9 +23,7 @@ class ConsigneesController extends Controller
                     // Generate action buttons
                     $actionBtn = '
                         <div class="dropdown">
-                            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                Aksi
-                            </button>
+                            <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" href="'.route('consignees.show', $hashId).'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>

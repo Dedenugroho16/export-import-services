@@ -32,7 +32,7 @@
                         @endif
                         <!-- Table Starts Here -->
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap" id="myTable">
+                            <table class="table card-table table-vcenter text-nowrap" id="clientTable">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
@@ -59,7 +59,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#myTable').DataTable({
+        $('#clientTable').DataTable({
             processing: false,
             serverSide: true,
             ajax: "{{ route('clients.index') }}",
@@ -85,7 +85,21 @@
                         infoFiltered: "(disaring dari total _MAX_ entri)"
                         },
                         lengthMenu: [5, 10, 25, 50],
-                        pageLength: 10
+                        pageLength: 10,
+
+                        drawCallback: function() {
+                                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
+                                $('#clientTable td:nth-child(2), #clientTable th:nth-child(2)').css({
+                                    'max-width': '200px',
+                                    'white-space': 'normal',
+                                    'word-wrap': 'break-word'
+                                });
+                                $('#clientTable td:nth-child(3), #clientTable th:nth-child(3)').css({
+                                    'max-width': '250px',
+                                    'overflow': 'hidden',
+                                    'text-overflow': 'ellipsis'
+                                });
+                            }
                         });
                     });
             </script>

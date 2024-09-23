@@ -59,6 +59,7 @@
     </div>
 </div>
 
+
 <!-- Script DataTables -->
 <script type="text/javascript">
     $(document).ready(function() {
@@ -88,7 +89,17 @@
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50], // Tentukan jumlah data yang ditampilkan per halaman
-            pageLength: 10 // Jumlah default data yang ditampilkan per halaman
+            pageLength: 10,
+
+            drawCallback: function() {                              
+                $('#commoditiesTable td:nth-child(2), #commoditiesTable th:nth-child(2)').css({
+                    'width': '70%', 
+                   });
+                $('#commoditiesTable td:nth-child(3), #commoditiesTable th:nth-child(3)').css({
+                    'max-width': '30%',
+                    'text-align': 'right'
+                });
+            }
         });
     });
 </script>

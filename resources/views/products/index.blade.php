@@ -64,7 +64,7 @@
 
                         <!-- Table Starts Here -->
                         <div class="table-responsive">
-                            <table id="myTable" class="table card-table table-vcenter text-nowrap">
+                            <table id="productTable" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
@@ -89,7 +89,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#myTable').DataTable({
+        $('#productTable').DataTable({
             serverSide: true, // Mengambil data dari server
             ajax: "{{ route('products.index') }}", // Endpoint untuk mengambil data
             columns: [

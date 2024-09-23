@@ -79,7 +79,17 @@
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50],
-            pageLength: 10
+            pageLength: 10,
+
+            drawCallback: function() {                              
+                $('#countryTable td:nth-child(1), #countryTable th:nth-child(1), #countryTable td:nth-child(2), #countryTable th:nth-child(2)').css({
+                    'width': '50%',
+                   });
+                $('#countryTable td:nth-child(3), #countryTable th:nth-child(3)').css({
+                    'width': '5%', 
+                   });
+
+            }
         });
     });
 </script>

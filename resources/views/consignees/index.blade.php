@@ -66,7 +66,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#consigneeTable').DataTable({
-            processing: true, // Tetap menggunakan pemrosesan server-side
+            processing: false,
             serverSide: true, 
             ajax: "{{ route('consignees.index') }}", // URL untuk AJAX
             columns: [
@@ -90,7 +90,21 @@
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50], // Opsi jumlah entri per halaman
-            pageLength: 10 // Jumlah default entri per halaman
+            pageLength: 10,
+
+            drawCallback: function() {
+                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
+                $('#consigneeTable td:nth-child(2), #consigneeTable th:nth-child(2)').css({
+                    'max-width': '200px',
+                    'white-space': 'normal',
+                    'word-wrap': 'break-word'
+                });
+                $('#consigneeTable td:nth-child(3), #consigneeTable th:nth-child(3)').css({
+                    'max-width': '250px',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis'
+                });
+            }
         });
     });
 </script>
@@ -121,14 +135,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
-<!-- CSS untuk membuat loading DataTables transparan -->
-<style>
-    /* Sembunyikan elemen loading DataTables */
-    div.dataTables_processing {
-        visibility: hidden; /* Buat loading tidak terlihat */
-        opacity: 0; /* Transparansi */
-    }
-</style>
 
 @endsection

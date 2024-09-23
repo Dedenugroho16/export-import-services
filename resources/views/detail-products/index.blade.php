@@ -54,12 +54,12 @@
                                     @foreach ($detailProducts as $detailProduct)
                                         <tr>
                                             <td class="text-center">{{ $detailProduct->id_product }}</td>
-                                            <td class="text-center">{{ $detailProduct->name }}</td>
+                                            <td>{{ $detailProduct->name }}</td>
                                             <td class="text-center">{{ $detailProduct->pcs }}</td>
                                             <td class="text-center">{{ $detailProduct->dimension }}</td>
                                             <td class="text-center">{{ $detailProduct->type }}</td>
                                             <td class="text-center">{{ $detailProduct->color }}</td>
-                                            <td class="text-center">{{ $detailProduct->price }}</td>
+                                            <td>{{ $detailProduct->price }}</td>
                                             <td class="text-center">
                                                 <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
                                                 <div class="dropdown-menu dropdown-menu-end">
