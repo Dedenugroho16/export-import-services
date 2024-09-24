@@ -171,34 +171,33 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/countries') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path
-                                            d="M21 12c0 4.418 -3.582 8 -8 8s-8 -3.582 -8 -8s3.582 -8 8 -8s8 3.582 8 8z" />
-                                        <path d="M12 4v8" />
-                                        <path d="M4 12h8" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Negara
-                                </span>
-                            </a>
-                        </li>
+                                <a class="nav-link" href="{{ url('/countries') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <circle cx="12" cy="12" r="9" />
+                                            <line x1="3.6" y1="9" x2="20.4" y2="9" />
+                                            <line x1="3.6" y1="15" x2="20.4" y2="15" />
+                                            <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                            <path d="M12.5 3a17 17 0 0 1 0 18" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Negara
+                                    </span>
+                                </a>
+                            </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/transaction/create') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                                        stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path
-                                            d="M21 12c0 4.418 -3.582 8 -8 8s-8 -3.582 -8 -8s3.582 -8 8 -8s8 3.582 8 8z" />
-                                        <path d="M12 4v8" />
-                                        <path d="M4 12h8" />
+                                        <circle cx="6" cy="19" r="2" />
+                                        <circle cx="17" cy="19" r="2" />
+                                        <path d="M17 17h-11v-14h-2" />
+                                        <path d="M6 5l14 1l-1 7h-13" />
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
