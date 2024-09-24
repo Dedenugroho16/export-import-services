@@ -12,22 +12,29 @@ class DetailProductController extends Controller
     // Display a listing of the detail products
     public function index()
     {
+        // Mendapatkan detail product bersama relasi product
         $detailProducts = DetailProduct::with('product')->get();
+        
+        // Mengembalikan view dengan data detail products
         return view('detail-products.index', compact('detailProducts'));
     }
 
     // Show the form for creating a new detail product
     public function create()
     {
+        // Mendapatkan semua produk untuk ditampilkan di dropdown
         $products = Product::all();
+
+        // Mengembalikan form create
         return view('detail-products.create', compact('products'));
     }
 
     // Store a newly created detail product in storage
     public function store(Request $request)
     {
+        // Validasi input pengguna
         $request->validate([
-            'id_product' => 'required|exists:products,id',
+            'product_id' => 'required|exists:products,id', // Mengganti id_product menjadi product_id sesuai dengan konvensi
             'name' => 'required|string|max:255',
             'pcs' => 'required|integer',
             'dimension' => 'required|string|max:255',
@@ -36,44 +43,60 @@ class DetailProductController extends Controller
             'price' => 'required|numeric',
         ]);
 
+        // Membuat detail product baru berdasarkan input
         DetailProduct::create($request->all());
-        $product = Product::findOrFail($request->id_product);
+
+        // Mendapatkan nama produk terkait untuk pesan sukses
+        $product = Product::findOrFail($request->product_id);
         $productName = $product->name;
 
-        return redirect()->route('products.index')->with('details_success', 'Detail ' . $productName . ' berhasil ditambahkan.');
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('products.index')->with('details_success', 'Detail produk ' . $productName . ' berhasil ditambahkan.');
     }
 
     // Display the specified detail product
     public function show($hash)
     {
+        // Mendekode hash untuk mendapatkan ID
         $id = IdHashHelper::decode($hash);
+
+        // Mendapatkan detail produk beserta relasi produk
         $detailProduct = DetailProduct::with('product')->findOrFail($id);
 
+        // Mengembalikan view untuk menampilkan detail produk
         return view('detail-products.show', compact('detailProduct'));
     }
 
     // Show the form for editing the specified detail product
     public function edit($hash)
     {
-        $id = IdHashHelper::decode($hash); // Decode hash to get the ID
-        $detailProduct = DetailProduct::findOrFail($id); // Find the DetailProduct by ID
-        $products = Product::all(); // Get all products
+        // Mendekode hash untuk mendapatkan ID detail produk
+        $id = IdHashHelper::decode($hash);
 
+        // Mendapatkan detail produk berdasarkan ID
+        $detailProduct = DetailProduct::findOrFail($id);
+
+        // Mendapatkan semua produk untuk dropdown
+        $products = Product::all();
+
+        // Mengembalikan view edit dengan data produk terkait
         return view('detail-products.edit', [
             'detailProduct' => $detailProduct,
             'products' => $products,
-            'hash' => $hash // Pass the hash to the view for the form action
+            'hash' => $hash // Mengirim hash ke view untuk digunakan dalam form action
         ]);
     }
 
     // Update the specified detail product in storage
     public function update(Request $request, $hash)
     {
-        $id = IdHashHelper::decode($hash); // Decode hash to get the ID
+        // Mendekode hash untuk mendapatkan ID detail produk
+        $id = IdHashHelper::decode($hash);
         $detailProduct = DetailProduct::findOrFail($id);
 
+        // Validasi input pengguna
         $request->validate([
-            'id_product' => 'required|exists:products,id',
+            'product_id' => 'required|exists:products,id', // Mengganti id_product menjadi product_id sesuai dengan konvensi
             'name' => 'required|string|max:255',
             'pcs' => 'required|integer',
             'dimension' => 'required|string|max:255',
@@ -82,19 +105,25 @@ class DetailProductController extends Controller
             'price' => 'required|numeric',
         ]);
 
+        // Update data detail produk
         $detailProduct->update($request->all());
 
-        return redirect($request->input('previous_url', route('products.index')))
-        ->with('details_success', 'Detail produk berhasil diupdate.');
+        // Redirect kembali ke halaman sebelumnya atau ke index produk
+        return redirect()->route('products.index')
+            ->with('details_success', 'Detail produk berhasil diupdate.');
     }
 
     // Remove the specified detail product from storage
     public function destroy($hash)
     {
+        // Mendekode hash untuk mendapatkan ID detail produk
         $id = IdHashHelper::decode($hash);
+
+        // Mendapatkan detail produk dan menghapusnya
         $detailProduct = DetailProduct::findOrFail($id);
         $detailProduct->delete();
 
+        // Redirect kembali ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('details_success', 'Detail produk berhasil dihapus.');
     }
 }
