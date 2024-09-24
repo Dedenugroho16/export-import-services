@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
+use App\Models\DetailProduct;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProductsController extends Controller
@@ -135,16 +136,42 @@ class ProductsController extends Controller
         return redirect()->route('products.index')->with('product_success', 'Produk berhasil di hapus.');
     }
 
-    public function showDetails($hash)
+    // Show details product
+    public function showDetails(Request $request, $hash)
     {
-        // Decode the hash to get the product's ID
         $id = IdHashHelper::decode($hash);
-        $product = Product::with('detailProducts')->findOrFail($id);
-
-        // Kirim data produk dan detail produk ke view
-        return view('products.details', compact('product'));
+        
+        // Ambil produk berdasarkan ID
+        $product = Product::findOrFail($id);
+    
+        if ($request->ajax()) {
+            $detailProducts = DetailProduct::where('id_product', $id);
+    
+            return DataTables::of($detailProducts)
+                ->addColumn('action', function($row) {
+                    $hashId = IdHashHelper::encode($row->id);
+                    $actionBtn = '
+                        <div class="dropdown d-inline">
+                            <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">Aksi</button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="'.route('detail-products.show', $hashId).'">Show</a>
+                                <a class="dropdown-item" href="'.route('detail-products.edit', $hashId).'">Edit</a>
+                                <form action="'.route('detail-products.destroy', $hashId).'" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus detail produk ini?\')" style="display:inline;">
+                                    '.csrf_field().method_field('DELETE').'
+                                    <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    
+        // Kirim produk dan hash ke view
+        return view('products.details', compact('product', 'hash')); // Ubah $productHash menjadi $hash
     }
-
+    
 
 
 }

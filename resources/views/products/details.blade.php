@@ -48,31 +48,6 @@
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach($product->detailProducts as $detail)
-                                    <tr>
-                                        <td>{{ $detail->name }}</td>
-                                        <td class="text-center">{{ $detail->pcs }}</td>
-                                        <td class="text-center">{{ $detail->dimension }}</td>
-                                        <td class="text-center">{{ $detail->type }}</td>
-                                        <td class="text-center">{{ $detail->color }}</td>
-                                        <td class="text-center">{{ $detail->price }}</td>
-                                        <td class="text-center">
-                                            <!-- Aksi buttons as dropdown -->
-                                            <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="{{ route('detail-products.show', \App\Helpers\IdHashHelper::encode($detail->id)) }}">Show</a>
-                                                <a class="dropdown-item" href="{{ route('detail-products.edit', \App\Helpers\IdHashHelper::encode($detail->id)) }}">Edit</a>
-                                                <form action="{{ route('detail-products.destroy', \App\Helpers\IdHashHelper::encode($detail->id)) }}" method="POST" onsubmit="return confirm('Apakah anda yakin ingin menghapus detail produk ini?')" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-danger">Delete</button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -87,7 +62,20 @@
     $(document).ready(function() {
         $('#detailProductTable').DataTable({
             processing: false,
-            serverSide: false, // Disable server-side processing as we are passing the data directly via Blade
+            serverSide: true,
+            ajax: {
+                url: "{{ route('products.details', $hash) }}",
+                type: 'GET'
+            },
+            columns: [
+                { data: 'name', name: 'name' },
+                { data: 'pcs', name: 'pcs', className: 'text-center' },
+                { data: 'dimension', name: 'dimension', className: 'text-center' },
+                { data: 'type', name: 'type', className: 'text-center' },
+                { data: 'color', name: 'color', className: 'text-center' },
+                { data: 'price', name: 'price', className: 'text-center' },
+                { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center' }
+            ],
             language: {
                 lengthMenu: "Tampilkan _MENU_ entri",
                 info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
@@ -101,22 +89,10 @@
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50],
-            pageLength: 10,
-            drawCallback: function() {
-                // Terapkan style khusus untuk kolom-kolom tertentu seperti pada tabel clients
-                $('#detailProductTable td:nth-child(1), #detailProductTable th:nth-child(1)').css({
-                    'max-width': '200px',
-                    'white-space': 'normal',
-                    'word-wrap': 'break-word'
-                });
-                $('#detailProductTable td:nth-child(3), #detailProductTable th:nth-child(3)').css({
-                    'max-width': '250px',
-                    'overflow': 'hidden',
-                    'text-overflow': 'ellipsis'
-                });
-            }
+            pageLength: 10
         });
     });
 </script>
+
 
 @endsection
