@@ -329,46 +329,22 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
+                                        <div class="table-responsive pb-2 border-top" style="max-height: 18rem">
+                                            <table class="table table-bordered table-hover table-striped table-sm"
+                                                id="tableDetailTransaction">
                                                 <thead>
-                                                    <tr>
-                                                        <th>Item Description</th>
-                                                        <th>Carton (pcs)</th>
-                                                        <th>Inner (pcs)</th>
-                                                        <th>Unit Price (USD / KG)</th>
-                                                        <th>Net Weight (KG)</th>
-                                                        <th>Price Amount (USD)</th>
-                                                    </tr>
+                                                    <th class="text-center">Item Description</th>
+                                                    <th class="text-center">Carton(pcs)</th>
+                                                    <th class="text-center">Inner(pcs)</th>
+                                                    <th class="text-center">Unit Price(USD/KG)</th>
+                                                    <th class="text-center">Net Weight(KG)</th>
+                                                    <th class="text-center">Price Amount(USD)</th>
+                                                    <th class="text-center">Aksi</th>
                                                 </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" class="form-control"
-                                                                name="item_description[]" placeholder="Item Description">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control"
-                                                                name="carton_pcs[]" placeholder="Carton (pcs)">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="inner_pcs[]"
-                                                                placeholder="Inner (pcs)">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" step="0.01" class="form-control"
-                                                                name="unit_price[]" placeholder="Unit Price (USD / KG)">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" step="0.01" class="form-control"
-                                                                name="net_weight[]" placeholder="Net Weight (KG)">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" step="0.01" class="form-control"
-                                                                name="price_amount[]" placeholder="Price Amount (USD)">
-                                                        </td>
+                                                <tbody style="font-size: 12px">
+                                                    <tr id="nullDetailTransaction">
+                                                        <td colspan="11" class="text-center">Tidak ada barang</td>
                                                     </tr>
-                                                    <!-- Add more rows as needed -->
                                                 </tbody>
                                             </table>
                                         </div>
@@ -403,13 +379,13 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Name</th>
-                                            <th>Pcs</th>
-                                            <th>Dimension</th>
-                                            <th>Type</th>
-                                            <th>Color</th>
-                                            <th>Price</th>
-                                            <th>Action</th>
+                                            <th>Nama Produk</th>
+                                            <th>Jumlah (pcs)</th>
+                                            <th>Dimensi</th>
+                                            <th>Tipe</th>
+                                            <th>Warna</th>
+                                            <th>Harga</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -419,7 +395,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info" data-bs-dismiss="modal"
-                        aria-label="Close">Close</button>
+                        aria-label="Close">Tutup</button>
                 </div>
             </div>
         </div>
@@ -463,91 +439,256 @@
             });
         });
 
-        // DATATABLES
-        //     $(document).ready(function() {
+        // modal datatables
+        // $(document).ready(function() {
         //     var table = $('#detailProductTable').DataTable({
         //         processing: true,
         //         serverSide: true,
-        //         ajax: "{{ route('get-detail-products') }}",
-        //         columns: [
-        //             { data: 'id', name: 'id' },
-        //             { data: 'name', name: 'name' },
-        //             { data: 'pcs', name: 'pcs' },
-        //             { data: 'dimension', name: 'dimension' },
-        //             { data: 'type', name: 'type' },
-        //             { data: 'color', name: 'color' },
-        //             { data: 'price', name: 'price' },
-        //             { data: 'action', name: 'action', orderable: false, searchable: false }
-        //         ]
+        //         ajax: {
+        //             url: "{{ route('get-detail-products') }}",
+        //             data: function(d) {
+        //                 var productId = $('#product').val();
+        //                 if (productId) {
+        //                     d.id_product = productId; // Kirim nilai id_product jika dipilih
+        //                 } else {
+        //                     d.id_product = null; // Tidak ada produk yang dipilih
+        //                 }
+        //             }
+        //         },
+        //         columns: [{
+        //                 data: 'id',
+        //                 name: 'id'
+        //             },
+        //             {
+        //                 data: 'name',
+        //                 name: 'name'
+        //             },
+        //             {
+        //                 data: 'pcs',
+        //                 name: 'pcs'
+        //             },
+        //             {
+        //                 data: 'dimension',
+        //                 name: 'dimension'
+        //             },
+        //             {
+        //                 data: 'type',
+        //                 name: 'type'
+        //             },
+        //             {
+        //                 data: 'color',
+        //                 name: 'color'
+        //             },
+        //             {
+        //                 data: 'price',
+        //                 name: 'price'
+        //             },
+        //             {
+        //                 data: 'action',
+        //                 name: 'action',
+        //                 orderable: false,
+        //                 searchable: false
+        //             }
+        //         ],
+        //         language: {
+        //             emptyTable: function() {
+        //                 if ($('#product').val()) {
+        //                     return "Produk yang Anda pilih tidak memiliki detail produk"; // Pesan ketika produk tidak memiliki detail produk
+        //                 } else {
+        //                     return "Tolong pilih produk terlebih dahulu"; // Pesan ketika produk belum dipilih
+        //                 }
+        //             },
+        //             "decimal": ",",
+        //             "thousands": ".",
+        //             "lengthMenu": "Tampilkan _MENU_ entri",
+        //             "zeroRecords": "Tidak ada data yang ditemukan",
+        //             "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+        //             "infoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
+        //             "infoFiltered": "(disaring dari _MAX_ total entri)",
+        //             "search": "Cari:",
+        //             "paginate": {
+        //                 "first": "Pertama",
+        //                 "last": "Terakhir",
+        //                 "next": "Selanjutnya",
+        //                 "previous": "Sebelumnya"
+        //             },
+        //             "loadingRecords": "Sedang memuat...",
+        //             "processing": "Sedang memproses...",
+        //             "emptyTable": "Tidak ada data yang tersedia di tabel",
+        //             "aria": {
+        //                 "sortAscending": ": aktifkan untuk mengurutkan kolom secara ascending",
+        //                 "sortDescending": ": aktifkan untuk mengurutkan kolom secara descending"
+        //             },
+        //             "select": {
+        //                 "rows": {
+        //                     "_": "%d baris terpilih",
+        //                     "1": "1 baris terpilih"
+        //                 }
+        //             }
+        //         },
+        //         responsive: true,
+        //         autoWidth: false,
+        //         lengthMenu: [5, 10, 25, 50],
+        //         pageLength: 10
         //     });
 
-        //     // Load DataTables when modal is shown
-        //     $('#memberModal').on('shown.bs.modal', function () {
-        //         table.ajax.reload(null, false); // Reload data without resetting the table
+        //     // Event ketika user memilih produk
+        //     $('#product').change(function() {
+        //         if ($(this).val()) {
+        //             // Jika produk dipilih, reload DataTables dengan data produk
+        //             table.ajax.reload();
+        //         } else {
+        //             // Jika produk belum dipilih, kosongkan DataTables dan tampilkan pesan
+        //             table.clear().draw(); // Clear table
+        //         }
         //     });
         // });
 
         $(document).ready(function() {
-            // Inisialisasi DataTables
             var table = $('#detailProductTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('get-detail-products') }}", // Ganti dengan URL route kamu
+                    url: "{{ route('get-detail-products') }}",
                     data: function(d) {
-                        d.id_product = $('#product').val(); // Kirim nilai id_product dari dropdown
+                        var productId = $('#product').val();
+                        d.id_product = productId ? productId :
+                            null; // Kirim nilai id_product jika produk dipilih
                     }
                 },
                 columns: [{
                         data: 'id',
-                        name: 'id'
+                        name: 'id',
+                        title: "No"
                     },
                     {
                         data: 'name',
-                        name: 'name'
+                        name: 'name',
+                        title: "Nama Produk"
                     },
                     {
                         data: 'pcs',
-                        name: 'pcs'
+                        name: 'pcs',
+                        title: "Jumlah (pcs)"
                     },
                     {
                         data: 'dimension',
-                        name: 'dimension'
+                        name: 'dimension',
+                        title: "Dimensi"
                     },
                     {
                         data: 'type',
-                        name: 'type'
+                        name: 'type',
+                        title: "Tipe"
                     },
                     {
                         data: 'color',
-                        name: 'color'
+                        name: 'color',
+                        title: "Warna"
                     },
                     {
                         data: 'price',
-                        name: 'price'
+                        name: 'price',
+                        title: "Harga"
                     },
                     {
-                        data: 'action',
-                        name: 'action',
+                        data: null,
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-primary btn-sm pilih-btn">Pilih</button>`;
+                        }
                     }
                 ],
-                responsive: true,
-                autoWidth: false, // Tidak secara otomatis mengatur lebar kolom
                 language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Cari produk...",
+                    decimal: ",",
+                    thousands: ".",
                     lengthMenu: "Tampilkan _MENU_ entri",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri"
+                    zeroRecords: "Tidak ada data yang ditemukan",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 entri",
+                    infoFiltered: "(disaring dari _MAX_ total entri)",
+                    search: "Cari:",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    loadingRecords: "Sedang memuat...",
+                    processing: "Sedang memproses...",
+                    emptyTable: function() {
+                        var productSelected = $('#product').val();
+                        return productSelected ?
+                            "Produk yang Anda pilih tidak memiliki detail produk" :
+                            "Tolong pilih produk terlebih dahulu";
+                    },
+                    aria: {
+                        sortAscending: ": aktifkan untuk mengurutkan kolom secara ascending",
+                        sortDescending: ": aktifkan untuk mengurutkan kolom secara descending"
+                    },
+                    select: {
+                        rows: {
+                            _: "%d baris terpilih",
+                            1: "1 baris terpilih"
+                        }
+                    }
                 },
-                lengthMenu: [5, 10, 25, 50], // Menentukan jumlah data yang ditampilkan per halaman
-                pageLength: 10 // Jumlah default data yang ditampilkan
+                responsive: true,
+                autoWidth: false,
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10
             });
 
-            // Event ketika user memilih product
+            // Event ketika user memilih produk
             $('#product').change(function() {
-                table.ajax.reload(); // Reload DataTables dengan filter baru
+                if ($(this).val()) {
+                    table.ajax.reload(); // Reload DataTables dengan data produk yang dipilih
+                } else {
+                    table.clear().draw(); // Kosongkan tabel jika tidak ada produk yang dipilih
+                }
+            });
+
+            // Event handler ketika tombol "Pilih" diklik
+            $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
+                var data = table.row($(this).parents('tr'))
+                    .data(); // Mengambil data dari baris yang dipilih
+
+                // Membuat elemen tr untuk ditambahkan ke tabel #tableDetailTransaction
+                var newRow = `
+        <tr>
+            <td class="text-center">
+        <strong>${data.name} ${data.pcs} PCS / 12 KG</strong><br>
+        ${data.dimension} ${data.color} - ${data.type}
+    </td>
+            <td class="text-center">${data.pcs}</td>
+            <td class="text-center">${data.dimension}</td>
+            <td class="text-center">${data.price}</td>
+            <td class="text-center">${data.color}</td>
+            <td class="text-center">${data.price}</td>
+            <td class="text-center">
+                <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
+            </td>
+        </tr>`;
+
+                // Menambahkan elemen tr baru ke tabel #tableDetailTransaction
+                $('#tableDetailTransaction tbody').append(newRow);
+
+                // Menghapus baris "Tidak ada barang" jika ada
+                $('#nullDetailTransaction').remove();
+            });
+
+            // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
+            $('#tableDetailTransaction tbody').on('click', '.remove-btn', function() {
+                $(this).closest('tr').remove(); // Menghapus baris saat tombol Hapus diklik
+
+                // Jika tidak ada baris lagi, tambahkan kembali baris "Tidak ada barang"
+                if ($('#tableDetailTransaction tbody tr').length === 0) {
+                    $('#tableDetailTransaction tbody').append(`
+            <tr id="nullDetailTransaction">
+                <td colspan="7" class="text-center">Tidak ada barang</td>
+            </tr>`);
+                }
             });
         });
     </script>

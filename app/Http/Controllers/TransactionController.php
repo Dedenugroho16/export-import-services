@@ -46,15 +46,19 @@ class TransactionController extends Controller
     // MENGAMBIL DATA DETAIL PRODUCTS
     public function getDetailProducts(Request $request)
     {
-        // Query ke DetailProduct
-        $query = DetailProduct::query();
-
-        // Filter berdasarkan id_product jika ada
-        if ($request->has('id_product') && !empty($request->id_product)) {
-            $query->where('id_product', $request->id_product);
+        // Jika tidak ada id_product yang dikirim, kembalikan DataTables kosong
+        if (!$request->has('id_product') || empty($request->id_product)) {
+            return datatables()->of(collect([])) // Mengirimkan data kosong
+                ->addColumn('action', function ($row) {
+                    return ''; // Kolom action kosong
+                })
+                ->make(true);
         }
 
-        // $detailProducts = DetailProduct::all();
+        // Query ke DetailProduct jika id_product ada
+        $query = DetailProduct::where('id_product', $request->id_product);
+
+        // Jika query tidak mengembalikan data, DataTables akan tetap mengirimkan response
         return datatables()->of($query)
             ->addColumn('action', function ($row) {
                 $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
