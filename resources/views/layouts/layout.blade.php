@@ -55,6 +55,11 @@
             font-size: 1rem;
             font-weight: 500;
         }
+
+        table {
+            table-layout: auto;
+            width: 100%;
+        }
     </style>
 
     {{-- JQuery --}}

@@ -43,7 +43,7 @@ class ProductsController extends Controller
                             </form>
                         </div>
                     </div>
-                    <a href="'.route('product.details', $hashId).'" class="btn btn-warning ms-2">Detail</a>
+                    <a href="'.route('products.details', $hashId).'" class="btn btn-warning ms-2">Detail</a>
                 ';
                 
                 return $actionBtn;
@@ -144,4 +144,7 @@ class ProductsController extends Controller
         // Kirim data produk dan detail produk ke view
         return view('products.details', compact('product'));
     }
+
+
+
 }
