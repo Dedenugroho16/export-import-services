@@ -84,9 +84,13 @@
                                                     <select class="form-control client" id="client">
                                                         <option value="">Pilih Client</option>
                                                         @foreach ($clients as $client)
-                                                            <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                                            <option value="{{ $client->id }}"
+                                                                data-address="{{ $client->address }}">{{ $client->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
+                                                    <!-- Element to display the address -->
+                                                    <div id="client-address" style="margin-top: 10px;"></div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -102,6 +106,8 @@
                                                     <select class="form-control consignee" id="consignee">
                                                         <option value="">Pilih Consignee</option>
                                                     </select>
+                                                    <!-- Element to display the address -->
+                                                    <div id="consignee-address" style="margin-top: 10px;"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -403,15 +409,29 @@
 
     <script>
         $(document).ready(function() {
-            $('#client').select2(); // Menginisialisasi Select2 untuk client
-            $('#consignee').select2(); // Menginisialisasi Select2 untuk consignee
-            $('#product').select2(); // Menginisialisasi Select2 untuk product
-            $('#commodity').select2(); // Menginisialisasi Select2 untuk commodity
+            // Menginisialisasi Select2
+            $('#client').select2();
+            $('#consignee').select2();
+            $('#product').select2();
+            $('#commodity').select2();
 
             // Ketika client dipilih
             $('#client').on('change', function() {
                 var clientId = $(this).val(); // Ambil ID client yang dipilih
 
+                // Ambil data dari Select2 untuk client yang dipilih
+                var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
+
+                // Tampilkan address di div jika ada
+                if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
+                        'address')) {
+                    var address = $(selectedClientData.element).data('address');
+                    $('#client-address').html('<strong>Address: </strong>' + address);
+                } else {
+                    $('#client-address').html('');
+                }
+
+                // Jika clientId ada, lakukan AJAX untuk ambil consignees
                 if (clientId) {
                     $.ajax({
                         url: '/get-consignees/' + clientId, // Panggil route yang sudah kita buat
@@ -425,7 +445,8 @@
                             $('#consignee').append('<option value="">Pilih Consignee</option>');
                             $.each(data, function(key, consignee) {
                                 $('#consignee').append('<option value="' + consignee
-                                    .id + '">' + consignee.name + '</option>');
+                                    .id + '" data-address="' + consignee.address +
+                                    '">' + consignee.name + '</option>');
                             });
 
                             // Refresh Select2 setelah data diperbarui
@@ -435,6 +456,20 @@
                 } else {
                     $('#consignee').empty();
                     $('#consignee').append('<option value="">Pilih Consignee</option>');
+                }
+            });
+
+            $('#consignee').on('change', function() {
+                // Ambil data dari Select2 untuk client yang dipilih
+                var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
+
+                // Tampilkan address di div jika ada
+                if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
+                        'address')) {
+                    var address = $(selectedClientData.element).data('address');
+                    $('#consignee-address').html('<strong>Address: </strong>' + address);
+                } else {
+                    $('#consignee-address').html('');
                 }
             });
         });
