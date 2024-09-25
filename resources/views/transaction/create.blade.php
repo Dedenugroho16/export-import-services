@@ -693,14 +693,16 @@
                 var newRow = `
         <tr>
             <td class="text-center">
-        <strong>${data.name} ${data.pcs} PCS / 12 KG</strong><br>
-        ${data.dimension} ${data.color} - ${data.type}
-    </td>
-            <td class="text-center">${data.pcs}</td>
-            <td class="text-center">${data.dimension}</td>
-            <td class="text-center">${data.price}</td>
-            <td class="text-center">${data.color}</td>
-            <td class="text-center">${data.price}</td>
+                <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
+                ${data.dimension} ${data.color} - ${data.type}
+            </td>
+            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" /></td>
+            <td class="text-center inner-result">
+                0
+            </td>
+            <td class="text-center price">${data.price}</td>
+            <td class="text-center net-weight">0</td>
+            <td class="text-center price-result">0</td>
             <td class="text-center">
                 <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
             </td>
@@ -711,6 +713,27 @@
 
                 // Menghapus baris "Tidak ada barang" jika ada
                 $('#nullDetailTransaction').remove();
+
+                // Event listener to calculate the result
+                $('#tableDetailTransaction tbody').on('input', '.qty-input, .carton-input', function() {
+                    var row = $(this).closest('tr');
+                    var qty = parseFloat(row.find('.qty-input').val()) || 0;
+                    var carton = parseFloat(row.find('.carton-input').val()) || 0;
+                    var price = parseFloat(row.find('.price').data('price')) || 0;
+
+                    // Multiply qty by carton and update the result
+                    var result = qty * carton;
+                    row.find('.inner-result').text(result);
+                    row.find('.net-weight').text(result);
+
+                    // Update the price based on result * data.price
+                    var totalPrice = result * data.price;
+                    // Round the total price to the nearest integer
+                    var roundedPrice = Math.round(totalPrice);
+                    row.find('.price-result').text(roundedPrice);
+                });
+                // Store the price in a data attribute for easy retrieval
+                $('.price-result').attr('data-price', data.price);
             });
 
             // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
