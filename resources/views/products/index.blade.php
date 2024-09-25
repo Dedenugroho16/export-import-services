@@ -108,7 +108,7 @@
                     next: "Selanjutnya",
                     previous: "Sebelumnya"
                 },
-                search: "Cari:",
+                search: "Cari :",
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50], // Pilihan jumlah entri yang ditampilkan per halaman

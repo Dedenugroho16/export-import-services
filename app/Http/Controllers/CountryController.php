@@ -15,7 +15,7 @@ class CountryController extends Controller
         return DataTables::of($countries)
             ->addColumn('action', function ($country) {
                 return '
-                    <form action="' . route('countries.destroy', $country->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this country?\')" style="display:inline;">
+                    <form action="' . route('countries.destroy', $country->id) . '" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus negara ini?\')" style="display:inline;">
                         ' . csrf_field() . '
                         ' . method_field('DELETE') . '
                         <button type="submit" class="btn btn-danger">

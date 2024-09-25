@@ -60,6 +60,52 @@
             table-layout: auto;
             width: 100%;
         }
+
+        /* Mengubah tampilan search bar */
+        .dataTables_filter input[type="search"] {
+            width: 300px;
+            padding: 3px;
+            border-radius: 4px;
+            border: 1px solid #b1b1b1;
+            outline: none;
+            transition: 0.3s;
+            margin: 15px;
+        }
+
+        /* Efek ketika fokus pada search bar */
+        .dataTables_filter input[type="search"]:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 5px rgba(255, 152, 0, 0.8);
+        }
+
+        .dataTables_filter label {
+            font-size: 15px;
+            font-weight: bold;
+            margin-right: 15px;
+            color: #535353
+        }
+
+        .dataTables_length label {
+            font-size: 15px;
+            font-weight: bold;
+            color: #535353;
+            margin: 15px;
+        }
+
+        /* Menyesuaikan gaya dropdown untuk memilih jumlah entri */
+        .dataTables_length select {
+            padding-left: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background-color: #f5f5f5;
+            transition: 0.3s;
+        }
+
+        /* Efek saat dropdown difokuskan */
+        .dataTables_length select:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 5px rgba(255, 152, 0, 0.8);
+        }
     </style>
 
     {{-- JQuery --}}
