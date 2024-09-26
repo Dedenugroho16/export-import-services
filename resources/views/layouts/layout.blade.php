@@ -15,6 +15,8 @@
 
     <!-- Bootstrap Icon CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
@@ -315,11 +317,17 @@
                                         style="background-image: url('https://www.gravatar.com/avatar/?d=mp'); border-radius: 50%;"></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <a href="#" class="dropdown-item">Profil</a>
-                                    <a href="./settings.html" class="dropdown-item">Pengaturan</a>
+                                    <a href="{{ route('profile.show') }}" class="dropdown-item">
+                                        <i class="fas fa-user me-2"></i> Profil
+                                    </a>
+                                    <a href="./settings.html" class="dropdown-item">
+                                        <i class="fas fa-cog me-2"></i> Pengaturan
+                                    </a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="dropdown-item">Keluar</button>
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Keluar
+                                        </button>
                                     </form>
                                 </div>
                             </div>
