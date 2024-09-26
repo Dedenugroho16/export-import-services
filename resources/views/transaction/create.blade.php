@@ -47,7 +47,7 @@
                                                             <span>:</span>
                                                         </div>
                                                         <div class="col-5">
-                                                            <p>-</p>
+                                                            <p id="product-code">-</p>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -59,6 +59,27 @@
                                                         </div>
                                                         <div class="col-5">
                                                             <p>-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 d-flex justify-content-end align-items-start">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <p><strong>Set Country</strong></p>
+                                                        </div>
+                                                        <div class="col-1 text-center">
+                                                            <span>:</span>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <select class="form-control country" id="country">
+                                                                <option value="">Pilih Negara</option>
+                                                                @foreach ($country as $negara)
+                                                                    <option value="{{ $negara->id }}"
+                                                                        data-code="{{ $negara->code }}">
+                                                                        {{ $negara->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -173,7 +194,8 @@
                                                         <select class="form-control product" id="product">
                                                             <option value="">Pilih Product</option>
                                                             @foreach ($products as $product)
-                                                                <option value="{{ $product->id }}">{{ $product->name }}
+                                                                <option value="{{ $product->id }}"
+                                                                    data-code="{{ $product->code }}">{{ $product->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -190,7 +212,8 @@
                                                         <select class="form-control commodity" id="commodity">
                                                             <option value="">Pilih Commodity</option>
                                                             @foreach ($commodities as $commodity)
-                                                                <option value="{{ $commodity->id }}">{{ $commodity->name }}
+                                                                <option value="{{ $commodity->id }}">
+                                                                    {{ $commodity->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -414,6 +437,7 @@
             $('#consignee').select2();
             $('#product').select2();
             $('#commodity').select2();
+            $('#country').select2();
 
             // Ketika client dipilih
             $('#client').on('change', function() {
@@ -475,110 +499,6 @@
         });
 
         // modal datatables
-        // $(document).ready(function() {
-        //     var table = $('#detailProductTable').DataTable({
-        //         processing: true,
-        //         serverSide: true,
-        //         ajax: {
-        //             url: "{{ route('get-detail-products') }}",
-        //             data: function(d) {
-        //                 var productId = $('#product').val();
-        //                 if (productId) {
-        //                     d.id_product = productId; // Kirim nilai id_product jika dipilih
-        //                 } else {
-        //                     d.id_product = null; // Tidak ada produk yang dipilih
-        //                 }
-        //             }
-        //         },
-        //         columns: [{
-        //                 data: 'id',
-        //                 name: 'id'
-        //             },
-        //             {
-        //                 data: 'name',
-        //                 name: 'name'
-        //             },
-        //             {
-        //                 data: 'pcs',
-        //                 name: 'pcs'
-        //             },
-        //             {
-        //                 data: 'dimension',
-        //                 name: 'dimension'
-        //             },
-        //             {
-        //                 data: 'type',
-        //                 name: 'type'
-        //             },
-        //             {
-        //                 data: 'color',
-        //                 name: 'color'
-        //             },
-        //             {
-        //                 data: 'price',
-        //                 name: 'price'
-        //             },
-        //             {
-        //                 data: 'action',
-        //                 name: 'action',
-        //                 orderable: false,
-        //                 searchable: false
-        //             }
-        //         ],
-        //         language: {
-        //             emptyTable: function() {
-        //                 if ($('#product').val()) {
-        //                     return "Produk yang Anda pilih tidak memiliki detail produk"; // Pesan ketika produk tidak memiliki detail produk
-        //                 } else {
-        //                     return "Tolong pilih produk terlebih dahulu"; // Pesan ketika produk belum dipilih
-        //                 }
-        //             },
-        //             "decimal": ",",
-        //             "thousands": ".",
-        //             "lengthMenu": "Tampilkan _MENU_ entri",
-        //             "zeroRecords": "Tidak ada data yang ditemukan",
-        //             "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-        //             "infoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
-        //             "infoFiltered": "(disaring dari _MAX_ total entri)",
-        //             "search": "Cari:",
-        //             "paginate": {
-        //                 "first": "Pertama",
-        //                 "last": "Terakhir",
-        //                 "next": "Selanjutnya",
-        //                 "previous": "Sebelumnya"
-        //             },
-        //             "loadingRecords": "Sedang memuat...",
-        //             "processing": "Sedang memproses...",
-        //             "emptyTable": "Tidak ada data yang tersedia di tabel",
-        //             "aria": {
-        //                 "sortAscending": ": aktifkan untuk mengurutkan kolom secara ascending",
-        //                 "sortDescending": ": aktifkan untuk mengurutkan kolom secara descending"
-        //             },
-        //             "select": {
-        //                 "rows": {
-        //                     "_": "%d baris terpilih",
-        //                     "1": "1 baris terpilih"
-        //                 }
-        //             }
-        //         },
-        //         responsive: true,
-        //         autoWidth: false,
-        //         lengthMenu: [5, 10, 25, 50],
-        //         pageLength: 10
-        //     });
-
-        //     // Event ketika user memilih produk
-        //     $('#product').change(function() {
-        //         if ($(this).val()) {
-        //             // Jika produk dipilih, reload DataTables dengan data produk
-        //             table.ajax.reload();
-        //         } else {
-        //             // Jika produk belum dipilih, kosongkan DataTables dan tampilkan pesan
-        //             table.clear().draw(); // Clear table
-        //         }
-        //     });
-        // });
-
         $(document).ready(function() {
             var table = $('#detailProductTable').DataTable({
                 processing: true,
@@ -683,6 +603,47 @@
                     table.clear().draw(); // Kosongkan tabel jika tidak ada produk yang dipilih
                 }
             });
+
+            // event untuk code transaksi
+            // Fungsi untuk mendapatkan dua digit bulan dan dua digit tahun dari tanggal saat ini
+            function getTwoDigitYearMonth() {
+                var date = new Date();
+                var year = date.getFullYear().toString().slice(-2); // Mengambil dua digit terakhir dari tahun
+                var month = ("0" + (date.getMonth() + 1)).slice(-2); // Mengambil dua digit bulan
+                return year + month; // Menggabungkan dua digit tahun dan dua digit bulan
+            }
+
+            // Fungsi untuk memperbarui kode negara atau dua digit bulan
+            function updateProductCode() {
+                var countryCode = $('#country option:selected').data('code'); // Mengambil kode negara
+                var productCode = $('#product option:selected').data('code'); // Mengambil kode produk
+                var twoDigitYearMonth = getTwoDigitYearMonth(); // Mendapatkan dua digit tahun + dua digit bulan
+
+                // Jika ada produk yang dipilih dan ada kode negara
+                if (productCode && countryCode) {
+                    $('#product-code').text(productCode + ' ' + countryCode + twoDigitYearMonth);
+                }
+                // Jika produk dipilih, tapi negara belum dipilih
+                else if (productCode) {
+                    $('#product-code').text(productCode + ' ' + 'negara_mana?' + twoDigitYearMonth);
+                }
+                // Jika negara dipilih, tapi produk belum dipilih
+                else if (countryCode) {
+                    $('#product-code').text(countryCode + twoDigitYearMonth);
+                }
+                // Jika tidak ada produk atau negara yang dipilih
+                else {
+                    $('#product-code').text('-');
+                }
+            }
+
+            // Pantau perubahan pada dropdown product dan country untuk memperbarui kode
+            $('#product, #country').on('change', function() {
+                updateProductCode();
+            });
+
+            // Jalankan fungsi updateProductCode saat halaman dimuat untuk menginisialisasi
+            updateProductCode();
 
             // Event handler ketika tombol "Pilih" diklik
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {

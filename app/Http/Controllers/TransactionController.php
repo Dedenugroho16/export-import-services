@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Country;
 use App\Models\Product;
 use App\Models\Commodity;
 use App\Models\Consignee;
@@ -30,7 +31,8 @@ class TransactionController extends Controller
         $clients = Client::all();
         $products = Product::all();
         $commodities = Commodity::all();
-        return view('transaction.create', compact('consignees', 'clients', 'products', 'commodities'));
+        $country = Country::all();
+        return view('transaction.create', compact('consignees', 'clients', 'products', 'commodities', 'country'));
     }
 
     // method get Consignee
