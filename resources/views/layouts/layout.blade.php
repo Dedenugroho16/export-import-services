@@ -317,10 +317,10 @@
                                         style="background-image: url('https://www.gravatar.com/avatar/?d=mp'); border-radius: 50%;"></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <a href="{{ route('profile.show') }}" class="dropdown-item">
+                                    <a href="#" class="dropdown-item">
                                         <i class="fas fa-user me-2"></i> Profil
                                     </a>
-                                    <a href="./settings.html" class="dropdown-item">
+                                    <a href="#" class="dropdown-item">
                                         <i class="fas fa-cog me-2"></i> Pengaturan
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}">
