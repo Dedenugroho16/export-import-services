@@ -16,6 +16,8 @@ Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware
 
 // Client Routes using resource
 Route::resource('clients', ClientsController::class);
+Route::get('clients', [ClientsController::class, 'index'])->name('clients.index');
+
 
 // Use id_hash for client routes
 Route::get('/clients/{hash}', [ClientsController::class, 'show'])->name('clients.show');
@@ -29,7 +31,7 @@ Route::resource('consignees', ConsigneesController::class);
 Route::resource('products', ProductsController::class);
 
 // Use id_hash for product routes
-Route::get('/products/{hash}/details', [ProductsController::class, 'showDetails'])->name('product.details');
+Route::get('products/{hash}/details', [ProductsController::class, 'showDetails'])->name('products.details');
 Route::get('/products/{hash}/edit', [ProductsController::class, 'edit'])->name('products.edit');
 Route::put('/products/{hash}', [ProductsController::class, 'update'])->name('products.update');
 Route::delete('/products/{hash}', [ProductsController::class, 'destroy'])->name('products.destroy');

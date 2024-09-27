@@ -6,28 +6,63 @@ use App\Models\DetailProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper; // Import IdHashHelper
+use Yajra\DataTables\Facades\DataTables;
 
 class DetailProductController extends Controller
 {
-    // Display a listing of the detail products
-    public function index()
+    public function index(Request $request)
     {
-        $detailProducts = DetailProduct::with('product')->get();
-        return view('detail-products.index', compact('detailProducts'));
+    // Check if the request is an AJAX call (from DataTables)
+    if ($request->ajax()) {
+        $detailProducts = DetailProduct::with('product')->select('detail_products.*');
+        return DataTables::of($detailProducts)
+            ->addColumn('action', function($row) {
+                $hashId = \App\Helpers\IdHashHelper::encode($row->id);
+
+                $actionBtn = '
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="'.route('detail-products.show', $hashId).'">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                                Show
+                            </a>
+                            <a class="dropdown-item" href="'.route('detail-products.edit', $hashId).'">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                                Edit
+                            </a>
+                            <form action="'.route('detail-products.destroy', $hashId).'" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus detail produk ini?\')" style="display:inline;">
+                                '.csrf_field().method_field('DELETE').'
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>';
+                
+                return $actionBtn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
+
+    return view('detail-products.index');
+    }
+
 
     // Show the form for creating a new detail product
     public function create()
     {
         $products = Product::all();
+
         return view('detail-products.create', compact('products'));
     }
 
-    // Store a newly created detail product in storage
     public function store(Request $request)
     {
         $request->validate([
-            'id_product' => 'required|exists:products,id',
+            'product_id' => 'required|exists:products,id',
             'name' => 'required|string|max:255',
             'pcs' => 'required|integer',
             'dimension' => 'required|string|max:255',
@@ -37,16 +72,17 @@ class DetailProductController extends Controller
         ]);
 
         DetailProduct::create($request->all());
-        $product = Product::findOrFail($request->id_product);
+
+        $product = Product::findOrFail($request->product_id);
         $productName = $product->name;
 
-        return redirect()->route('products.index')->with('details_success', 'Detail ' . $productName . ' berhasil ditambahkan.');
+        return redirect()->route('products.index')->with('details_success', 'Detail produk ' . $productName . ' berhasil ditambahkan.');
     }
 
-    // Display the specified detail product
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);
+
         $detailProduct = DetailProduct::with('product')->findOrFail($id);
 
         return view('detail-products.show', compact('detailProduct'));
@@ -55,25 +91,29 @@ class DetailProductController extends Controller
     // Show the form for editing the specified detail product
     public function edit($hash)
     {
-        $id = IdHashHelper::decode($hash); // Decode hash to get the ID
-        $detailProduct = DetailProduct::findOrFail($id); // Find the DetailProduct by ID
-        $products = Product::all(); // Get all products
+        $id = IdHashHelper::decode($hash);
 
+        $detailProduct = DetailProduct::findOrFail($id);
+
+        // Mendapatkan semua produk untuk dropdown
+        $products = Product::all();
+
+        // Mengembalikan view edit dengan data produk terkait
         return view('detail-products.edit', [
             'detailProduct' => $detailProduct,
             'products' => $products,
-            'hash' => $hash // Pass the hash to the view for the form action
+            'hash' => $hash // Mengirim hash ke view untuk digunakan dalam form action
         ]);
     }
 
-    // Update the specified detail product in storage
+
     public function update(Request $request, $hash)
     {
-        $id = IdHashHelper::decode($hash); // Decode hash to get the ID
+        $id = IdHashHelper::decode($hash);
         $detailProduct = DetailProduct::findOrFail($id);
 
         $request->validate([
-            'id_product' => 'required|exists:products,id',
+            'product_id' => 'required|exists:products,id',
             'name' => 'required|string|max:255',
             'pcs' => 'required|integer',
             'dimension' => 'required|string|max:255',
@@ -84,14 +124,14 @@ class DetailProductController extends Controller
 
         $detailProduct->update($request->all());
 
-        return redirect($request->input('previous_url', route('products.index')))
-        ->with('details_success', 'Detail produk berhasil diupdate.');
+        return redirect()->route('products.index')
+            ->with('details_success', 'Detail produk berhasil diupdate.');
     }
 
-    // Remove the specified detail product from storage
     public function destroy($hash)
     {
         $id = IdHashHelper::decode($hash);
+
         $detailProduct = DetailProduct::findOrFail($id);
         $detailProduct->delete();
 

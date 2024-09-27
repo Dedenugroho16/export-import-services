@@ -7,7 +7,7 @@
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
-                    <div class="card-header text-white shadow-sm p-3" style="background-color: #182433;">
+                    <div class="card-header text-white shadow-sm p-3" style="background-color: #0054a6;">
                         <h3 class="card-title">Edit Detail Produk</h3>
                     </div>
                     <div class="card-body">
@@ -27,7 +27,7 @@
                             
                             <div class="mb-3">
                                 <label for="id_product" class="form-label">Produk</label>
-                                <select name="id_product" id="id_product" class="form-control" required>
+                                <select name="product_id" id="id_product" class="form-control" required>
                                     @foreach($products as $product)
                                         <option value="{{ $product->id }}" {{ $product->id == $detailProduct->id_product ? 'selected' : '' }}>
                                             {{ $product->name }}

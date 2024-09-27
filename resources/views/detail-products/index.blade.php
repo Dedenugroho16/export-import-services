@@ -37,7 +37,7 @@
 
                         <!-- Data Table -->
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap">
+                            <table id="myTable" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th class="text-center">ID Product</th>
@@ -50,56 +50,6 @@
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($detailProducts as $detailProduct)
-                                        <tr>
-                                            <td class="text-center">{{ $detailProduct->id_product }}</td>
-                                            <td class="text-center">{{ $detailProduct->name }}</td>
-                                            <td class="text-center">{{ $detailProduct->pcs }}</td>
-                                            <td class="text-center">{{ $detailProduct->dimension }}</td>
-                                            <td class="text-center">{{ $detailProduct->type }}</td>
-                                            <td class="text-center">{{ $detailProduct->color }}</td>
-                                            <td class="text-center">{{ $detailProduct->price }}</td>
-                                            <td class="text-center">
-                                                <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="{{ route('detail-products.show', ['hash' => \App\Helpers\IdHashHelper::encode($detailProduct->id)]) }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right me-2">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                            <path d="M17 7l-10 10" />
-                                                            <path d="M8 7l9 0l0 9" />
-                                                        </svg>
-                                                        Show
-                                                    </a>
-                                                    <a class="dropdown-item" href="{{ route('detail-products.edit', ['hash' => \App\Helpers\IdHashHelper::encode($detailProduct->id)]) }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit me-2">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                                            <path d="M16 5l3 3" />
-                                                        </svg>
-                                                        Edit
-                                                    </a>
-                                                    <form action="{{ route('detail-products.destroy', ['hash' => \App\Helpers\IdHashHelper::encode($detailProduct->id)]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this detail product?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="dropdown-item text-danger" style="border: none; background: none; display: block; width: 100%; text-align: left;">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash me-1">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                                <path d="M4 7l16 0" />
-                                                                <path d="M10 11l0 6" />
-                                                                <path d="M14 11l0 6" />
-                                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                            </svg>
-                                                            Delete
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -109,6 +59,54 @@
     </div>
 </div>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#myTable').DataTable({
+            serverSide: true,
+            ajax: '{{ route('detail-products.index') }}',
+            columns: [
+                { data: 'id_product', name: 'id_product', className: 'text-center' },
+                { data: 'name', name: 'name' },
+                { data: 'pcs', name: 'pcs', className: 'text-center' },
+                { data: 'dimension', name: 'dimension', className: 'text-center' },
+                { data: 'type', name: 'type', className: 'text-center' },
+                { data: 'color', name: 'color', className: 'text-center' },
+                { data: 'price', name: 'price' },
+                { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center' }
+            ],
+            language: {
+                        lengthMenu: "Tampilkan _MENU_ entri",
+                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                        paginate: {
+                            first: "Pertama",
+                            last: "Terakhir",
+                            next: "Selanjutnya",
+                            previous: "Sebelumnya"
+                        },
+                        search: "Cari :",
+                        infoFiltered: "(disaring dari total _MAX_ entri)"
+                        },
+                        lengthMenu: [5, 10, 25, 50],
+                        pageLength: 10,
+
+                        drawCallback: function() {
+                                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
+                                $('#myTable td:nth-child(2)').css({
+                                    'white-space': 'normal',
+                                    'word-wrap': 'break-word'
+                                });
+
+                                $('#myTable td:nth-child(4), #myTable td:nth-child(7)').css({
+                                    'max-width': '200px',
+                                    'overflow': 'hidden',
+                                    'text-overflow': 'ellipsis'
+                                });
+                            }
+        });
+    });
+    </script>
+    
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const forms = document.querySelectorAll('form');
