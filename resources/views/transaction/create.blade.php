@@ -47,7 +47,7 @@
                                                             <span>:</span>
                                                         </div>
                                                         <div class="col-5">
-                                                            <p>-</p>
+                                                            <p id="product-code">-</p>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -59,6 +59,27 @@
                                                         </div>
                                                         <div class="col-5">
                                                             <p>-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 d-flex justify-content-end align-items-start">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <p><strong>Set Country</strong></p>
+                                                        </div>
+                                                        <div class="col-1 text-center">
+                                                            <span>:</span>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <select class="form-control country" id="country">
+                                                                <option value="">Pilih Negara</option>
+                                                                @foreach ($country as $negara)
+                                                                    <option value="{{ $negara->id }}"
+                                                                        data-code="{{ $negara->code }}">
+                                                                        {{ $negara->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -84,9 +105,13 @@
                                                     <select class="form-control client" id="client">
                                                         <option value="">Pilih Client</option>
                                                         @foreach ($clients as $client)
-                                                            <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                                            <option value="{{ $client->id }}"
+                                                                data-address="{{ $client->address }}">{{ $client->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
+                                                    <!-- Element to display the address -->
+                                                    <div id="client-address" style="margin-top: 10px;"></div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -102,6 +127,8 @@
                                                     <select class="form-control consignee" id="consignee">
                                                         <option value="">Pilih Consignee</option>
                                                     </select>
+                                                    <!-- Element to display the address -->
+                                                    <div id="consignee-address" style="margin-top: 10px;"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -156,129 +183,161 @@
                                         <div class="row">
                                             <!-- Kolom Sebelah Kiri -->
                                             <div class="col-6">
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Name of Product</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="productName">-</p>
+                                                        <select class="form-control product" id="product">
+                                                            <option value="">Pilih Product</option>
+                                                            @foreach ($products as $product)
+                                                                <option value="{{ $product->id }}"
+                                                                    data-code="{{ $product->code }}">{{ $product->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Name of Commodity</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="commodityName">-</p>
+                                                        <select class="form-control commodity" id="commodity">
+                                                            <option value="">Pilih Commodity</option>
+                                                            @foreach ($commodities as $commodity)
+                                                                <option value="{{ $commodity->id }}">
+                                                                    {{ $commodity->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Container</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="container">-</p>
+                                                        <input type="text" name="container" id="container"
+                                                            class="form-control" placeholder="Masukkan Container">
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Net Weight</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="netWeight">-</p>
+                                                        <input type="number" id="decimalInput" name="decimalInput"
+                                                            class="form-control" step="0.01"
+                                                            placeholder="Contoh: 123.45" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Gross Weight</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="grossWeight">-</p>
+                                                        <input type="number" id="decimalInput" name="decimalInput"
+                                                            class="form-control" step="0.01"
+                                                            placeholder="Contoh: 123.45" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Payment Term</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="paymentTerm">-</p>
+                                                        <input type="text" name="container" id="container"
+                                                            class="form-control" placeholder="Masukkan Payment term">
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <!-- Kolom Sebelah Kanan -->
                                             <div class="col-6">
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Stuffing Date</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="stuffingDate">-</p>
+                                                        <input type="date" name="stuffing_date" id="stuffing_date"
+                                                            class="form-control" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>BL Number</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="blNumber">-</p>
+                                                        <input type="text" name="bl_number" id="bl_number"
+                                                            class="form-control" placeholder="Masukkan BL Number"
+                                                            required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Container Number</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="containerNumber">-</p>
+                                                        <input type="text" name="container_number"
+                                                            id="container_number" class="form-control"
+                                                            placeholder="Masukkan Container Number" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Seal Number</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="sealNumber">-</p>
+                                                        <input type="text" name="seal_number" id="seal_number"
+                                                            class="form-control" placeholder="Masukkan Seal Number"
+                                                            required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+
+                                                <div class="row mt-2">
                                                     <div class="col-4">
                                                         <p><strong>Product NCM</strong></p>
                                                     </div>
-                                                    <div class="col-3 text-center">
+                                                    <div class="col-2 text-center">
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <p id="productNcm">-</p>
+                                                        <input type="text" name="product_ncm" id="product_ncm"
+                                                            class="form-control" placeholder="Masukkan Product NCM"
+                                                            required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -299,46 +358,22 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
+                                        <div class="table-responsive pb-2 border-top" style="max-height: 18rem">
+                                            <table class="table table-bordered table-hover table-striped table-sm"
+                                                id="tableDetailTransaction">
                                                 <thead>
-                                                    <tr>
-                                                        <th>Item Description</th>
-                                                        <th>Carton (pcs)</th>
-                                                        <th>Inner (pcs)</th>
-                                                        <th>Unit Price (USD / KG)</th>
-                                                        <th>Net Weight (KG)</th>
-                                                        <th>Price Amount (USD)</th>
-                                                    </tr>
+                                                    <th class="text-center">Item Description</th>
+                                                    <th class="text-center">Carton(pcs)</th>
+                                                    <th class="text-center">Inner(pcs)</th>
+                                                    <th class="text-center">Unit Price(USD/KG)</th>
+                                                    <th class="text-center">Net Weight(KG)</th>
+                                                    <th class="text-center">Price Amount(USD)</th>
+                                                    <th class="text-center">Aksi</th>
                                                 </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" class="form-control"
-                                                                name="item_description[]" placeholder="Item Description">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control"
-                                                                name="carton_pcs[]" placeholder="Carton (pcs)">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="inner_pcs[]"
-                                                                placeholder="Inner (pcs)">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" step="0.01" class="form-control"
-                                                                name="unit_price[]" placeholder="Unit Price (USD / KG)">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" step="0.01" class="form-control"
-                                                                name="net_weight[]" placeholder="Net Weight (KG)">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" step="0.01" class="form-control"
-                                                                name="price_amount[]" placeholder="Price Amount (USD)">
-                                                        </td>
+                                                <tbody style="font-size: 12px">
+                                                    <tr id="nullDetailTransaction">
+                                                        <td colspan="11" class="text-center">Tidak ada barang</td>
                                                     </tr>
-                                                    <!-- Add more rows as needed -->
                                                 </tbody>
                                             </table>
                                         </div>
@@ -373,13 +408,13 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Product Name</th>
-                                            <th>Pcs</th>
-                                            <th>Dimension</th>
-                                            <th>Type</th>
-                                            <th>Color</th>
-                                            <th>Price</th>
-                                            <th>Action</th>
+                                            <th>Nama Produk</th>
+                                            <th>Jumlah (pcs)</th>
+                                            <th>Dimensi</th>
+                                            <th>Tipe</th>
+                                            <th>Warna</th>
+                                            <th>Harga</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -389,7 +424,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info" data-bs-dismiss="modal"
-                        aria-label="Close">Close</button>
+                        aria-label="Close">Tutup</button>
                 </div>
             </div>
         </div>
@@ -397,13 +432,30 @@
 
     <script>
         $(document).ready(function() {
-            $('#client').select2(); // Menginisialisasi Select2 untuk client
-            $('#consignee').select2(); // Menginisialisasi Select2 untuk consignee
+            // Menginisialisasi Select2
+            $('#client').select2();
+            $('#consignee').select2();
+            $('#product').select2();
+            $('#commodity').select2();
+            $('#country').select2();
 
             // Ketika client dipilih
             $('#client').on('change', function() {
                 var clientId = $(this).val(); // Ambil ID client yang dipilih
 
+                // Ambil data dari Select2 untuk client yang dipilih
+                var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
+
+                // Tampilkan address di div jika ada
+                if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
+                        'address')) {
+                    var address = $(selectedClientData.element).data('address');
+                    $('#client-address').html('<strong>Address: </strong>' + address);
+                } else {
+                    $('#client-address').html('');
+                }
+
+                // Jika clientId ada, lakukan AJAX untuk ambil consignees
                 if (clientId) {
                     $.ajax({
                         url: '/get-consignees/' + clientId, // Panggil route yang sudah kita buat
@@ -417,7 +469,8 @@
                             $('#consignee').append('<option value="">Pilih Consignee</option>');
                             $.each(data, function(key, consignee) {
                                 $('#consignee').append('<option value="' + consignee
-                                    .id + '">' + consignee.name + '</option>');
+                                    .id + '" data-address="' + consignee.address +
+                                    '">' + consignee.name + '</option>');
                             });
 
                             // Refresh Select2 setelah data diperbarui
@@ -429,59 +482,233 @@
                     $('#consignee').append('<option value="">Pilih Consignee</option>');
                 }
             });
+
+            $('#consignee').on('change', function() {
+                // Ambil data dari Select2 untuk client yang dipilih
+                var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
+
+                // Tampilkan address di div jika ada
+                if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
+                        'address')) {
+                    var address = $(selectedClientData.element).data('address');
+                    $('#consignee-address').html('<strong>Address: </strong>' + address);
+                } else {
+                    $('#consignee-address').html('');
+                }
+            });
         });
 
-        // DATATABLES
-    //     $(document).ready(function() {
-    //     var table = $('#detailProductTable').DataTable({
-    //         processing: true,
-    //         serverSide: true,
-    //         ajax: "{{ route('get-detail-products') }}",
-    //         columns: [
-    //             { data: 'id', name: 'id' },
-    //             { data: 'name', name: 'name' },
-    //             { data: 'pcs', name: 'pcs' },
-    //             { data: 'dimension', name: 'dimension' },
-    //             { data: 'type', name: 'type' },
-    //             { data: 'color', name: 'color' },
-    //             { data: 'price', name: 'price' },
-    //             { data: 'action', name: 'action', orderable: false, searchable: false }
-    //         ]
-    //     });
+        // modal datatables
+        $(document).ready(function() {
+            var table = $('#detailProductTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('get-detail-products') }}",
+                    data: function(d) {
+                        var productId = $('#product').val();
+                        d.id_product = productId ? productId :
+                            null; // Kirim nilai id_product jika produk dipilih
+                    }
+                },
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        title: "No"
+                    },
+                    {
+                        data: 'name',
+                        name: 'name',
+                        title: "Nama Produk"
+                    },
+                    {
+                        data: 'pcs',
+                        name: 'pcs',
+                        title: "Jumlah (pcs)"
+                    },
+                    {
+                        data: 'dimension',
+                        name: 'dimension',
+                        title: "Dimensi"
+                    },
+                    {
+                        data: 'type',
+                        name: 'type',
+                        title: "Tipe"
+                    },
+                    {
+                        data: 'color',
+                        name: 'color',
+                        title: "Warna"
+                    },
+                    {
+                        data: 'price',
+                        name: 'price',
+                        title: "Harga"
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-primary btn-sm pilih-btn">Pilih</button>`;
+                        }
+                    }
+                ],
+                language: {
+                    decimal: ",",
+                    thousands: ".",
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    zeroRecords: "Tidak ada data yang ditemukan",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 entri",
+                    infoFiltered: "(disaring dari _MAX_ total entri)",
+                    search: "Cari:",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    loadingRecords: "Sedang memuat...",
+                    processing: "Sedang memproses...",
+                    emptyTable: function() {
+                        var productSelected = $('#product').val();
+                        return productSelected ?
+                            "Produk yang Anda pilih tidak memiliki detail produk" :
+                            "Tolong pilih produk terlebih dahulu";
+                    },
+                    aria: {
+                        sortAscending: ": aktifkan untuk mengurutkan kolom secara ascending",
+                        sortDescending: ": aktifkan untuk mengurutkan kolom secara descending"
+                    },
+                    select: {
+                        rows: {
+                            _: "%d baris terpilih",
+                            1: "1 baris terpilih"
+                        }
+                    }
+                },
+                responsive: true,
+                autoWidth: false,
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10
+            });
 
-    //     // Load DataTables when modal is shown
-    //     $('#memberModal').on('shown.bs.modal', function () {
-    //         table.ajax.reload(null, false); // Reload data without resetting the table
-    //     });
-    // });
+            // Event ketika user memilih produk
+            $('#product').change(function() {
+                if ($(this).val()) {
+                    table.ajax.reload(); // Reload DataTables dengan data produk yang dipilih
+                } else {
+                    table.clear().draw(); // Kosongkan tabel jika tidak ada produk yang dipilih
+                }
+            });
 
-    $(document).ready(function() {
-        $('#detailProductTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('get-detail-products') }}",
-            columns: [
-                { data: 'id', name: 'id' },
-                { data: 'name', name: 'name' },
-                { data: 'pcs', name: 'pcs' },
-                { data: 'dimension', name: 'dimension' },
-                { data: 'type', name: 'type' },
-                { data: 'color', name: 'color' },
-                { data: 'price', name: 'price' },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ],
-            // Pengaturan styling
-            responsive: true,
-            autoWidth: false, // Tidak secara otomatis mengatur lebar kolom
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Cari produk...",
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri"
-            },
-            lengthMenu: [5, 10, 25, 50], // Menentukan jumlah data yang ditampilkan per halaman
-            pageLength: 10, // Jumlah default data yang ditampilkan
+            // event untuk code transaksi
+            // Fungsi untuk mendapatkan dua digit bulan dan dua digit tahun dari tanggal saat ini
+            function getTwoDigitYearMonth() {
+                var date = new Date();
+                var year = date.getFullYear().toString().slice(-2); // Mengambil dua digit terakhir dari tahun
+                var month = ("0" + (date.getMonth() + 1)).slice(-2); // Mengambil dua digit bulan
+                return year + month; // Menggabungkan dua digit tahun dan dua digit bulan
+            }
+
+            // Fungsi untuk memperbarui kode negara atau dua digit bulan
+            function updateProductCode() {
+                var countryCode = $('#country option:selected').data('code'); // Mengambil kode negara
+                var productCode = $('#product option:selected').data('code'); // Mengambil kode produk
+                var twoDigitYearMonth = getTwoDigitYearMonth(); // Mendapatkan dua digit tahun + dua digit bulan
+
+                // Jika ada produk yang dipilih dan ada kode negara
+                if (productCode && countryCode) {
+                    $('#product-code').text(productCode + ' ' + countryCode + twoDigitYearMonth);
+                }
+                // Jika produk dipilih, tapi negara belum dipilih
+                else if (productCode) {
+                    $('#product-code').text(productCode + ' ' + 'negara_mana?' + twoDigitYearMonth);
+                }
+                // Jika negara dipilih, tapi produk belum dipilih
+                else if (countryCode) {
+                    $('#product-code').text(countryCode + twoDigitYearMonth);
+                }
+                // Jika tidak ada produk atau negara yang dipilih
+                else {
+                    $('#product-code').text('-');
+                }
+            }
+
+            // Pantau perubahan pada dropdown product dan country untuk memperbarui kode
+            $('#product, #country').on('change', function() {
+                updateProductCode();
+            });
+
+            // Jalankan fungsi updateProductCode saat halaman dimuat untuk menginisialisasi
+            updateProductCode();
+
+            // Event handler ketika tombol "Pilih" diklik
+            $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
+                var data = table.row($(this).parents('tr'))
+                    .data(); // Mengambil data dari baris yang dipilih
+
+                // Membuat elemen tr untuk ditambahkan ke tabel #tableDetailTransaction
+                var newRow = `
+        <tr>
+            <td class="text-center">
+                <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
+                ${data.dimension} ${data.color} - ${data.type}
+            </td>
+            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" /></td>
+            <td class="text-center inner-result">
+                0
+            </td>
+            <td class="text-center price">${data.price}</td>
+            <td class="text-center net-weight">0</td>
+            <td class="text-center price-result">0</td>
+            <td class="text-center">
+                <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
+            </td>
+        </tr>`;
+
+                // Menambahkan elemen tr baru ke tabel #tableDetailTransaction
+                $('#tableDetailTransaction tbody').append(newRow);
+
+                // Menghapus baris "Tidak ada barang" jika ada
+                $('#nullDetailTransaction').remove();
+
+                // Event listener to calculate the result
+                $('#tableDetailTransaction tbody').on('input', '.qty-input, .carton-input', function() {
+                    var row = $(this).closest('tr');
+                    var qty = parseFloat(row.find('.qty-input').val()) || 0;
+                    var carton = parseFloat(row.find('.carton-input').val()) || 0;
+                    var price = parseFloat(row.find('.price').data('price')) || 0;
+
+                    // Multiply qty by carton and update the result
+                    var result = qty * carton;
+                    row.find('.inner-result').text(result);
+                    row.find('.net-weight').text(result);
+
+                    // Update the price based on result * data.price
+                    var totalPrice = result * data.price;
+                    // Round the total price to the nearest integer
+                    var roundedPrice = Math.round(totalPrice);
+                    row.find('.price-result').text(roundedPrice);
+                });
+                // Store the price in a data attribute for easy retrieval
+                $('.price-result').attr('data-price', data.price);
+            });
+
+            // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
+            $('#tableDetailTransaction tbody').on('click', '.remove-btn', function() {
+                $(this).closest('tr').remove(); // Menghapus baris saat tombol Hapus diklik
+
+                // Jika tidak ada baris lagi, tambahkan kembali baris "Tidak ada barang"
+                if ($('#tableDetailTransaction tbody tr').length === 0) {
+                    $('#tableDetailTransaction tbody').append(`
+            <tr id="nullDetailTransaction">
+                <td colspan="7" class="text-center">Tidak ada barang</td>
+            </tr>`);
+                }
+            });
         });
-    });
     </script>
 @endsection
