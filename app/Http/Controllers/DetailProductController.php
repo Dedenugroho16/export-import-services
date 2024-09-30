@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DetailProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Helpers\IdHashHelper; // Import IdHashHelper
+use App\Helpers\IdHashHelper;
 use Yajra\DataTables\Facades\DataTables;
 
 class DetailProductController extends Controller
@@ -51,14 +51,23 @@ class DetailProductController extends Controller
     }
 
 
-    // Show the form for creating a new detail product
-    public function create()
+    public function create($hash)
     {
-        $products = Product::all();
-        return view('detail-products.create', compact('products'));
+        // Decode hashed ID menjadi ID asli
+        $productId = IdHashHelper::decode($hash);
+    
+        // Temukan produk berdasarkan ID asli
+        $product = Product::find($productId);
+    
+        // Jika produk tidak ditemukan, kembalikan 404
+        if (!$product) {
+            abort(404);
+        }
+        return view('detail-products.create', [
+            'product' => $product // Kirim produk ke view
+        ]);
     }
-
-    // Store a newly created detail product in storage
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -75,7 +84,7 @@ class DetailProductController extends Controller
         $product = Product::findOrFail($request->id_product);
         $productName = $product->name;
 
-        return redirect()->route('products.index')->with('details_success', 'Detail ' . $productName . ' berhasil ditambahkan.');
+        return redirect($request->input('previous_url', route('products.index')))->with('details_success', 'Detail ' . $productName . ' berhasil ditambahkan.');
     }
 
     // Display the specified detail product
@@ -90,8 +99,8 @@ class DetailProductController extends Controller
     // Show the form for editing the specified detail product
     public function edit($hash)
     {
-        $id = IdHashHelper::decode($hash); // Decode hash to get the ID
-        $detailProduct = DetailProduct::findOrFail($id); // Find the DetailProduct by ID
+        $id = IdHashHelper::decode($hash);
+        $detailProduct = DetailProduct::findOrFail($id);
         $products = Product::all(); // Get all products
 
         return view('detail-products.edit', [
@@ -104,7 +113,7 @@ class DetailProductController extends Controller
     // Update the specified detail product in storage
     public function update(Request $request, $hash)
     {
-        $id = IdHashHelper::decode($hash); // Decode hash to get the ID
+        $id = IdHashHelper::decode($hash);
         $detailProduct = DetailProduct::findOrFail($id);
 
         $request->validate([
@@ -123,7 +132,7 @@ class DetailProductController extends Controller
         ->with('details_success', 'Detail produk berhasil diupdate.');
     }
 
-    // Remove the specified detail product from storage
+
     public function destroy($hash)
     {
         $id = IdHashHelper::decode($hash);

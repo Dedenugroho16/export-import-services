@@ -20,17 +20,11 @@
 
                         <form action="{{ route('detail-products.store') }}" method="POST">
                             @csrf
-                            <div class="mb-3">
-                                <label for="id_product" class="form-label">Produk</label>
-                                <select name="id_product" id="id_product" class="form-control" required>
-                                    <option value="">Select Product</option>
-                                    @foreach($products as $product)
-                                        <option value="{{ $product->id }}" {{ old('id_product') == $product->id ? 'selected' : '' }}>>
-                                            {{ $product->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+
+                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
+                            
+                            <!-- Hidden field for product ID -->
+                            <input type="hidden" name="id_product" value="{{ $product->id }}">
 
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama</label>

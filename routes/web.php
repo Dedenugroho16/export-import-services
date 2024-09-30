@@ -49,6 +49,7 @@ Route::get('/detail-products/{hash}', [DetailProductController::class, 'show'])-
 Route::get('/detail-products/{hash}/edit', [DetailProductController::class, 'edit'])->name('detail-products.edit');
 Route::put('/detail-products/{hash}', [DetailProductController::class, 'update'])->name('detail-products.update');
 Route::delete('/detail-products/{hash}', [DetailProductController::class, 'destroy'])->name('detail-products.destroy');
+Route::get('detail-products/create/{hash}', [DetailProductController::class, 'create'])->name('detail-products.create');
 
 
 // Country Routes using resource
