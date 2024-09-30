@@ -36,7 +36,7 @@
                                                             <span>:</span>
                                                         </div>
                                                         <div class="col-5">
-                                                            <p>{{ date('d F Y') }}</p>
+                                                            <p id="date">{{ date('F d, Y') }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -58,7 +58,7 @@
                                                             <span>:</span>
                                                         </div>
                                                         <div class="col-5">
-                                                            <p>-</p>
+                                                            <p id="number">-</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -91,6 +91,8 @@
 
                             <form>
                                 @csrf
+                                <input type="date" id="date" name="date" value="{{ date('F d, Y') }}" hidden>
+                                
 
                                 <!-- Bagian 2: Consignee, Notify, Client -->
                                 <div class="card mt-3">
@@ -195,7 +197,9 @@
                                                             <option value="">Pilih Product</option>
                                                             @foreach ($products as $product)
                                                                 <option value="{{ $product->id }}"
-                                                                    data-code="{{ $product->code }}">{{ $product->name }}
+                                                                    data-code="{{ $product->code }}"
+                                                                    data-abbreviation="{{ $product->abbreviation }}">
+                                                                    {{ $product->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -637,13 +641,56 @@
                 }
             }
 
+            function updateNumber() {
+                var productAbbreviation = $('#product option:selected').data(
+                    'abbreviation'); // Mengambil abbreviation produk
+                var countryCode = $('#country option:selected').data('code'); // Mengambil kode negara
+
+                // Mendapatkan tanggal saat ini
+                var currentDate = new Date();
+
+                // Mendapatkan dua digit bulan (misalnya 09 untuk September)
+                var twoDigitMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+
+                // Mendapatkan angka Romawi bulan
+                var romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                var romanMonth = romanMonths[currentDate.getMonth()]; // Bulan dalam format Romawi
+
+                // Mendapatkan dua digit tahun
+                var twoDigitYear = currentDate.getFullYear().toString().slice(-2);
+
+                if (productAbbreviation && countryCode) {
+                    // Format yang diminta: 'countryCode/09/INV/II/24'
+                    var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
+                        twoDigitYear;
+                    $('#number').text('{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
+                        formattedNumber);
+                } else if (productAbbreviation) {
+                    // Format yang diminta: 'countryCode/09/INV/II/24'
+                    var formattedNumber = '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
+                        twoDigitYear;
+                    $('#number').text('{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
+                        formattedNumber);
+                } else if (countryCode) {
+                    // Format yang diminta: 'countryCode/09/INV/II/24'
+                    var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
+                        twoDigitYear;
+                    $('#number').text('{{ $formattedNumber }}' + ' ' +
+                        formattedNumber);
+                } else {
+                    $('#number').text('{{ $formattedNumber }}');
+                }
+            }
+
             // Pantau perubahan pada dropdown product dan country untuk memperbarui kode
             $('#product, #country').on('change', function() {
                 updateProductCode();
+                updateNumber()
             });
 
             // Jalankan fungsi updateProductCode saat halaman dimuat untuk menginisialisasi
             updateProductCode();
+            updateNumber()
 
             // Event handler ketika tombol "Pilih" diklik
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
