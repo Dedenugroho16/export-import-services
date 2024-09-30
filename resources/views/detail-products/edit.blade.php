@@ -27,7 +27,7 @@
                             
                             <div class="mb-3">
                                 <label for="id_product" class="form-label">Produk</label>
-                                <select name="product_id" id="id_product" class="form-control" required>
+                                <select name="id_product" id="id_product" class="form-control" required>
                                     @foreach($products as $product)
                                         <option value="{{ $product->id }}" {{ $product->id == $detailProduct->id_product ? 'selected' : '' }}>
                                             {{ $product->name }}

@@ -3,7 +3,14 @@
 @section('content')
 <div class="page-body">
     <div class="container-xl">
-        <!-- Card Details Product -->
+        <div class="mb-4 mt-4">
+            <a href="{{ route('detail-products.create') }}" class="btn btn-primary">
+                Tambah
+            </a>
+            <a href="{{ route('products.index') }}" class="btn btn-outline-primary">
+                Kembali
+            </a>
+        </div>
         <div class="card mb-5">
             <div class="card-header shadow-sm p-3 d-flex justify-content-between align-items-center">
                 <h3 class="card-title">Informasi Produk</h3>
@@ -45,15 +52,7 @@
                                 <td>{{ $product->name }}</td>
                             </tr>
                         </tbody>
-                    </table>                  
-                    <div class="mb-4 d-flex justify-content-between align-items-center">
-                        <a href="{{ route('detail-products.create') }}" class="btn btn-primary">
-                            Tambah
-                        </a>
-                        <a href="{{ route('products.index') }}" class="btn btn-outline-primary">
-                            Kembali
-                        </a>
-                    </div>
+                    </table>                   
                     
                 </div>
             </div>
