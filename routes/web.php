@@ -23,6 +23,8 @@ Route::get('clients', [ClientsController::class, 'index'])->name('clients.index'
 Route::get('/clients/{hash}', [ClientsController::class, 'show'])->name('clients.show');
 Route::get('/clients/{hash}/edit', [ClientsController::class, 'edit'])->name('clients.edit');
 Route::put('/clients/{hash}', [ClientsController::class, 'update'])->name('clients.update');
+Route::get('clients/details/{hash}', [ClientsController::class, 'details'])->name('clients.details');
+
 
 // Consignee Routes using resource
 Route::resource('consignees', ConsigneesController::class);
