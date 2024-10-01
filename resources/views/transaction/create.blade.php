@@ -120,7 +120,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="notify">Notify</label>
-                                                    <input type="text" id="notify" class="form-control"
+                                                    <input type="text" name="notify" id="notify" class="form-control"
                                                         placeholder="Enter notify party">
                                                 </div>
                                             </div>
@@ -148,28 +148,28 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="port_of_loading">Port of Loading</label>
-                                                    <input type="text" id="port_of_loading" class="form-control"
+                                                    <input type="text" name="port_of_loading" id="port_of_loading" class="form-control"
                                                         placeholder="Enter port of loading">
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="place_of_receipt">Place of Receipt</label>
-                                                    <input type="text" id="place_of_receipt" class="form-control"
+                                                    <input type="text" name="place_of_receipt" id="place_of_receipt" class="form-control"
                                                         placeholder="Enter place of receipt">
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="port_of_discharge">Port of Discharge</label>
-                                                    <input type="text" id="port_of_discharge" class="form-control"
+                                                    <input type="text" name="port_of_discharge" id="port_of_discharge" class="form-control"
                                                         placeholder="Enter port of discharge">
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="place_of_delivery">Place of Delivery</label>
-                                                    <input type="text" id="place_of_delivery" class="form-control"
+                                                    <input type="text" name="place_of_delivery" id="place_of_delivery" class="form-control"
                                                         placeholder="Enter place of delivery">
                                                 </div>
                                             </div>
@@ -270,7 +270,7 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="text" name="container" id="container"
+                                                        <input type="text" name="payment_term" id="payment_term"
                                                             class="form-control" placeholder="Masukkan Payment term">
                                                     </div>
                                                 </div>
@@ -386,22 +386,25 @@
                                                         <td class="text-center" id="totalInner">0</td>
                                                         <td class="text-center"></td>
                                                         <td class="text-center" id="totalNetWeight">0</td>
-                                                        <td class="text-center" id="totalPriceAmount">0</td>
+                                                        <td class="text-center" id="PriceAmount">0</td>
                                                         <td></td>
                                                     </tr>
                                                     <tr id="inputRow">
                                                         <td class="text-center" colspan="5"></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                <label for="additionalInput" class="mr-2">Freight Cost :</label>
-                                                                <input type="text" class="form-control" id="additionalInput" placeholder="Freight cost" style="width: 150px;">
+                                                                <label for="additionalInput" class="mr-2">Freight Cost
+                                                                    :</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="freight_cost" placeholder="Freight cost"
+                                                                    style="width: 150px;">
                                                             </div>
                                                         </td>
                                                         <td></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center" colspan="5"></td>
-                                                        <td class="text-center" id="amount-total-price">Total : </td>
+                                                        <td class="text-center" id="amount-total-price">Total : - </td>
                                                         <td></td>
                                                     </tr>
                                                 </tfoot>
@@ -772,37 +775,56 @@
                     row.find('.price-result').text(roundedPrice);
 
                     // Update total values in the footer
-                    updateTotals();
+                    updateAmounts();
                 });
 
-                function updateTotals() {
+                function updateAmounts() {
                     var totalCarton = 0;
                     var totalInner = 0;
                     var totalNetWeight = 0;
-                    var totalPriceAmount = 0;
+                    var PriceAmount = 0;
 
                     // Iterasi setiap baris untuk mendapatkan nilai total
                     $('#tableDetailTransaction tbody tr').each(function() {
                         var carton = parseFloat($(this).find('.carton-input').val()) || 0;
                         var inner = parseFloat($(this).find('.inner-result').text()) || 0;
                         var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
-                        var priceAmount = parseFloat($(this).find('.price-result').text()) || 0;
+                        var price = parseFloat($(this).find('.price-result').text()) || 0;
 
                         totalCarton += carton;
                         totalInner += inner;
                         totalNetWeight += netWeight;
-                        totalPriceAmount += priceAmount;
+                        PriceAmount += price;
                     });
 
                     // Update nilai total di footer
                     $('#totalCarton').text(totalCarton);
                     $('#totalInner').text(totalInner);
                     $('#totalNetWeight').text(totalNetWeight);
-                    $('#totalPriceAmount').text(totalPriceAmount);
+                    $('#PriceAmount').text(PriceAmount);
                 }
 
-                // Store the price in a data attribute for easy retrieval
-                $('.price-result').attr('data-price', data.price);
+                // Fungsi untuk memperbarui total price amount
+                function updateTotals() {
+                    // Ambil nilai dari Price Amount yang ada di kolom
+                    var priceAmount = parseFloat($('#PriceAmount').text()) || 0;
+
+                    // Ambil nilai dari input Freight Cost
+                    var freightCost = parseFloat($('#freight_cost').val()) || 0;
+
+                    // Hitung total dengan menambahkan priceAmount dan freightCost
+                    var total = priceAmount + freightCost;
+
+                    // Update elemen dengan total baru
+                    $('#amount-total-price').text('Total : ' + total);
+                }
+
+                // Event listener untuk input Freight Cost
+                $('#freight_cost').on('input', function() {
+                    updateTotals(); // Panggil fungsi saat input freight cost berubah
+                });
+
+
             });
 
             // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
