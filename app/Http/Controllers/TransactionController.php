@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Product;
 use App\Models\Commodity;
 use App\Models\Consignee;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\DetailProduct;
 use Yajra\DataTables\Facades\DataTables;
@@ -32,7 +33,26 @@ class TransactionController extends Controller
         $products = Product::all();
         $commodities = Commodity::all();
         $country = Country::all();
-        return view('transaction.create', compact('consignees', 'clients', 'products', 'commodities', 'country'));
+
+        // Mengambil number terakhir dari tabel transaction
+        $lastTransaction = Transaction::orderBy('number', 'desc')->first();
+
+        // Jika belum ada data di kolom number, mulai dari 0001
+        if ($lastTransaction === null || empty($lastTransaction->number)) {
+            $newNumber = '0001';
+        } else {
+            // Mengambil number terakhir dan menambah 1, pastikan tetap 4 digit
+            $lastNumber = intval($lastTransaction->number);
+            $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        }
+
+        // Mengambil dua digit tanggal saat ini
+        $twoDigitDate = date('d');
+
+        // Menggabungkan $newNumber dengan dua digit tanggal
+        $formattedNumber = $newNumber . '/' . $twoDigitDate;
+
+        return view('transaction.create', compact('consignees', 'clients', 'products', 'commodities', 'country', 'formattedNumber'));
     }
 
     // method get Consignee
