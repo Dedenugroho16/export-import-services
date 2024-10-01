@@ -777,6 +777,7 @@
 
                     // Update total values in the footer
                     updateAmounts();
+                    updateTotals();
                 });
 
                 function updateAmounts() {
@@ -825,20 +826,21 @@
                     updateTotals();
                 });
 
+                // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
+                $('#tableDetailTransaction tbody').on('click', '.remove-btn', function() {
+                    $(this).closest('tr').remove(); // Menghapus baris saat tombol Hapus diklik
 
-            });
-
-            // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
-            $('#tableDetailTransaction tbody').on('click', '.remove-btn', function() {
-                $(this).closest('tr').remove(); // Menghapus baris saat tombol Hapus diklik
-
-                // Jika tidak ada baris lagi, tambahkan kembali baris "Tidak ada barang"
-                if ($('#tableDetailTransaction tbody tr').length === 0) {
-                    $('#tableDetailTransaction tbody').append(`
+                    // Jika tidak ada baris lagi, tambahkan kembali baris "Tidak ada barang"
+                    if ($('#tableDetailTransaction tbody tr').length === 0) {
+                        $('#tableDetailTransaction tbody').append(`
             <tr id="nullDetailTransaction">
                 <td colspan="7" class="text-center">Tidak ada barang</td>
             </tr>`);
-                }
+                    }
+
+                    updateAmounts();
+                    updateTotals();
+                });
             });
 
             // FORM TRANSACTION VALUE
