@@ -64,6 +64,7 @@ class ConsigneesController extends Controller
 
     public function store(Request $request)
     {
+        // Validate incoming request
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
@@ -71,9 +72,14 @@ class ConsigneesController extends Controller
             'id_client' => 'required|exists:clients,id',
         ]);
 
+        // Create a new Consignee using the validated data
         Consignee::create($request->all());
 
-        return redirect()->route('consignees.index')->with('success', 'Consignee created successfully.');
+        // Fetch the client name for a more informative success message
+        $clientName = Client::findOrFail($request->id_client)->name;
+
+        // Redirect back to clients.index with a success message
+        return redirect()->route('clients.index')->with('success', 'Consignee for ' . $clientName . ' created successfully.');
     }
 
     public function edit($hash)

@@ -38,6 +38,7 @@ class ClientsController extends Controller
                                  </button>
                                 </form>
                             </div>
+                            <a href="'.route('clients.details', $hashId).'" class="btn btn-warning ms-2">Consignees</a>
                         </div>';
                     
                     return $actionBtn;
@@ -108,5 +109,11 @@ class ClientsController extends Controller
         $client->delete();
 
         return redirect()->route('clients.index')->with('success', 'Data clien berhasil di hapus.');
+    }
+    public function details($hash)
+    {
+        $id = IdHashHelper::decode($hash);
+        $client = Clients::with('consignees')->findOrFail($id); // Eager load consignees
+        return view('clients.details', compact('client'));
     }
 }
