@@ -94,8 +94,6 @@
                                 <input type="date" name="date" id="date" hidden>
                                 <input type="text" name="code" id="code" hidden>
                                 <input type="text" name="number" id="number" hidden>
-                                <input type="number" step="0.01" class="form-control" id="freight_cost"
-                                    name="freight_cost" min="0" max="99999999.99">
 
                                 <!-- Bagian 2: Consignee, Notify, Client -->
                                 <div class="card mt-3">
@@ -398,7 +396,7 @@
                                                                 <label for="additionalInput" class="mr-2">Freight Cost
                                                                     :</label>
                                                                 <input type="number" step="0.01" class="form-control"
-                                                                    id="freight_cost_display"
+                                                                    id="freight_cost" name="freight_cost"
                                                                     placeholder="Enter Freight Cost" min="0"
                                                                     max="99999999.99">
                                                             </div>
@@ -813,7 +811,7 @@
                     var priceAmount = parseFloat($('#PriceAmount').text()) || 0;
 
                     // Ambil nilai dari input Freight Cost
-                    var freightCost = parseFloat($('#freight_cost_display').val()) || 0;
+                    var freightCost = parseFloat($('#freight_cost').val()) || 0;
 
                     // Hitung total dengan menambahkan priceAmount dan freightCost
                     var total = priceAmount + freightCost;
@@ -823,11 +821,7 @@
                 }
 
                 // Event listener untuk input Freight Cost
-                $('#freight_cost_display').on('input', function() {
-                    var freightCost = $(this).val();
-                    console.log('Freight Cost:',
-                    freightCost); // Cek apakah nilai diambil dengan benar
-                    $('#freight_cost').val(freightCost);
+                $('#freight_cost').on('input', function() {
                     updateTotals();
                 });
 
