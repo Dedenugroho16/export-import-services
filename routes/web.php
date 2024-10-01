@@ -10,6 +10,7 @@ use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DetailProductController;
+use App\Http\Controllers\UserController;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
@@ -74,3 +75,5 @@ Route::post('/register', [AuthController::class, 'register'])->middleware('guest
 // Login Routes (Hanya untuk tamu)
 Route::view('/login', 'auth.login')->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
+
+Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
