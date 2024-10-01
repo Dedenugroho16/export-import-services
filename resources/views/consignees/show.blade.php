@@ -61,7 +61,7 @@
                             </table>
 
                             <div class="mt-5 d-flex justify-content-end">
-                                <a href="{{ route('consignees.index') }}" class="btn btn-primary">Kembali</a>
+                                <a href="javascript:window.history.back();" class="btn btn-primary">Kembali</a>
                             </div>
                         </div>
                     </div>

@@ -21,6 +21,7 @@
                         <!-- Edit Form -->
                         <form action="{{ route('consignees.update', \App\Helpers\IdHashHelper::encode($consignee->id)) }}" method="POST">
                             @csrf
+                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
                             @method('PUT')
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama Consignee</label>

@@ -28,6 +28,7 @@ Route::get('clients/details/{hash}', [ClientsController::class, 'details'])->nam
 
 // Consignee Routes using resource
 Route::resource('consignees', ConsigneesController::class);
+Route::get('consignees/create/{hash}', [ConsigneesController::class, 'create'])->name('consignees.create');
 
 // Product Routes using resource
 Route::resource('products', ProductsController::class);
