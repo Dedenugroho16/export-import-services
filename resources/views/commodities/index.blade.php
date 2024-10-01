@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-
+@section('title', 'Komoditas')
 @section('content')
 <div class="page-body">
     <div class="container-xl">
@@ -11,7 +11,7 @@
                     <path d="M12 5v14" />
                     <path d="M5 12h14" />
                 </svg>
-                Komoditas
+                Tambah
             </a>
         </div>
         <!-- Section Tabel Komoditas -->

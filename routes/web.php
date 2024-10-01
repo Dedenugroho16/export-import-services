@@ -23,9 +23,12 @@ Route::get('clients', [ClientsController::class, 'index'])->name('clients.index'
 Route::get('/clients/{hash}', [ClientsController::class, 'show'])->name('clients.show');
 Route::get('/clients/{hash}/edit', [ClientsController::class, 'edit'])->name('clients.edit');
 Route::put('/clients/{hash}', [ClientsController::class, 'update'])->name('clients.update');
+Route::get('clients/details/{hash}', [ClientsController::class, 'details'])->name('clients.details');
+
 
 // Consignee Routes using resource
 Route::resource('consignees', ConsigneesController::class);
+Route::get('consignees/create/{hash}', [ConsigneesController::class, 'create'])->name('consignees.create');
 
 // Product Routes using resource
 Route::resource('products', ProductsController::class);
@@ -49,6 +52,7 @@ Route::get('/detail-products/{hash}', [DetailProductController::class, 'show'])-
 Route::get('/detail-products/{hash}/edit', [DetailProductController::class, 'edit'])->name('detail-products.edit');
 Route::put('/detail-products/{hash}', [DetailProductController::class, 'update'])->name('detail-products.update');
 Route::delete('/detail-products/{hash}', [DetailProductController::class, 'destroy'])->name('detail-products.destroy');
+Route::get('detail-products/create/{hash}', [DetailProductController::class, 'create'])->name('detail-products.create');
 
 
 // Country Routes using resource

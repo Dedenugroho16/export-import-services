@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-
+@section('title', 'Consignee')
 @section('content')
 <div class="page-body">
     <div class="container-xl">
@@ -21,21 +21,10 @@
                         <!-- Consignee Form -->
                         <form action="{{ route('consignees.store') }}" method="POST">
                             @csrf
-                            <!-- Client Dropdown -->
-                            <div class="mb-5">
-                                <label for="id_client" class="form-label">Client</label>
-                                <select id="id_client" name="id_client" class="form-control" required>
-                                    <option value="">Pilih Client</option>
-                                    @foreach($clients as $client)
-                                        <option value="{{ $client->id }}" {{ old('id_client') == $client->id ? 'selected' : '' }}>
-                                            {{ $client->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('id_client')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
+                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
+                            
+                            <!-- Hidden field for product ID -->
+                            <input type="hidden" name="id_client" value="{{ $client->id }}">
 
                             <!-- Consignee Name -->
                             <div class="mb-3">
@@ -67,7 +56,7 @@
                             
                             <!-- Buttons -->
                             <div class="text-end">
-                                <a href="{{ route('consignees.index') }}" class="btn btn-outline-primary">Kembali</a>
+                            <a href="javascript:window.history.back();" class="btn btn-outline-primary">Kembali</a>
                                 <button type="submit" class="btn btn-primary">Tambah</button>
                             </div>
                         </form>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Consignee;
 use App\Models\Client;
 use App\Helpers\IdHashHelper;
+use App\Models\Clients;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -45,10 +46,6 @@ class ConsigneesController extends Controller
                     
                     return $actionBtn;
                 })
-                ->editColumn('id_client', function($row) {
-                    // Tampilkan nama client terkait, jika ada
-                    return $row->client ? $row->client->name : 'N/A';
-                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -56,14 +53,24 @@ class ConsigneesController extends Controller
         return view('consignees.index');
     }
 
-    public function create()
+    public function create($hash)
     {
-        $clients = Client::all();
-        return view('consignees.create', compact('clients'));
+   
+        $clientId = IdHashHelper::decode($hash);
+    
+        $client = Clients::find($clientId);
+    
+        if (!$client) {
+            abort(404);
+        }
+        return view('consignees.create', [
+            'client' => $client
+        ]);
     }
 
     public function store(Request $request)
     {
+        // Validate incoming request
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
@@ -71,9 +78,14 @@ class ConsigneesController extends Controller
             'id_client' => 'required|exists:clients,id',
         ]);
 
+        // Create a new Consignee using the validated data
         Consignee::create($request->all());
 
-        return redirect()->route('consignees.index')->with('success', 'Consignee created successfully.');
+        // Fetch the client name for a more informative success message
+        $clientName = Client::findOrFail($request->id_client)->name;
+
+        // Redirect back to clients.index with a success message
+        return redirect($request->input('previous_url', route('products.index')))->with('Data berhasil ditambahkan');
     }
 
     public function edit($hash)
@@ -97,7 +109,8 @@ class ConsigneesController extends Controller
         $consignee = Consignee::findOrFail($id);
         $consignee->update($request->all());
 
-        return redirect()->route('consignees.index')->with('success', 'Consignee updated successfully.');
+        return redirect($request->input('previous_url', route('products.index')))
+        ->with('details_success', 'Data berhasil di update');
     }
 
     public function show($hash)
@@ -113,6 +126,6 @@ class ConsigneesController extends Controller
         $consignee = Consignee::findOrFail($id);
         $consignee->delete();
 
-        return redirect()->route('consignees.index')->with('success', 'Consignee deleted successfully.');
+        return redirect()->back()->with('details_success', 'Data berhasil di hapus');
     }
 }

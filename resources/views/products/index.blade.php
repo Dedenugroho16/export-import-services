@@ -1,31 +1,15 @@
 @extends('layouts.layout')
+@section('title', 'Produk')
 
 @section('content')
 <div class="page-body">
-    <div class="container-xl mb-5">
-        <!-- Dashboard Header and Add Product & Detail Product Button -->
+    <div class="container-xl">
+        <!-- Dashboard Header and Add Client Button -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
-            <div class="d-flex gap-3">
-                <!-- Button Produk -->
-                <a href="{{ route('products.create') }}" class="btn btn-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M12 5l0 14"/>
-                        <path d="M5 12l14 0"/>
-                    </svg>
-                    Produk
-                </a>
-
-                <!-- Button Detail Produk -->
-                <a href="{{ route('detail-products.create') }}" class="btn btn-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M12 5l0 14"/>
-                        <path d="M5 12l14 0"/>
-                    </svg>
-                    Detail Produk
-                </a>
-            </div>
+            <a href="{{ route('products.create') }}" class="btn btn-primary">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+                Tambah
+            </a>
         </div>
         <!-- Products Section -->
         <div class="row row-deck row-cards">

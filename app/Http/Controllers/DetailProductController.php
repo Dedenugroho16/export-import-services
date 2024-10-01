@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DetailProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Helpers\IdHashHelper; // Import IdHashHelper
+use App\Helpers\IdHashHelper;
 use Yajra\DataTables\Facades\DataTables;
 
 class DetailProductController extends Controller
@@ -51,18 +51,27 @@ class DetailProductController extends Controller
     }
 
 
-    // Show the form for creating a new detail product
-    public function create()
+    public function create($hash)
     {
-        $products = Product::all();
-
-        return view('detail-products.create', compact('products'));
+        // Decode hashed ID menjadi ID asli
+        $productId = IdHashHelper::decode($hash);
+    
+        // Temukan produk berdasarkan ID asli
+        $product = Product::find($productId);
+    
+        // Jika produk tidak ditemukan, kembalikan 404
+        if (!$product) {
+            abort(404);
+        }
+        return view('detail-products.create', [
+            'product' => $product // Kirim produk ke view
+        ]);
     }
-
+    
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'id_product' => 'required|exists:products,id',
             'name' => 'required|string|max:255',
             'pcs' => 'required|integer',
             'dimension' => 'required|string|max:255',
@@ -72,17 +81,16 @@ class DetailProductController extends Controller
         ]);
 
         DetailProduct::create($request->all());
-
-        $product = Product::findOrFail($request->product_id);
+        $product = Product::findOrFail($request->id_product);
         $productName = $product->name;
 
-        return redirect()->route('products.index')->with('details_success', 'Detail produk ' . $productName . ' berhasil ditambahkan.');
+        return redirect($request->input('previous_url', route('products.index')))->with('details_success', 'Data berhasil ditambahkan.');
     }
 
+    // Display the specified detail product
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);
-
         $detailProduct = DetailProduct::with('product')->findOrFail($id);
 
         return view('detail-products.show', compact('detailProduct'));
@@ -92,28 +100,24 @@ class DetailProductController extends Controller
     public function edit($hash)
     {
         $id = IdHashHelper::decode($hash);
-
         $detailProduct = DetailProduct::findOrFail($id);
+        $products = Product::all(); // Get all products
 
-        // Mendapatkan semua produk untuk dropdown
-        $products = Product::all();
-
-        // Mengembalikan view edit dengan data produk terkait
         return view('detail-products.edit', [
             'detailProduct' => $detailProduct,
             'products' => $products,
-            'hash' => $hash // Mengirim hash ke view untuk digunakan dalam form action
+            'hash' => $hash // Pass the hash to the view for the form action
         ]);
     }
 
-
+    // Update the specified detail product in storage
     public function update(Request $request, $hash)
     {
         $id = IdHashHelper::decode($hash);
         $detailProduct = DetailProduct::findOrFail($id);
 
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'id_product' => 'required|exists:products,id',
             'name' => 'required|string|max:255',
             'pcs' => 'required|integer',
             'dimension' => 'required|string|max:255',
@@ -124,17 +128,17 @@ class DetailProductController extends Controller
 
         $detailProduct->update($request->all());
 
-        return redirect()->route('products.index')
-            ->with('details_success', 'Detail produk berhasil diupdate.');
+        return redirect($request->input('previous_url', route('products.index')))
+        ->with('details_success', 'Data berhasil di update');
     }
+
 
     public function destroy($hash)
     {
         $id = IdHashHelper::decode($hash);
-
         $detailProduct = DetailProduct::findOrFail($id);
         $detailProduct->delete();
 
-        return redirect()->back()->with('details_success', 'Detail produk berhasil dihapus.');
+        return redirect()->back()->with('details_success', 'Data berhasil dihapus.');
     }
 }

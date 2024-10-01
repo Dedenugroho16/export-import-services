@@ -1,4 +1,5 @@
 @extends('layouts.layout')
+@section('title', 'Client')
 
 @section('content')
 <div class="page-body">
@@ -7,7 +8,7 @@
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="{{ route('clients.create') }}" class="btn btn-primary">
                 <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
-                Client
+                Tambah
             </a>
         </div>
         <!-- Clients Section -->

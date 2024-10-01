@@ -1,4 +1,5 @@
 @extends('layouts.layout')
+@section('title', 'Negara')
 
 @section('content')
 <div class="page-body">
@@ -11,7 +12,7 @@
                     <path d="M12 5v14"/>
                     <path d="M5 12h14"/>
                 </svg>
-                Negara
+                Tambah
             </a>
         </div>
         <!-- Countries Section -->
@@ -19,27 +20,13 @@
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-body">
-                        <!-- Success Message for Adding or Updating Country -->
-                        @if (session('success'))
-                        <div class="alert alert-important alert-success alert-dismissible" role="alert">
-                            <div class="d-flex">
-                                <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
-                                </div>
-                                <div>{{ session('success') }}</div>
-                            </div>
-                            <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
-                        </div>
-                        @endif
-
-                        <!-- Table Starts Here -->
+                       <!-- Table Starts Here -->
                         <div class="table-responsive">
                             <table id="countryTable" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Negara</th>
-                                        <th class="text-center">Kode</th>
-                                        <th class="text-center">Aksi</th>
+                                        <th class="text-center">Kode Negara</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -63,8 +50,7 @@
             ajax: "{{ route('countries.index') }}",
             columns: [
                 { data: 'name', name: 'name', class: 'text-center' },
-                { data: 'code', name: 'code', class: 'text-center' },
-                { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' } 
+                { data: 'code', name: 'code', class: 'text-center' }
             ],
             language: {
                 lengthMenu: "Tampilkan _MENU_ entri",

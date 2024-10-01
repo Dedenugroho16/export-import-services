@@ -1,4 +1,5 @@
 @extends('layouts.layout')
+@section('title', 'Dashboard')
 @section('content')
 <div class="page-body">
     <div class="container-xl">
