@@ -60,6 +60,7 @@ Route::resource('countries', CountryController::class);
 
 // Transaction Routes using resource
 Route::resource('transaction', TransactionController::class);
+Route::post('transaction', [TransactionController::class, 'store'])->name('transaction.store');
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
 Route::get('/get-detail-products', [TransactionController::class, 'getDetailProducts'])->name('get-detail-products');

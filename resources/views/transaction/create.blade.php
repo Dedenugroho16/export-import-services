@@ -18,6 +18,16 @@
                                 </div>
                             @endif
 
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
                             {{-- Bagian 1 --}}
                             <div class="row">
                                 <div class="col-md-12">
@@ -89,7 +99,7 @@
                                 </div>
                             </div>
 
-                            <form id="formTransaction" method="POST">
+                            <form id="formTransaction" method="POST" action="{{ route('transaction.store') }}">
                                 @csrf
                                 <input type="date" name="date" id="date" hidden>
                                 <input type="text" name="code" id="code" hidden>
@@ -102,14 +112,17 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
+                                            <!-- Client Input -->
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="client">Client</label>
-                                                    <select class="form-control client" id="client">
+                                                    <select name="id_client" class="form-control client" id="client"
+                                                        required>
                                                         <option value="">Pilih Client</option>
                                                         @foreach ($clients as $client)
                                                             <option value="{{ $client->id }}"
-                                                                data-address="{{ $client->address }}">{{ $client->name }}
+                                                                data-address="{{ $client->address }}">
+                                                                {{ $client->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -117,18 +130,29 @@
                                                     <div id="client-address" style="margin-top: 10px;"></div>
                                                 </div>
                                             </div>
+
+                                            <!-- Notify Input -->
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="notify">Notify</label>
                                                     <input type="text" name="notify" id="notify" class="form-control"
-                                                        placeholder="Enter notify party">
+                                                        placeholder="Enter notify party" required>
                                                 </div>
                                             </div>
+
+                                            <!-- Consignee Input -->
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="consignee">Consignee</label>
-                                                    <select class="form-control consignee" id="consignee">
+                                                    <select name="id_consignee" class="form-control consignee"
+                                                        id="consignee" required>
                                                         <option value="">Pilih Consignee</option>
+                                                        @foreach ($consignees as $consignee)
+                                                            <option value="{{ $consignee->id }}"
+                                                                data-address="{{ $consignee->address }}">
+                                                                {{ $consignee->name }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
                                                     <!-- Element to display the address -->
                                                     <div id="consignee-address" style="margin-top: 10px;"></div>
@@ -138,6 +162,7 @@
                                     </div>
                                 </div>
 
+
                                 <!-- Bagian 3: Port of Loading, Place of Receipt, Port of Discharge, Place of Delivery -->
                                 <div class="card mt-3">
                                     <div class="card-header">
@@ -145,32 +170,42 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
+                                            <!-- Port of Loading Input -->
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="port_of_loading">Port of Loading</label>
                                                     <input type="text" name="port_of_loading" id="port_of_loading"
-                                                        class="form-control" placeholder="Enter port of loading">
+                                                        class="form-control" placeholder="Enter port of loading" required>
                                                 </div>
                                             </div>
+
+                                            <!-- Place of Receipt Input -->
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="place_of_receipt">Place of Receipt</label>
                                                     <input type="text" name="place_of_receipt" id="place_of_receipt"
-                                                        class="form-control" placeholder="Enter place of receipt">
+                                                        class="form-control" placeholder="Enter place of receipt"
+                                                        required>
                                                 </div>
                                             </div>
+
+                                            <!-- Port of Discharge Input -->
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="port_of_discharge">Port of Discharge</label>
                                                     <input type="text" name="port_of_discharge" id="port_of_discharge"
-                                                        class="form-control" placeholder="Enter port of discharge">
+                                                        class="form-control" placeholder="Enter port of discharge"
+                                                        required>
                                                 </div>
                                             </div>
+
+                                            <!-- Place of Delivery Input -->
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="place_of_delivery">Place of Delivery</label>
                                                     <input type="text" name="place_of_delivery" id="place_of_delivery"
-                                                        class="form-control" placeholder="Enter place of delivery">
+                                                        class="form-control" placeholder="Enter place of delivery"
+                                                        required>
                                                 </div>
                                             </div>
                                         </div>
@@ -194,7 +229,8 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <select class="form-control product" id="product">
+                                                        <select class="form-control product" id="product"
+                                                            name="id_product" required>
                                                             <option value="">Pilih Product</option>
                                                             @foreach ($products as $product)
                                                                 <option value="{{ $product->id }}"
@@ -214,7 +250,8 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <select class="form-control commodity" id="commodity">
+                                                        <select class="form-control commodity" id="commodity"
+                                                            name="id_commodity" required>
                                                             <option value="">Pilih Commodity</option>
                                                             @foreach ($commodities as $commodity)
                                                                 <option value="{{ $commodity->id }}">
@@ -233,7 +270,8 @@
                                                     </div>
                                                     <div class="col-5">
                                                         <input type="text" name="container" id="container"
-                                                            class="form-control" placeholder="Masukkan Container">
+                                                            class="form-control" placeholder="Masukkan Container"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-2">
@@ -271,7 +309,8 @@
                                                     </div>
                                                     <div class="col-5">
                                                         <input type="text" name="payment_term" id="payment_term"
-                                                            class="form-control" placeholder="Masukkan Payment term">
+                                                            class="form-control" placeholder="Masukkan Payment term"
+                                                            required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -406,9 +445,11 @@
                                                     <tr>
                                                         <td class="text-center" colspan="5"></td>
                                                         <td class="text-center" id="amount-total-price">
-                                                            <div class="form-group d-flex align-items-center justify-content-center">
+                                                            <div
+                                                                class="form-group d-flex align-items-center justify-content-center">
                                                                 <label for="total" class="mr-2">Total:</label>
-                                                                <input type="number" step="0.01" class="form-control" id="total" name="total" style="width: 150px;" disabled>
+                                                                <input type="number" step="0.01" class="form-control"
+                                                                    id="total" name="total" style="width: 150px;">
                                                             </div>
                                                         </td>
                                                         <td></td>
@@ -418,11 +459,13 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <input type="checkbox" name="approved" id="approved" value="1"> Approved
                             </form>
 
                             <!-- Tombol Submit -->
                             <div class="card-body text-end">
-                                <button type="submit" class="btn btn-primary">Submit Invoice</button>
+                                <button type="button" id="submitButton" class="btn btn-primary">Submit Invoice</button>
                             </div>
                         </div>
                     </div>
@@ -518,6 +561,7 @@
                     });
                 } else {
                     $('#consignee').empty();
+                    $('#consignee-address').empty();
                     $('#consignee').append('<option value="">Pilih Consignee</option>');
                 }
             });
@@ -864,6 +908,10 @@
 
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
+
+            $('#submitButton').on('click', function() {
+                $('#formTransaction').submit();
+            });
         });
     </script>
 @endsection
