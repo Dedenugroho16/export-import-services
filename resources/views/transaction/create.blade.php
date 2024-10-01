@@ -405,7 +405,12 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center" colspan="5"></td>
-                                                        <td class="text-center" id="amount-total-price">Total : - </td>
+                                                        <td class="text-center" id="amount-total-price">
+                                                            <div class="form-group d-flex align-items-center justify-content-center">
+                                                                <label for="total" class="mr-2">Total:</label>
+                                                                <input type="number" step="0.01" class="form-control" id="total" name="total" style="width: 150px;" disabled>
+                                                            </div>
+                                                        </td>
                                                         <td></td>
                                                     </tr>
                                                 </tfoot>
@@ -818,7 +823,7 @@
                     var total = priceAmount + freightCost;
 
                     // Update elemen dengan total baru
-                    $('#amount-total-price').text('Total : ' + total);
+                    $('#total').val(total);
                 }
 
                 // Event listener untuk input Freight Cost
