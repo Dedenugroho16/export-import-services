@@ -256,6 +256,19 @@
                                 </span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('branches.index') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-building-community">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9l5 5v7h-5v-4m0 4h-5v-7l5 -5m1 1v-6a1 1 0 0 1 1 -1h10a1 1 0 0 1 1 1v17h-8" /><path d="M13 7l0 .01" /><path d="M17 7l0 .01" /><path d="M17 11l0 .01" />
+                                        <path d="M17 15l0 .01" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">
+                                    Data Cabang
+                                </span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -268,9 +281,7 @@
                         <h1 id="page-title"
                             class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3"
                             style="font-size: 1.5rem;">
-                            <a href=".">
-                                Dashboard
-                            </a>
+                            @yield('title', 'Default Title')
                         </h1>
                         <div class="navbar-nav flex-row order-md-last">
                             <div class="d-none d-md-flex">
@@ -375,57 +386,10 @@
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
 
     <!-- DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> --}}
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const pages = {
-                "/": "Dashboard", // Default
-                "/dashboard": "Dashboard",
-                "/clients": "Client",
-                "/consignees": "Consignee",
-                "/products": "Produk",
-                "/commodities": "Commoditas",
-                "/detail-products": "Detail Produk",
-                "/countries": "Negara",
-                "/transaction/create": "Transaksi",
-                "/invoices": "Invoices",
-                "/settings": "Settings"
-            };
-
-            const dynamicPages = {
-                "/clients": "Client",
-                "/consignees": "Consignee",
-                "/commodities": "Komoditas",
-                "/products": "Produk",
-                "/detail-products": "Detail Produk",
-                "/countries": "Negara",
-                "/transaction": "Transaksi"
-            };
-
-            const updateTitle = () => {
-                const path = window.location.pathname;
-
-                // Cek untuk path yang eksak terlebih dahulu
-                let title = pages[path] || pages["/"];
-
-                // Cek URL dinamis berdasarkan awalan
-                for (let prefix in dynamicPages) {
-                    if (path.startsWith(prefix)) {
-                        title = dynamicPages[prefix];
-                        break;
-                    }
-                }
-
-                document.querySelector("#page-title").innerHTML = `<a href=".">${title}</a>`;
-            };
-
-            updateTitle();
-            window.addEventListener("popstate", updateTitle);
-        });
-    </script>
 </body>
 
 </html>

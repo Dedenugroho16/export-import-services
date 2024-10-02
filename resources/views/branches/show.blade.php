@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Komoditas')
+@section('title', 'Data Cabang')
 
 @section('content')
 <div class="page-body">
@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-header shadow-sm p-3 d-flex justify-content-between align-items-center">
-                        <h3 class="card-title">Commodity Information</h3>
+                        <h3 class="card-title">Informasi Cabang</h3>
                         <div class="dropdown">
                             <a class="btn btn-light" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-dots-vertical">
@@ -19,7 +19,7 @@
                                 </svg>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="{{ route('commodities.edit', \App\Helpers\IdHashHelper::encode($commodity->id)) }}">
+                                <a class="dropdown-item" href="{{ route('branches.edit', \App\Helpers\IdHashHelper::encode($branch->id)) }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                         <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/>
@@ -28,7 +28,7 @@
                                     </svg>
                                     Edit
                                 </a>
-                                <form action="{{ route('commodities.destroy', \App\Helpers\IdHashHelper::encode($commodity->id)) }}" method="POST" onsubmit="return confirm('Apakah anda yakin ingin menghapus data ini?')" style="display:inline;">
+                                <form action="{{ route('branches.destroy', \App\Helpers\IdHashHelper::encode($branch->id)) }}" method="POST" onsubmit="return confirm('Apakah anda yakin ingin menghapus data ini?')" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="dropdown-item text-danger" style="border: none; background: none;">
@@ -53,17 +53,25 @@
                                 <tbody>
                                     <tr>
                                         <th>ID</th>
-                                        <td>{{ $commodity->id }}</td>
+                                        <td>{{ $branch->id }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Name</th>
-                                        <td>{{ $commodity->name }}</td>
+                                        <th>Nama Cabang</th>
+                                        <td>{{ $branch->branch_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Alamat Cabang</th>
+                                        <td>{{ $branch->branch_address }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Telepon Cabang</th>
+                                        <td>{{ $branch->branch_phone }}</td>
                                     </tr>
                                 </tbody>
                             </table>
 
                             <div class="mt-5 d-flex justify-content-end">
-                                <a href="{{ route('commodities.index') }}" class="btn btn-primary">Kembali</a>
+                                <a href="{{ route('branches.index') }}" class="btn btn-primary">Kembali</a>
                             </div>
                         </div>
                     </div>

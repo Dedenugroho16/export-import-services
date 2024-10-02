@@ -23,7 +23,7 @@
                                 <div class="col-md-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h3 class="card-title">INVOICE - NUMBER</h3>
+                                            <h3 class="card-title">INVOICE</h3>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
@@ -36,7 +36,7 @@
                                                             <span>:</span>
                                                         </div>
                                                         <div class="col-5">
-                                                            <p>{{ date('d F Y') }}</p>
+                                                            <p>{{ date('F d, Y') }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -58,7 +58,7 @@
                                                             <span>:</span>
                                                         </div>
                                                         <div class="col-5">
-                                                            <p>-</p>
+                                                            <p id="numberDisplay">-</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -89,8 +89,13 @@
                                 </div>
                             </div>
 
-                            <form>
+                            <form id="formTransaction" method="POST">
                                 @csrf
+                                <input type="date" name="date" id="date" hidden>
+                                <input type="text" name="code" id="code" hidden>
+                                <input type="text" name="number" id="number" hidden>
+                                <input type="number" step="0.01" class="form-control" id="freight_cost"
+                                    name="freight_cost" min="0" max="99999999.99">
 
                                 <!-- Bagian 2: Consignee, Notify, Client -->
                                 <div class="card mt-3">
@@ -117,7 +122,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="notify">Notify</label>
-                                                    <input type="text" id="notify" class="form-control"
+                                                    <input type="text" name="notify" id="notify" class="form-control"
                                                         placeholder="Enter notify party">
                                                 </div>
                                             </div>
@@ -145,29 +150,29 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="port_of_loading">Port of Loading</label>
-                                                    <input type="text" id="port_of_loading" class="form-control"
-                                                        placeholder="Enter port of loading">
+                                                    <input type="text" name="port_of_loading" id="port_of_loading"
+                                                        class="form-control" placeholder="Enter port of loading">
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="place_of_receipt">Place of Receipt</label>
-                                                    <input type="text" id="place_of_receipt" class="form-control"
-                                                        placeholder="Enter place of receipt">
+                                                    <input type="text" name="place_of_receipt" id="place_of_receipt"
+                                                        class="form-control" placeholder="Enter place of receipt">
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="port_of_discharge">Port of Discharge</label>
-                                                    <input type="text" id="port_of_discharge" class="form-control"
-                                                        placeholder="Enter port of discharge">
+                                                    <input type="text" name="port_of_discharge" id="port_of_discharge"
+                                                        class="form-control" placeholder="Enter port of discharge">
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="place_of_delivery">Place of Delivery</label>
-                                                    <input type="text" id="place_of_delivery" class="form-control"
-                                                        placeholder="Enter place of delivery">
+                                                    <input type="text" name="place_of_delivery" id="place_of_delivery"
+                                                        class="form-control" placeholder="Enter place of delivery">
                                                 </div>
                                             </div>
                                         </div>
@@ -195,7 +200,9 @@
                                                             <option value="">Pilih Product</option>
                                                             @foreach ($products as $product)
                                                                 <option value="{{ $product->id }}"
-                                                                    data-code="{{ $product->code }}">{{ $product->name }}
+                                                                    data-code="{{ $product->code }}"
+                                                                    data-abbreviation="{{ $product->abbreviation }}">
+                                                                    {{ $product->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -239,7 +246,7 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="number" id="decimalInput" name="decimalInput"
+                                                        <input type="number" id="net_weight" name="net_weight"
                                                             class="form-control" step="0.01"
                                                             placeholder="Contoh: 123.45" required>
                                                     </div>
@@ -252,7 +259,7 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="number" id="decimalInput" name="decimalInput"
+                                                        <input type="number" id="gross_weight" name="gross_weight"
                                                             class="form-control" step="0.01"
                                                             placeholder="Contoh: 123.45" required>
                                                     </div>
@@ -265,7 +272,7 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="text" name="container" id="container"
+                                                        <input type="text" name="payment_term" id="payment_term"
                                                             class="form-control" placeholder="Masukkan Payment term">
                                                     </div>
                                                 </div>
@@ -344,9 +351,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </form>
 
-                            <form>
+                                {{-- tabel detail transaction --}}
                                 <div class="card mt-3">
                                     <div class="card-header d-flex justify-content-between">
                                         <h4>Transaction Details</h4>
@@ -370,11 +376,41 @@
                                                     <th class="text-center">Price Amount(USD)</th>
                                                     <th class="text-center">Aksi</th>
                                                 </thead>
-                                                <tbody style="font-size: 12px">
+                                                <tbody id="detail-rows" style="font-size: 12px">
                                                     <tr id="nullDetailTransaction">
-                                                        <td colspan="11" class="text-center">Tidak ada barang</td>
+                                                        <td colspan="7" class="text-center">Tidak ada barang</td>
                                                     </tr>
                                                 </tbody>
+                                                <tfoot>
+                                                    <tr id="totalRow" style="font-weight: bold;">
+                                                        <td class="text-center">Amount</td>
+                                                        <td class="text-center" id="totalCarton">0</td>
+                                                        <td class="text-center" id="totalInner">0</td>
+                                                        <td class="text-center"></td>
+                                                        <td class="text-center" id="totalNetWeight">0</td>
+                                                        <td class="text-center" id="PriceAmount">0</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr id="inputRow">
+                                                        <td class="text-center" colspan="5"></td>
+                                                        <td class="text-center">
+                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                <label for="additionalInput" class="mr-2">Freight Cost
+                                                                    :</label>
+                                                                <input type="number" step="0.01" class="form-control"
+                                                                    id="freight_cost_display"
+                                                                    placeholder="Enter Freight Cost" min="0"
+                                                                    max="99999999.99">
+                                                            </div>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center" colspan="5"></td>
+                                                        <td class="text-center" id="amount-total-price">Total : - </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tfoot>
                                             </table>
                                         </div>
                                     </div>
@@ -621,11 +657,13 @@
 
                 // Jika ada produk yang dipilih dan ada kode negara
                 if (productCode && countryCode) {
-                    $('#product-code').text(productCode + ' ' + countryCode + twoDigitYearMonth);
+                    var codeText = productCode + ' ' + countryCode + twoDigitYearMonth;
+                    $('#product-code').text(codeText);
+                    $('#code').val(codeText); // Mengisi input dengan nilai yang sama
                 }
                 // Jika produk dipilih, tapi negara belum dipilih
                 else if (productCode) {
-                    $('#product-code').text(productCode + ' ' + 'negara_mana?' + twoDigitYearMonth);
+                    $('#product-code').text(productCode + ' ' + 'pilih negara!' + twoDigitYearMonth);
                 }
                 // Jika negara dipilih, tapi produk belum dipilih
                 else if (countryCode) {
@@ -637,14 +675,60 @@
                 }
             }
 
+            function updateNumber() {
+                var productAbbreviation = $('#product option:selected').data(
+                    'abbreviation'); // Mengambil abbreviation produk
+                var countryCode = $('#country option:selected').data('code'); // Mengambil kode negara
+
+                // Mendapatkan tanggal saat ini
+                var currentDate = new Date();
+
+                // Mendapatkan dua digit bulan (misalnya 09 untuk September)
+                var twoDigitMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+
+                // Mendapatkan angka Romawi bulan
+                var romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                var romanMonth = romanMonths[currentDate.getMonth()]; // Bulan dalam format Romawi
+
+                // Mendapatkan dua digit tahun
+                var twoDigitYear = currentDate.getFullYear().toString().slice(-2);
+
+                if (productAbbreviation && countryCode) {
+                    // Format yang diminta: 'countryCode/09/INV/II/24'
+                    var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
+                        twoDigitYear;
+                    var finalNumber = '{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
+                        formattedNumber;
+                    $('#numberDisplay').text(finalNumber);
+                    $('#number').val(finalNumber); // Mengisi input dengan nilai yang sama
+                } else if (productAbbreviation) {
+                    // Format yang diminta: 'countryCode/09/INV/II/24'
+                    var formattedNumber = '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
+                        twoDigitYear;
+                    $('#numberDisplay').text('{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
+                        formattedNumber);
+                } else if (countryCode) {
+                    // Format yang diminta: 'countryCode/09/INV/II/24'
+                    var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
+                        twoDigitYear;
+                    $('#numberDisplay').text('{{ $formattedNumber }}' + ' ' +
+                        formattedNumber);
+                } else {
+                    $('#numberDisplay').text('{{ $formattedNumber }}');
+                }
+            }
+
             // Pantau perubahan pada dropdown product dan country untuk memperbarui kode
             $('#product, #country').on('change', function() {
                 updateProductCode();
+                updateNumber()
             });
 
             // Jalankan fungsi updateProductCode saat halaman dimuat untuk menginisialisasi
             updateProductCode();
+            updateNumber()
 
+            // Tabel Detail Transaction
             // Event handler ketika tombol "Pilih" diklik
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
                 var data = table.row($(this).parents('tr'))
@@ -692,9 +776,62 @@
                     // Round the total price to the nearest integer
                     var roundedPrice = Math.round(totalPrice);
                     row.find('.price-result').text(roundedPrice);
+
+                    // Update total values in the footer
+                    updateAmounts();
                 });
-                // Store the price in a data attribute for easy retrieval
-                $('.price-result').attr('data-price', data.price);
+
+                function updateAmounts() {
+                    var totalCarton = 0;
+                    var totalInner = 0;
+                    var totalNetWeight = 0;
+                    var PriceAmount = 0;
+
+                    // Iterasi setiap baris untuk mendapatkan nilai total
+                    $('#tableDetailTransaction tbody tr').each(function() {
+                        var carton = parseFloat($(this).find('.carton-input').val()) || 0;
+                        var inner = parseFloat($(this).find('.inner-result').text()) || 0;
+                        var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
+                        var price = parseFloat($(this).find('.price-result').text()) || 0;
+
+                        totalCarton += carton;
+                        totalInner += inner;
+                        totalNetWeight += netWeight;
+                        PriceAmount += price;
+                    });
+
+                    // Update nilai total di footer
+                    $('#totalCarton').text(totalCarton);
+                    $('#totalInner').text(totalInner);
+                    $('#totalNetWeight').text(totalNetWeight);
+                    $('#PriceAmount').text(PriceAmount);
+                }
+
+                // Fungsi untuk memperbarui total price amount
+                function updateTotals() {
+                    // Ambil nilai dari Price Amount yang ada di kolom
+                    var priceAmount = parseFloat($('#PriceAmount').text()) || 0;
+
+                    // Ambil nilai dari input Freight Cost
+                    var freightCost = parseFloat($('#freight_cost_display').val()) || 0;
+
+                    // Hitung total dengan menambahkan priceAmount dan freightCost
+                    var total = priceAmount + freightCost;
+
+                    // Update elemen dengan total baru
+                    $('#amount-total-price').text('Total : ' + total);
+                }
+
+                // Event listener untuk input Freight Cost
+                $('#freight_cost_display').on('input', function() {
+                    var freightCost = $(this).val();
+                    console.log('Freight Cost:',
+                    freightCost); // Cek apakah nilai diambil dengan benar
+                    $('#freight_cost').val(freightCost);
+                    updateTotals();
+                });
+
+
             });
 
             // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
@@ -709,6 +846,23 @@
             </tr>`);
                 }
             });
+
+            // FORM TRANSACTION VALUE
+            // Fungsi untuk mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+            function setTodayDate() {
+                var today = new Date();
+                var day = String(today.getDate()).padStart(2, '0'); // Mengambil tanggal, 2 digit
+                var month = String(today.getMonth() + 1).padStart(2, '0'); // Mengambil bulan, 2 digit
+                var year = today.getFullYear(); // Mengambil tahun 4 digit
+
+                var formattedDate = year + '-' + month + '-' + day; // Format YYYY-MM-DD
+
+                // Mengisi input dengan nilai tanggal hari ini
+                document.getElementById('date').value = formattedDate;
+            }
+
+            // Panggil fungsi untuk mengatur tanggal saat ini pada input date
+            setTodayDate();
         });
     </script>
 @endsection
