@@ -95,7 +95,6 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi data yang diterima dari form
         $validatedData = $request->validate([
             'date' => 'required|date',
             'code' => 'required|string|max:255',
@@ -120,44 +119,12 @@ class TransactionController extends Controller
             'product_ncm' => 'required|string|max:255',
             'freight_cost' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
-            'approved' => 'nullable|boolean', // Validasi untuk approved
+            'approved' => 'nullable|boolean',
         ]);
 
-        // Ambil nilai approved dari request, default 0 jika tidak ada
-        $approved = $request->input('approved', 0); // Ganti default ke 0
+        $transaction = Transaction::create($validatedData);
 
-        // Simpan data ke dalam database
-        $transaction = new Transaction();
-        $transaction->date = $validatedData['date'];
-        $transaction->code = $validatedData['code'];
-        $transaction->number = $validatedData['number'];
-        $transaction->id_consignee = $validatedData['id_consignee'];
-        $transaction->notify = $validatedData['notify'];
-        $transaction->id_client = $validatedData['id_client'];
-        $transaction->port_of_loading = $validatedData['port_of_loading'];
-        $transaction->place_of_receipt = $validatedData['place_of_receipt'];
-        $transaction->port_of_discharge = $validatedData['port_of_discharge'];
-        $transaction->place_of_delivery = $validatedData['place_of_delivery'];
-        $transaction->id_product = $validatedData['id_product'];
-        $transaction->id_commodity = $validatedData['id_commodity'];
-        $transaction->container = $validatedData['container'];
-        $transaction->net_weight = $validatedData['net_weight'];
-        $transaction->gross_weight = $validatedData['gross_weight'];
-        $transaction->payment_term = $validatedData['payment_term'];
-        $transaction->stuffing_date = $validatedData['stuffing_date'];
-        $transaction->bl_number = $validatedData['bl_number'];
-        $transaction->container_number = $validatedData['container_number'];
-        $transaction->seal_number = $validatedData['seal_number'];
-        $transaction->product_ncm = $validatedData['product_ncm'];
-        $transaction->freight_cost = $validatedData['freight_cost'];
-        $transaction->total = $validatedData['total'];
-        $transaction->approved = $approved; // Menggunakan nilai approved yang diambil dari request
-
-        // Simpan transaksi
-        $transaction->save();
-
-        // Redirect kembali ke halaman create dengan pesan sukses
-        return redirect()->back()->with('success', 'Invoice berhasil disimpan!');
+        return response()->json(['id' => $transaction->id], 201);
     }
 
     /**

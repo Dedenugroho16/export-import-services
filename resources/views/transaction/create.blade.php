@@ -18,6 +18,12 @@
                                 </div>
                             @endif
 
+                            @if (session('transaction_id'))
+                                <div class="alert alert-info">
+                                    Transaction ID: {{ session('transaction_id') }}
+                                </div>
+                            @endif
+
                             @if ($errors->any())
                                 <div class="alert alert-danger">
                                     <ul>
@@ -461,6 +467,12 @@
                                 </div>
 
                                 <input type="checkbox" name="approved" id="approved" value="1"> Approved
+                            </form>
+
+                            <form id="formDetailTransaction" method="POST"
+                                action="{{ route('detailtransaction.store') }}">
+                                @csrf
+                                <input type="hidden" id="transaction_id" name="transaction_id">
                             </form>
 
                             <!-- Tombol Submit -->
@@ -909,8 +921,44 @@
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
 
-            $('#submitButton').on('click', function() {
-                $('#formTransaction').submit();
+            // $('#submitButton').on('click', function() {
+            //     $('#formTransaction').submit();
+            // });
+
+            $('#submitButton').click(function() {
+                var formTransaction = $('#formTransaction');
+                var formDetailTransaction = $('#formDetailTransaction');
+
+                // Submit formTransaction terlebih dahulu
+                $.ajax({
+                    url: formTransaction.attr('action'),
+                    method: formTransaction.attr('method'),
+                    data: formTransaction.serialize(),
+                    success: function(response) {
+                        // Jika transaksi berhasil, ambil ID transaksi untuk detail
+                        $('#transaction_id').val(response.id);
+
+                        // Selanjutnya submit formDetailTransaction
+                        $.ajax({
+                            url: formDetailTransaction.attr('action'),
+                            method: formDetailTransaction.attr('method'),
+                            data: formDetailTransaction.serialize(),
+                            success: function(response) {
+                                alert(response.message);
+                                // Lakukan sesuatu setelah detail berhasil disimpan
+                            },
+                            error: function(xhr) {
+                                // Tangani error untuk detail transaksi
+                                alert('Error saving detail transaction: ' + xhr
+                                    .responseJSON.message);
+                            }
+                        });
+                    },
+                    error: function(xhr) {
+                        // Tangani error untuk transaksi
+                        alert('Error saving transaction: ' + xhr.responseJSON.message);
+                    }
+                });
             });
         });
     </script>
