@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -176,9 +177,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/products') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <rect x="3" y="4" width="18" height="16" rx="2" />
                                         <path d="M3 6h18" />
@@ -208,28 +209,30 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/countries') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-                                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <circle cx="12" cy="12" r="9" />
-                                            <line x1="3.6" y1="9" x2="20.4" y2="9" />
-                                            <line x1="3.6" y1="15" x2="20.4" y2="15" />
-                                            <path d="M11.5 3a17 17 0 0 0 0 18" />
-                                            <path d="M12.5 3a17 17 0 0 1 0 18" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">
-                                        Negara
-                                    </span>
-                                </a>
-                            </li>
+                            <a class="nav-link" href="{{ url('/countries') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <circle cx="12" cy="12" r="9" />
+                                        <line x1="3.6" y1="9" x2="20.4" y2="9" />
+                                        <line x1="3.6" y1="15" x2="20.4" y2="15" />
+                                        <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                        <path d="M12.5 3a17 17 0 0 1 0 18" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">
+                                    Negara
+                                </span>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/transaction/create') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <circle cx="6" cy="19" r="2" />
                                         <circle cx="17" cy="19" r="2" />
@@ -389,7 +392,7 @@
     {{-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> --}}
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-    
+
 </body>
 
 </html>
