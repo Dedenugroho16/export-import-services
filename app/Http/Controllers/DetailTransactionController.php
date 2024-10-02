@@ -28,22 +28,31 @@ class DetailTransactionController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi data yang diterima dari form
         $validatedData = $request->validate([
-            'transaction_id' => 'required|exists:transactions,id', // Pastikan transaction_id valid
-            'id_detail_product' => 'required|exists:detail_products,id', // Pastikan id_detail_product valid
-            'qty' => 'required|numeric|min:1', // Pastikan qty tidak kurang dari 1
-            'carton' => 'required|numeric|min:0', // Pastikan carton tidak negatif
-            'inner_qty_carton' => 'required|numeric|min:0', // Pastikan inner_qty_carton tidak negatif
-            'unit_price' => 'required|numeric|min:0', // Pastikan unit_price tidak negatif
-            'net_weight' => 'required|numeric|min:0', // Pastikan net_weight tidak negatif
-            'price_amount' => 'required|numeric|min:0', // Pastikan price_amount tidak negatif
+            'id_transaction' => 'required|exists:transactions,id', // Pastikan id_transaction valid
+            'transactions.*.id_detail_product' => 'required|exists:detail_products,id',
+            'transactions.*.qty' => 'required|numeric|min:1',
+            'transactions.*.carton' => 'required|numeric|min:0',
+            'transactions.*.inner_qty_carton' => 'required|numeric|min:0',
+            'transactions.*.unit_price' => 'required|numeric|min:0',
+            'transactions.*.net_weight' => 'required|numeric|min:0',
+            'transactions.*.price_amount' => 'required|numeric|min:0',
         ]);
 
-        // Simpan data detail transaksi ke database
-        $detailTransaction = DetailTransaction::create($validatedData);
+        foreach ($validatedData['transactions'] as $detail) {
+            DetailTransaction::create([
+                'id_transaction' => $validatedData['id_transaction'], // Set ID transaksi
+                'id_detail_product' => $detail['id_detail_product'],
+                'qty' => $detail['qty'],
+                'carton' => $detail['carton'],
+                'inner_qty_carton' => $detail['inner_qty_carton'],
+                'unit_price' => $detail['unit_price'],
+                'net_weight' => $detail['net_weight'],
+                'price_amount' => $detail['price_amount'],
+            ]);
+        }
 
-        return response()->json(['message' => 'Detail transaction saved successfully.']);
+        return response()->json(['message' => 'Detail transactions saved successfully'], 201);
     }
 
     /**

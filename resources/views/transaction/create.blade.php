@@ -474,6 +474,7 @@
 
                             <form id="formDetailTransaction" method="POST"
                                 action="{{ route('detailtransaction.store') }}">
+                                @csrf
                                 <!-- Hidden inputs will be generated here -->
                             </form>
 
@@ -527,6 +528,12 @@
     </div>
 
     <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         $(document).ready(function() {
             // Menginisialisasi Select2
             $('#client').select2();
@@ -852,7 +859,7 @@
                     $('#formDetailTransaction').empty();
 
                     $('#formDetailTransaction').append(`
-                        <input type="text" name="id_transaction" id="id_transaction">
+                        <input type="hidden" name="id_transaction" id="id_transaction">
                     `);
 
                     // Iterate through each row of the table
@@ -871,13 +878,13 @@
                         // Create hidden inputs and append to the form
                         $('#formDetailTransaction').append(`
     <!-- ID Detail Product (Validasi exists:detail_products,id) -->
-            <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-            <input type="" name="transactions[${index}][qty]" value="${qty}">
-            <input type="" name="transactions[${index}][carton]" value="${carton}">
-            <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
+            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
+            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
+            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
+            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
+            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
     `);
                     });
                 }
@@ -978,24 +985,30 @@
                     method: formTransaction.attr('method'),
                     data: formTransaction.serialize(),
                     success: function(response) {
-                        // Jika transaksi berhasil, ambil ID transaksi untuk detail
-                        $('#transaction_id').val(response.id);
+                        // Pastikan response.id berisi ID transaksi yang valid
+                        if (response.id) {
+                            // Set ID transaksi ke input hidden pada form detail transaksi
+                            $('#id_transaction').val(response.id); // Isi ID transaksi pada form
 
-                        // Selanjutnya submit formDetailTransaction
-                        $.ajax({
-                            url: formDetailTransaction.attr('action'),
-                            method: formDetailTransaction.attr('method'),
-                            data: formDetailTransaction.serialize(),
-                            success: function(response) {
-                                alert(response.message);
-                                // Lakukan sesuatu setelah detail berhasil disimpan
-                            },
-                            error: function(xhr) {
-                                // Tangani error untuk detail transaksi
-                                alert('Error saving detail transaction: ' + xhr
-                                    .responseJSON.message);
-                            }
-                        });
+                            // Selanjutnya submit formDetailTransaction
+                            $.ajax({
+                                url: formDetailTransaction.attr('action'),
+                                method: formDetailTransaction.attr('method'),
+                                data: formDetailTransaction.serialize(),
+                                success: function(response) {
+                                    alert(response.message);
+                                    location
+                                .reload(); // Reload halaman setelah alert
+                                },
+                                error: function(xhr) {
+                                    // Tangani error untuk detail transaksi
+                                    alert('Error saving detail transaction: ' + xhr
+                                        .responseJSON.message);
+                                }
+                            });
+                        } else {
+                            alert('Transaction ID is missing');
+                        }
                     },
                     error: function(xhr) {
                         // Tangani error untuk transaksi
@@ -1003,6 +1016,7 @@
                     }
                 });
             });
+
         });
     </script>
 @endsection

@@ -122,8 +122,10 @@ class TransactionController extends Controller
             'approved' => 'nullable|boolean',
         ]);
 
+        // Simpan transaksi
         $transaction = Transaction::create($validatedData);
 
+        // Kembalikan response JSON dengan ID transaksi yang baru
         return response()->json(['id' => $transaction->id], 201);
     }
 
