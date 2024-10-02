@@ -81,3 +81,4 @@ Route::view('/login', 'auth.login')->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 
 Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
+Route::resource('users', UserController::class);
