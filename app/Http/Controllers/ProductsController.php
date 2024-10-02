@@ -24,28 +24,31 @@ class ProductsController extends Controller
 
                 // Generate action buttons
                 $actionBtn = '
-                    <div class="dropdown d-inline">
-                        <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
-                        <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">
+                Aksi
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                            <a href="'.route('products.details', $hashId).'" class="dropdown-item">
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
+                            Lihat Detail Produk
+                            </a>
                             <a class="dropdown-item" href="'.route('products.show', $hashId).'">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
-                            Show
+                            Tampilkan
                             </a>
                             <a class="dropdown-item" href="'.route('products.edit', $hashId).'">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
                             Edit
                             </a>
-                            <form action="'.route('products.destroy', $hashId).'" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus produk ini?\')" style="display:inline;">
+                            <form action="'.route('products.destroy', $hashId).'" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus data ini?\')" style="display:inline;">
                                 '.csrf_field().method_field('DELETE').'
                                 <button type="submit" class="dropdown-item text-danger">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                                Delete
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                                Hapus
                                 </button>
                             </form>
-                        </div>
-                    </div>
-                    <a href="'.route('products.details', $hashId).'" class="btn btn-warning ms-2">Detail</a>
-                ';
+                        </div>';
                 
                 return $actionBtn;
             })
@@ -79,7 +82,7 @@ class ProductsController extends Controller
         ]);
 
         return redirect()->route('products.index')
-                         ->with('product_success', 'Produk berhasil ditambahkan.');
+                         ->with('product_success', 'Data berhasil ditambahkan.');
     }
 
     // Display the specified product
@@ -122,7 +125,7 @@ class ProductsController extends Controller
         ]);
 
         return redirect()->route('products.index')
-                         ->with('product_success', 'Produk berhasil di update');
+                         ->with('product_success', 'Data berhasil diupdate.');
     }
 
     // Remove the specified product from storage
@@ -133,7 +136,7 @@ class ProductsController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
 
-        return redirect()->route('products.index')->with('product_success', 'Produk berhasil di hapus.');
+        return redirect()->route('products.index')->with('product_success', 'Data berhasil dihapus.');
     }
 
     // Show details product
@@ -156,17 +159,17 @@ class ProductsController extends Controller
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" href="'.route('detail-products.show', $hashId).'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
-                                    Show
+                                    Tampilkan
                                 </a>
                                 <a class="dropdown-item" href="'.route('detail-products.edit', $hashId).'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
                                      Edit
                                 </a>
-                                <form action="'.route('detail-products.destroy', $hashId).'" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus detail produk ini?\')" style="display:inline;">
+                                <form action="'.route('detail-products.destroy', $hashId).'" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus data ini?\')" style="display:inline;">
                                     '.csrf_field().method_field('DELETE').'
                                     <button type="submit" class="dropdown-item text-danger">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                                     Delete
+                                     Hapus
                                  </button>
                                 </form>
                             </div>

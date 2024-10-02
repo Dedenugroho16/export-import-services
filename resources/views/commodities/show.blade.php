@@ -28,7 +28,7 @@
                                     </svg>
                                     Edit
                                 </a>
-                                <form action="{{ route('commodities.destroy', \App\Helpers\IdHashHelper::encode($commodity->id)) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this commodity?')" style="display:inline;">
+                                <form action="{{ route('commodities.destroy', \App\Helpers\IdHashHelper::encode($commodity->id)) }}" method="POST" onsubmit="return confirm('Apakah anda yakin ingin menghapus data ini?')" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="dropdown-item text-danger" style="border: none; background: none;">
@@ -40,7 +40,7 @@
                                             <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
                                             <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
                                         </svg>
-                                        Delete
+                                        Hapus
                                     </button>
                                 </form>
                             </ul>

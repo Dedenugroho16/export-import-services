@@ -10,11 +10,7 @@ class Client extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'address',
-        'PO_BOX',
-        'tel',
-        'fax',
+        //
     ];
 
     // Definisi relasi one-to-many

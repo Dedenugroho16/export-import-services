@@ -28,7 +28,7 @@ class ConsigneesController extends Controller
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" href="'.route('consignees.show', $hashId).'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
-                                    Show
+                                    Tampilkan
                                 </a>
                                 <a class="dropdown-item" href="'.route('consignees.edit', $hashId).'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
@@ -38,7 +38,7 @@ class ConsigneesController extends Controller
                                     '.csrf_field().method_field('DELETE').'
                                     <button type="submit" class="dropdown-item text-danger">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                                     Delete
+                                     Hapus
                                  </button>
                                 </form>
                             </div>
@@ -85,7 +85,7 @@ class ConsigneesController extends Controller
         $clientName = Client::findOrFail($request->id_client)->name;
 
         // Redirect back to clients.index with a success message
-        return redirect($request->input('previous_url', route('products.index')))->with('Data berhasil ditambahkan');
+        return redirect($request->input('previous_url', route('products.index')))->with('Data berhasil ditambahkan.');
     }
 
     public function edit($hash)
@@ -110,7 +110,7 @@ class ConsigneesController extends Controller
         $consignee->update($request->all());
 
         return redirect($request->input('previous_url', route('products.index')))
-        ->with('details_success', 'Data berhasil di update');
+        ->with('details_success', 'Data berhasil diupdate.');
     }
 
     public function show($hash)
@@ -126,6 +126,6 @@ class ConsigneesController extends Controller
         $consignee = Consignee::findOrFail($id);
         $consignee->delete();
 
-        return redirect()->back()->with('details_success', 'Data berhasil di hapus');
+        return redirect()->back()->with('details_success', 'Data berhasil dihapus.');
     }
 }
