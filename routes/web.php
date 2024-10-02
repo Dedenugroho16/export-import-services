@@ -11,6 +11,7 @@ use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DetailProductController;
+use App\Http\Controllers\UserController;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
