@@ -95,7 +95,38 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'code' => 'required|string|max:255',
+            'number' => 'required|string|max:255',
+            'id_consignee' => 'required|exists:consignees,id',
+            'notify' => 'required|string|max:255',
+            'id_client' => 'required|exists:clients,id',
+            'port_of_loading' => 'required|string|max:255',
+            'place_of_receipt' => 'required|string|max:255',
+            'port_of_discharge' => 'required|string|max:255',
+            'place_of_delivery' => 'required|string|max:255',
+            'id_product' => 'required|exists:products,id',
+            'id_commodity' => 'required|exists:commodities,id',
+            'container' => 'required|string|max:255',
+            'net_weight' => 'required|numeric|min:0',
+            'gross_weight' => 'required|numeric|min:0',
+            'payment_term' => 'required|string|max:255',
+            'stuffing_date' => 'required|date',
+            'bl_number' => 'required|string|max:255',
+            'container_number' => 'required|string|max:255',
+            'seal_number' => 'required|string|max:255',
+            'product_ncm' => 'required|string|max:255',
+            'freight_cost' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0',
+            'approved' => 'nullable|boolean',
+        ]);
+
+        // Simpan transaksi
+        $transaction = Transaction::create($validatedData);
+
+        // Kembalikan response JSON dengan ID transaksi yang baru
+        return response()->json(['id' => $transaction->id], 201);
     }
 
     /**

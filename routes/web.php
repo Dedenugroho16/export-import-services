@@ -11,6 +11,7 @@ use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DetailProductController;
+use App\Http\Controllers\DetailTransactionController;
 use App\Http\Controllers\UserController;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
@@ -65,9 +66,14 @@ Route::resource('branches', BranchController::class);
 
 // Transaction Routes using resource
 Route::resource('transaction', TransactionController::class);
+Route::get('transaction/create', [TransactionController::class, 'create'])->name('transaction.create');
+Route::post('/transaction/store', [TransactionController::class, 'store'])->name('transaction.store');
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
 Route::get('/get-detail-products', [TransactionController::class, 'getDetailProducts'])->name('get-detail-products');
+
+// Detail Transaction Route
+Route::post('/detailtransaction/store', [DetailTransactionController::class, 'store'])->name('detailtransaction.store');
 
 // Logout Route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
