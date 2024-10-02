@@ -849,32 +849,37 @@
 
                 function updateFormDetailTransaction() {
                     // Clear previous inputs
-    $('#formDetailTransaction').empty();
+                    $('#formDetailTransaction').empty();
 
-// Iterate through each row of the table
-$('#tableDetailTransaction tbody tr').each(function (index, row) {
-    // Skip the row if it is the 'No data' row
-    if ($(row).attr('id') === 'nullDetailTransaction') return;
+                    $('#formDetailTransaction').append(`
+                        <input type="text" name="id_transaction" id="id_transaction">
+                    `);
 
-    var qty = $(row).find('.qty-input').val();
-    var carton = $(row).find('.carton-input').val();
-    var inner = $(row).find('.inner-result').text().trim();
-    var unitPrice = $(row).find('.price').text().trim();
-    var netWeight = $(row).find('.net-weight').text().trim();
-    var priceAmount = $(row).find('.price-result').text().trim();
+                    // Iterate through each row of the table
+                    $('#tableDetailTransaction tbody tr').each(function(index, row) {
+                        // Skip the row if it is the 'No data' row
+                        if ($(row).attr('id') === 'nullDetailTransaction') return;
 
-    // Create hidden inputs and append to the form
-    $('#formDetailTransaction').append(`
+                        var idDetailProduct = $(row).find('.id-detail-product').text().trim();
+                        var qty = $(row).find('.qty-input').val();
+                        var carton = $(row).find('.carton-input').val();
+                        var inner = $(row).find('.inner-result').text().trim();
+                        var unitPrice = $(row).find('.price').text().trim();
+                        var netWeight = $(row).find('.net-weight').text().trim();
+                        var priceAmount = $(row).find('.price-result').text().trim();
+
+                        // Create hidden inputs and append to the form
+                        $('#formDetailTransaction').append(`
     <!-- ID Detail Product (Validasi exists:detail_products,id) -->
-            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${getDetailProductId(itemDescription)}">
-            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
-            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
-            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
+            <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+            <input type="" name="transactions[${index}][qty]" value="${qty}">
+            <input type="" name="transactions[${index}][carton]" value="${carton}">
+            <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+            <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
+            <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
+            <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
     `);
-});
+                    });
                 }
 
                 function updateAmounts() {
@@ -937,6 +942,7 @@ $('#tableDetailTransaction tbody tr').each(function (index, row) {
 
                     updateAmounts();
                     updateTotals();
+                    updateFormDetailTransaction();
                 });
             });
             // Event handler ketika tombol "Pilih" diklik END
