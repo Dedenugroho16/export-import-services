@@ -155,12 +155,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('clients.index') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <circle cx="12" cy="7" r="4" />
-                                        <path d="M5 21v-4a7 7 0 0 1 14 0v4" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <circle cx="12" cy="12" r="3" />
+                                        <path d="M12 3v6" />
+                                        <path d="M12 15v6" />
+                                        <path d="M3 12h6" />
+                                        <path d="M15 12h6" />
+                                        <path d="M5.6 5.6l4.2 4.2" />
+                                        <path d="M18.4 18.4l-4.2 -4.2" />
+                                        <path d="M18.4 5.6l-4.2 4.2" />
+                                        <path d="M5.6 18.4l4.2 -4.2" />
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
@@ -234,6 +239,20 @@
                                 </span>
                                 <span class="nav-link-title">
                                     Transaksi
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('users.index') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <circle cx="12" cy="7" r="4" />
+                                        <path d="M20 21l-2 -2a5 5 0 0 0 -7 -7l-5 5" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">
+                                    Data User
                                 </span>
                             </a>
                         </li>
