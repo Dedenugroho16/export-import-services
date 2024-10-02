@@ -28,10 +28,19 @@ class DetailTransactionController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi data yang diterima dari form
         $validatedData = $request->validate([
-            'transaction_id' => 'required|exists:transactions,id',
+            'transaction_id' => 'required|exists:transactions,id', // Pastikan transaction_id valid
+            'id_detail_product' => 'required|exists:detail_products,id', // Pastikan id_detail_product valid
+            'qty' => 'required|numeric|min:1', // Pastikan qty tidak kurang dari 1
+            'carton' => 'required|numeric|min:0', // Pastikan carton tidak negatif
+            'inner_qty_carton' => 'required|numeric|min:0', // Pastikan inner_qty_carton tidak negatif
+            'unit_price' => 'required|numeric|min:0', // Pastikan unit_price tidak negatif
+            'net_weight' => 'required|numeric|min:0', // Pastikan net_weight tidak negatif
+            'price_amount' => 'required|numeric|min:0', // Pastikan price_amount tidak negatif
         ]);
 
+        // Simpan data detail transaksi ke database
         $detailTransaction = DetailTransaction::create($validatedData);
 
         return response()->json(['message' => 'Detail transaction saved successfully.']);

@@ -288,8 +288,10 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="number" id="net_weight" name="net_weight"
-                                                            class="form-control" step="0.01"
+                                                        <input type="number" class="form-control net_weight_transaction"
+                                                            step="0.01" disabled>
+                                                        <input type="hidden" id="net_weight_transaction"
+                                                            name="net_weight" class="form-control" step="0.01"
                                                             placeholder="Contoh: 123.45" required>
                                                     </div>
                                                 </div>
@@ -411,6 +413,7 @@
                                             <table class="table table-bordered table-hover table-striped table-sm"
                                                 id="tableDetailTransaction">
                                                 <thead>
+                                                    <th class="text-center">ID</th>
                                                     <th class="text-center">Item Description</th>
                                                     <th class="text-center">Carton(pcs)</th>
                                                     <th class="text-center">Inner(pcs)</th>
@@ -471,8 +474,7 @@
 
                             <form id="formDetailTransaction" method="POST"
                                 action="{{ route('detailtransaction.store') }}">
-                                @csrf
-                                <input type="hidden" id="transaction_id" name="transaction_id">
+                                <!-- Hidden inputs will be generated here -->
                             </form>
 
                             <!-- Tombol Submit -->
@@ -796,6 +798,7 @@
                 // Membuat elemen tr untuk ditambahkan ke tabel #tableDetailTransaction
                 var newRow = `
         <tr>
+            <td class="text-center id-detail-product">${data.id}</td>
             <td class="text-center">
                 <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
                 ${data.dimension} ${data.color} - ${data.type}
@@ -829,6 +832,8 @@
                     var result = qty * carton;
                     row.find('.inner-result').text(result);
                     row.find('.net-weight').text(result);
+                    $('#net_weight_transaction').val(result);
+                    $('.net_weight_transaction').val(result);
 
                     // Update the price based on result * data.price
                     var totalPrice = result * data.price;
@@ -839,7 +844,38 @@
                     // Update total values in the footer
                     updateAmounts();
                     updateTotals();
+                    updateFormDetailTransaction();
                 });
+
+                function updateFormDetailTransaction() {
+                    // Clear previous inputs
+    $('#formDetailTransaction').empty();
+
+// Iterate through each row of the table
+$('#tableDetailTransaction tbody tr').each(function (index, row) {
+    // Skip the row if it is the 'No data' row
+    if ($(row).attr('id') === 'nullDetailTransaction') return;
+
+    var qty = $(row).find('.qty-input').val();
+    var carton = $(row).find('.carton-input').val();
+    var inner = $(row).find('.inner-result').text().trim();
+    var unitPrice = $(row).find('.price').text().trim();
+    var netWeight = $(row).find('.net-weight').text().trim();
+    var priceAmount = $(row).find('.price-result').text().trim();
+
+    // Create hidden inputs and append to the form
+    $('#formDetailTransaction').append(`
+    <!-- ID Detail Product (Validasi exists:detail_products,id) -->
+            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${getDetailProductId(itemDescription)}">
+            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
+            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
+            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
+            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
+            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
+    `);
+});
+                }
 
                 function updateAmounts() {
                     var totalCarton = 0;
@@ -903,6 +939,7 @@
                     updateTotals();
                 });
             });
+            // Event handler ketika tombol "Pilih" diklik END
 
             // FORM TRANSACTION VALUE
             // Fungsi untuk mendapatkan tanggal hari ini dalam format YYYY-MM-DD
