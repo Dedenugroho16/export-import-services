@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ProductsController;
@@ -58,6 +59,9 @@ Route::get('detail-products/create/{hash}', [DetailProductController::class, 'cr
 
 // Country Routes using resource
 Route::resource('countries', CountryController::class);
+
+// Branch Routes
+Route::resource('branches', BranchController::class);
 
 // Transaction Routes using resource
 Route::resource('transaction', TransactionController::class);
