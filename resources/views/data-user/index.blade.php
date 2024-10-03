@@ -18,10 +18,18 @@
 
                         <!-- Toast notifications -->
                         <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
-                            <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div id="addToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
                                 <div class="d-flex">
                                     <div class="toast-body">
                                         User berhasil ditambahkan!
+                                    </div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                            </div>
+                            <div id="editToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="d-flex">
+                                    <div class="toast-body">
+                                        User berhasil diubah!
                                     </div>
                                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                                 </div>
@@ -167,7 +175,12 @@
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50],
-            pageLength: 10
+            pageLength: 10,
+            // Disable loading indicator
+            bAutoWidth: false,
+            bLengthChange: true,
+            processing: false, // Disable processing display
+            searching: true, // Enable searching
         });
 
         // Reset form when Add User modal is shown
@@ -184,10 +197,9 @@
                 data: $(this).serialize(),
                 success: function(response) {
                     $('#addUserModal').modal('hide');
-                    $('#addUserForm')[0].reset();
                     table.ajax.reload();
-                    var successToast = new bootstrap.Toast(document.getElementById('successToast'));
-                    successToast.show();
+                    var addToast = new bootstrap.Toast(document.getElementById('addToast'));
+                    addToast.show();
                 },
                 error: function(xhr) {
                     var errorMessage = '';
@@ -230,8 +242,8 @@
                 success: function(response) {
                     $('#editUserModal').modal('hide');
                     table.ajax.reload();
-                    var successToast = new bootstrap.Toast(document.getElementById('successToast'));
-                    successToast.show();
+                    var editToast = new bootstrap.Toast(document.getElementById('editToast'));
+                    editToast.show();
                 },
                 error: function(xhr) {
                     var errorMessage = '';
