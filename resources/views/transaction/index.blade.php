@@ -37,7 +37,7 @@
                         <table class="table card-table table-vcenter text-nowrap">
                             <thead>
                                 <tr>
-                                    <th class="text-center">#</th>
+                                    <th class="text-center">No</th>
                                     <th class="text-center">Code</th>
                                     <th class="text-center">Number</th>
                                     <th class="text-center">Date</th>
@@ -54,11 +54,11 @@
                                         <td class="text-center">{{ $transaction->code }}</td>
                                         <td class="text-center">{{ $transaction->number }}</td>
                                         <td class="text-center">{{ $transaction->date }}</td>
-                                        <td class="text-center">{{ $transaction->id_consignee }}</td>
                                         <td class="text-center">{{ $transaction->id_client }}</td>
+                                        <td class="text-center">{{ $transaction->id_consignee }}</td>
                                         <td class="text-center">{{ $transaction->total }}</td>
                                         <td class="text-center">
-                                            <a href="#" class="btn btn-info btn-sm">Lihat Detail</a>
+                                            <a href="{{ route('transaction.show', $transaction->id) }}">Lihat detail</a>
                                         </td>
                                     </tr>
                                 @endforeach

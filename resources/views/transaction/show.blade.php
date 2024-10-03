@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Detail Transaksi')
+@section('title', 'Detail Invoice')
 
 @section('content')
     <div class="page-body">
@@ -8,9 +8,6 @@
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card mb-5">
-                        <div class="card-header text-white shadow-sm p-3" style="background-color: #0054a6;">
-                            <h3 class="card-title">Detail Transaksi</h3>
-                        </div>
                         <div class="card-body">
                             <!-- Display Success Message -->
                             @if (session('success'))
@@ -35,138 +32,128 @@
                                 </div>
                             @endif
 
-                            {{-- Bagian 1 --}}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <p><strong>Date</strong></p>
-                                                </div>
-                                                <div class="col-3 text-center">
-                                                    <span>:</span>
-                                                </div>
-                                                <div class="col-5">
-                                                    <p>{{ date('F d, Y') }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <p><strong>Code</strong></p>
-                                                </div>
-                                                <div class="col-3 text-center">
-                                                    <span>:</span>
-                                                </div>
-                                                <div class="col-5">
-                                                    <p id="product-code">-</p>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <p><strong>Number</strong></p>
-                                                </div>
-                                                <div class="col-3 text-center">
-                                                    <span>:</span>
-                                                </div>
-                                                <div class="col-5">
-                                                    <p id="numberDisplay">-</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mt-4">
+                            <div class="row mt-4 mb-4">
                                 <div class="col-md-12 text-center">
                                     <h1>INVOICE</h1>
                                 </div>
                             </div>
 
+                            <!-- Bagian 1 -->
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <table class="table-sm">
+                                        <tr>
+                                            <td><strong>Date</strong></td>
+                                            <td>{{ $transaction->date }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Code</strong></td>
+                                            <td>{{ $transaction->code}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Number</strong></td>
+                                            <td>{{ $transaction->number}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
                             <!-- Bagian 2: Consignee, Notify, Client -->
                             <div class="row mt-4">
-                                <!-- Client Input -->
+                                <!-- Consignee Input -->
                                 <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="client">Client</label>
-                                        <select name="id_client" class="form-control client" id="client" required>
-                                            <option value="">Pilih Client</option>
-                                            {{-- @foreach ($clients as $client)
-                                                        <option value="{{ $client->id }}"
-                                                            data-address="{{ $client->address }}">
-                                                            {{ $client->name }}
-                                                        </option>
-                                                    @endforeach --}}
-                                        </select>
-                                        <!-- Element to display the address -->
-                                        <div id="client-address" style="margin-top: 10px;"></div>
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Consignee</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>
+                                                {{ $transaction->consignee->name }} <br>
+                                                {{ $transaction->consignee->address }} <br>
+                                                {{ $transaction->consignee->tel }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Notify Input -->
                                 <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="notify">Notify</label>
-                                        <input type="text" name="notify" id="notify" class="form-control"
-                                            placeholder="Enter notify party" required>
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Notify</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>
+                                                {{ $transaction->notify }} <br>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Consignee Input -->
+                                <!-- Client Input -->
                                 <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="consignee">Consignee</label>
-                                        <select name="id_consignee" class="form-control consignee" id="consignee" required>
-                                            <option value="">Pilih Consignee</option>
-                                            {{-- @foreach ($consignees as $consignee)
-                                                        <option value="{{ $consignee->id }}"
-                                                            data-address="{{ $consignee->address }}">
-                                                            {{ $consignee->name }}
-                                                        </option>
-                                                    @endforeach --}}
-                                        </select>
-                                        <!-- Element to display the address -->
-                                        <div id="consignee-address" style="margin-top: 10px;"></div>
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Client</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>
+                                                {{ $transaction->client->name }} <br>
+                                                {{ $transaction->client->address }} <br>
+                                                {{ $transaction->client->tel }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Bagian 3: Port of Loading, Place of Receipt, Port of Discharge, Place of Delivery -->
-                            <div class="row mt-6">
+                            <div class="row mt-4"> 
                                 <!-- Port of Loading Input -->
                                 <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="port_of_loading">Port of Loading</label>
-                                        <input type="text" name="port_of_loading" id="port_of_loading"
-                                            class="form-control" placeholder="Enter port of loading" required>
+                                    <div class="card p-2"> 
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Port of loading</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>{{ $transaction->port_of_loading }}</p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Place of Receipt Input -->
                                 <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="place_of_receipt">Place of Receipt</label>
-                                        <input type="text" name="place_of_receipt" id="place_of_receipt"
-                                            class="form-control" placeholder="Enter place of receipt" required>
+                                    <div class="card p-2">
+                                        <div class="card-header p-2"> 
+                                            <h5 class="card-title">Place of receipt</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>{{ $transaction->place_of_receipt }}</p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Port of Discharge Input -->
                                 <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="port_of_discharge">Port of Discharge</label>
-                                        <input type="text" name="port_of_discharge" id="port_of_discharge"
-                                            class="form-control" placeholder="Enter port of discharge" required>
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Port of discharge</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>{{ $transaction->port_of_discharge }}</p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Place of Delivery Input -->
                                 <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="place_of_delivery">Place of Delivery</label>
-                                        <input type="text" name="place_of_delivery" id="place_of_delivery"
-                                            class="form-control" placeholder="Enter place of delivery" required>
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Place of delivery</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>{{ $transaction->place_of_delivery }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -184,17 +171,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <select class="form-control product" id="product" name="id_product"
-                                                    required>
-                                                    <option value="">Pilih Product</option>
-                                                    {{-- @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}"
-                                                                data-code="{{ $product->code }}"
-                                                                data-abbreviation="{{ $product->abbreviation }}">
-                                                                {{ $product->name }}
-                                                            </option>
-                                                        @endforeach --}}
-                                                </select>
+                                                <p>{{ $transaction->product->name }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -205,15 +182,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <select class="form-control commodity" id="commodity" name="id_commodity"
-                                                    required>
-                                                    <option value="">Pilih Commodity</option>
-                                                    {{-- @foreach ($commodities as $commodity)
-                                                            <option value="{{ $commodity->id }}">
-                                                                {{ $commodity->name }}
-                                                            </option>
-                                                        @endforeach --}}
-                                                </select>
+                                                <p>{{ $transaction->commodity->name}}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -224,8 +193,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <input type="text" name="container" id="container"
-                                                    class="form-control" placeholder="Masukkan Container" required>
+                                                <p>{{ $transaction->container}}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -236,11 +204,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <input type="number" class="form-control net_weight_transaction"
-                                                    step="0.01" disabled>
-                                                <input type="hidden" id="net_weight_transaction" name="net_weight"
-                                                    class="form-control" step="0.01" placeholder="Contoh: 123.45"
-                                                    required>
+                                                <p>{{ $transaction->net_weight}}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -251,9 +215,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <input type="number" id="gross_weight" name="gross_weight"
-                                                    class="form-control" step="0.01" placeholder="Contoh: 123.45"
-                                                    required>
+                                                <p>{{ $transaction->gross_weight}}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -264,8 +226,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <input type="text" name="payment_term" id="payment_term"
-                                                    class="form-control" placeholder="Masukkan Payment term" required>
+                                                <p>{{ $transaction->payment_term}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -280,8 +241,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <input type="date" name="stuffing_date" id="stuffing_date"
-                                                    class="form-control" required>
+                                                <p>{{ $transaction->stuffing_date}}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -292,8 +252,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <input type="text" name="bl_number" id="bl_number"
-                                                    class="form-control" placeholder="Masukkan BL Number" required>
+                                                <p>{{ $transaction->bl_number}}</p>
                                             </div>
                                         </div>
 
@@ -305,8 +264,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <input type="text" name="container_number" id="container_number"
-                                                    class="form-control" placeholder="Masukkan Container Number" required>
+                                                <p>{{ $transaction->container_number}}</p>
                                             </div>
                                         </div>
 
@@ -318,8 +276,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <input type="text" name="seal_number" id="seal_number"
-                                                    class="form-control" placeholder="Masukkan Seal Number" required>
+                                                <p>{{ $transaction->seal_number}}</p>
                                             </div>
                                         </div>
 
@@ -331,8 +288,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <input type="text" name="product_ncm" id="product_ncm"
-                                                    class="form-control" placeholder="Masukkan Product NCM" required>
+                                                <p>{{ $transaction->product_ncm}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -354,7 +310,12 @@
                                         </thead>
                                         <tbody id="detail-rows" style="font-size: 12px">
                                             <tr id="nullDetailTransaction">
-                                                <td colspan="7" class="text-center">Tidak ada barang</td>
+                                                <td>{{ $detailTransaction->detailProduct->name }}</td>
+                                                <td>{{ $detailTransaction->carton }}</td>
+                                                <td>{{ $detailTransaction->inner_qty_carton }}</td>
+                                                <td>{{ $detailTransaction->unit_price }}</td>
+                                                <td>{{ $detailTransaction->net_weight }}</td>
+                                                <td>{{ $detailTransaction->price_amount }}</td>
                                             </tr>
                                         </tbody>
                                         <tfoot>
@@ -366,28 +327,16 @@
                                                 <td class="text-center" id="totalNetWeight">0</td>
                                                 <td class="text-center" id="PriceAmount">0</td>
                                             </tr>
-                                            <tr id="inputRow">
+                                            <tr>
                                                 <td class="text-center" colspan="5"></td>
                                                 <td class="text-center">
-                                                    <div class="d-flex align-items-center justify-content-center">
-                                                        <label for="additionalInput" class="mr-2">Freight Cost
-                                                            :</label>
-                                                        <input type="number" step="0.01" class="form-control"
-                                                            id="freight_cost" name="freight_cost"
-                                                            placeholder="Enter Freight Cost" min="0"
-                                                            max="99999999.99">
-                                                    </div>
+                                                    <p>Freight cost : {{ $transaction->freight_cost}}</p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="text-center" colspan="5"></td>
-                                                <td class="text-center" id="amount-total-price">
-                                                    <div
-                                                        class="form-group d-flex align-items-center justify-content-center">
-                                                        <label for="total" class="mr-2">Total:</label>
-                                                        <input type="number" step="0.01" class="form-control"
-                                                            id="total" name="total" style="width: 150px;">
-                                                    </div>
+                                                <td class="text-center">
+                                                    <p>Total : {{ $transaction->total}}</p>
                                                 </td>
                                             </tr>
                                         </tfoot>

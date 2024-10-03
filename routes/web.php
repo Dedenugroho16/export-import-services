@@ -69,6 +69,8 @@ Route::resource('transaction', TransactionController::class);
 Route::get('transaction/create', [TransactionController::class, 'create'])->name('transaction.create');
 Route::post('/transaction/store', [TransactionController::class, 'store'])->name('transaction.store');
 Route::get('transaction/index', [TransactionController::class, 'index'])->name('transaction.index');
+Route::get('/transaction/{transaction}', [TransactionController::class, 'show'])->name('transaction.show');
+
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
 Route::get('/get-detail-products', [TransactionController::class, 'getDetailProducts'])->name('get-detail-products');

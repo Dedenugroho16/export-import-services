@@ -10,6 +10,7 @@ use App\Models\Consignee;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\DetailProduct;
+use App\Models\DetailTransaction;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -129,9 +130,13 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $transaction = Transaction::findOrFail($id);
+        $detailTransaction = DetailTransaction::findOrFail($id);
+        $detailProduct = DetailProduct::findOrFail($id);
+        $product = Product::findOrFail($id);
+        return view('transaction.show', compact('transaction', 'detailTransaction', 'product'));
     }
 
     /**
