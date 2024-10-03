@@ -479,8 +479,9 @@
                             </form>
 
                             <!-- Tombol Submit -->
-                            <div class="card-body text-end">
-                                <button type="button" id="submitButton" class="btn btn-primary">Submit Invoice</button>
+                            <div class="text-end">
+                                <a href="{{ url('/transaction') }}" class="btn btn-outline-primary">Kembali</a>
+                                <button type="button" id="submitButton" class="btn btn-primary">Tambah</button>
                             </div>
                         </div>
                     </div>

@@ -15,17 +15,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
-    {
-        //
+    {       
+        $transaction = Transaction::all(['id','code', 'number','date', 'id_client', 'id_consignee', 'total']);
+        return view('transaction.index', compact('transaction'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         $consignees = Consignee::all();
