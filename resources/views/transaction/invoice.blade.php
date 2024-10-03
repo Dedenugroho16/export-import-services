@@ -85,7 +85,7 @@
                             </div>
 
                             <!-- Bagian 2: Consignee, Notify, Client -->
-                            <div class="row mt-2">
+                            <div class="row mt-4">
                                 <!-- Client Input -->
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -133,7 +133,7 @@
                             </div>
 
                             <!-- Bagian 3: Port of Loading, Place of Receipt, Port of Discharge, Place of Delivery -->
-                            <div class="row mt-4">
+                            <div class="row mt-6">
                                 <!-- Port of Loading Input -->
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -172,7 +172,7 @@
                             </div>
 
                             {{-- bagian 4 --}}
-                            <div class="group-info mt-4">
+                            <div class="group-info mt-6">
                                 <div class="row">
                                     <!-- Kolom Sebelah Kiri -->
                                     <div class="col-6">
