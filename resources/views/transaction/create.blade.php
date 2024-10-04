@@ -841,8 +841,6 @@
                     var result = qty * carton;
                     row.find('.inner-result').text(result);
                     row.find('.net-weight').text(result);
-                    $('#net_weight_transaction').val(result);
-                    $('.net_weight_transaction').val(result);
 
                     // Update the price based on result * data.price
                     var totalPrice = result * data.price;
@@ -915,6 +913,8 @@
                     $('#totalInner').text(totalInner);
                     $('#totalNetWeight').text(totalNetWeight);
                     $('#PriceAmount').text(PriceAmount);
+                    $('#net_weight_transaction').val(totalNetWeight);
+                    $('.net_weight_transaction').val(totalNetWeight);
                 }
 
                 // Fungsi untuk memperbarui total price amount
