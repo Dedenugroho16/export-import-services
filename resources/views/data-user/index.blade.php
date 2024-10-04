@@ -18,18 +18,12 @@
 
                         <!-- Toast notifications -->
                         <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
-
-                            <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-
                             <div id="addToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-
                                 <div class="d-flex">
                                     <div class="toast-body">
                                         User berhasil ditambahkan!
                                     </div>
                                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-
-
                                 </div>
                             </div>
                             <div id="editToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -38,7 +32,6 @@
                                         User berhasil diubah!
                                     </div>
                                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-
                                 </div>
                             </div>
                             <div id="deleteToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -183,11 +176,10 @@
             },
             lengthMenu: [5, 10, 25, 50],
             pageLength: 10,
-            // Disable loading indicator
             bAutoWidth: false,
             bLengthChange: true,
-            processing: false, // Disable processing display
-            searching: true, // Enable searching
+            processing: false,
+            searching: true,
         });
 
         // Reset form when Add User modal is shown
@@ -209,12 +201,7 @@
                     addToast.show();
                 },
                 error: function(xhr) {
-                    var errorMessage = '';
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        errorMessage = Object.values(xhr.responseJSON.errors).map(err => err.join(', ')).join('\n');
-                    } else {
-                        errorMessage = 'Terjadi kesalahan: ' + xhr.responseText;
-                    }
+                    let errorMessage = 'Terjadi kesalahan: ' + (xhr.responseJSON?.message || xhr.responseText);
                     alert(errorMessage);
                 }
             });
@@ -253,12 +240,7 @@
                     editToast.show();
                 },
                 error: function(xhr) {
-                    var errorMessage = '';
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        errorMessage = Object.values(xhr.responseJSON.errors).map(err => err.join(', ')).join('\n');
-                    } else {
-                        errorMessage = 'Terjadi kesalahan: ' + xhr.responseText;
-                    }
+                    let errorMessage = 'Terjadi kesalahan: ' + (xhr.responseJSON?.message || xhr.responseText);
                     alert(errorMessage);
                 }
             });
