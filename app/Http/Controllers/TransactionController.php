@@ -18,9 +18,9 @@ class TransactionController extends Controller
 {
 
     public function index()
-    {       
-        $transaction = Transaction::all(['id','code', 'number','date', 'id_client', 'id_consignee', 'total']);
-        return view('transaction.index', compact('transaction'));
+    {
+        $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
+        return view('transaction.index', compact('transactions'));
     }
 
 
@@ -133,10 +133,13 @@ class TransactionController extends Controller
     public function show($id)
     {
         $transaction = Transaction::findOrFail($id);
-        $detailTransaction = DetailTransaction::findOrFail($id);
+
+        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+
         $detailProduct = DetailProduct::findOrFail($id);
         $product = Product::findOrFail($id);
-        return view('transaction.show', compact('transaction', 'detailTransaction', 'product'));
+        return view('transaction.show', compact('transaction', 'detailTransactions', 'product'));
     }
 
     /**

@@ -48,11 +48,11 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Code</strong></td>
-                                            <td>{{ $transaction->code}}</td>
+                                            <td>{{ $transaction->code }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Number</strong></td>
-                                            <td>{{ $transaction->number}}</td>
+                                            <td>{{ $transaction->number }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -108,10 +108,10 @@
                             </div>
 
                             <!-- Bagian 3: Port of Loading, Place of Receipt, Port of Discharge, Place of Delivery -->
-                            <div class="row mt-4"> 
+                            <div class="row mt-4">
                                 <!-- Port of Loading Input -->
                                 <div class="col-md-3">
-                                    <div class="card p-2"> 
+                                    <div class="card p-2">
                                         <div class="card-header p-2">
                                             <h5 class="card-title">Port of loading</h5>
                                         </div>
@@ -124,7 +124,7 @@
                                 <!-- Place of Receipt Input -->
                                 <div class="col-md-3">
                                     <div class="card p-2">
-                                        <div class="card-header p-2"> 
+                                        <div class="card-header p-2">
                                             <h5 class="card-title">Place of receipt</h5>
                                         </div>
                                         <div class="card-body p-1">
@@ -182,7 +182,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->commodity->name}}</p>
+                                                <p>{{ $transaction->commodity->name }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -193,7 +193,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->container}}</p>
+                                                <p>{{ $transaction->container }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -204,7 +204,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->net_weight}}</p>
+                                                <p>{{ $transaction->net_weight }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -215,7 +215,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->gross_weight}}</p>
+                                                <p>{{ $transaction->gross_weight }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -226,7 +226,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->payment_term}}</p>
+                                                <p>{{ $transaction->payment_term }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -241,7 +241,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->stuffing_date}}</p>
+                                                <p>{{ $transaction->stuffing_date }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -252,7 +252,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->bl_number}}</p>
+                                                <p>{{ $transaction->bl_number }}</p>
                                             </div>
                                         </div>
 
@@ -264,7 +264,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->container_number}}</p>
+                                                <p>{{ $transaction->container_number }}</p>
                                             </div>
                                         </div>
 
@@ -276,7 +276,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->seal_number}}</p>
+                                                <p>{{ $transaction->seal_number }}</p>
                                             </div>
                                         </div>
 
@@ -288,7 +288,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->product_ncm}}</p>
+                                                <p>{{ $transaction->product_ncm }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -309,14 +309,16 @@
                                             <th class="text-center">Price Amount(USD)</th>
                                         </thead>
                                         <tbody id="detail-rows" style="font-size: 12px">
-                                            <tr id="nullDetailTransaction">
-                                                <td>{{ $detailTransaction->detailProduct->name }}</td>
-                                                <td>{{ $detailTransaction->carton }}</td>
-                                                <td>{{ $detailTransaction->inner_qty_carton }}</td>
-                                                <td>{{ $detailTransaction->unit_price }}</td>
-                                                <td>{{ $detailTransaction->net_weight }}</td>
-                                                <td>{{ $detailTransaction->price_amount }}</td>
-                                            </tr>
+                                                @foreach ($detailTransactions as $detailTransaction)
+                                                    <tr>
+                                                        <td>{{ $detailTransaction->detailProduct->name }}</td>
+                                                        <td>{{ $detailTransaction->carton }}</td>
+                                                        <td>{{ $detailTransaction->inner_qty_carton }}</td>
+                                                        <td>{{ $detailTransaction->unit_price }}</td>
+                                                        <td>{{ $detailTransaction->net_weight }}</td>
+                                                        <td>{{ $detailTransaction->price_amount }}</td>
+                                                    </tr>
+                                                @endforeach
                                         </tbody>
                                         <tfoot>
                                             <tr id="totalRow" style="font-weight: bold;">
@@ -330,19 +332,20 @@
                                             <tr>
                                                 <td class="text-center" colspan="5"></td>
                                                 <td class="text-center">
-                                                    <p>Freight cost : {{ $transaction->freight_cost}}</p>
+                                                    <p>Freight cost : {{ $transaction->freight_cost }}</p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="text-center" colspan="5"></td>
                                                 <td class="text-center">
-                                                    <p>Total : {{ $transaction->total}}</p>
+                                                    <p>Total : {{ $transaction->total }}</p>
                                                 </td>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

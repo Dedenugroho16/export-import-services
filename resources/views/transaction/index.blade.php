@@ -28,7 +28,7 @@
         @endif
 
         <!-- Daftar Invoice -->
-        @if ($transaction->isEmpty())
+        @if ($transactions->isEmpty())
             <p>Tidak ada invoice yang tersedia.</p>
         @else
             <div class="card">
@@ -41,21 +41,21 @@
                                     <th class="text-center">Code</th>
                                     <th class="text-center">Number</th>
                                     <th class="text-center">Date</th>
-                                    <th class="text-center">Client ID</th>
-                                    <th class="text-center">Consignee ID</th>
+                                    <th class="text-center">Client</th>
+                                    <th class="text-center">Consignee</th>
                                     <th class="text-center">Total</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($transaction as $transaction)
+                                @foreach ($transactions as $transaction)
                                     <tr>
                                         <td class="text-center">{{ $transaction->id }}</td>
                                         <td class="text-center">{{ $transaction->code }}</td>
                                         <td class="text-center">{{ $transaction->number }}</td>
                                         <td class="text-center">{{ $transaction->date }}</td>
-                                        <td class="text-center">{{ $transaction->id_client }}</td>
-                                        <td class="text-center">{{ $transaction->id_consignee }}</td>
+                                        <td class="text-center">{{ $transaction->client->name }}</td>
+                                        <td class="text-center">{{ $transaction->consignee->name }}</td>
                                         <td class="text-center">{{ $transaction->total }}</td>
                                         <td class="text-center">
                                             <a href="{{ route('transaction.show', $transaction->id) }}">Lihat detail</a>

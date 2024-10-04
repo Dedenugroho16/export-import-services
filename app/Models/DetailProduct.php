@@ -26,6 +26,6 @@ class DetailProduct extends Model
 
     public function detailTransactions()
     {
-        return $this->hasMany(DetailTransaction::class, 'id_detail_product');
+        return $this->belongsTo(DetailTransaction::class, 'id_detail_product');
     }
 }
