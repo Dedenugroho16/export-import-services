@@ -51,6 +51,11 @@ class Transaction extends Model
         return $this->belongsToMany(Product::class, 'detail_transactions', 'id_transaction', 'id_product');
     }
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'id_product');
+    }
+
 
     public function commodity()
     {
