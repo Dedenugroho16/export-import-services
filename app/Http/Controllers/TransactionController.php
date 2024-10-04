@@ -10,22 +10,20 @@ use App\Models\Consignee;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\DetailProduct;
+use App\Models\DetailTransaction;
 use Yajra\DataTables\Facades\DataTables;
 
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
-    {
-        //
+    {       
+        $transaction = Transaction::all(['id','code', 'number','date', 'id_client', 'id_consignee', 'total']);
+        return view('transaction.index', compact('transaction'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         $consignees = Consignee::all();
@@ -132,9 +130,13 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $transaction = Transaction::findOrFail($id);
+        $detailTransaction = DetailTransaction::findOrFail($id);
+        $detailProduct = DetailProduct::findOrFail($id);
+        $product = Product::findOrFail($id);
+        return view('transaction.show', compact('transaction', 'detailTransaction', 'product'));
     }
 
     /**

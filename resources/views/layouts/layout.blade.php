@@ -264,6 +264,9 @@
                                 <span class="nav-link-title">Transaksi</span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ url('/transaction') }}">
+                                    <span class="nav-link-title">Invoice</span>
+                                </a>
                                 <a class="dropdown-item" href="{{ url('/transaction/create') }}">
                                     <span class="nav-link-title">Seluruh Transaksi</span>
                                 </a>

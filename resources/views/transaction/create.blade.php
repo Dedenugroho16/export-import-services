@@ -429,6 +429,7 @@
                                                 </tbody>
                                                 <tfoot>
                                                     <tr id="totalRow" style="font-weight: bold;">
+                                                        <td></td>
                                                         <td class="text-center">Amount</td>
                                                         <td class="text-center" id="totalCarton">0</td>
                                                         <td class="text-center" id="totalInner">0</td>
@@ -438,7 +439,7 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr id="inputRow">
-                                                        <td class="text-center" colspan="5"></td>
+                                                        <td class="text-center" colspan="6"></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
                                                                 <label for="additionalInput" class="mr-2">Freight Cost
@@ -452,7 +453,7 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="text-center" colspan="5"></td>
+                                                        <td class="text-center" colspan="6"></td>
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
@@ -479,8 +480,9 @@
                             </form>
 
                             <!-- Tombol Submit -->
-                            <div class="card-body text-end">
-                                <button type="button" id="submitButton" class="btn btn-primary">Submit Invoice</button>
+                            <div class="text-end">
+                                <a href="{{ url('/transaction') }}" class="btn btn-outline-primary">Kembali</a>
+                                <button type="button" id="submitButton" class="btn btn-primary">Tambah</button>
                             </div>
                         </div>
                     </div>
