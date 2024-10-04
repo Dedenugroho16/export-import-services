@@ -309,16 +309,16 @@
                                             <th class="text-center">Price Amount(USD)</th>
                                         </thead>
                                         <tbody id="detail-rows" style="font-size: 12px">
-                                                @foreach ($detailTransactions as $detailTransaction)
-                                                    <tr>
-                                                        <td>{{ $detailTransaction->detailProduct->name }}</td>
-                                                        <td>{{ $detailTransaction->carton }}</td>
-                                                        <td>{{ $detailTransaction->inner_qty_carton }}</td>
-                                                        <td>{{ $detailTransaction->unit_price }}</td>
-                                                        <td>{{ $detailTransaction->net_weight }}</td>
-                                                        <td>{{ $detailTransaction->price_amount }}</td>
-                                                    </tr>
-                                                @endforeach
+                                            @foreach ($detailTransactions as $detailTransaction)
+                                                <tr>
+                                                    <td>{{ $detailTransaction->detailProduct->name }}</td>
+                                                    <td class="carton">{{ $detailTransaction->carton }}</td>
+                                                    <td class="inner">{{ $detailTransaction->inner_qty_carton }}</td>
+                                                    <td>{{ $detailTransaction->unit_price }}</td>
+                                                    <td class="net-weight">{{ $detailTransaction->net_weight }}</td>
+                                                    <td class="price-amount">{{ $detailTransaction->price_amount }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                         <tfoot>
                                             <tr id="totalRow" style="font-weight: bold;">
@@ -352,4 +352,35 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            function updateAmounts() {
+                var totalCarton = 0;
+                var totalInner = 0;
+                var totalNetWeight = 0;
+                var PriceAmount = 0;
+
+                // Iterasi setiap baris untuk mendapatkan nilai total
+                $('#tableDetailTransaction tbody tr').each(function() {
+                    var carton = parseFloat($(this).find('.carton').text()) || 0;
+                    var inner = parseFloat($(this).find('.inner').text()) || 0;
+                    var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
+                    var price = parseFloat($(this).find('.price-amount').text()) || 0;
+
+                    totalCarton += carton;
+                    totalInner += inner;
+                    totalNetWeight += netWeight;
+                    PriceAmount += price;
+                });
+
+                // Update nilai total di footer
+                $('#totalCarton').text(totalCarton);
+                $('#totalInner').text(totalInner);
+                $('#totalNetWeight').text(totalNetWeight);
+                $('#PriceAmount').text(PriceAmount);
+            }
+            updateAmounts();
+        });
+    </script>
 @endsection

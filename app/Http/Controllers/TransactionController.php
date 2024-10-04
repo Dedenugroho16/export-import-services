@@ -137,9 +137,8 @@ class TransactionController extends Controller
         // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 
-        $detailProduct = DetailProduct::findOrFail($id);
-        $product = Product::findOrFail($id);
-        return view('transaction.show', compact('transaction', 'detailTransactions', 'product'));
+        
+        return view('transaction.show', compact('transaction', 'detailTransactions'));
     }
 
     /**
