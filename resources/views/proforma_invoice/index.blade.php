@@ -28,7 +28,7 @@
         @endif
 
         <!-- Daftar Proforma Invoice -->
-        @if ($proformaInvoice->isEmpty())
+        @if ($proforma_invoice->isEmpty())
             <p>Tidak ada proforma invoice yang tersedia.</p>
         @else
             <div class="card">
@@ -37,7 +37,7 @@
                         <table class="table card-table table-vcenter text-nowrap">
                             <thead>
                                 <tr>
-                                    <th class="text-center">#</th>
+                                    <th class="text-center">No</th>
                                     <th class="text-center">Code</th>
                                     <th class="text-center">Number</th>
                                     <th class="text-center">Client ID</th>
@@ -47,19 +47,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($proformaInvoice as $invoice)
-                                <tr>
-                                    <td class="text-center">{{ $invoice->id }}</td> <!-- Menggunakan ID invoice -->
-                                    <td class="text-center">{{ $invoice->code }}</td>
-                                    <td class="text-center">{{ $invoice->number }}</td>
-                                    <td class="text-center">{{ $invoice->id_client }}</td>
-                                    <td class="text-center">{{ $invoice->id_consignee }}</td>
-                                    <td class="text-center">{{ $invoice->total }}</td>
-                                    <td class="text-center">
-                                        <a href="#" class="btn btn-info btn-sm">Lihat Detail</a>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                @foreach ($proforma_invoice as $key => $invoice)
+                                    <tr>
+                                        <td class="text-center">{{ $key + 1 }}</td>
+                                        <td class="text-center">{{ $invoice->code }}</td>
+                                        <td class="text-center">{{ $invoice->number }}</td>
+                                        <td class="text-center">{{ $invoice->id_client }}</td>
+                                        <td class="text-center">{{ $invoice->id_consignee }}</td>
+                                        <td class="text-center">{{ $invoice->total }}</td>
+                                        <td class="text-center">
+                                            <a href="#" class="btn btn-info btn-sm">Lihat Detail</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

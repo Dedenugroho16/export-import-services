@@ -1,14 +1,10 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class ProformaInvoice extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'date',
         'code',
@@ -37,33 +33,26 @@ class ProformaInvoice extends Model
         'total',
         'approved'
     ];
-
     public function consignee()
     {
         return $this->belongsTo(Consignee::class, 'id_consignee');
     }
-
     public function client()
     {
         return $this->belongsTo(Client::class, 'id_client');
     }
-
     public function products()
     {
         return $this->belongsToMany(Product::class, 'detail_transactions', 'id_transaction', 'id_product');
     }
-
     public function product()
     {
         return $this->belongsTo(Product::class, 'id_product');
     }
-
-
     public function commodity()
     {
         return $this->belongsTo(Commodity::class, 'id_commodity');
     }
-
     public function detailProduct()
     {
         return $this->belongsTo(DetailProduct::class, 'id_detail_product');

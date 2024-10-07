@@ -339,7 +339,7 @@
                                 </div>
 
                                 {{-- tabel detail transaction --}}
-                                <div class="card mt-3 mb-3">
+                                <div class="card mt-3">
                                     <div class="card-header d-flex justify-content-between">
                                         <h4>Transaction Details</h4>
                                         <div class="btn-group">
@@ -414,7 +414,7 @@
                             </form>
 
                             <form id="formDetailTransaction" method="POST"
-                                action="{{ route('detailtransaction.store') }}">
+                                action="{{ route('proforma_invoice.store') }}">
                                 @csrf
                                 <!-- Hidden inputs will be generated here -->
                             </form>
@@ -781,6 +781,8 @@
                     var result = qty * carton;
                     row.find('.inner-result').text(result);
                     row.find('.net-weight').text(result);
+                    $('#net_weight_transaction').val(result);
+                    $('.net_weight_transaction').val(result);
 
                     // Update the price based on result * data.price
                     var totalPrice = result * data.price;
@@ -853,8 +855,6 @@
                     $('#totalInner').text(totalInner);
                     $('#totalNetWeight').text(totalNetWeight);
                     $('#PriceAmount').text(PriceAmount);
-                    $('#net_weight_transaction').val(totalNetWeight);
-                    $('.net_weight_transaction').val(totalNetWeight);
                 }
 
                 // Fungsi untuk memperbarui total price amount
@@ -913,51 +913,11 @@
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
 
-            // $('#submitButton').on('click', function() {
-            //     $('#formTransaction').submit();
-            // });
+            $('#submitButton').on('click', function() {
+                $('#formProformaInvoice').submit();
+             });
 
-            $('#submitButton').click(function() {
-                var formTransaction = $('#formTransaction');
-                var formDetailTransaction = $('#formDetailTransaction');
-
-                // Submit formTransaction terlebih dahulu
-                $.ajax({
-                    url: formTransaction.attr('action'),
-                    method: formTransaction.attr('method'),
-                    data: formTransaction.serialize(),
-                    success: function(response) {
-                        // Pastikan response.id berisi ID transaksi yang valid
-                        if (response.id) {
-                            // Set ID transaksi ke input hidden pada form detail transaksi
-                            $('#id_transaction').val(response.id); // Isi ID transaksi pada form
-
-                            // Selanjutnya submit formDetailTransaction
-                            $.ajax({
-                                url: formDetailTransaction.attr('action'),
-                                method: formDetailTransaction.attr('method'),
-                                data: formDetailTransaction.serialize(),
-                                success: function(response) {
-                                    alert(response.message);
-                                    location
-                                .reload(); // Reload halaman setelah alert
-                                },
-                                error: function(xhr) {
-                                    // Tangani error untuk detail transaksi
-                                    alert('Error saving detail transaction: ' + xhr
-                                        .responseJSON.message);
-                                }
-                            });
-                        } else {
-                            alert('Transaction ID is missing');
-                        }
-                    },
-                    error: function(xhr) {
-                        // Tangani error untuk transaksi
-                        alert('Error saving transaction: ' + xhr.responseJSON.message);
-                    }
-                });
-            });
+            
 
         });
     </script>
