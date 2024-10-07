@@ -29,6 +29,7 @@ class TransactionController extends Controller
         return view('proforma.index', compact('proformaInvoice'));
     }
 
+    // Mengambil Proforma yang belum disetujui
     public function getProformaData()
     {
         // Mengambil data hanya yang approved = 0
@@ -61,6 +62,27 @@ class TransactionController extends Controller
         return response()->json(['success' => 'Proforma invoice disetujui.']);
     }
 
+    // Mengambil Proforma yang telah disetujui
+    public function getApprovedData()
+    {
+        $approvedInvoices = Transaction::with(['client', 'consignee'])
+            ->where('approved', 1) // Mengambil transaksi yang disetujui
+            ->select(['id', 'code', 'number', 'id_client', 'id_consignee']);
+
+        return DataTables::of($approvedInvoices)
+            ->addColumn('client', function ($row) {
+                return $row->client->name;  // Mengambil nama client dari relasi
+            })
+            ->addColumn('consignee', function ($row) {
+                return $row->consignee->name;  // Mengambil nama consignee dari relasi
+            })
+            ->addColumn('aksi', function ($row) {
+                // Link untuk melihat detail
+                return '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+            })
+            ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
+            ->make(true);
+    }
 
     public function proformaCreate()
     {

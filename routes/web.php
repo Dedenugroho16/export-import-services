@@ -79,6 +79,7 @@ Route::get('proforma/create', [TransactionController::class, 'proformaCreate'])-
 Route::post('/proforma/store', [TransactionController::class, 'proformaStore'])->name('proforma.store');
 Route::post('/proforma/show', [TransactionController::class, 'proformaShow'])->name('proforma.show');
 Route::get('proforma/data', [TransactionController::class, 'getProformaData'])->name('proforma.data');
+Route::get('/approved-proforma/data', [TransactionController::class, 'getApprovedData'])->name('approved.data');
 
 // APPROVE
 Route::post('proforma/approve/{id}', [TransactionController::class, 'approveProforma'])->name('proforma.approve');

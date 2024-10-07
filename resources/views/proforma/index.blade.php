@@ -49,33 +49,17 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap">
+                            <table class="table card-table table-vcenter text-nowrap" id="approvedTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">#</th>
+                                        <th class="text-center">No</th>
                                         <th class="text-center">Code</th>
                                         <th class="text-center">Number</th>
                                         <th class="text-center">Client ID</th>
                                         <th class="text-center">Consignee ID</th>
-                                        <th class="text-center">Total</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($proformaInvoice as $invoice)
-                                        <tr>
-                                            <td class="text-center">{{ $invoice->id }}</td> <!-- Menggunakan ID invoice -->
-                                            <td class="text-center">{{ $invoice->code }}</td>
-                                            <td class="text-center">{{ $invoice->number }}</td>
-                                            <td class="text-center">{{ $invoice->id_client }}</td>
-                                            <td class="text-center">{{ $invoice->id_consignee }}</td>
-                                            <td class="text-center">{{ $invoice->total }}</td>
-                                            <td class="text-center">
-                                                <a href="#" class="btn btn-info btn-sm">Lihat Detail</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -133,6 +117,59 @@
 
     <script>
         $(document).ready(function() {
+            var approvedTable = $('#approvedTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('approved.data') }}',
+                    type: 'GET'
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'code',
+                        name: 'code',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'number',
+                        name: 'number',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'client',
+                        name: 'client',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'consignee',
+                        name: 'consignee',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-center'
+                    }
+                ],
+                order: [
+                    [1, 'asc']
+                ],
+                columnDefs: [{
+                    targets: 0,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                }]
+            });
+
             var table = $('#waitingProformaTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -220,6 +257,8 @@
                                     'success'
                                 );
                                 table.ajax.reload(); // Reload tabel setelah sukses
+                                approvedTable.ajax
+                            .reload(); // Reload tabel setelah sukses
                             },
                             error: function(xhr) {
                                 // Tampilkan pesan error jika terjadi kesalahan
@@ -232,54 +271,6 @@
                         });
                     }
                 });
-            });
-        });
-
-
-        // Handle approve button click
-        // Handle approve button click with confirmation using SweetAlert
-        $('#waitingProformaTable').on('click', '.approve-btn', function() {
-            var transactionId = $(this).data('id');
-
-            // Menampilkan konfirmasi SweetAlert
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Anda tidak dapat membatalkan setelah ini!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Setujui!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Jika pengguna menekan tombol "Ya, Setujui!"
-                    $.ajax({
-                        url: '{{ route('proforma.approve', ':id') }}'.replace(':id',
-                            transactionId),
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}' // CSRF token untuk keamanan
-                        },
-                        success: function(response) {
-                            // Tampilkan pesan sukses dan reload tabel
-                            Swal.fire(
-                                'Disetujui!',
-                                'Proforma invoice telah disetujui.',
-                                'success'
-                            );
-                            table.ajax.reload(); // Reload tabel setelah sukses
-                        },
-                        error: function(xhr) {
-                            // Tampilkan pesan error jika terjadi kesalahan
-                            Swal.fire(
-                                'Error!',
-                                'Terjadi kesalahan. Silakan coba lagi.',
-                                'error'
-                            );
-                        }
-                    });
-                }
             });
         });
     </script>
