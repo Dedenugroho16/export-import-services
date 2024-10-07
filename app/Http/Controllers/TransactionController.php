@@ -29,6 +29,39 @@ class TransactionController extends Controller
         return view('proforma.index', compact('proformaInvoice'));
     }
 
+    public function getProformaData()
+    {
+        // Mengambil data hanya yang approved = 0
+        $proformaInvoice = Transaction::with(['client', 'consignee'])
+            ->where('approved', 0) // Kondisi approved harus 0
+            ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
+
+        return DataTables::of($proformaInvoice)
+            ->addColumn('client', function ($row) {
+                return $row->client->name;  // Asumsikan ada relasi `client` di model Transaction
+            })
+            ->addColumn('consignee', function ($row) {
+                return $row->consignee->name;  // Asumsikan ada relasi `consignee` di model Transaction
+            })
+            ->addColumn('aksi', function ($row) {
+                return '<button class="btn btn-sm btn-primary approve-btn" data-id="' . $row->id . '">Setujui</button>';
+            })
+            ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
+            ->make(true);
+    }
+
+    public function approveProforma($id)
+    {
+        // Cari transaksi berdasarkan ID dan update field approved menjadi 1
+        $transaction = Transaction::findOrFail($id);
+        $transaction->approved = 1;
+        $transaction->save();
+
+        // Kembalikan respons sukses
+        return response()->json(['success' => 'Proforma invoice disetujui.']);
+    }
+
+
     public function proformaCreate()
     {
         $consignees = Consignee::all();
@@ -77,10 +110,10 @@ class TransactionController extends Controller
             'net_weight' => 'required|numeric|min:0',
             'gross_weight' => 'required|numeric|min:0',
             'payment_term' => 'required|string|max:255',
-            'stuffing_date' => 'required|date',
-            'bl_number' => 'required|string|max:255',
-            'container_number' => 'required|string|max:255',
-            'seal_number' => 'required|string|max:255',
+            'stuffing_date' => 'nullable|date',
+            'bl_number' => 'nullable|string|max:255',
+            'container_number' => 'nullable|string|max:255',
+            'seal_number' => 'nullable|string|max:255',
             'product_ncm' => 'required|string|max:255',
             'freight_cost' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',

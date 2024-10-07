@@ -88,7 +88,7 @@
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content modal-centered">
                 <div class="modal-header border-bottom bg-transparent">
-                    <h4 class="modal-title">Daftar Proforma</h4>
+                    <h4 class="modal-title">Menunggu Persetujuan</h4>
                     <a href="{{ route('proforma.create') }}" class="btn btn-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -104,18 +104,17 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <h4 class="mb-2 mt-1">Data Detail Produk</h4>
+                            <h4 class="mb-2 mt-1">Daftar Proforma</h4>
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover" id="detailProductTable">
+                                <table class="table table-striped table-hover" id="waitingProformaTable">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama Produk</th>
-                                            <th>Jumlah (pcs)</th>
-                                            <th>Dimensi</th>
-                                            <th>Tipe</th>
-                                            <th>Warna</th>
-                                            <th>Harga</th>
+                                            <th>Code</th>
+                                            <th>Number</th>
+                                            <th>Date</th>
+                                            <th>Client</th>
+                                            <th>Consignee</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -130,4 +129,158 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#waitingProformaTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('proforma.data') }}', // Endpoint yang memuat data
+                    data: function(d) {
+                        d.approved = 0; // Mengirimkan approved = 0 sebagai filter ke server
+                    }
+                },
+                responsive: true,
+                autoWidth: false,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'code',
+                        name: 'code'
+                    },
+                    {
+                        data: 'number',
+                        name: 'number'
+                    },
+                    {
+                        data: 'date',
+                        name: 'date'
+                    },
+                    {
+                        data: 'client',
+                        name: 'client'
+                    },
+                    {
+                        data: 'consignee',
+                        name: 'consignee'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        orderable: false,
+                        searchable: false
+                    },
+                ],
+                order: [
+                    [1, 'asc']
+                ],
+                columnDefs: [{
+                    targets: 0,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                }]
+            });
+
+            // Handle approve button click with confirmation using SweetAlert
+            $('#waitingProformaTable').on('click', '.approve-btn', function() {
+                var transactionId = $(this).data('id');
+
+                // Menampilkan konfirmasi SweetAlert
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Anda tidak dapat membatalkan setelah ini!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Setujui!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Jika pengguna menekan tombol "Ya, Setujui!"
+                        $.ajax({
+                            url: '{{ route('proforma.approve', ':id') }}'.replace(':id',
+                                transactionId),
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}' // CSRF token untuk keamanan
+                            },
+                            success: function(response) {
+                                // Tampilkan pesan sukses dan reload tabel
+                                Swal.fire(
+                                    'Disetujui!',
+                                    'Proforma invoice telah disetujui.',
+                                    'success'
+                                );
+                                table.ajax.reload(); // Reload tabel setelah sukses
+                            },
+                            error: function(xhr) {
+                                // Tampilkan pesan error jika terjadi kesalahan
+                                Swal.fire(
+                                    'Error!',
+                                    'Terjadi kesalahan. Silakan coba lagi.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+
+        // Handle approve button click
+        // Handle approve button click with confirmation using SweetAlert
+        $('#waitingProformaTable').on('click', '.approve-btn', function() {
+            var transactionId = $(this).data('id');
+
+            // Menampilkan konfirmasi SweetAlert
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda tidak dapat membatalkan setelah ini!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna menekan tombol "Ya, Setujui!"
+                    $.ajax({
+                        url: '{{ route('proforma.approve', ':id') }}'.replace(':id',
+                            transactionId),
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}' // CSRF token untuk keamanan
+                        },
+                        success: function(response) {
+                            // Tampilkan pesan sukses dan reload tabel
+                            Swal.fire(
+                                'Disetujui!',
+                                'Proforma invoice telah disetujui.',
+                                'success'
+                            );
+                            table.ajax.reload(); // Reload tabel setelah sukses
+                        },
+                        error: function(xhr) {
+                            // Tampilkan pesan error jika terjadi kesalahan
+                            Swal.fire(
+                                'Error!',
+                                'Terjadi kesalahan. Silakan coba lagi.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 @endsection
