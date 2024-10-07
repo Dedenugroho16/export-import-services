@@ -100,11 +100,15 @@
                                 </div>
                             </div>
 
-                            <form id="formProformaInvoice" method="POST" action="{{ route('proforma_invoice.store') }}">
+                            <form id="formProformaInvoice" method="POST" action="{{ route('proforma.store') }}">
                                 @csrf
                                 <input type="date" name="date" id="date" hidden>
                                 <input type="text" name="code" id="code" hidden>
                                 <input type="text" name="number" id="number" hidden>
+                                <input type="date" name="stuffing_date" id="stuffing_date" hidden>
+                                <input type="text" name="bl_number" id="bl_number" hidden>
+                                <input type="text" name="container_number" id="container_number" hidden>
+                                <input type="text" name="seal_number" id="seal_number" hidden>
 
                                 <!-- Bagian 2: Consignee, Notify, Client -->
                                 <div class="card mt-3">
@@ -421,7 +425,7 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end">
-                                <a href="{{ route('proforma_invoice.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Tambah</button>
                             </div>
                         </div>
@@ -918,14 +922,14 @@
             // });
 
             $('#submitButton').click(function() {
-                var formTransaction = $('#formTransaction');
+                var formProformaInvoice = $('#formProformaInvoice');
                 var formDetailTransaction = $('#formDetailTransaction');
 
-                // Submit formTransaction terlebih dahulu
+                // Submit formProformaInvoice terlebih dahulu
                 $.ajax({
-                    url: formTransaction.attr('action'),
-                    method: formTransaction.attr('method'),
-                    data: formTransaction.serialize(),
+                    url: formProformaInvoice.attr('action'),
+                    method: formProformaInvoice.attr('method'),
+                    data: formProformaInvoice.serialize(),
                     success: function(response) {
                         // Pastikan response.id berisi ID transaksi yang valid
                         if (response.id) {
@@ -938,7 +942,7 @@
                                 method: formDetailTransaction.attr('method'),
                                 data: formDetailTransaction.serialize(),
                                 success: function(response) {
-                                    alert(response.message);
+                                    alert('Berhasil menambahkan proforma invoice');
                                     location
                                 .reload(); // Reload halaman setelah alert
                                 },

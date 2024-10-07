@@ -26,10 +26,10 @@ class CreateTransactionsTable extends Migration
             $table->decimal('net_weight', 8, 2);
             $table->decimal('gross_weight', 8, 2);
             $table->string('payment_term');
-            $table->date('stuffing_date');
-            $table->string('bl_number');
-            $table->string('container_number');
-            $table->string('seal_number');
+            $table->date('stuffing_date')->nullable();
+            $table->string('bl_number')->nullable();
+            $table->string('container_number')->nullable();
+            $table->string('seal_number')->nullable();
             $table->string('product_ncm');
             $table->decimal('freight_cost', 10, 2);
             $table->decimal('total', 10, 2);
