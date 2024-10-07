@@ -247,34 +247,6 @@
                                 </span>
                             </a>
                         </li> --}}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <circle cx="6" cy="19" r="2" />
-                                        <circle cx="17" cy="19" r="2" />
-                                        <path d="M17 17h-11v-14h-2" />
-                                        <path d="M6 5l14 1l-1 7h-13" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">Transaksi</span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ url('/transaction') }}">
-                                    <span class="nav-link-title">Invoice</span>
-                                </a>
-                                <a class="dropdown-item" href="{{ url('/transaction/create') }}">
-                                    <span class="nav-link-title">Seluruh Transaksi</span>
-                                </a>
-                                <a class="dropdown-item" href="{{ url('/transaction/create') }}">
-                                    <span class="nav-link-title">Buat Transaksi</span>
-                                </a>
-                            </div>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('users.index') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -311,6 +283,56 @@
                                     Data Cabang
                                 </span>
                             </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-text"><path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12h6" /><path d="M9 16h6" />
+                                </svg>
+                                </span>
+                                <span class="nav-link-title">Proforma Invoice</span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ url('/proforma_invoice') }}">
+                                    <span class="nav-link-title">Proforma Invoice</span>
+                                </a>
+                                {{-- <a class="dropdown-item" href="{{ url('/transaction/create') }}">
+                                    <span class="nav-link-title">Seluruh Transaksi</span>
+                                </a> --}}
+                                <a class="dropdown-item" href="{{ url('/proforma_invoice/create') }}">
+                                    <span class="nav-link-title">Buat Proforma Invoice</span>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <circle cx="6" cy="19" r="2" />
+                                        <circle cx="17" cy="19" r="2" />
+                                        <path d="M17 17h-11v-14h-2" />
+                                        <path d="M6 5l14 1l-1 7h-13" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">Transaksi</span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ url('/transaction') }}">
+                                    <span class="nav-link-title">Invoice</span>
+                                </a>
+                                <a class="dropdown-item" href="{{ url('/transaction/create') }}">
+                                    <span class="nav-link-title">Seluruh Transaksi</span>
+                                </a>
+                                <a class="dropdown-item" href="{{ url('/transaction/create') }}">
+                                    <span class="nav-link-title">Buat Transaksi</span>
+                                </a>
+                            </div>
                         </li>
                     </ul>
                 </div>

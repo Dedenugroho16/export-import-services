@@ -14,6 +14,7 @@ use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\DetailTransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProformaInvoiceController;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
@@ -95,3 +96,11 @@ Route::resource('users', UserController::class);
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
 Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+// Proforma Invoice Routes
+Route::resource('proforma_invoice', ProformaInvoiceController::class);
+Route::get('proforma_invoice/{id}/generate-invoice', [ProformaInvoiceController::class, 'generateInvoice'])->name('proforma_invoice.generateInvoice');
+Route::get('/get-consignees/{client_id}', [App\Http\Controllers\ProformaInvoiceController::class, 'getConsignees']);
+Route::get('/get-detail-products', [ProformaInvoiceController::class, 'getDetailProducts'])->name('get-detail-products');
+Route::get('/proforma-invoice', [ProformaInvoiceController::class, 'index'])->name('proforma_invoice.index');
+Route::get('/proforma-invoice/{id}', [ProformaInvoiceController::class, 'show'])->name('proforma-invoice.show');
