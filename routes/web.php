@@ -73,6 +73,10 @@ Route::post('/transaction/store', [TransactionController::class, 'store'])->name
 Route::get('transaction/index', [TransactionController::class, 'index'])->name('transaction.index');
 Route::get('/transaction/{transaction}', [TransactionController::class, 'show'])->name('transaction.show');
 
+// Proforma invoice route
+Route::get('proforma/index', [TransactionController::class, 'proformaIndex'])->name('proforma.index');
+Route::get('proforma/create', [TransactionController::class, 'proformaCreate'])->name('proforma.create');
+
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
 Route::get('/get-detail-products', [TransactionController::class, 'getDetailProducts'])->name('get-detail-products');
@@ -96,11 +100,3 @@ Route::resource('users', UserController::class);
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
 Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
-
-// Proforma Invoice Routes
-Route::resource('proforma_invoice', ProformaInvoiceController::class);
-Route::get('proforma_invoice/{id}/generate-invoice', [ProformaInvoiceController::class, 'generateInvoice'])->name('proforma_invoice.generateInvoice');
-Route::get('/get-consignees/{client_id}', [App\Http\Controllers\ProformaInvoiceController::class, 'getConsignees']);
-Route::get('/get-detail-products', [ProformaInvoiceController::class, 'getDetailProducts'])->name('get-detail-products');
-Route::get('/proforma-invoice', [ProformaInvoiceController::class, 'index'])->name('proforma_invoice.index');
-Route::get('/proforma-invoice/{id}', [ProformaInvoiceController::class, 'show'])->name('proforma-invoice.show');

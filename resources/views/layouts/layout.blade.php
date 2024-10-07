@@ -295,14 +295,8 @@
                                 <span class="nav-link-title">Proforma Invoice</span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ url('/proforma_invoice') }}">
+                                <a class="dropdown-item" href="{{ route('proforma.index') }}">
                                     <span class="nav-link-title">Proforma Invoice</span>
-                                </a>
-                                {{-- <a class="dropdown-item" href="{{ url('/transaction/create') }}">
-                                    <span class="nav-link-title">Seluruh Transaksi</span>
-                                </a> --}}
-                                <a class="dropdown-item" href="{{ url('/proforma_invoice/create') }}">
-                                    <span class="nav-link-title">Buat Proforma Invoice</span>
                                 </a>
                             </div>
                         </li>
