@@ -22,6 +22,18 @@ class TransactionController extends Controller
         $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
         return view('transaction.index', compact('transactions'));
     }
+    
+    public function proformaIndex()
+    {
+        // $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
+        return view('proforma.index');
+    }
+    
+    public function proformaCreate()
+    {
+        // $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
+        return view('proforma.create');
+    }
 
 
     public function create()
