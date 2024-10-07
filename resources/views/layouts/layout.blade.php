@@ -324,12 +324,6 @@
                                 <a class="dropdown-item" href="{{ url('/transaction') }}">
                                     <span class="nav-link-title">Invoice</span>
                                 </a>
-                                <a class="dropdown-item" href="{{ url('/transaction/create') }}">
-                                    <span class="nav-link-title">Seluruh Transaksi</span>
-                                </a>
-                                <a class="dropdown-item" href="{{ url('/transaction/create') }}">
-                                    <span class="nav-link-title">Buat Transaksi</span>
-                                </a>
                             </div>
                         </li>
                     </ul>

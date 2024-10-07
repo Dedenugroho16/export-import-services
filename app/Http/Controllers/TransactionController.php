@@ -16,6 +16,28 @@ use Yajra\DataTables\Facades\DataTables;
 
 class TransactionController extends Controller
 {
+    public function getInvoice()
+    {
+        $invoices = Transaction::with(['client', 'consignee'])
+            ->where('approved', 1) // Mengambil transaksi yang disetujui
+            ->whereNotNull('stuffing_date') // Mengambil transaksi yang stuffing_date tidak null
+            ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
+
+        return DataTables::of($invoices)
+            ->addIndexColumn() // Menambahkan kolom nomor urut
+            ->addColumn('client', function ($row) {
+                return $row->client->name; // Mengambil nama client dari relasi
+            })
+            ->addColumn('consignee', function ($row) {
+                return $row->consignee->name; // Mengambil nama consignee dari relasi
+            })
+            ->addColumn('aksi', function ($row) {
+                // Tombol aksi untuk melihat detail
+                return '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+            })
+            ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
+            ->make(true);
+    }
 
     public function index()
     {
@@ -67,7 +89,8 @@ class TransactionController extends Controller
     {
         $approvedInvoices = Transaction::with(['client', 'consignee'])
             ->where('approved', 1) // Mengambil transaksi yang disetujui
-            ->select(['id', 'code', 'number', 'id_client', 'id_consignee']);
+            ->whereNull('stuffing_date') // Mengambil transaksi yang stuffing_date nya null
+            ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
 
         return DataTables::of($approvedInvoices)
             ->addColumn('client', function ($row) {
