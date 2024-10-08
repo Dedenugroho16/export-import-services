@@ -429,7 +429,7 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-2">
-                                <a href="{{ url('/transaction') }}" class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ url('/proforma') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButtonTransaction"
                                     class="btn btn-primary">Tambah</button>
                             </div>
