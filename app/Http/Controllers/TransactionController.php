@@ -214,8 +214,9 @@ class TransactionController extends Controller
                 return $row->consignee->name;  // Asumsikan ada relasi `consignee` di model Transaction
             })
             ->addColumn('aksi', function ($row) {
-                $lihatDetail = '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-warning">Lihat Detail</a> ';
-                $edit = ' <a href="' . route('proforma.edit', $row->id) . '" class="btn btn-sm btn-danger">Edit Proforma</a> ';
+                $hashId = IdHashHelper::encode($row->id);
+                $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning">Lihat Detail</a> ';
+                $edit = ' <a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger">Edit Proforma</a> ';
                 return $lihatDetail . $edit . ' <button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button> ';
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
@@ -249,7 +250,8 @@ class TransactionController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 // Link untuk melihat detail
-                $lihatDetail = '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+                $hashId = IdHashHelper::encode($row->id);
+                $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
 
                 // Cek jika stuffing_date bernilai null, tampilkan tombol "Buat Invoice"
                 $buatInvoice = '';
@@ -328,15 +330,25 @@ class TransactionController extends Controller
         return response()->json(['id' => $transaction->id], 201);
     }
 
-    public function proformaShow($id)
+    public function proformaShow($hash)
     {
-        return view('proforma.show');
+        $id = IdHashHelper::decode($hash);
+        $ApprovedData = Transaction::findOrFail($id);
+
+        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+        
+        return view('proforma.show', compact('ApprovedData', 'detailTransactions'));
     }
 
-    public function proformaEdit(string $id)
+    public function proformaEdit($hash)
     {
-        return view('proforma.edit');
+        $id = IdHashHelper::decode($hash);
+        $proforma = Transaction::findOrFail($id);
+
+        return view('proforma.edit', compact('proforma')); // Kirim $countries
     }
+
 
     public function proformaUpdate(Request $request, string $id)
     {
