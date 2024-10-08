@@ -67,12 +67,13 @@ Route::resource('countries', CountryController::class);
 Route::resource('branches', BranchController::class);
 
 // Transaction Routes using resource
-Route::resource('transaction', TransactionController::class);
+// Route::resource('transaction', TransactionController::class);
 Route::get('/get-invoice', [TransactionController::class, 'getInvoice'])->name('getInvoice');
-Route::get('transaction/create', [TransactionController::class, 'create'])->name('transaction.create');
-Route::post('/transaction/store', [TransactionController::class, 'store'])->name('transaction.store');
-Route::get('transaction/index', [TransactionController::class, 'index'])->name('transaction.index');
+Route::get('transaction/create/{id}', [TransactionController::class, 'create'])->name('transaction.create');
+Route::get('transaction', [TransactionController::class, 'index'])->name('transaction.index');
 Route::get('/transaction/{transaction}', [TransactionController::class, 'show'])->name('transaction.show');
+// Route untuk update transaksi
+Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 
 // Proforma invoice route
 Route::get('proforma', [TransactionController::class, 'proformaIndex'])->name('proforma.index');
@@ -81,7 +82,6 @@ Route::post('/proforma/store', [TransactionController::class, 'proformaStore'])-
 Route::post('/proforma/show', [TransactionController::class, 'proformaShow'])->name('proforma.show');
 Route::get('proforma/data', [TransactionController::class, 'getProformaData'])->name('proforma.data');
 Route::get('/approved-proforma/data', [TransactionController::class, 'getApprovedData'])->name('approved.data');
-
 // APPROVE
 Route::post('proforma/approve/{id}', [TransactionController::class, 'approveProforma'])->name('proforma.approve');
 

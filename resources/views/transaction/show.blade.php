@@ -345,7 +345,7 @@
                                     </table>
                                 </div>
                             </div>
-
+                            {{-- akhir tabel detail transaction --}}
                         </div>
                     </div>
                 </div>
