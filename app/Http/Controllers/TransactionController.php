@@ -96,12 +96,10 @@ class TransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // fungsi untuk membuat invoice berdasarkan proforma
     public function store(Request $request)
     {
         //
     }
-
 
     /**
      * Display the specified resource.
