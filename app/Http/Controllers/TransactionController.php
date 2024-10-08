@@ -34,7 +34,7 @@ class TransactionController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 // Tombol aksi untuk melihat detail
-                return '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+                return '<a href="' . route('transaction.show', $row->id) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
             ->make(true);
@@ -211,7 +211,9 @@ class TransactionController extends Controller
                 return $row->consignee->name;  // Asumsikan ada relasi `consignee` di model Transaction
             })
             ->addColumn('aksi', function ($row) {
-                return '<button class="btn btn-sm btn-primary approve-btn" data-id="' . $row->id . '">Setujui</button>';
+                $lihatDetail = '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-warning">Lihat Detail</a> ';
+                $edit = ' <a href="' . route('proforma.edit', $row->id) . '" class="btn btn-sm btn-danger">Edit Proforma</a> ';
+                return $lihatDetail . $edit . ' <button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button> ';
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
             ->make(true);
@@ -325,12 +327,12 @@ class TransactionController extends Controller
 
     public function proformaShow($id)
     {
-        //
+        return view('proforma.show');
     }
 
     public function proformaEdit(string $id)
     {
-        //
+        return view('proforma.edit');
     }
 
     public function proformaUpdate(Request $request, string $id)

@@ -413,8 +413,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <input type="checkbox" name="approved" id="approved" value="1"> Approved
                             </form>
 
                             <form id="formDetailTransaction" method="POST"

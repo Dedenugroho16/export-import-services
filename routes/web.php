@@ -79,7 +79,8 @@ Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])
 Route::get('proforma', [TransactionController::class, 'proformaIndex'])->name('proforma.index');
 Route::get('proforma/create', [TransactionController::class, 'proformaCreate'])->name('proforma.create');
 Route::post('/proforma/store', [TransactionController::class, 'proformaStore'])->name('proforma.store');
-Route::post('/proforma/show', [TransactionController::class, 'proformaShow'])->name('proforma.show');
+Route::get('/proforma/show/{id}', [TransactionController::class, 'proformaShow'])->name('proforma.show');
+Route::get('/proforma/edit/{id}', [TransactionController::class, 'proformaEdit'])->name('proforma.edit');
 Route::get('proforma/data', [TransactionController::class, 'getProformaData'])->name('proforma.data');
 Route::get('/approved-proforma/data', [TransactionController::class, 'getApprovedData'])->name('approved.data');
 // APPROVE
