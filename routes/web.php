@@ -71,7 +71,7 @@ Route::resource('branches', BranchController::class);
 Route::get('/get-invoice', [TransactionController::class, 'getInvoice'])->name('getInvoice');
 Route::get('transaction', [TransactionController::class, 'index'])->name('transaction.index');
 Route::get('transaction/create/{id}', [TransactionController::class, 'create'])->name('transaction.create');
-Route::get('/transaction/{transaction}', [TransactionController::class, 'show'])->name('transaction.show');
+Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->name('transaction.show');
 // Route untuk update transaksi
 Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 

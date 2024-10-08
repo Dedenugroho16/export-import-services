@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Helpers\IdHashHelper;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Commodity;
@@ -33,8 +34,9 @@ class TransactionController extends Controller
                 return $row->consignee->name; // Mengambil nama consignee dari relasi
             })
             ->addColumn('aksi', function ($row) {
+                $hashId = IdHashHelper::encode($row->id);
                 // Tombol aksi untuk melihat detail
-                return '<a href="' . route('transaction.show', $row->id) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+                return '<a href="' . route('transaction.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
             ->make(true);
@@ -104,8 +106,9 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($hash)
     {
+        $id = IdHashHelper::decode($hash);
         $transaction = Transaction::findOrFail($id);
 
         // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut

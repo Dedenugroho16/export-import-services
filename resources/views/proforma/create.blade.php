@@ -18,7 +18,7 @@
                                     {{ session('success') }}
                                 </div>
                             @endif
-                            
+
                             @if ($errors->any())
                                 <div class="alert alert-danger">
                                     <ul>
@@ -923,6 +923,9 @@
                 var formProformaInvoice = $('#formProformaInvoice');
                 var formDetailTransaction = $('#formDetailTransaction');
 
+                // Nonaktifkan tombol submit
+                $('#submitButton').prop('disabled', true);
+
                 // Submit formProformaInvoice terlebih dahulu
                 $.ajax({
                     url: formProformaInvoice.attr('action'),
@@ -948,19 +951,26 @@
                                     // Tangani error untuk detail transaksi
                                     alert('Error saving detail transaction: ' + xhr
                                         .responseJSON.message);
+                                },
+                                complete: function() {
+                                    // Aktifkan kembali tombol setelah selesai (sukses/gagal)
+                                    $('#submitButton').prop('disabled', false);
                                 }
                             });
                         } else {
                             alert('Transaction ID is missing');
+                            // Aktifkan kembali tombol jika ID tidak valid
+                            $('#submitButton').prop('disabled', false);
                         }
                     },
                     error: function(xhr) {
                         // Tangani error untuk transaksi
                         alert('Error saving transaction: ' + xhr.responseJSON.message);
+                        // Aktifkan kembali tombol jika error terjadi
+                        $('#submitButton').prop('disabled', false);
                     }
                 });
             });
-
         });
     </script>
 @endsection
