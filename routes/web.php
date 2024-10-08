@@ -68,13 +68,14 @@ Route::resource('branches', BranchController::class);
 
 // Transaction Routes using resource
 Route::resource('transaction', TransactionController::class);
+Route::get('/get-invoice', [TransactionController::class, 'getInvoice'])->name('getInvoice');
 Route::get('transaction/create', [TransactionController::class, 'create'])->name('transaction.create');
 Route::post('/transaction/store', [TransactionController::class, 'store'])->name('transaction.store');
 Route::get('transaction/index', [TransactionController::class, 'index'])->name('transaction.index');
 Route::get('/transaction/{transaction}', [TransactionController::class, 'show'])->name('transaction.show');
 
 // Proforma invoice route
-Route::get('proforma/index', [TransactionController::class, 'proformaIndex'])->name('proforma.index');
+Route::get('proforma', [TransactionController::class, 'proformaIndex'])->name('proforma.index');
 Route::get('proforma/create', [TransactionController::class, 'proformaCreate'])->name('proforma.create');
 Route::post('/proforma/store', [TransactionController::class, 'proformaStore'])->name('proforma.store');
 Route::post('/proforma/show', [TransactionController::class, 'proformaShow'])->name('proforma.show');
