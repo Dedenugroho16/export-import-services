@@ -89,7 +89,7 @@ class TransactionController extends Controller
     {
         $approvedInvoices = Transaction::with(['client', 'consignee'])
             ->where('approved', 1) // Mengambil transaksi yang disetujui
-            ->whereNull('stuffing_date') // Mengambil transaksi yang stuffing_date nya null
+            ->whereNull('stuffing_date') // Mengambil transaksi yang stuffing_date-nya null
             ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
 
         return DataTables::of($approvedInvoices)
@@ -100,8 +100,10 @@ class TransactionController extends Controller
                 return $row->consignee->name;  // Mengambil nama consignee dari relasi
             })
             ->addColumn('aksi', function ($row) {
-                // Link untuk melihat detail
-                return '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+                // Link untuk melihat detail dan membuat invoice
+                $lihatDetail = '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+                $buatInvoice = '<a href="' . route('transaction.create', ['id' => $row->id]) . '" class="btn btn-sm btn-success">Buat Invoice</a>';
+                return $lihatDetail . ' ' . $buatInvoice; // Menggabungkan kedua link
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
             ->make(true);
@@ -173,33 +175,16 @@ class TransactionController extends Controller
     }
 
 
-    public function create()
+    public function create($id)
     {
-        $consignees = Consignee::all();
-        $clients = Client::all();
-        $products = Product::all();
-        $commodities = Commodity::all();
-        $country = Country::all();
+        // Logika untuk membuat invoice berdasarkan id proforma yang dipilih
+        $transaction = Transaction::findOrFail($id);
 
-        // Mengambil number terakhir dari tabel transaction
-        $lastTransaction = Transaction::orderBy('number', 'desc')->first();
+        // Ambil semua detail transaksi yang berhubungan dengan proforma tersebut
+        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 
-        // Jika belum ada data di kolom number, mulai dari 0001
-        if ($lastTransaction === null || empty($lastTransaction->number)) {
-            $newNumber = '0001';
-        } else {
-            // Mengambil number terakhir dan menambah 1, pastikan tetap 4 digit
-            $lastNumber = intval($lastTransaction->number);
-            $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-        }
-
-        // Mengambil dua digit tanggal saat ini
-        $twoDigitDate = date('d');
-
-        // Menggabungkan $newNumber dengan dua digit tanggal
-        $formattedNumber = $newNumber . '/' . $twoDigitDate;
-
-        return view('transaction.create', compact('consignees', 'clients', 'products', 'commodities', 'country', 'formattedNumber'));
+        // Kembalikan view yang sesuai dan oper data proforma
+        return view('transaction.create', compact('transaction', 'detailTransactions'));
     }
 
     // method get Consignee
@@ -240,41 +225,12 @@ class TransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // fungsi untuk membuat invoice berdasarkan proforma
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'date' => 'required|date',
-            'code' => 'required|string|max:255',
-            'number' => 'required|string|max:255',
-            'id_consignee' => 'required|exists:consignees,id',
-            'notify' => 'required|string|max:255',
-            'id_client' => 'required|exists:clients,id',
-            'port_of_loading' => 'required|string|max:255',
-            'place_of_receipt' => 'required|string|max:255',
-            'port_of_discharge' => 'required|string|max:255',
-            'place_of_delivery' => 'required|string|max:255',
-            'id_product' => 'required|exists:products,id',
-            'id_commodity' => 'required|exists:commodities,id',
-            'container' => 'required|string|max:255',
-            'net_weight' => 'required|numeric|min:0',
-            'gross_weight' => 'required|numeric|min:0',
-            'payment_term' => 'required|string|max:255',
-            'stuffing_date' => 'required|date',
-            'bl_number' => 'required|string|max:255',
-            'container_number' => 'required|string|max:255',
-            'seal_number' => 'required|string|max:255',
-            'product_ncm' => 'required|string|max:255',
-            'freight_cost' => 'required|numeric|min:0',
-            'total' => 'required|numeric|min:0',
-            'approved' => 'nullable|boolean',
-        ]);
-
-        // Simpan transaksi
-        $transaction = Transaction::create($validatedData);
-
-        // Kembalikan response JSON dengan ID transaksi yang baru
-        return response()->json(['id' => $transaction->id], 201);
+        //
     }
+
 
     /**
      * Display the specified resource.
@@ -303,7 +259,55 @@ class TransactionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Validasi data input
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'code' => 'required|string|max:255',
+            'number' => 'required|string|max:255',
+            'id_consignee' => 'required|exists:consignees,id',
+            'notify' => 'required|string|max:255',
+            'id_client' => 'required|exists:clients,id',
+            'port_of_loading' => 'required|string|max:255',
+            'place_of_receipt' => 'required|string|max:255',
+            'port_of_discharge' => 'required|string|max:255',
+            'place_of_delivery' => 'required|string|max:255',
+            'id_product' => 'required|exists:products,id',
+            'id_commodity' => 'required|exists:commodities,id',
+            'container' => 'required|string|max:255',
+            'net_weight' => 'required|numeric|min:0',
+            'gross_weight' => 'required|numeric|min:0',
+            'payment_term' => 'required|string|max:255',
+            'stuffing_date' => 'required|date',
+            'bl_number' => 'required|string|max:255',
+            'container_number' => 'required|string|max:255',
+            'seal_number' => 'required|string|max:255',
+            'product_ncm' => 'required|string|max:255',
+            'freight_cost' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0',
+            'approved' => 'nullable|boolean',
+        ]);
+
+        try {
+            // Cari transaksi berdasarkan ID
+            $transaction = Transaction::findOrFail($id);
+
+            // Update data transaksi
+            $transaction->update($validatedData);
+
+            // Kembalikan response JSON sukses dengan ID transaksi yang diperbarui
+            return response()->json([
+                'success' => true,
+                'message' => 'Invoice berhasil dibuat!',  // Pesan sukses diubah
+                'id' => $transaction->id
+            ], 200);
+
+        } catch (\Exception $e) {
+            \Log::error('Terjadi kesalahan saat membuat invoice: ', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat invoice: ' . $e->getMessage()  // Pesan error diubah
+            ], 500);
+        }
     }
 
     /**
