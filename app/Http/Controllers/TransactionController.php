@@ -89,7 +89,6 @@ class TransactionController extends Controller
     {
         $approvedInvoices = Transaction::with(['client', 'consignee'])
             ->where('approved', 1) // Mengambil transaksi yang disetujui
-            ->whereNull('stuffing_date') // Mengambil transaksi yang stuffing_date-nya null
             ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
 
         return DataTables::of($approvedInvoices)
