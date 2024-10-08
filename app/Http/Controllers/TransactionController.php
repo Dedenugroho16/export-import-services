@@ -49,13 +49,13 @@ class TransactionController extends Controller
     public function create($id)
     {
         // Logika untuk membuat invoice berdasarkan id proforma yang dipilih
-        // $transaction = Transaction::findOrFail($id);
+        $transaction = Transaction::findOrFail($id);
 
         // Ambil semua detail transaksi yang berhubungan dengan proforma tersebut
-        // $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 
         // Kembalikan view yang sesuai dan oper data proforma
-        // return view('transaction.create', compact('transaction', 'detailTransactions'));
+        return view('transaction.create', compact('transaction', 'detailTransactions'));
     }
 
     // method get Consignee
