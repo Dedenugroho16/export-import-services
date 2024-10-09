@@ -36,7 +36,9 @@ class TransactionController extends Controller
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
                 // Tombol aksi untuk melihat detail
-                return '<a href="' . route('transaction.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+                $detailInvoice = '<a href="' . route('transaction.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a> ';
+                $packingList = '<a href="' . route('packingList.show', $hashId) . '" class="btn btn-sm btn-success">Packing List</a>';
+                return $detailInvoice . $packingList;
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
             ->make(true);
@@ -188,6 +190,21 @@ class TransactionController extends Controller
     {
         //
     }
+    // Akhir fungsi - fungsi invoice
+
+    // fungsi tampilan Packing List
+    public function packingListShow($hash)
+    {
+        $id = IdHashHelper::decode($hash);
+        $transaction = Transaction::findOrFail($id);
+
+        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+
+
+        return view('packing_list.show', compact('transaction', 'detailTransactions'));
+    }
+    // akhir fungsi tampilan Packing List
 
 
     // fungsi - fungsi Proforma Invoice
