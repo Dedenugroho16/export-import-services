@@ -266,7 +266,8 @@ class TransactionController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 // Link untuk melihat detail
-                $lihatDetail = '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+                $hashId = IdHashHelper::encode($row->id);
+                $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
 
                 // Cek jika stuffing_date bernilai null, tampilkan tombol "Buat Invoice"
                 $buatInvoice = '';
@@ -345,10 +346,17 @@ class TransactionController extends Controller
         return response()->json(['id' => $transaction->id], 201);
     }
 
-    public function proformaShow($id)
+    public function proformaShow($hash)
     {
-        return view('proforma.show');
+        $id = IdHashHelper::decode($hash);
+        $ApprovedData = Transaction::findOrFail($id);
+
+        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+        
+        return view('proforma.show', compact('ApprovedData', 'detailTransactions'));
     }
+
 
     public function proformaEdit(string $hash)
     {
@@ -419,6 +427,7 @@ class TransactionController extends Controller
             'consigneeSelectedAddress'
         ));
     }
+
 
     public function proformaUpdate(Request $request, string $id)
     {

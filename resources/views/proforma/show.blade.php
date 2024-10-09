@@ -1,127 +1,339 @@
-{{-- @extends('layouts.layout')
-
+@extends('layouts.layout')
 @section('title', 'Detail Proforma Invoice')
 
 @section('content')
-<div class="page-body">
-    <div class="container-xl">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Proforma Invoice</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6><strong>Consignee:</strong></h6>
-                                <p>
-                                    {{ $proformaInvoice->consignee->name }} <br>
-                                    {{ $proformaInvoice->consignee->address }} <br>
-                                    Tel: {{ $proformaInvoice->consignee->phone }}
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6><strong>Client:</strong></h6>
-                                <p>
-                                    {{ $proformaInvoice->client->name }} <br>
-                                    {{ $proformaInvoice->client->address }} <br>
-                                    Tel: {{ $proformaInvoice->client->phone }}
-                                </p>
-                            </div>
-                        </div>
+    <div class="page-body">
+        <div class="container-xl">
+            <!-- Form Section -->
+            <div class="row row-deck row-cards">
+                <div class="col-12">
+                    <div class="card mb-5">
+                        <div class="card-body">
+                            <!-- Display Success Message -->
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6><strong>Port of Loading:</strong></h6>
-                                <p>{{ $proformaInvoice->port_of_loading }}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6><strong>Port of Discharge:</strong></h6>
-                                <p>{{ $proformaInvoice->port_of_discharge }}</p>
-                            </div>
-                        </div>
+                            @if (session('transaction_id'))
+                                <div class="alert alert-info">
+                                    Transaction ID: {{ session('transaction_id') }}
+                                </div>
+                            @endif
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6><strong>Place of Delivery:</strong></h6>
-                                <p>{{ $proformaInvoice->place_of_delivery }}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6><strong>Container:</strong></h6>
-                                <p>{{ $proformaInvoice->container }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6><strong>Payment Term:</strong></h6>
-                                <p>{{ $proformaInvoice->payment_term }}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6><strong>Freight Cost:</strong></h6>
-                                <p>${{ number_format($proformaInvoice->freight_cost, 2) }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h6><strong>Item Description:</strong></h6>
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Item</th>
-                                            <th>Carton (PCS)</th>
-                                            <th>Inner (PCS)</th>
-                                            <th>Unit Price (USD/KG)</th>
-                                            <th>Net Weight (KG)</th>
-                                            <th>Price Amount (USD)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Loop data produk yang terkait dengan Proforma Invoice -->
-                                        @foreach ($proformaInvoice->products as $product)
-                                            <tr>
-                                                <td>{{ $product->name }}</td>
-                                                <td>{{ $product->pivot->carton }}</td>
-                                                <td>{{ $product->pivot->inner }}</td>
-                                                <td>${{ number_format($product->pivot->unit_price, 2) }}</td>
-                                                <td>{{ $product->pivot->net_weight }}</td>
-                                                <td>${{ number_format($product->pivot->price_amount, 2) }}</td>
-                                            </tr>
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
                                         @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                                    </ul>
+                                </div>
+                            @endif
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h6><strong>Total Amount:</strong></h6>
-                                <p>${{ number_format($proformaInvoice->total, 2) }}</p>
+                            <div class="row mt-4 mb-4">
+                                <div class="col-md-12 text-center">
+                                    <h1>PROFORMA INVOICE</h1>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h6><strong>Terms & Conditions:</strong></h6>
-                                <p>{{ $proformaInvoice->terms_conditions }}</p>
+                            <!-- Bagian 1 -->
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <table class="table-sm">
+                                        <tr>
+                                            <td><strong>Date</strong></td>
+                                            <td>{{ $ApprovedData->date }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Code</strong></td>
+                                            <td>{{ $ApprovedData->code }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Number</strong></td>
+                                            <td>{{ $ApprovedData->number }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-12 text-end">
-                                <p><strong>Total Amount in Words:</strong> {{ ucwords(\App\Helpers\NumberToWords::convert($proformaInvoice->total)) }} USD</p>
-                                <p><strong>Payment Condition:</strong> FOB (Free On Board)</p>
+                            <!-- Bagian 2: Consignee, Notify, Client -->
+                            <div class="row mt-4">
+                                <!-- Consignee Input -->
+                                <div class="col-md-4">
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Consignee</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>
+                                                {{ $ApprovedData->consignee->name }} <br>
+                                                {{ $ApprovedData->consignee->address }} <br>
+                                                {{ $ApprovedData->consignee->tel }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Notify Input -->
+                                <div class="col-md-4">
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Notify</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>
+                                                {{ $ApprovedData->notify }} <br>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Client Input -->
+                                <div class="col-md-4">
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Client</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>
+                                                {{ $ApprovedData->client->name }} <br>
+                                                {{ $ApprovedData->client->address }} <br>
+                                                {{ $ApprovedData->client->tel }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
+                            <!-- Bagian 3: Port of Loading, Place of Receipt, Port of Discharge, Place of Delivery -->
+                            <div class="row mt-4">
+                                <!-- Port of Loading Input -->
+                                <div class="col-md-3">
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Port of loading</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>{{ $ApprovedData->port_of_loading }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Place of Receipt Input -->
+                                <div class="col-md-3">
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Place of receipt</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>{{ $ApprovedData->place_of_receipt }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Port of Discharge Input -->
+                                <div class="col-md-3">
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Port of discharge</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>{{ $ApprovedData->port_of_discharge }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Place of Delivery Input -->
+                                <div class="col-md-3">
+                                    <div class="card p-2">
+                                        <div class="card-header p-2">
+                                            <h5 class="card-title">Place of delivery</h5>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <p>{{ $ApprovedData->place_of_delivery }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- bagian 4 --}}
+                            <div class="group-info mt-6">
+                                <div class="row">
+                                    <!-- Kolom Sebelah Kiri -->
+                                    <div class="col-6">
+                                        <div class="row mt-2">
+                                            <div class="col-4">
+                                                <p><strong>Name of Product</strong></p>
+                                            </div>
+                                            <div class="col-2 text-center">
+                                                <span>:</span>
+                                            </div>
+                                            <div class="col-5">
+                                                <p>{{ $ApprovedData->product->name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-4">
+                                                <p><strong>Name of Commodity</strong></p>
+                                            </div>
+                                            <div class="col-2 text-center">
+                                                <span>:</span>
+                                            </div>
+                                            <div class="col-5">
+                                                <p>{{ $ApprovedData->commodity->name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-4">
+                                                <p><strong>Container</strong></p>
+                                            </div>
+                                            <div class="col-2 text-center">
+                                                <span>:</span>
+                                            </div>
+                                            <div class="col-5">
+                                                <p>{{ $ApprovedData->container }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-4">
+                                                <p><strong>Payment Term</strong></p>
+                                            </div>
+                                            <div class="col-2 text-center">
+                                                <span>:</span>
+                                            </div>
+                                            <div class="col-5">
+                                                <p>{{ $ApprovedData->payment_term }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Kolom Sebelah Kanan -->
+                                    <div class="col-6">
+                                        <div class="row mt-2">
+                                            <div class="col-4">
+                                                <p><strong>Net Weight</strong></p>
+                                            </div>
+                                            <div class="col-2 text-center">
+                                                <span>:</span>
+                                            </div>
+                                            <div class="col-5">
+                                                <p>{{ $ApprovedData->net_weight }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-4">
+                                                <p><strong>Gross Weight</strong></p>
+                                            </div>
+                                            <div class="col-2 text-center">
+                                                <span>:</span>
+                                            </div>
+                                            <div class="col-5">
+                                                <p>{{ $ApprovedData->gross_weight }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-4">
+                                                <p><strong>Product NCM</strong></p>
+                                            </div>
+                                            <div class="col-2 text-center">
+                                                <span>:</span>
+                                            </div>
+                                            <div class="col-5">
+                                                <p>{{ $ApprovedData->product_ncm }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- tabel detail transaction --}}
+                            <div class="tabel-detail-transaksi mt-4">
+                                <div class="table-responsive pb-2 border-top" style="max-height: 18rem">
+                                    <table class="table table-bordered table-hover table-striped table-sm"
+                                        id="tableDetailTransaction">
+                                        <thead>
+                                            <th class="text-center">Item Description</th>
+                                            <th class="text-center">Carton(pcs)</th>
+                                            <th class="text-center">Inner(pcs)</th>
+                                            <th class="text-center">Unit Price(USD/KG)</th>
+                                            <th class="text-center">Net Weight(KG)</th>
+                                            <th class="text-center">Price Amount(USD)</th>
+                                        </thead>
+                                        <tbody id="detail-rows" style="font-size: 12px">
+                                            @foreach ($detailTransactions as $detailTransaction)
+                                                <tr>
+                                                    <td>{{ $detailTransaction->detailProduct->name }}</td>
+                                                    <td class="carton">{{ $detailTransaction->carton }}</td>
+                                                    <td class="inner">{{ $detailTransaction->inner_qty_carton }}</td>
+                                                    <td>{{ $detailTransaction->unit_price }}</td>
+                                                    <td class="net-weight">{{ $detailTransaction->net_weight }}</td>
+                                                    <td class="price-amount">{{ $detailTransaction->price_amount }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            <tr id="totalRow" style="font-weight: bold;">
+                                                <td class="text-center">Amount</td>
+                                                <td class="text-center" id="totalCarton">0</td>
+                                                <td class="text-center" id="totalInner">0</td>
+                                                <td class="text-center"></td>
+                                                <td class="text-center" id="totalNetWeight">0</td>
+                                                <td class="text-center" id="PriceAmount">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center" colspan="5"></td>
+                                                <td class="text-center">
+                                                    <p>Freight cost : {{ $ApprovedData->freight_cost }}</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center" colspan="5"></td>
+                                                <td class="text-center">
+                                                    <p>Total : {{ $ApprovedData->total }}</p>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            {{-- akhir tabel detail transaction --}}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection --}}
 
-<h1>Proforma Show</h1>
+    <script>
+        $(document).ready(function() {
+            function updateAmounts() {
+                var totalCarton = 0;
+                var totalInner = 0;
+                var totalNetWeight = 0;
+                var PriceAmount = 0;
+
+                // Iterasi setiap baris untuk mendapatkan nilai total
+                $('#tableDetailTransaction tbody tr').each(function() {
+                    var carton = parseFloat($(this).find('.carton').text()) || 0;
+                    var inner = parseFloat($(this).find('.inner').text()) || 0;
+                    var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
+                    var price = parseFloat($(this).find('.price-amount').text()) || 0;
+
+                    totalCarton += carton;
+                    totalInner += inner;
+                    totalNetWeight += netWeight;
+                    PriceAmount += price;
+                });
+
+                // Update nilai total di footer
+                $('#totalCarton').text(totalCarton);
+                $('#totalInner').text(totalInner);
+                $('#totalNetWeight').text(totalNetWeight);
+                $('#PriceAmount').text(PriceAmount);
+            }
+            updateAmounts();
+        });
+    </script>
+@endsection
