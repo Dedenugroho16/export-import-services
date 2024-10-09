@@ -485,8 +485,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Sukses!',
-                                text: 'Invoice berhasil dibuat dengan ID: ' + response
-                                    .id,
+                                text: 'Invoice berhasil dibuat',
                                 confirmButtonText: 'OK'
                             }).then((result) => {
                                 if (result.isConfirmed) {
@@ -498,7 +497,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal',
-                                text: 'Gagal memperbarui transaksi: ' + response
+                                text: 'Gagal membuat invoice: ' + response
                                     .message,
                                 confirmButtonText: 'OK'
                             });
@@ -509,7 +508,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Error memperbarui transaksi: ' + xhr.responseJSON
+                            text: 'Error membuat invoice: ' + xhr.responseJSON
                                 .message,
                             confirmButtonText: 'OK'
                         });

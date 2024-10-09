@@ -169,8 +169,7 @@ class TransactionController extends Controller
             // Kembalikan response JSON sukses dengan ID transaksi yang diperbarui
             return response()->json([
                 'success' => true,
-                'message' => 'Invoice berhasil dibuat!',  // Pesan sukses diubah
-                'id' => $transaction->id
+                'message' => 'Invoice berhasil dibuat!',
             ], 200);
 
         } catch (\Exception $e) {
