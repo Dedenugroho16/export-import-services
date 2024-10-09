@@ -230,8 +230,9 @@ class TransactionController extends Controller
                 return $row->consignee->name;  // Asumsikan ada relasi `consignee` di model Transaction
             })
             ->addColumn('aksi', function ($row) {
+                $hashId = IdHashHelper::encode($row->id);
                 $lihatDetail = '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-warning">Lihat Detail</a> ';
-                $edit = ' <a href="' . route('proforma.edit', $row->id) . '" class="btn btn-sm btn-danger">Edit Proforma</a> ';
+                $edit = ' <a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger">Edit</a> ';
                 return $lihatDetail . $edit . ' <button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button> ';
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
@@ -349,9 +350,74 @@ class TransactionController extends Controller
         return view('proforma.show');
     }
 
-    public function proformaEdit(string $id)
+    public function proformaEdit(string $hash)
     {
-        return view('proforma.edit');
+        // Dekode hash menjadi ID
+        $id = IdHashHelper::decode($hash);
+
+        // Ambil transaksi berdasarkan ID
+        $transaction = Transaction::findOrFail($id);
+
+        // Ambil data lain yang diperlukan untuk form
+        $consignees = Consignee::all();
+        $clients = Client::all();
+        $products = Product::all();
+        $commodities = Commodity::all();
+        $country = Country::all();
+
+        // mencari product dan commodity yang terpilih
+        $productSelectedID = $transaction->id_product;
+        $commoditySelectedID = $transaction->id_commodity;
+
+        // mencari client yang sudah terpilih
+        $clientSelectedID = $transaction->id_client;
+        $clientSelected = Client::findOrFail($clientSelectedID);
+        $clientSelectedAddress = $clientSelected->address;
+
+        // mencari consignee yang sudah terpilih
+        $consigneeSelectedID = $transaction->id_consignee;
+        $consigneeSelected = Consignee::findOrFail($consigneeSelectedID);
+        $consigneeSelectedAddress = $consigneeSelected->address;
+
+        // mencari Negara yang sudah terpilih
+        $transactionCode = $transaction->code; // contoh: RESTO ID2410
+        // Ekstrak dua huruf kapital sebelum angka
+        if (preg_match('/([A-Z]{2})(?=\d+)/', $transactionCode, $matches)) {
+            $countryCode = $matches[1]; // 'ID'
+
+            // Cari negara berdasarkan kode yang diekstrak
+            $countryOld = Country::where('code', $countryCode)->firstOrFail();
+            $countrySelected = $countryOld->id;
+        }
+
+        // number
+        $transactionNumber = $transaction->number; // 0002/09.CR ID/10/INV/X/24
+        // Memisahkan string berdasarkan titik ('.') untuk memisahkan bagian pertama
+        $parts = explode('.', $transactionNumber);
+        // Ambil bagian pertama sebelum titik
+        $formattedNumber = $parts[0]; // Hasil: 0002/09
+
+        // mencari detail product
+        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $detailTransactions = DetailTransaction::where('id_transaction', $transaction->id)->get();
+
+        // Kirim semua data yang dibutuhkan ke view
+        return view('proforma.edit', compact(
+            'transaction',  // Data transaksi yang perlu diedit
+            'consignees',
+            'clients',
+            'products',
+            'productSelectedID',
+            'commodities',
+            'commoditySelectedID',
+            'country',
+            'countrySelected',
+            'formattedNumber',
+            'clientSelectedID',
+            'clientSelectedAddress',
+            'consigneeSelectedID',
+            'consigneeSelectedAddress'
+        ));
     }
 
     public function proformaUpdate(Request $request, string $id)
