@@ -24,8 +24,9 @@ class DetailProduct extends Model
         return $this->belongsTo(Product::class, 'id_product');
     }
 
-    public function detailTransactions()
+    // Relasi one-to-one: satu detail produk dimiliki oleh satu detail transaksi
+    public function detailTransaction()
     {
-        return $this->hasMany(DetailTransaction::class, 'id_detail_product');
+        return $this->hasOne(DetailTransaction::class, 'id_detail_product');
     }
 }

@@ -14,6 +14,7 @@ class Transaction extends Model
         'code',
         'number',
         'id_consignee',
+        'notify',
         'id_client',
         'port_of_loading',
         'place_of_receipt',
@@ -32,9 +33,9 @@ class Transaction extends Model
         'product_ncm',
         'freight_cost',
         'total',
-        'approved',
+        'approved'
     ];
-
+    
     public function consignee()
     {
         return $this->belongsTo(Consignee::class, 'id_consignee');
@@ -45,9 +46,14 @@ class Transaction extends Model
         return $this->belongsTo(Client::class, 'id_client');
     }
 
-        public function products()
+    public function products()
     {
         return $this->belongsToMany(Product::class, 'detail_transactions', 'id_transaction', 'id_product');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'id_product');
     }
 
 

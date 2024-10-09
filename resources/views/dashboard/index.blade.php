@@ -1,139 +1,169 @@
 @extends('layouts.layout')
+
+@section('title', 'Dashboard')
+
 @section('content')
-<div class="page-body">
-    <div class="container-xl">
-        <!-- Dashboard Header -->
-        <div class="mb-4 d-flex justify-content-between align-items-center">        
+<div class="container mt-4">
+    <div class="row">
+        <!-- Kartu untuk Klien -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+                    <h5 class="card-title">
+                        <i class="fas fa-users fa-3x" style="color: #007bff;"></i>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Klien</h6>
+                    <p class="card-text" style="font-size: 0.85rem;">Kelola data klien Anda di sini.</p>
+                    <div class="mt-auto">
+                        <a href="{{ route('clients.index') }}" class="btn btn-primary btn-sm">Lihat Klien</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Invoices Section -->
-        <div class="page-body">
-          <div class="container-xl">
-            <div class="row row-deck row-cards">
-              <div class="col-sm-6 col-lg-3">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex align-items-center">
-                      <div class="subheader">Sales</div>
-                      <div class="ms-auto lh-1">
-                        <div class="dropdown">
-                          <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                          <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item active" href="#">Last 7 days</a>
-                            <a class="dropdown-item" href="#">Last 30 days</a>
-                            <a class="dropdown-item" href="#">Last 3 months</a>
-                          </div>
-                        </div>
-                      </div>
+        <!-- Kartu untuk Produk -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+                    <h5 class="card-title">
+                        <i class="fas fa-box fa-3x" style="color: #28a745;"></i>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Produk</h6>
+                    <p class="card-text" style="font-size: 0.85rem;">Kelola data produk Anda di sini.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url('/products') }}" class="btn btn-success btn-sm">Lihat Produk</a>
                     </div>
-                    <div class="h1 mb-3">75%</div>
-                    <div class="d-flex mb-2">
-                      <div>Conversion rate</div>
-                      <div class="ms-auto">
-                        <span class="text-green d-inline-flex align-items-center lh-1">
-                          7% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="progress progress-sm">
-                      <div class="progress-bar bg-primary" style="width: 75%" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="75% Complete">
-                        <span class="visually-hidden">75% Complete</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
-              <div class="col-sm-6 col-lg-3">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex align-items-center">
-                      <div class="subheader">Revenue</div>
-                      <div class="ms-auto lh-1">
-                        <div class="dropdown">
-                          <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                          <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item active" href="#">Last 7 days</a>
-                            <a class="dropdown-item" href="#">Last 30 days</a>
-                            <a class="dropdown-item" href="#">Last 3 months</a>
-                          </div>
-                        </div>
-                      </div>
+            </div>
+        </div>
+
+        <!-- Kartu untuk Komoditas -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+                    <h5 class="card-title">
+                        <i class="fas fa-gem fa-3x" style="color: #ffc107;"></i>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Komoditas</h6>
+                    <p class="card-text" style="font-size: 0.85rem;">Kelola data komoditas Anda di sini.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url('/commodities') }}" class="btn btn-warning btn-sm">Lihat Komoditas</a>
                     </div>
-                    <div class="d-flex align-items-baseline">
-                      <div class="h1 mb-0 me-2">$4,300</div>
-                      <div class="me-auto">
-                        <span class="text-green d-inline-flex align-items-center lh-1">
-                          8% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="chart-revenue-bg" class="chart-sm"></div>
                 </div>
-              </div>
-              <div class="col-sm-6 col-lg-3">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex align-items-center">
-                      <div class="subheader">New clients</div>
-                      <div class="ms-auto lh-1">
-                        <div class="dropdown">
-                          <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                          <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item active" href="#">Last 7 days</a>
-                            <a class="dropdown-item" href="#">Last 30 days</a>
-                            <a class="dropdown-item" href="#">Last 3 months</a>
-                          </div>
-                        </div>
-                      </div>
+            </div>
+        </div>
+
+        <!-- Kartu untuk Negara -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+                    <h5 class="card-title">
+                        <i class="fas fa-flag fa-3x" style="color: #dc3545;"></i>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Negara</h6>
+                    <p class="card-text" style="font-size: 0.85rem;">Kelola informasi negara di sini.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url('/countries') }}" class="btn btn-danger btn-sm">Lihat Negara</a>
                     </div>
-                    <div class="d-flex align-items-baseline">
-                      <div class="h1 mb-3 me-2">6,782</div>
-                      <div class="me-auto">
-                        <span class="text-yellow d-inline-flex align-items-center lh-1">
-                          0% <!-- Download SVG icon from http://tabler-icons.io/i/minus -->
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /></svg>
-                        </span>
-                      </div>
-                    </div>
-                    <div id="chart-new-clients" class="chart-sm"></div>
-                  </div>
                 </div>
-              </div>
-              <div class="col-sm-6 col-lg-3">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex align-items-center">
-                      <div class="subheader">Active users</div>
-                      <div class="ms-auto lh-1">
-                        <div class="dropdown">
-                          <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                          <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item active" href="#">Last 7 days</a>
-                            <a class="dropdown-item" href="#">Last 30 days</a>
-                            <a class="dropdown-item" href="#">Last 3 months</a>
-                          </div>
-                        </div>
-                      </div>
+            </div>
+        </div>
+
+        <!-- Kartu untuk Pengguna -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+                    <h5 class="card-title">
+                        <i class="fas fa-user fa-3x" style="color: #17a2b8;"></i>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Pengguna</h6>
+                    <p class="card-text" style="font-size: 0.85rem;">Kelola data pengguna di sini.</p>
+                    <div class="mt-auto">
+                        <a href="{{ route('users.index') }}" class="btn btn-info btn-sm">Lihat Pengguna</a>
                     </div>
-                    <div class="d-flex align-items-baseline">
-                      <div class="h1 mb-3 me-2">2,986</div>
-                      <div class="me-auto">
-                        <span class="text-green d-inline-flex align-items-center lh-1">
-                          4% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
-                        </span>
-                      </div>
-                    </div>
-                    <div id="chart-active-users" class="chart-sm"></div>
-                  </div>
                 </div>
-              </div>
-              </div>
-          </div>
+            </div>
+        </div>
+
+        <!-- Kartu untuk Cabang -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+                    <h5 class="card-title">
+                        <i class="fas fa-building fa-3x" style="color: #6f42c1;"></i>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Cabang</h6>
+                    <p class="card-text" style="font-size: 0.85rem;">Kelola data cabang di sini.</p>
+                    <div class="mt-auto">
+                        <a href="{{ route('branches.index') }}" class="btn btn-purple btn-sm">Lihat Cabang</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kartu untuk Transaksi -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+                    <h5 class="card-title">
+                        <i class="fas fa-receipt fa-3x" style="color: #17a2b8;"></i>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Transaksi</h6>
+                    <p class="card-text" style="font-size: 0.85rem;">Kelola transaksi Anda di sini.</p>
+                    <div class="mt-auto">
+                        <a href="#" class="btn btn-info btn-sm">Lihat Transaksi</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        border-radius: 10px;
+    }
+
+    .btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-info, .btn-purple {
+        font-weight: bold;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        color: white;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+        color: white;
+    }
+
+    .btn-purple {
+        background-color: #6f42c1;
+        color: white;
+    }
+    
+    .btn-purple:hover {
+        background-color: #5a32a3;
+        color: white;
+    }
+</style>
+
 @endsection
