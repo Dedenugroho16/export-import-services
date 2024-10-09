@@ -75,6 +75,9 @@ Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->nam
 // Route untuk update transaksi
 Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 
+// Route Packing List
+Route::get('/packing-list/{hashId}', [TransactionController::class, 'packingListShow'])->name('packingList.show');
+
 // Proforma invoice route
 Route::get('proforma', [TransactionController::class, 'proformaIndex'])->name('proforma.index');
 Route::get('proforma/create', [TransactionController::class, 'proformaCreate'])->name('proforma.create');
