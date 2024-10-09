@@ -8,7 +8,7 @@
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card mb-5">
-                        <div class="card-body">
+                        <div class="card-body p-5">
                             <!-- Display Success Message -->
                             @if (session('success'))
                                 <div class="alert alert-success">
@@ -32,29 +32,47 @@
                                 </div>
                             @endif
 
-                            <div class="row mt-4 mb-4">
-                                <div class="col-md-12 text-center">
-                                    <h1>PROFORMA INVOICE</h1>
+                            <!-- Hader -->
+                            <div class="container">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <!-- Kolom Kiri: Logo dan Nama Perusahaan -->
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ asset('dist/img/mefita-logo.png') }}" alt="logo" width="60">
+                                        <div style="padding-left: 10px;">
+                                            <em style="font-size: 60px; font-weight:500;">PT. PSN</em><br>
+                                            <p style="font-weight:500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
+                                        </div>
+                                    </div>
+                            
+                                    <!-- Kolom Kanan: Detail Informasi -->
+                                    <div class="row mb-5 mt-4">
+                                        <div>
+                                            <table class="table-sm">
+                                                <tr>
+                                                    <td><strong>Date</strong></td>
+                                                    <td><strong>:</strong></td>
+                                                    <td class="text-end">{{ $ApprovedData->date }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Code</strong></td>
+                                                    <td><strong>:</strong></td>
+                                                    <td class="text-end">{{ $ApprovedData->code }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Number</strong></td>
+                                                    <td><strong>:</strong></td>
+                                                    <td class="text-end">{{ $ApprovedData->number }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- Bagian 1 -->
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <table class="table-sm">
-                                        <tr>
-                                            <td><strong>Date</strong></td>
-                                            <td>{{ $ApprovedData->date }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Code</strong></td>
-                                            <td>{{ $ApprovedData->code }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Number</strong></td>
-                                            <td>{{ $ApprovedData->number }}</td>
-                                        </tr>
-                                    </table>
+                            
+                            
+                            <div class="row mt-6 mb-5">
+                                <div class="col-md-12 text-center">
+                                    <h1>PROFORMA INVOICE</h1>
                                 </div>
                             </div>
 
@@ -264,7 +282,9 @@
                                         <tbody id="detail-rows" style="font-size: 12px">
                                             @foreach ($detailTransactions as $detailTransaction)
                                                 <tr>
-                                                    <td>{{ $detailTransaction->detailProduct->name }}</td>
+                                                    <td><strong>{{ $detailTransaction->detailProduct->name }}
+                                                    {{ $detailTransaction->detailProduct->pcs }} PCS/ {{ $detailTransaction->qty }} KG</strong><br>
+                                                    {{ $detailTransaction->detailProduct->dimension }} {{ $detailTransaction->detailProduct->color }} {{ $detailTransaction->detailProduct->type }}</td>
                                                     <td class="carton">{{ $detailTransaction->carton }}</td>
                                                     <td class="inner">{{ $detailTransaction->inner_qty_carton }}</td>
                                                     <td>{{ $detailTransaction->unit_price }}</td>
@@ -276,30 +296,44 @@
                                         <tfoot>
                                             <tr id="totalRow" style="font-weight: bold;">
                                                 <td class="text-center">Amount</td>
-                                                <td class="text-center" id="totalCarton">0</td>
-                                                <td class="text-center" id="totalInner">0</td>
-                                                <td class="text-center"></td>
-                                                <td class="text-center" id="totalNetWeight">0</td>
-                                                <td class="text-center" id="PriceAmount">0</td>
+                                                <td class="text-center bg-danger text-white" id="totalCarton">0</td>
+                                                <td class="text-center bg-danger text-white" id="totalInner">0</td>
+                                                <td class="text-center bg-danger text-white"></td>
+                                                <td class="text-center bg-danger text-white" id="totalNetWeight">0</td>
+                                                <td class="text-center bg-danger text-white" id="PriceAmount">0</td>
                                             </tr>
                                             <tr>
-                                                <td class="text-center" colspan="5"></td>
-                                                <td class="text-center">
-                                                    <p>Freight cost : {{ $ApprovedData->freight_cost }}</p>
-                                                </td>
+                                                <td class="text-end" colspan="5">FREIGHT COST</td>
+                                                <td class="text-center">{{ $ApprovedData->freight_cost }}</td>
                                             </tr>
                                             <tr>
-                                                <td class="text-center" colspan="5"></td>
-                                                <td class="text-center">
-                                                    <p>Total : {{ $ApprovedData->total }}</p>
-                                                </td>
+                                                <td class="text-end" colspan="5">TOTAL</td>
+                                                <td class="text-center bg-danger text-white">{{ $ApprovedData->total }}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
                             </div>
                             {{-- akhir tabel detail transaction --}}
-                        </div>
+                            <!-- Teks total dalam kata -->
+                            <div class="text-end mt-3">
+                                <div>
+                                    <p><strong><em>{{ $totalInWords }} USD</em></strong></p>
+                                    <p><em>Payment Condition: FOB (Free on Board)</em></p>
+                                </div>
+                                <div class="mt-7">
+                                    <p>Approved By</p>
+                                    <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80">
+                                    <div>
+                                        <p style="display: inline-block;">
+                                            <strong>Approver</strong><br>
+                                            <u style="width: 100%; display: block; border-bottom: 1px solid black;"></u>
+                                        </p>
+                                        <p><strong>Director</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                            
                     </div>
                 </div>
             </div>
