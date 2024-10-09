@@ -423,6 +423,8 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end">
+                                <p id="error-message" style="color: red;">Harap menginput negara terlebih
+                                    dahulu</p>
                                 <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Tambah</button>
                             </div>
@@ -548,6 +550,26 @@
 
         // modal datatables
         $(document).ready(function() {
+            // Saat halaman dimuat, tombol "Tambah" dinonaktifkan
+            $('#submitButton').prop('disabled', true);
+
+            // Deteksi perubahan pada dropdown negara
+            $('#country').on('change', function() {
+                // Ambil value yang dipilih
+                var selectedValue = $(this).val();
+
+                if (selectedValue === "") {
+                    // Jika belum ada negara yang dipilih, tombol "Tambah" dinonaktifkan
+                    $('#submitButton').prop('disabled', true);
+                    $('#error-message').show();
+                } else {
+                    // Jika negara sudah dipilih, tombol "Tambah" diaktifkan
+                    $('#submitButton').prop('disabled', false);
+                    // Sembunyikan pesan error
+                    $('#error-message').hide();
+                }
+            });
+
             var table = $('#detailProductTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -945,7 +967,7 @@
                                 success: function(response) {
                                     alert('Berhasil menambahkan proforma invoice');
                                     location
-                                .reload(); // Reload halaman setelah alert
+                                        .reload(); // Reload halaman setelah alert
                                 },
                                 error: function(xhr) {
                                     // Tangani error untuk detail transaksi
