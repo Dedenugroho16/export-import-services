@@ -12,6 +12,7 @@ use App\Http\Controllers\ProformaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\ProformaInvoiceController;
@@ -66,6 +67,9 @@ Route::resource('countries', CountryController::class);
 
 // Branch Routes
 Route::resource('branches', BranchController::class);
+
+// Company Routes using resource
+Route::resource('company', CompanyController::class);
 
 // Transaction Routes using resource
 // Route::resource('transaction', TransactionController::class);

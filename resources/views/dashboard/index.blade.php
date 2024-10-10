@@ -7,17 +7,17 @@
     <div class="row">
 
         @if(auth()->user()->role === 'admin')
-            <!-- Kartu untuk Klien -->
+            <!-- Kartu untuk client -->
             <div class="col-md-4 mb-4">
                 <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
                     <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
                         <h5 class="card-title">
                             <i class="fas fa-users fa-3x" style="color: #007bff;"></i>
                         </h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Klien</h6>
-                        <p class="card-text" style="font-size: 0.85rem;">Kelola data klien Anda di sini.</p>
+                        <h6 class="card-subtitle mb-2 text-muted">client</h6>
+                        <p class="card-text" style="font-size: 0.85rem;">Kelola data client Anda di sini.</p>
                         <div class="mt-auto">
-                            <a href="{{ route('clients.index') }}" class="btn btn-primary btn-sm">Lihat Klien</a>
+                            <a href="{{ route('clients.index') }}" class="btn btn-primary btn-sm">Lihat client</a>
                         </div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">Transaksi</h6>
                         <p class="card-text" style="font-size: 0.85rem;">Kelola transaksi Anda di sini.</p>
                         <div class="mt-auto">
-                            <a href="#" class="btn btn-info btn-sm">Lihat Transaksi</a>
+                            <a href="{{ route('proforma.create') }}" class="btn btn-info btn-sm">Lihat Transaksi</a>
                         </div>
                     </div>
                 </div>
@@ -121,17 +121,17 @@
 
 
         @elseif(auth()->user()->role === 'operator')
-            <!-- Kartu untuk Klien -->
+            <!-- Kartu untuk client -->
             <div class="col-md-4 mb-4">
                 <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
                     <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
                         <h5 class="card-title">
                             <i class="fas fa-users fa-3x" style="color: #007bff;"></i>
                         </h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Klien</h6>
-                        <p class="card-text" style="font-size: 0.85rem;">Kelola data klien Anda di sini.</p>
+                        <h6 class="card-subtitle mb-2 text-muted">client</h6>
+                        <p class="card-text" style="font-size: 0.85rem;">Kelola data client Anda di sini.</p>
                         <div class="mt-auto">
-                            <a href="{{ route('clients.index') }}" class="btn btn-primary btn-sm">Lihat Klien</a>
+                            <a href="{{ route('clients.index') }}" class="btn btn-primary btn-sm">Lihat client</a>
                         </div>
                     </div>
                 </div>
@@ -211,7 +211,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">Transaksi</h6>
                         <p class="card-text" style="font-size: 0.85rem;">Kelola transaksi Anda di sini.</p>
                         <div class="mt-auto">
-                            <a href="#" class="btn btn-info btn-sm">Lihat Transaksi</a>
+                            <a href="{{ route('proforma.create') }}" class="btn btn-info btn-sm">Lihat Transaksi</a>
                         </div>
                     </div>
                 </div>
@@ -227,7 +227,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">Transaksi</h6>
                         <p class="card-text" style="font-size: 0.85rem;">Kelola transaksi Anda di sini.</p>
                         <div class="mt-auto">
-                            <a href="#" class="btn btn-info btn-sm">Lihat Transaksi</a>
+                            <a href="{{ route('proforma.create') }}" class="btn btn-info btn-sm">Lihat Transaksi</a>
                         </div>
                     </div>
                 </div>
