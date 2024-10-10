@@ -378,8 +378,8 @@
                                     <a href="{{ route('profile.show') }}" class="dropdown-item">
                                         <i class="fas fa-user me-2"></i> Profil
                                     </a>
-                                    <a href="#" class="dropdown-item">
-                                        <i class="fas fa-cog me-2"></i> Pengaturan
+                                    <a href="{{ route('company.index')}}" class="dropdown-item">
+                                        <i class="fas fa-cog me-2"></i> Profil Perusahaan
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
