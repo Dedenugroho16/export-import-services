@@ -51,8 +51,9 @@ class TransactionController extends Controller
         return view('transaction.index', compact('transactions'));
     }
 
-    public function create($id)
+    public function create($hash)
     {
+        $id = IdHashHelper::decode($hash);
         // Logika untuk membuat invoice berdasarkan id proforma yang dipilih
         $transaction = Transaction::findOrFail($id);
 

@@ -82,7 +82,8 @@ class ProformaController extends Controller
                 // Cek jika stuffing_date bernilai null, tampilkan tombol "Buat Invoice"
                 $buatInvoice = '';
                 if (is_null($row->stuffing_date)) {
-                    $buatInvoice = '<a href="' . route('transaction.create', ['id' => $row->id]) . '" class="btn btn-sm btn-success">Buat Invoice</a>';
+                    $hashId = IdHashHelper::encode($row->id);
+                    $buatInvoice = '<a href="' . route('transaction.create', ['id' => $hashId]) . '" class="btn btn-sm btn-success">Buat Invoice</a>';
                 }
 
                 return $lihatDetail . ' ' . $buatInvoice; // Menggabungkan kedua link
@@ -193,19 +194,23 @@ class ProformaController extends Controller
     // }
 
     public function show($hash)
-    {
-        $id = IdHashHelper::decode($hash);
-        $transaction = Transaction::findOrFail($id);
+{
+    $id = IdHashHelper::decode($hash);
+    $proformaInvoice = Transaction::findOrFail($id);
 
-        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
-        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+    // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+    $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 
-        // Panggil helper untuk mengonversi total menjadi kata
-        $totalInWords = NumberToWords::convert($transaction->total);
+    // Panggil helper untuk mengonversi total menjadi kata
+    $totalInWords = NumberToWords::convert($proformaInvoice->total);
 
+    // Kirim nilai approved ke view
+    $approved = $proformaInvoice->approved;
 
-        return view('transaction.show', compact('transaction', 'detailTransactions', 'totalInWords'));
-    }
+    // Kirimkan hasil ke view
+    return view('proforma.show', compact('proformaInvoice', 'detailTransactions', 'totalInWords', 'approved'));
+}
+
 
 
     public function edit(string $hash)
