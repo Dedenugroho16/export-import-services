@@ -333,7 +333,9 @@
                                         <tbody id="detail-rows" style="font-size: 12px">
                                             @foreach ($detailTransactions as $detailTransaction)
                                                 <tr>
-                                                    <td>{{ $detailTransaction->detailProduct->name }}</td>
+                                                    <td><strong>{{ $detailTransaction->detailProduct->name }}
+                                                    {{ $detailTransaction->detailProduct->pcs }} PCS/ {{ $detailTransaction->qty }} KG</strong><br>
+                                                    {{ $detailTransaction->detailProduct->dimension }} {{ $detailTransaction->detailProduct->color }} {{ $detailTransaction->detailProduct->type }}</td>
                                                     <td class="carton">{{ $detailTransaction->carton }}</td>
                                                     <td class="inner">{{ $detailTransaction->inner_qty_carton }}</td>
                                                     <td class="net-weight">{{ $detailTransaction->net_weight }}</td>
