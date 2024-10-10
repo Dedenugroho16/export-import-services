@@ -104,8 +104,8 @@
             </div>
 
             <!-- Kartu untuk Transaksi -->
-            <div class="col-md-4 mb-4">
-                <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
+            <div class="col-md-12 mb-4 d-flex justify-content-center"> 
+                <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px; border: 2px solid white; width: 100%; margin: 0;"> <!-- Border putih diperlebar -->
                     <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
                         <h5 class="card-title">
                             <i class="fas fa-receipt fa-3x" style="color: #17a2b8;"></i>
@@ -118,6 +118,7 @@
                     </div>
                 </div>
             </div>
+
 
         @elseif(auth()->user()->role === 'operator')
             <!-- Kartu untuk Klien -->
@@ -217,10 +218,19 @@
             </div>
 
         @elseif(auth()->user()->role === 'director')
-            <!-- Dashboard Kosong untuk Director -->
-            <div class="col-md-12 text-center">
-                <h3>Selamat datang di Dashboard Director!</h3>
-                <p>Tidak ada informasi yang ditampilkan untuk Anda.</p>
+        <div class="col-md-12 mb-4 d-flex justify-content-center"> 
+                <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px; border: 2px solid white; width: 100%; margin: 0;"> <!-- Border putih diperlebar -->
+                    <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+                        <h5 class="card-title">
+                            <i class="fas fa-receipt fa-3x" style="color: #17a2b8;"></i>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Transaksi</h6>
+                        <p class="card-text" style="font-size: 0.85rem;">Kelola transaksi Anda di sini.</p>
+                        <div class="mt-auto">
+                            <a href="#" class="btn btn-info btn-sm">Lihat Transaksi</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         @endif
 
