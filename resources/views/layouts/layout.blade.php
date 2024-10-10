@@ -450,10 +450,10 @@
                                 </div>
                             </div>
                             <div class="nav-item dropdown">
-                                <a href="#" class="nav-link d-flex lh-1 text-reset p-0"
-                                    data-bs-toggle="dropdown" aria-label="Open user menu">
+                                <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+                                    <!-- Menggunakan gambar dari database atau gravatar sebagai default -->
                                     <span class="avatar avatar-sm rounded-circle"
-                                        style="background-image: url('https://www.gravatar.com/avatar/?d=mp'); border-radius: 50%;"></span>
+                                        style="background-image: url('{{ Auth::user()->profile_picture_url ? asset('storage/' . Auth::user()->profile_picture_url) : 'https://www.gravatar.com/avatar/' . md5(strtolower(trim(Auth::user()->email))) . '?d=mp' }}'); border-radius: 50%;"></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                     <a href="{{ route('profile.show') }}" class="dropdown-item">

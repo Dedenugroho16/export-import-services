@@ -5,9 +5,9 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card shadow-lg border-0">
+            <div class="card shadow border-0 rounded-lg modern-card">
                 <!-- Header card -->
-                <div class="card-header bg-gradient-primary text-white py-3 d-flex justify-content-between align-items-center">
+                <div class="card-header bg-gradient-primary text-white py-4 d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Welcome, {{ $user->name }}!</h4>
                     <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                         <i class="bi bi-pencil-square"></i> Edit Profile
@@ -36,13 +36,13 @@
                     <!-- User Information -->
                     <div class="row align-items-center mb-4">
                         <!-- Profile Picture -->
-                        <div class="col-md-4 text-center mb-3 mb-md-0">
-                            <img src="{{ $user->profile_picture_url ?? 'https://via.placeholder.com/150' }}" alt="Profile Picture" class="img-fluid img-thumbnail rounded-circle" width="150">
+                        <div class="col-md-4 text-center mb-3 mb-md-0 profile-card">
+                            <img src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" alt="Profile Picture" class="img-fluid img-thumbnail rounded-circle profile-image">
                         </div>
                         <!-- User Details -->
                         <div class="col-md-8">
                             <h5 class="fw-bold">User Information</h5>
-                            <ul class="list-group list-group-flush">
+                            <ul class="list-group list-group-flush modern-list">
                                 <li class="list-group-item"><strong>Name:</strong> {{ $user->name }}</li>
                                 <li class="list-group-item"><strong>Email:</strong> {{ $user->email }}</li>
                                 <li class="list-group-item"><strong>Role:</strong> {{ $user->role }}</li>
@@ -100,37 +100,86 @@
     </div>
 </div>
 
+<!-- JavaScript to reset form -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('editProfileModal');
+        modal.addEventListener('hidden.bs.modal', function () {
+            document.getElementById('editProfileForm').reset();
+        });
+    });
+</script>
+
 <!-- CSS for improved appearance -->
 <style>
-    .card-header {
-        background: linear-gradient(90deg, #007bff, #6610f2);
-        color: white;
+    /* Modern card style */
+    .modern-card {
+        border-radius: 20px;
+        background-color: #fff;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease-in-out;
     }
-    .list-group-item {
-        background: #f8f9fa;
+
+    .modern-card:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Ukuran lebih besar untuk card gambar profil */
+    .profile-card {
+        width: 200px;  
+        height: 200px; 
+        margin: 0 auto;
+    }
+
+    /* Ukuran lebih besar untuk gambar profil */
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+        border-radius: 50%; 
+        border: 4px solid #007bff; 
+    }
+
+    /* Modern list style */
+    .modern-list .list-group-item {
+        background-color: #f8f9fa;
         border: none;
+        font-size: 1.05rem;
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        border-radius: 10px;
     }
+
+    /* Header styling */
+    .card-header {
+        background: linear-gradient(90deg, #1A5276, #21618C); /* Gradasi biru nefi */
+        color: white;
+        border-radius: 20px 20px 0 0;
+    }
+
     .list-group-item strong {
         color: #495057;
     }
+
     .btn-outline-primary, .btn-outline-secondary {
         transition: background-color 0.3s, color 0.3s;
     }
+
     .btn-outline-primary:hover, .btn-outline-secondary:hover {
         background-color: #007bff;
         color: white;
     }
+
     .modal-content {
-        border-radius: 10px; /* Rounded corners for modal */
+        border-radius: 20px;
     }
-    .img-thumbnail {
-        border: 2px solid #007bff; /* Custom border for profile image */
-    }
+
     .lead {
-        font-size: 1.1rem; /* Slightly larger text for lead */
+        font-size: 1.1rem;
     }
+
     .alert {
-        border-radius: 10px; /* Rounded corners for alerts */
+        border-radius: 10px;
     }
 </style>
 @endsection
