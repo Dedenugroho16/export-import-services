@@ -88,7 +88,7 @@ Route::get('/proforma/edit/{hash}', [ProformaController::class, 'edit'])->name('
 Route::get('proforma/data', [ProformaController::class, 'getProformaData'])->name('proforma.data');
 Route::get('/approved-proforma/data', [ProformaController::class, 'getApprovedData'])->name('approved.data');
 // APPROVE
-Route::post('proforma/approve/{id}', [TransactionController::class, 'approveProforma'])->name('proforma.approve');
+Route::post('proforma/approve/{id}', [ProformaController::class, 'approveProforma'])->name('proforma.approve');
 
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
