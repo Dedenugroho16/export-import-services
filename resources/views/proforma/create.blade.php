@@ -369,7 +369,7 @@
                                                 </thead>
                                                 <tbody id="detail-rows" style="font-size: 12px">
                                                     <tr id="nullDetailTransaction">
-                                                        <td colspan="7" class="text-center">Tidak ada barang</td>
+                                                        <td colspan="8" class="text-center">Tidak ada barang</td>
                                                     </tr>
                                                 </tbody>
                                                 <tfoot>
@@ -381,9 +381,10 @@
                                                         <td class="text-center" id="totalNetWeight">0</td>
                                                         <td class="text-center" id="PriceAmount">0</td>
                                                         <td></td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr id="inputRow">
-                                                        <td class="text-center" colspan="5"></td>
+                                                        <td class="text-center" colspan="6"></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
                                                                 <label for="additionalInput" class="mr-2">Freight Cost
@@ -397,7 +398,7 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="text-center" colspan="5"></td>
+                                                        <td class="text-center" colspan="6"></td>
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">

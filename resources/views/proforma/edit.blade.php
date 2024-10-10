@@ -103,9 +103,12 @@
 
                             <form id="formProformaInvoice" method="POST" action="{{ route('proforma.store') }}">
                                 @csrf
-                                <input type="date" name="date" id="date" value="{{ $transaction->date }}" hidden>
-                                <input type="text" name="code" id="code" value="{{ $transaction->code }}" hidden>
-                                <input type="text" name="number" id="number" value="{{ $transaction->number }}" hidden>
+                                <input type="date" name="date" id="date" value="{{ $transaction->date }}"
+                                    hidden>
+                                <input type="text" name="code" id="code" value="{{ $transaction->code }}"
+                                    hidden>
+                                <input type="text" name="number" id="number" value="{{ $transaction->number }}"
+                                    hidden>
                                 <input type="date" name="stuffing_date" id="stuffing_date" hidden>
                                 <input type="text" name="bl_number" id="bl_number" hidden>
                                 <input type="text" name="container_number" id="container_number" hidden>
@@ -143,7 +146,8 @@
                                                 <div class="form-group">
                                                     <label for="notify">Notify</label>
                                                     <input type="text" name="notify" id="notify" class="form-control"
-                                                        placeholder="Enter notify party" value="{{ $transaction->notify }}" required>
+                                                        placeholder="Enter notify party" value="{{ $transaction->notify }}"
+                                                        required>
                                                 </div>
                                             </div>
 
@@ -183,7 +187,8 @@
                                                 <div class="form-group">
                                                     <label for="port_of_loading">Port of Loading</label>
                                                     <input type="text" name="port_of_loading" id="port_of_loading"
-                                                        class="form-control" placeholder="Enter port of loading" value="{{ $transaction->port_of_loading }}" required>
+                                                        class="form-control" placeholder="Enter port of loading"
+                                                        value="{{ $transaction->port_of_loading }}" required>
                                                 </div>
                                             </div>
 
@@ -192,8 +197,8 @@
                                                 <div class="form-group">
                                                     <label for="place_of_receipt">Place of Receipt</label>
                                                     <input type="text" name="place_of_receipt" id="place_of_receipt"
-                                                        class="form-control" placeholder="Enter place of receipt" value="{{ $transaction->place_of_receipt }}"
-                                                        required>
+                                                        class="form-control" placeholder="Enter place of receipt"
+                                                        value="{{ $transaction->place_of_receipt }}" required>
                                                 </div>
                                             </div>
 
@@ -202,8 +207,8 @@
                                                 <div class="form-group">
                                                     <label for="port_of_discharge">Port of Discharge</label>
                                                     <input type="text" name="port_of_discharge" id="port_of_discharge"
-                                                        class="form-control" placeholder="Enter port of discharge" value="{{ $transaction->port_of_discharge }}"
-                                                        required>
+                                                        class="form-control" placeholder="Enter port of discharge"
+                                                        value="{{ $transaction->port_of_discharge }}" required>
                                                 </div>
                                             </div>
 
@@ -212,8 +217,8 @@
                                                 <div class="form-group">
                                                     <label for="place_of_delivery">Place of Delivery</label>
                                                     <input type="text" name="place_of_delivery" id="place_of_delivery"
-                                                        class="form-control" placeholder="Enter place of delivery" value="{{ $transaction->place_of_delivery }}"
-                                                        required>
+                                                        class="form-control" placeholder="Enter place of delivery"
+                                                        value="{{ $transaction->place_of_delivery }}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -263,7 +268,8 @@
                                                             name="id_commodity" required>
                                                             <option value="">Pilih Commodity</option>
                                                             @foreach ($commodities as $commodity)
-                                                                <option value="{{ $commodity->id }}" {{ $commodity->id == $commoditySelectedID ? 'selected' : '' }}>
+                                                                <option value="{{ $commodity->id }}"
+                                                                    {{ $commodity->id == $commoditySelectedID ? 'selected' : '' }}>
                                                                     {{ $commodity->name }}
                                                                 </option>
                                                             @endforeach
@@ -279,8 +285,8 @@
                                                     </div>
                                                     <div class="col-5">
                                                         <input type="text" name="container" id="container"
-                                                            class="form-control" placeholder="Masukkan Container" value="{{ $transaction->container }}"
-                                                            required>
+                                                            class="form-control" placeholder="Masukkan Container"
+                                                            value="{{ $transaction->container }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-2">
@@ -292,8 +298,8 @@
                                                     </div>
                                                     <div class="col-5">
                                                         <input type="text" name="payment_term" id="payment_term"
-                                                            class="form-control" placeholder="Masukkan Payment term" value="{{ $transaction->payment_term }}"
-                                                            required>
+                                                            class="form-control" placeholder="Masukkan Payment term"
+                                                            value="{{ $transaction->payment_term }}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -311,7 +317,8 @@
                                                         <input type="number" class="form-control net_weight_transaction"
                                                             step="0.01" disabled>
                                                         <input type="hidden" id="net_weight_transaction"
-                                                            name="net_weight" class="form-control" step="0.01" required>
+                                                            name="net_weight" class="form-control" step="0.01"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-2">
@@ -324,7 +331,8 @@
                                                     <div class="col-5">
                                                         <input type="number" id="gross_weight" name="gross_weight"
                                                             class="form-control" step="0.01"
-                                                            placeholder="Contoh: 123.45" value="{{ $transaction->gross_weight }}" required>
+                                                            placeholder="Contoh: 123.45"
+                                                            value="{{ $transaction->gross_weight }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-2">
@@ -557,8 +565,6 @@
 
         // modal datatables
         $(document).ready(function() {
-            updateFormDetailTransaction();
-
             // Saat halaman dimuat, tombol "Tambah" dinonaktifkan
             $('#submitButton').prop('disabled', true);
 
@@ -579,15 +585,15 @@
                 }
             });
 
+            // Initialize DataTable
             var table = $('#detailProductTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('get-detail-products') }}",
+                    url: "{{ route('edit-get-detail-products') }}",
                     data: function(d) {
                         var productId = $('#product').val();
-                        d.id_product = productId ? productId :
-                            null; // Kirim nilai id_product jika produk dipilih
+                        d.id_product = productId ? productId : null;
                     }
                 },
                 columns: [{
@@ -656,16 +662,6 @@
                         return productSelected ?
                             "Produk yang Anda pilih tidak memiliki detail produk" :
                             "Tolong pilih produk terlebih dahulu";
-                    },
-                    aria: {
-                        sortAscending: ": aktifkan untuk mengurutkan kolom secara ascending",
-                        sortDescending: ": aktifkan untuk mengurutkan kolom secara descending"
-                    },
-                    select: {
-                        rows: {
-                            _: "%d baris terpilih",
-                            1: "1 baris terpilih"
-                        }
                     }
                 },
                 responsive: true,
@@ -769,9 +765,106 @@
 
             // Jalankan fungsi updateProductCode saat halaman dimuat untuk menginisialisasi
             updateProductCode();
-            updateNumber()
+            updateNumber();
 
             // Tabel Detail Transaction
+            // Fungsi untuk memuat detail transaksi berdasarkan id_transaction
+            function loadDetailTransaction(idTransaction) {
+                $.ajax({
+                    url: `/get-detail-transaction/${idTransaction}`, // URL endpoint untuk mendapatkan detail transaksi
+                    method: 'GET',
+                    success: function(response) {
+                        // Kosongkan tabel sebelum menambah baris baru
+                        $('#tableDetailTransaction tbody').empty();
+
+                        // Jika ada data detail transaksi, tambahkan ke tabel
+                        if (response.length > 0) {
+                            response.forEach(function(data, index) {
+                                var newRow = `
+                                <tr>
+                                    <td class="text-center id-detail-product">${data.id_detail_product}</td>
+                                    <td class="text-center">
+                                        <strong>${data.product_name} ${data.qty} PCS / ${data.weight} KG</strong><br>
+                                        ${data.dimension} ${data.color} - ${data.type}
+                                    </td>
+                                    <td class="text-center">${data.carton}</td>
+                                    <td class="text-center inner-result">${data.inner_qty_carton}</td>
+                                    <td class="text-center price">${data.unit_price}</td>
+                                    <td class="text-center net-weight">${data.net_weight}</td>
+                                    <td class="text-center price-result">${data.price_amount}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
+                                    </td>
+                                </tr>
+                            `;
+
+                                // Tambahkan baris ke tabel
+                                $('#tableDetailTransaction tbody').append(newRow);
+                            });
+                        } else {
+                            // Jika tidak ada data, tambahkan baris "Tidak ada barang"
+                            $('#tableDetailTransaction tbody').append(`
+                            <tr id="nullDetailTransaction">
+                                <td colspan="7" class="text-center">Tidak ada barang</td>
+                            </tr>
+                        `);
+                        }
+
+                        // Setelah data dimuat, lakukan perhitungan ulang
+                        updateAmounts();
+                        updateTotals();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching detail transactions:', error);
+                    }
+                });
+            }
+
+            // Panggil fungsi untuk memuat detail transaksi saat halaman dimuat
+            var transactionId = "{{ $transaction->id }}"; // Dapatkan id_transaction dari backend
+            if (transactionId) {
+                loadDetailTransaction(transactionId);
+            }
+
+            // Fungsi untuk menghitung jumlah total, sama seperti yang sudah ada
+            function updateAmounts() {
+                var totalCarton = 0;
+                var totalInner = 0;
+                var totalNetWeight = 0;
+                var PriceAmount = 0;
+
+                $('#tableDetailTransaction tbody tr').each(function() {
+                    var carton = parseFloat($(this).find('.carton-input').val()) || 0;
+                    var inner = parseFloat($(this).find('.inner-result').text()) || 0;
+                    var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
+                    var price = parseFloat($(this).find('.price-result').text()) || 0;
+
+                    totalCarton += carton;
+                    totalInner += inner;
+                    totalNetWeight += netWeight;
+                    PriceAmount += price;
+                });
+
+                $('#totalCarton').text(totalCarton);
+                $('#totalInner').text(totalInner);
+                $('#totalNetWeight').text(totalNetWeight);
+                $('#PriceAmount').text(PriceAmount);
+                $('#net_weight_transaction').val(totalNetWeight);
+                $('.net_weight_transaction').val(totalNetWeight);
+            }
+
+            function updateTotals() {
+                var priceAmount = parseFloat($('#PriceAmount').text()) || 0;
+                var freightCost = parseFloat($('#freight_cost').val()) || 0;
+                var total = priceAmount + freightCost;
+
+                $('#total').val(total);
+            }
+
+            // Event listener untuk input Freight Cost
+            $('#freight_cost').on('input', function() {
+                updateTotals();
+            });
             // Event handler ketika tombol "Pilih" diklik
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
                 var data = table.row($(this).parents('tr'))
@@ -779,23 +872,24 @@
 
                 // Membuat elemen tr untuk ditambahkan ke tabel #tableDetailTransaction
                 var newRow = `
-        <tr>
-            <td class="text-center id-detail-product">${data.id}</td>
-            <td class="text-center">
-                <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
-                ${data.dimension} ${data.color} - ${data.type}
-            </td>
-            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" /></td>
-            <td class="text-center inner-result">
-                0
-            </td>
-            <td class="text-center price">${data.price}</td>
-            <td class="text-center net-weight">0</td>
-            <td class="text-center price-result">0</td>
-            <td class="text-center">
-                <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
-            </td>
-        </tr>`;
+                                <tr>
+                                    <td class="text-center id-detail-product">${data.id}</td>
+                                    <td class="text-center">
+                                        <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
+                                        ${data.dimension} ${data.color} - ${data.type}
+                                    </td>
+                                    <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" /></td>
+                                    <td class="text-center inner-result">
+                                        0
+                                    </td>
+                                    <td class="text-center price">${data.price}</td>
+                                    <td class="text-center net-weight">0</td>
+                                    <td class="text-center price-result">0</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
+                                    </td>
+                                </tr>
+                                `;
 
                 // Menambahkan elemen tr baru ke tabel #tableDetailTransaction
                 $('#tableDetailTransaction tbody').append(newRow);
@@ -850,15 +944,15 @@
 
                         // Create hidden inputs and append to the form
                         $('#formDetailTransaction').append(`
-    <!-- ID Detail Product (Validasi exists:detail_products,id) -->
-            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
-            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
-            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
-    `);
+                                                                <!-- ID Detail Product (Validasi exists:detail_products,id) -->
+                                                                        <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+                                                                        <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
+                                                                        <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
+                                                                        <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+                                                                        <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
+                                                                        <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
+                                                                        <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
+                                                                `);
                     });
                 }
 
@@ -917,9 +1011,9 @@
                     // Jika tidak ada baris lagi, tambahkan kembali baris "Tidak ada barang"
                     if ($('#tableDetailTransaction tbody tr').length === 0) {
                         $('#tableDetailTransaction tbody').append(`
-            <tr id="nullDetailTransaction">
-                <td colspan="7" class="text-center">Tidak ada barang</td>
-            </tr>`);
+                                                                    <tr id="nullDetailTransaction">
+                                                                        <td colspan="7" class="text-center">Tidak ada barang</td>
+                                                                    </tr>`);
                     }
 
                     updateAmounts();
@@ -945,10 +1039,6 @@
 
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
-
-            // $('#submitButton').on('click', function() {
-            //     $('#formTransaction').submit();
-            // });
 
             $('#submitButton').click(function() {
                 var formProformaInvoice = $('#formProformaInvoice');
