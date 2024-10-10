@@ -51,6 +51,12 @@ class ProformaController extends Controller
 
     public function approveProforma($id)
     {
+        // Cek apakah pengguna yang sedang login adalah director
+        if (auth()->user()->role !== 'director') {
+            // Jika bukan director, berikan respons error
+            return response()->json(['error' => 'Anda tidak memiliki akses untuk menyetujui Proforma.'], 403);
+        }
+
         // Cari transaksi berdasarkan ID dan update field approved menjadi 1
         $transaction = Transaction::findOrFail($id);
         $transaction->approved = 1;
@@ -59,6 +65,7 @@ class ProformaController extends Controller
         // Kembalikan respons sukses
         return response()->json(['success' => 'Proforma invoice disetujui.']);
     }
+
 
     // Mengambil Proforma yang telah disetujui
     public function getApprovedData()

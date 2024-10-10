@@ -111,162 +111,116 @@
 
 
     <script>
-        $(document).ready(function() {
-            var approvedTable = $('#approvedTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('approved.data') }}',
-                    type: 'GET'
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'code',
-                        name: 'code',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'number',
-                        name: 'number',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'client',
-                        name: 'client',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'consignee',
-                        name: 'consignee',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    }
-                ],
-                order: [
-                    [1, 'asc']
-                ],
-                columnDefs: [{
-                    targets: 0,
-                    render: function(data, type, row, meta) {
-                        return meta.row + 1;
-                    }
-                }]
-            });
+    $(document).ready(function() {
+        var approvedTable = $('#approvedTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route('approved.data') }}',
+                type: 'GET'
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
+                { data: 'code', name: 'code', className: 'text-center' },
+                { data: 'number', name: 'number', className: 'text-center' },
+                { data: 'client', name: 'client', className: 'text-center' },
+                { data: 'consignee', name: 'consignee', className: 'text-center' },
+                { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
+            ],
+            order: [[1, 'asc']],
+            columnDefs: [{
+                targets: 0,
+                render: function(data, type, row, meta) {
+                    return meta.row + 1;
+                }
+            }]
+        });
 
-            var table = $('#waitingProformaTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('proforma.data') }}', // Endpoint yang memuat data
-                    data: function(d) {
-                        d.approved = 0; // Mengirimkan approved = 0 sebagai filter ke server
-                    }
-                },
-                responsive: true,
-                autoWidth: false,
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'code',
-                        name: 'code'
-                    },
-                    {
-                        data: 'number',
-                        name: 'number'
-                    },
-                    {
-                        data: 'date',
-                        name: 'date'
-                    },
-                    {
-                        data: 'client',
-                        name: 'client'
-                    },
-                    {
-                        data: 'consignee',
-                        name: 'consignee'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi',
-                        orderable: false,
-                        searchable: false
-                    },
-                ],
-                order: [
-                    [1, 'asc']
-                ],
-                columnDefs: [{
-                    targets: 0,
-                    render: function(data, type, row, meta) {
-                        return meta.row + 1;
-                    }
-                }]
-            });
+        var waitingTable = $('#waitingProformaTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route('proforma.data') }}',
+                data: function(d) {
+                    d.approved = 0; // Mengirimkan approved = 0 sebagai filter ke server
+                }
+            },
+            responsive: true,
+            autoWidth: false,
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'code', name: 'code' },
+                { data: 'number', name: 'number' },
+                { data: 'date', name: 'date' },
+                { data: 'client', name: 'client' },
+                { data: 'consignee', name: 'consignee' },
+                { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+            ],
+            order: [[1, 'asc']],
+            columnDefs: [{
+                targets: 0,
+                render: function(data, type, row, meta) {
+                    return meta.row + 1;
+                }
+            }]
+        });
 
-            // Handle approve button click with confirmation using SweetAlert
-            $('#waitingProformaTable').on('click', '.approve-btn', function() {
-                var transactionId = $(this).data('id');
+        // Event delegation for dynamically generated approve buttons
+        $('#waitingProformaTable').on('click', '.approve-btn', function() {
+            var id = $(this).data('id');
 
-                // Menampilkan konfirmasi SweetAlert
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Anda tidak dapat membatalkan setelah ini!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, Setujui!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Jika pengguna menekan tombol "Ya, Setujui!"
-                        $.ajax({
-                            url: '{{ route('proforma.approve', ':id') }}'.replace(':id',
-                                transactionId),
-                            type: 'POST',
-                            data: {
-                                _token: '{{ csrf_token() }}' // CSRF token untuk keamanan
-                            },
-                            success: function(response) {
-                                // Tampilkan pesan sukses dan reload tabel
-                                Swal.fire(
-                                    'Disetujui!',
-                                    'Proforma invoice telah disetujui.',
-                                    'success'
-                                );
-                                table.ajax.reload(); // Reload tabel setelah sukses
-                                approvedTable.ajax
-                                    .reload(); // Reload tabel setelah sukses
-                            },
-                            error: function(xhr) {
-                                // Tampilkan pesan error jika terjadi kesalahan
+            // SweetAlert confirmation dialog
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda tidak dapat membatalkan setelah ini!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna menekan tombol "Ya, Setujui!"
+                    $.ajax({
+                        url: '/proforma/approve/' + id, // URL untuk approve proforma
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}' // CSRF token Laravel
+                        },
+                        success: function(response) {
+                            // Menampilkan pesan sukses
+                            Swal.fire(
+                                'Disetujui!',
+                                'Proforma invoice telah disetujui.',
+                                'success'
+                            );
+                            // Refresh tabel
+                            approvedTable.ajax.reload();
+                            waitingTable.ajax.reload();
+                        },
+                        error: function(response) {
+                            // Jika gagal karena error authorization (status 403)
+                            if (response.status === 403) {
                                 Swal.fire(
                                     'Error!',
-                                    'Terjadi kesalahan. Silakan coba lagi.',
+                                    response.responseJSON.error,  // Menampilkan pesan error dari response
+                                    'error'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    'Terjadi kesalahan, coba lagi.',
                                     'error'
                                 );
                             }
-                        });
-                    }
-                });
+                        }
+                    });
+                }
             });
         });
-    </script>
+    });
+</script>
+
+
 @endsection
