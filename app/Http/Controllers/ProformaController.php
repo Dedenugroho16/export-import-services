@@ -10,6 +10,8 @@ use App\Models\Consignee;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
+use App\Models\DetailProduct;
+use App\Helpers\NumberToWords;
 use App\Models\DetailTransaction;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -39,7 +41,7 @@ class ProformaController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-                $lihatDetail = '<a href="' . route('proforma.show', $row->id) . '" class="btn btn-sm btn-warning">Lihat Detail</a> ';
+                $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning">Lihat Detail</a> ';
                 $edit = ' <a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger">Edit</a> ';
                 return $lihatDetail . $edit . ' <button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button> ';
             })
@@ -118,6 +120,31 @@ class ProformaController extends Controller
         return view('proforma.create', compact('consignees', 'clients', 'products', 'commodities', 'country', 'formattedNumber'));
     }
 
+    // mengambil detail product
+    public function getDetailProducts(Request $request)
+    {
+        // Jika tidak ada id_product yang dikirim, kembalikan DataTables kosong
+        if (!$request->has('id_product') || empty($request->id_product)) {
+            return datatables()->of(collect([])) // Mengirimkan data kosong
+                ->addColumn('action', function ($row) {
+                    return ''; // Kolom action kosong
+                })
+                ->make(true);
+        }
+
+        // Query ke DetailProduct jika id_product ada
+        $query = DetailProduct::where('id_product', $request->id_product);
+
+        // Jika query tidak mengembalikan data, DataTables akan tetap mengirimkan response
+        return datatables()->of($query)
+            ->addColumn('action', function ($row) {
+                $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -154,15 +181,30 @@ class ProformaController extends Controller
         return response()->json(['id' => $transaction->id], 201);
     }
 
+    // public function show($hash)
+    // {
+    //     $id = IdHashHelper::decode($hash);
+    //     $ApprovedData = Transaction::findOrFail($id);
+
+    //     // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+    //     $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+
+    //     return view('proforma.show', compact('ApprovedData', 'detailTransactions'));
+    // }
+
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);
-        $ApprovedData = Transaction::findOrFail($id);
+        $transaction = Transaction::findOrFail($id);
 
         // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 
-        return view('proforma.show', compact('ApprovedData', 'detailTransactions'));
+        // Panggil helper untuk mengonversi total menjadi kata
+        $totalInWords = NumberToWords::convert($transaction->total);
+
+
+        return view('transaction.show', compact('transaction', 'detailTransactions', 'totalInWords'));
     }
 
 

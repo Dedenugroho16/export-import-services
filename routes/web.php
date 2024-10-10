@@ -81,9 +81,9 @@ Route::get('/packing-list/{hashId}', [TransactionController::class, 'packingList
 
 // Proforma invoice route
 Route::get('proforma', [ProformaController::class, 'index'])->name('proforma.index');
-Route::get('proforma/create', [TransactionController::class, 'proformaCreate'])->name('proforma.create');
-Route::post('/proforma/store', [TransactionController::class, 'proformaStore'])->name('proforma.store');
-Route::get('/proforma/show/{id}', [TransactionController::class, 'proformaShow'])->name('proforma.show');
+Route::get('proforma/create', [ProformaController::class, 'create'])->name('proforma.create');
+Route::post('/proforma/store', [ProformaController::class, 'store'])->name('proforma.store');
+Route::get('/proforma/show/{id}', [ProformaController::class, 'show'])->name('proforma.show');
 Route::get('/proforma/edit/{hash}', [ProformaController::class, 'edit'])->name('proforma.edit');
 Route::get('proforma/data', [ProformaController::class, 'getProformaData'])->name('proforma.data');
 Route::get('/approved-proforma/data', [ProformaController::class, 'getApprovedData'])->name('approved.data');
