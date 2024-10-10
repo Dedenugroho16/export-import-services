@@ -4,11 +4,17 @@
 @section('content')
     <div class="page-body">
         <div class="container-xl">
+            <div class="mb-4 mt-4">
+                <a href="{{ route('transaction.index') }}" class="btn btn-primary">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+                    Kembali
+                </a>
+            </div>
             <!-- Form Section -->
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card mb-5">
-                        <div class="card-body">
+                        <div class="card-body p-5">
                             <!-- Display Success Message -->
                             @if (session('success'))
                                 <div class="alert alert-success">
@@ -32,29 +38,47 @@
                                 </div>
                             @endif
 
-                            <div class="row mt-4 mb-4">
-                                <div class="col-md-12 text-center">
-                                    <h1>PACKING LIST</h1>
+                            <!-- Hader -->
+                            <div class="container">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <!-- Kolom Kiri: Logo dan Nama Perusahaan -->
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ asset('dist/img/mefita-logo.png') }}" alt="logo" width="60">
+                                        <div style="padding-left: 10px;">
+                                            <em style="font-size: 60px; font-weight:500;">PT. PSN</em><br>
+                                            <p style="font-weight:500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
+                                        </div>
+                                    </div>
+                            
+                                    <!-- Kolom Kanan: Detail Informasi -->
+                                    <div class="row mb-5 mt-3">
+                                        <div>
+                                            <table class="table-sm">
+                                                <tr>
+                                                    <td><strong>Date</strong></td>
+                                                    <td><strong>:</strong></td>
+                                                    <td class="text-end">{{ $transaction->date }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Code</strong></td>
+                                                    <td><strong>:</strong></td>
+                                                    <td class="text-end">{{ $transaction->code }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Number</strong></td>
+                                                    <td><strong>:</strong></td>
+                                                    <td class="text-end">{{ $transaction->number }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- Bagian 1 -->
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <table class="table-sm">
-                                        <tr>
-                                            <td><strong>Date</strong></td>
-                                            <td>{{ $transaction->date }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Code</strong></td>
-                                            <td>{{ $transaction->code }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Number</strong></td>
-                                            <td>{{ $transaction->number }}</td>
-                                        </tr>
-                                    </table>
+                            
+                            
+                            <div class="row mt-6 mb-5">
+                                <div class="col-md-12 text-center">
+                                    <h1>PACKING LIST</h1>
                                 </div>
                             </div>
 
@@ -328,6 +352,20 @@
                                 </div>
                             </div>
                             {{-- akhir tabel detail transaction --}}
+                            <!-- Teks total dalam kata -->
+                            <div class="text-end mt-3">
+                                <div class="mt-7">
+                                    <p>Approved By</p>
+                                    <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80">
+                                    <div>
+                                        <p style="display: inline-block;">
+                                            <strong>Approver</strong><br>
+                                            <u style="width: 100%; display: block; border-bottom: 1px solid black;"></u>
+                                        </p>
+                                        <p><strong>Director</strong></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

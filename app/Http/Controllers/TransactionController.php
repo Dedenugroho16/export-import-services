@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Helpers\IdHashHelper;
+use App\Helpers\NumberToWords;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Commodity;
@@ -116,8 +117,11 @@ class TransactionController extends Controller
         // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 
+        // Panggil helper untuk mengonversi total menjadi kata
+        $totalInWords = NumberToWords::convert($transaction->total);
 
-        return view('transaction.show', compact('transaction', 'detailTransactions'));
+
+        return view('transaction.show', compact('transaction', 'detailTransactions', 'totalInWords'));
     }
 
     /**
