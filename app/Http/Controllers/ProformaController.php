@@ -210,7 +210,18 @@ class ProformaController extends Controller
     public function getDetailTransaction($idTransaction)
     {
         // Query untuk mendapatkan detail transaksi berdasarkan id_transaction
-        $detailTransactions = DetailTransaction::where('id_transaction', $idTransaction)->get();
+        $detailTransactions = DetailTransaction::where('id_transaction', $idTransaction)
+            ->join('detail_products', 'detail_transactions.id_detail_product', '=', 'detail_products.id')
+            ->select(
+                'detail_transactions.*',
+                'detail_products.name as product_name',
+                'detail_products.pcs',
+                'detail_products.dimension',
+                'detail_products.type',
+                'detail_products.color',
+                'detail_products.price as unit_price'
+            )
+            ->get();
 
         // Kembalikan data dalam format JSON
         return response()->json($detailTransactions);

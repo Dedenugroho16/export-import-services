@@ -374,13 +374,12 @@
                                                 </tbody>
                                                 <tfoot>
                                                     <tr id="totalRow" style="font-weight: bold;">
-                                                        <td class="text-center">Amount</td>
+                                                        <td class="text-center" colspan="2">Amount</td>
                                                         <td class="text-center" id="totalCarton">0</td>
                                                         <td class="text-center" id="totalInner">0</td>
                                                         <td class="text-center"></td>
                                                         <td class="text-center" id="totalNetWeight">0</td>
                                                         <td class="text-center" id="PriceAmount">0</td>
-                                                        <td></td>
                                                         <td></td>
                                                     </tr>
                                                     <tr id="inputRow">

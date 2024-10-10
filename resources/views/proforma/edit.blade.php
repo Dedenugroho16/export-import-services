@@ -380,12 +380,12 @@
                                                 </thead>
                                                 <tbody id="detail-rows" style="font-size: 12px">
                                                     <tr id="nullDetailTransaction">
-                                                        <td colspan="7" class="text-center">Tidak ada barang</td>
+                                                        <td colspan="8" class="text-center">Tidak ada barang</td>
                                                     </tr>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr id="totalRow" style="font-weight: bold;">
-                                                        <td class="text-center">Amount</td>
+                                                        <td class="text-center" colspan="2">Amount</td>
                                                         <td class="text-center" id="totalCarton">0</td>
                                                         <td class="text-center" id="totalInner">0</td>
                                                         <td class="text-center"></td>
@@ -394,7 +394,7 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr id="inputRow">
-                                                        <td class="text-center" colspan="5"></td>
+                                                        <td class="text-center" colspan="6"></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
                                                                 <label for="additionalInput" class="mr-2">Freight Cost
@@ -408,7 +408,7 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="text-center" colspan="5"></td>
+                                                        <td class="text-center" colspan="6"></td>
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
@@ -767,52 +767,52 @@
             updateProductCode();
             updateNumber();
 
-            // Tabel Detail Transaction
             // Fungsi untuk memuat detail transaksi berdasarkan id_transaction
             function loadDetailTransaction(idTransaction) {
                 $.ajax({
-                    url: `/get-detail-transaction/${idTransaction}`, // URL endpoint untuk mendapatkan detail transaksi
+                    url: `/get-detail-transaction/${idTransaction}`,
                     method: 'GET',
                     success: function(response) {
-                        // Kosongkan tabel sebelum menambah baris baru
-                        $('#tableDetailTransaction tbody').empty();
+                        $('#tableDetailTransaction tbody').empty(); // Kosongkan tabel
 
-                        // Jika ada data detail transaksi, tambahkan ke tabel
                         if (response.length > 0) {
-                            response.forEach(function(data, index) {
+                            response.forEach(function(data) {
                                 var newRow = `
-                                <tr>
-                                    <td class="text-center id-detail-product">${data.id_detail_product}</td>
-                                    <td class="text-center">
-                                        <strong>${data.product_name} ${data.qty} PCS / ${data.weight} KG</strong><br>
-                                        ${data.dimension} ${data.color} - ${data.type}
-                                    </td>
-                                    <td class="text-center">${data.carton}</td>
-                                    <td class="text-center inner-result">${data.inner_qty_carton}</td>
-                                    <td class="text-center price">${data.unit_price}</td>
-                                    <td class="text-center net-weight">${data.net_weight}</td>
-                                    <td class="text-center price-result">${data.price_amount}</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
-                                    </td>
-                                </tr>
-                            `;
+                        <tr>
+                            <td class="text-center id-detail-product">${data.id_detail_product}</td>
+                            <td class="text-center">
+                                <strong>${data.product_name} 
+                                PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
+                                ${data.dimension} ${data.color} - ${data.type}
+                            </td>
+                            <td class="text-center">
+                                <input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" min="1" value="${data.carton}" />
+                            </td>
+                            <td class="text-center inner-result">${data.inner_qty_carton}</td>
+                            <td class="text-center price" data-price="${data.unit_price}">${data.unit_price}</td>
+                            <td class="text-center net-weight">${data.net_weight}</td>
+                            <td class="text-center price-result">${data.price_amount}</td>
+                            <td class="text-center">
+                                <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
+                            </td>
+                        </tr>
+                    `;
 
-                                // Tambahkan baris ke tabel
                                 $('#tableDetailTransaction tbody').append(newRow);
                             });
+
+                            // Add event listeners for input changes
+                            addDynamicEventListeners();
                         } else {
-                            // Jika tidak ada data, tambahkan baris "Tidak ada barang"
                             $('#tableDetailTransaction tbody').append(`
-                            <tr id="nullDetailTransaction">
-                                <td colspan="7" class="text-center">Tidak ada barang</td>
-                            </tr>
-                        `);
+                    <tr id="nullDetailTransaction">
+                        <td colspan="8" class="text-center">Tidak ada barang</td>
+                    </tr>
+                `);
                         }
 
-                        // Setelah data dimuat, lakukan perhitungan ulang
+                        // Panggil fungsi updateAmounts untuk menghitung total nilai setelah data dimuat
                         updateAmounts();
-                        updateTotals();
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching detail transactions:', error);
@@ -820,45 +820,106 @@
                 });
             }
 
-            // Panggil fungsi untuk memuat detail transaksi saat halaman dimuat
-            var transactionId = "{{ $transaction->id }}"; // Dapatkan id_transaction dari backend
-            if (transactionId) {
-                loadDetailTransaction(transactionId);
+            function addDynamicEventListeners() {
+                // Event listener for qty and carton input changes
+                $('#tableDetailTransaction tbody').on('input', '.qty-input, .carton-input', function() {
+                    var row = $(this).closest('tr');
+                    var qty = parseFloat(row.find('.qty-input').val()) || 0;
+                    var carton = parseFloat(row.find('.carton-input').val()) || 0;
+                    var unitPrice = parseFloat(row.find('.price').data('price')) || 0;
+
+                    // Calculate the result based on qty and carton
+                    var innerResult = qty *
+                        carton; // Example logic, can be changed according to your requirements
+                    var netWeight = innerResult; // Assuming net weight is the same as innerResult
+                    var totalPrice = innerResult * unitPrice;
+
+                    // Update the inner-result, net-weight, and price-result
+                    row.find('.inner-result').text(innerResult);
+                    row.find('.net-weight').text(netWeight);
+                    row.find('.price-result').text(Math.round(totalPrice));
+
+                    // Call updateAmounts to recalculate the total for all rows
+                    updateAmounts();
+                });
             }
 
-            // Fungsi untuk menghitung jumlah total, sama seperti yang sudah ada
+            // Panggil fungsi untuk memuat detail transaksi ketika halaman dimuat
+            var transactionId = "{{ $transaction->id }}"; // Ambil id_transaction dari backend
+            if (transactionId) {
+                loadDetailTransaction(transactionId);
+                // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
+                $('#tableDetailTransaction tbody').on('click', '.remove-btn', function() {
+                    $(this).closest('tr').remove(); // Menghapus baris saat tombol Hapus diklik
+
+                    // Jika tidak ada baris lagi, tambahkan kembali baris "Tidak ada barang"
+                    if ($('#tableDetailTransaction tbody tr').length === 0) {
+                        $('#tableDetailTransaction tbody').append(`
+                                                                    <tr id="nullDetailTransaction">
+                                                                        <td colspan="8" class="text-center">Tidak ada barang</td>
+                                                                    </tr>`);
+                    }
+
+                    updateAmounts();
+                    updateTotals();
+                    updateFormDetailTransaction();
+                });
+            }
+
+            // Fungsi untuk memperbarui total setelah nilai diubah
             function updateAmounts() {
                 var totalCarton = 0;
                 var totalInner = 0;
                 var totalNetWeight = 0;
-                var PriceAmount = 0;
+                var totalPriceAmount = 0;
 
                 $('#tableDetailTransaction tbody tr').each(function() {
                     var carton = parseFloat($(this).find('.carton-input').val()) || 0;
-                    var inner = parseFloat($(this).find('.inner-result').text()) || 0;
+                    var innerResult = parseFloat($(this).find('.inner-result').text()) || 0;
                     var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
-                    var price = parseFloat($(this).find('.price-result').text()) || 0;
+                    var priceAmount = parseFloat($(this).find('.price-result').text()) || 0;
 
                     totalCarton += carton;
-                    totalInner += inner;
+                    totalInner += innerResult;
                     totalNetWeight += netWeight;
-                    PriceAmount += price;
+                    totalPriceAmount += priceAmount;
                 });
 
+                // Update footer values or other elements displaying totals
                 $('#totalCarton').text(totalCarton);
                 $('#totalInner').text(totalInner);
                 $('#totalNetWeight').text(totalNetWeight);
-                $('#PriceAmount').text(PriceAmount);
+                $('#PriceAmount').text(totalPriceAmount);
+
+                // Optionally, update hidden inputs for the form
                 $('#net_weight_transaction').val(totalNetWeight);
                 $('.net_weight_transaction').val(totalNetWeight);
             }
 
+
+            // Event listener untuk input perubahan carton
+            $('#tableDetailTransaction tbody').on('input', '.carton-input', function() {
+                updateAmounts(); // Panggil fungsi updateAmounts setiap kali carton diubah
+            });
+
+            // Event listener untuk input Freight Cost
+            $('#freight_cost').on('input', function() {
+                updateTotals(); // Panggil fungsi updateTotals ketika freight cost diubah
+            });
+
+            // Fungsi untuk memperbarui total price dan freight cost
             function updateTotals() {
                 var priceAmount = parseFloat($('#PriceAmount').text()) || 0;
                 var freightCost = parseFloat($('#freight_cost').val()) || 0;
                 var total = priceAmount + freightCost;
 
                 $('#total').val(total);
+            }
+
+            // Panggil fungsi untuk memuat detail transaksi saat halaman dimuat
+            var transactionId = "{{ $transaction->id }}"; // Dapatkan id_transaction dari backend
+            if (transactionId) {
+                loadDetailTransaction(transactionId);
             }
 
             // Event listener untuk input Freight Cost
