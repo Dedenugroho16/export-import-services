@@ -284,6 +284,7 @@
                             <span class="nav-link-title">Client</span>
                         </a>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/products') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">

@@ -10,36 +10,39 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     // Menampilkan data pengguna
-    public function index(Request $request)
-    {
-        if ($request->ajax()) {
-            return DataTables::of(User::query())
-                ->addColumn('password', function (User $user) {
-                    return '******'; // Menyembunyikan password
-                })
-                ->addColumn('created_at', function (User $user) {
-                    return $user->created_at->format('d M Y'); // Format tanggal
-                })
-                ->addColumn('role', function (User $user) {
-                    return $user->role; // Menampilkan role
-                })
-                ->addColumn('action', function (User $user) {
-                    return '
-                    <div class="dropdown">
-                        <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">
-                            Aksi
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a href="#" class="dropdown-item edit-user" data-id="' . $user->id . '">Edit</a>
-                            <a href="#" class="dropdown-item delete-user" data-id="' . $user->id . '">Hapus</a>
-                        </div>
-                    </div>';
-                })
-                ->rawColumns(['action']) 
-                ->make(true);
-        }
-        return view('data-user.index');
+    // Menampilkan data pengguna
+public function index(Request $request)
+{
+    if ($request->ajax()) {
+        $users = User::where('id', '!=', auth()->id())->get(); // Ambil semua pengguna kecuali pengguna yang sedang login
+        return DataTables::of($users)
+            ->addColumn('password', function (User $user) {
+                return '******'; // Menyembunyikan password
+            })
+            ->addColumn('created_at', function (User $user) {
+                return $user->created_at->format('d M Y'); // Format tanggal
+            })
+            ->addColumn('role', function (User $user) {
+                return $user->role; // Menampilkan role
+            })
+            ->addColumn('action', function (User $user) {
+                return '
+                <div class="dropdown">
+                    <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">
+                        Aksi
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a href="#" class="dropdown-item edit-user" data-id="' . $user->id . '">Edit</a>
+                        <a href="#" class="dropdown-item delete-user" data-id="' . $user->id . '">Hapus</a>
+                    </div>
+                </div>';
+            })
+            ->rawColumns(['action']) 
+            ->make(true);
     }
+    return view('data-user.index');
+}
+
 
     // Menyimpan data pengguna baru
     public function store(Request $request)

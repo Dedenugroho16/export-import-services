@@ -108,5 +108,7 @@ Route::resource('users', UserController::class);
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
 
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
-Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+// Route untuk menampilkan halaman profil
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+// Route untuk memperbarui profil
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');

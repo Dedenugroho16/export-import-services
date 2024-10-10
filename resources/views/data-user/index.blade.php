@@ -147,7 +147,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Password</th>
-                                        <th>Role</th> <!-- Tambahkan kolom untuk Role -->
+                                        <th>Role</th>
                                         <th>Created At</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -177,7 +177,7 @@
                 { data: 'name', name: 'name' },
                 { data: 'email', name: 'email' },
                 { data: 'password', name: 'password' },
-                { data: 'role', name: 'role' }, // Tambahkan kolom role
+                { data: 'role', name: 'role' },
                 { data: 'created_at', name: 'created_at' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
@@ -194,6 +194,11 @@
                 infoEmpty: "Tidak ada entri",
                 zeroRecords: "Tidak ada catatan yang cocok",
             },
+        });
+
+        // Reset form ketika modal ditutup
+        $('#addUserModal').on('hidden.bs.modal', function() {
+            $('#addUserForm')[0].reset(); // Reset form
         });
 
         // Handle Add User form submission
@@ -247,7 +252,7 @@
                     $('#edit_name').val(data.name);
                     $('#edit_email').val(data.email);
                     $('#edit_user_id').val(data.id);
-                    $('#edit_role').val(data.role); // Menambahkan set value untuk role
+                    $('#edit_role').val(data.role);
                     $('#editUserModal').modal('show');
                 },
                 error: function(xhr) {
@@ -261,14 +266,14 @@
             var userId = $(this).data('id');
             if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
                 $.ajax({
-                    url: "/users/" + userId, // Pastikan URL menuju ke /users/{id}
+                    url: "/users/" + userId,
                     method: 'DELETE',
                     data: {
-                        _token: '{{ csrf_token() }}' // Menyertakan token CSRF
+                        _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
                         if (response.success) {
-                            table.ajax.reload(); // Reload DataTable
+                            table.ajax.reload();
                             var deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
                             deleteToast.show();
                         } else {
