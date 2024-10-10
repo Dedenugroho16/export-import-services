@@ -2,19 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ProformaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DetailProductController;
-use App\Http\Controllers\DetailTransactionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProformaInvoiceController;
+use App\Http\Controllers\DetailTransactionController;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
@@ -67,11 +68,27 @@ Route::resource('countries', CountryController::class);
 Route::resource('branches', BranchController::class);
 
 // Transaction Routes using resource
-Route::resource('transaction', TransactionController::class);
-Route::get('transaction/create', [TransactionController::class, 'create'])->name('transaction.create');
-Route::post('/transaction/store', [TransactionController::class, 'store'])->name('transaction.store');
-Route::get('transaction/index', [TransactionController::class, 'index'])->name('transaction.index');
-Route::get('/transaction/{transaction}', [TransactionController::class, 'show'])->name('transaction.show');
+// Route::resource('transaction', TransactionController::class);
+Route::get('/get-invoice', [TransactionController::class, 'getInvoice'])->name('getInvoice');
+Route::get('transaction', [TransactionController::class, 'index'])->name('transaction.index');
+Route::get('transaction/create/{id}', [TransactionController::class, 'create'])->name('transaction.create');
+Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->name('transaction.show');
+// Route untuk update transaksi
+Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
+
+// Route Packing List
+Route::get('/packing-list/{hashId}', [TransactionController::class, 'packingListShow'])->name('packingList.show');
+
+// Proforma invoice route
+Route::get('proforma', [ProformaController::class, 'index'])->name('proforma.index');
+Route::get('proforma/create', [ProformaController::class, 'create'])->name('proforma.create');
+Route::post('/proforma/store', [ProformaController::class, 'store'])->name('proforma.store');
+Route::get('/proforma/show/{id}', [ProformaController::class, 'show'])->name('proforma.show');
+Route::get('/proforma/edit/{hash}', [ProformaController::class, 'edit'])->name('proforma.edit');
+Route::get('proforma/data', [ProformaController::class, 'getProformaData'])->name('proforma.data');
+Route::get('/approved-proforma/data', [ProformaController::class, 'getApprovedData'])->name('approved.data');
+// APPROVE
+Route::post('proforma/approve/{id}', [TransactionController::class, 'approveProforma'])->name('proforma.approve');
 
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
@@ -96,11 +113,3 @@ Route::resource('users', UserController::class);
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
 Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
-
-// Proforma Invoice Routes
-Route::resource('proforma_invoice', ProformaInvoiceController::class);
-Route::get('proforma_invoice/{id}/generate-invoice', [ProformaInvoiceController::class, 'generateInvoice'])->name('proforma_invoice.generateInvoice');
-Route::get('/get-consignees/{client_id}', [App\Http\Controllers\ProformaInvoiceController::class, 'getConsignees']);
-Route::get('/get-detail-products', [ProformaInvoiceController::class, 'getDetailProducts'])->name('get-detail-products');
-Route::get('/proforma-invoice', [ProformaInvoiceController::class, 'index'])->name('proforma_invoice.index');
-Route::get('/proforma-invoice/{id}', [ProformaInvoiceController::class, 'show'])->name('proforma-invoice.show');

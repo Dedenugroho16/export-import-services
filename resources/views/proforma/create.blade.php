@@ -18,7 +18,7 @@
                                     {{ session('success') }}
                                 </div>
                             @endif
-                            
+
                             @if ($errors->any())
                                 <div class="alert alert-danger">
                                     <ul>
@@ -100,11 +100,15 @@
                                 </div>
                             </div>
 
-                            <form id="formProformaInvoice" method="POST" action="{{ route('proforma_invoice.store') }}">
+                            <form id="formProformaInvoice" method="POST" action="{{ route('proforma.store') }}">
                                 @csrf
                                 <input type="date" name="date" id="date" hidden>
                                 <input type="text" name="code" id="code" hidden>
                                 <input type="text" name="number" id="number" hidden>
+                                <input type="date" name="stuffing_date" id="stuffing_date" hidden>
+                                <input type="text" name="bl_number" id="bl_number" hidden>
+                                <input type="text" name="container_number" id="container_number" hidden>
+                                <input type="text" name="seal_number" id="seal_number" hidden>
 
                                 <!-- Bagian 2: Consignee, Notify, Client -->
                                 <div class="card mt-3">
@@ -409,8 +413,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <input type="checkbox" name="approved" id="approved" value="1"> Approved
                             </form>
 
                             <form id="formDetailTransaction" method="POST"
@@ -421,7 +423,9 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end">
-                                <a href="{{ route('proforma_invoice.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <p id="error-message" style="color: red;">Harap menginput negara terlebih
+                                    dahulu</p>
+                                <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Tambah</button>
                             </div>
                         </div>
@@ -546,6 +550,26 @@
 
         // modal datatables
         $(document).ready(function() {
+            // Saat halaman dimuat, tombol "Tambah" dinonaktifkan
+            $('#submitButton').prop('disabled', true);
+
+            // Deteksi perubahan pada dropdown negara
+            $('#country').on('change', function() {
+                // Ambil value yang dipilih
+                var selectedValue = $(this).val();
+
+                if (selectedValue === "") {
+                    // Jika belum ada negara yang dipilih, tombol "Tambah" dinonaktifkan
+                    $('#submitButton').prop('disabled', true);
+                    $('#error-message').show();
+                } else {
+                    // Jika negara sudah dipilih, tombol "Tambah" diaktifkan
+                    $('#submitButton').prop('disabled', false);
+                    // Sembunyikan pesan error
+                    $('#error-message').hide();
+                }
+            });
+
             var table = $('#detailProductTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -917,8 +941,63 @@
                 $('#formProformaInvoice').submit();
              });
 
+<<<<<<< HEAD:resources/views/proforma_invoice/create.blade.php
             
 
+=======
+            $('#submitButton').click(function() {
+                var formProformaInvoice = $('#formProformaInvoice');
+                var formDetailTransaction = $('#formDetailTransaction');
+
+                // Nonaktifkan tombol submit
+                $('#submitButton').prop('disabled', true);
+
+                // Submit formProformaInvoice terlebih dahulu
+                $.ajax({
+                    url: formProformaInvoice.attr('action'),
+                    method: formProformaInvoice.attr('method'),
+                    data: formProformaInvoice.serialize(),
+                    success: function(response) {
+                        // Pastikan response.id berisi ID transaksi yang valid
+                        if (response.id) {
+                            // Set ID transaksi ke input hidden pada form detail transaksi
+                            $('#id_transaction').val(response.id); // Isi ID transaksi pada form
+
+                            // Selanjutnya submit formDetailTransaction
+                            $.ajax({
+                                url: formDetailTransaction.attr('action'),
+                                method: formDetailTransaction.attr('method'),
+                                data: formDetailTransaction.serialize(),
+                                success: function(response) {
+                                    alert('Berhasil menambahkan proforma invoice');
+                                    location
+                                        .reload(); // Reload halaman setelah alert
+                                },
+                                error: function(xhr) {
+                                    // Tangani error untuk detail transaksi
+                                    alert('Error saving detail transaction: ' + xhr
+                                        .responseJSON.message);
+                                },
+                                complete: function() {
+                                    // Aktifkan kembali tombol setelah selesai (sukses/gagal)
+                                    $('#submitButton').prop('disabled', false);
+                                }
+                            });
+                        } else {
+                            alert('Transaction ID is missing');
+                            // Aktifkan kembali tombol jika ID tidak valid
+                            $('#submitButton').prop('disabled', false);
+                        }
+                    },
+                    error: function(xhr) {
+                        // Tangani error untuk transaksi
+                        alert('Error saving transaction: ' + xhr.responseJSON.message);
+                        // Aktifkan kembali tombol jika error terjadi
+                        $('#submitButton').prop('disabled', false);
+                    }
+                });
+            });
+>>>>>>> f4bbe5a778064ac5e75891e3276e6472acdd1c31:resources/views/proforma/create.blade.php
         });
     </script>
 @endsection

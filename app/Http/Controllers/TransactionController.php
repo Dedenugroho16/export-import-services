@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Helpers\IdHashHelper;
+use App\Helpers\NumberToWords;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Commodity;
@@ -16,6 +18,32 @@ use Yajra\DataTables\Facades\DataTables;
 
 class TransactionController extends Controller
 {
+    // fungsi - fungsi invoice
+    public function getInvoice()
+    {
+        $invoices = Transaction::with(['client', 'consignee'])
+            ->where('approved', 1) // Mengambil transaksi yang disetujui
+            ->whereNotNull('stuffing_date') // Mengambil transaksi yang stuffing_date tidak null
+            ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
+
+        return DataTables::of($invoices)
+            ->addIndexColumn() // Menambahkan kolom nomor urut
+            ->addColumn('client', function ($row) {
+                return $row->client->name; // Mengambil nama client dari relasi
+            })
+            ->addColumn('consignee', function ($row) {
+                return $row->consignee->name; // Mengambil nama consignee dari relasi
+            })
+            ->addColumn('aksi', function ($row) {
+                $hashId = IdHashHelper::encode($row->id);
+                // Tombol aksi untuk melihat detail
+                $detailInvoice = '<a href="' . route('transaction.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a> ';
+                $packingList = '<a href="' . route('packingList.show', $hashId) . '" class="btn btn-sm btn-success">Packing List</a>';
+                return $detailInvoice . $packingList;
+            })
+            ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
+            ->make(true);
+    }
 
     public function index()
     {
@@ -23,34 +51,16 @@ class TransactionController extends Controller
         return view('transaction.index', compact('transactions'));
     }
 
-
-    public function create()
+    public function create($id)
     {
-        $consignees = Consignee::all();
-        $clients = Client::all();
-        $products = Product::all();
-        $commodities = Commodity::all();
-        $country = Country::all();
+        // Logika untuk membuat invoice berdasarkan id proforma yang dipilih
+        $transaction = Transaction::findOrFail($id);
 
-        // Mengambil number terakhir dari tabel transaction
-        $lastTransaction = Transaction::orderBy('number', 'desc')->first();
+        // Ambil semua detail transaksi yang berhubungan dengan proforma tersebut
+        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 
-        // Jika belum ada data di kolom number, mulai dari 0001
-        if ($lastTransaction === null || empty($lastTransaction->number)) {
-            $newNumber = '0001';
-        } else {
-            // Mengambil number terakhir dan menambah 1, pastikan tetap 4 digit
-            $lastNumber = intval($lastTransaction->number);
-            $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-        }
-
-        // Mengambil dua digit tanggal saat ini
-        $twoDigitDate = date('d');
-
-        // Menggabungkan $newNumber dengan dua digit tanggal
-        $formattedNumber = $newNumber . '/' . $twoDigitDate;
-
-        return view('transaction.create', compact('consignees', 'clients', 'products', 'commodities', 'country', 'formattedNumber'));
+        // Kembalikan view yang sesuai dan oper data proforma
+        return view('transaction.create', compact('transaction', 'detailTransactions'));
     }
 
     // method get Consignee
@@ -64,35 +74,70 @@ class TransactionController extends Controller
     }
 
     // MENGAMBIL DATA DETAIL PRODUCTS
-    public function getDetailProducts(Request $request)
-    {
-        // Jika tidak ada id_product yang dikirim, kembalikan DataTables kosong
-        if (!$request->has('id_product') || empty($request->id_product)) {
-            return datatables()->of(collect([])) // Mengirimkan data kosong
-                ->addColumn('action', function ($row) {
-                    return ''; // Kolom action kosong
-                })
-                ->make(true);
-        }
+    // public function getDetailProducts(Request $request)
+    // {
+    //     // Jika tidak ada id_product yang dikirim, kembalikan DataTables kosong
+    //     if (!$request->has('id_product') || empty($request->id_product)) {
+    //         return datatables()->of(collect([])) // Mengirimkan data kosong
+    //             ->addColumn('action', function ($row) {
+    //                 return ''; // Kolom action kosong
+    //             })
+    //             ->make(true);
+    //     }
 
-        // Query ke DetailProduct jika id_product ada
-        $query = DetailProduct::where('id_product', $request->id_product);
+    //     // Query ke DetailProduct jika id_product ada
+    //     $query = DetailProduct::where('id_product', $request->id_product);
 
-        // Jika query tidak mengembalikan data, DataTables akan tetap mengirimkan response
-        return datatables()->of($query)
-            ->addColumn('action', function ($row) {
-                $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
-                return $btn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-    }
+    //     // Jika query tidak mengembalikan data, DataTables akan tetap mengirimkan response
+    //     return datatables()->of($query)
+    //         ->addColumn('action', function ($row) {
+    //             $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
+    //             return $btn;
+    //         })
+    //         ->rawColumns(['action'])
+    //         ->make(true);
+    // }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($hash)
+    {
+        $id = IdHashHelper::decode($hash);
+        $transaction = Transaction::findOrFail($id);
+
+        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+
+        // Panggil helper untuk mengonversi total menjadi kata
+        $totalInWords = NumberToWords::convert($transaction->total);
+
+
+        return view('transaction.show', compact('transaction', 'detailTransactions', 'totalInWords'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        // Validasi data input
         $validatedData = $request->validate([
             'date' => 'required|date',
             'code' => 'required|string|max:255',
@@ -120,41 +165,26 @@ class TransactionController extends Controller
             'approved' => 'nullable|boolean',
         ]);
 
-        // Simpan transaksi
-        $transaction = Transaction::create($validatedData);
+        try {
+            // Cari transaksi berdasarkan ID
+            $transaction = Transaction::findOrFail($id);
 
-        // Kembalikan response JSON dengan ID transaksi yang baru
-        return response()->json(['id' => $transaction->id], 201);
-    }
+            // Update data transaksi
+            $transaction->update($validatedData);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $transaction = Transaction::findOrFail($id);
+            // Kembalikan response JSON sukses dengan ID transaksi yang diperbarui
+            return response()->json([
+                'success' => true,
+                'message' => 'Invoice berhasil dibuat!',
+            ], 200);
 
-        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
-        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
-
-        
-        return view('transaction.show', compact('transaction', 'detailTransactions'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        } catch (\Exception $e) {
+            \Log::error('Terjadi kesalahan saat membuat invoice: ', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat invoice: ' . $e->getMessage()  // Pesan error diubah
+            ], 500);
+        }
     }
 
     /**
@@ -164,4 +194,19 @@ class TransactionController extends Controller
     {
         //
     }
+    // Akhir fungsi - fungsi invoice
+
+    // fungsi tampilan Packing List
+    public function packingListShow($hash)
+    {
+        $id = IdHashHelper::decode($hash);
+        $transaction = Transaction::findOrFail($id);
+
+        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+
+
+        return view('packing_list.show', compact('transaction', 'detailTransactions'));
+    }
+    // akhir fungsi tampilan Packing List
 }

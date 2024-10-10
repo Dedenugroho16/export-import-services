@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Detail Invoice')
+@section('title', 'Packing List')
 
 @section('content')
     <div class="page-body">
@@ -37,6 +37,7 @@
                                     </ul>
                                 </div>
                             @endif
+
                             <!-- Hader -->
                             <div class="container">
                                 <div class="d-flex justify-content-between align-items-start">
@@ -77,7 +78,7 @@
                             
                             <div class="row mt-6 mb-5">
                                 <div class="col-md-12 text-center">
-                                    <h1>INVOICE</h1>
+                                    <h1>PACKING LIST</h1>
                                 </div>
                             </div>
 
@@ -327,9 +328,7 @@
                                             <th class="text-center">Item Description</th>
                                             <th class="text-center">Carton(pcs)</th>
                                             <th class="text-center">Inner(pcs)</th>
-                                            <th class="text-center">Unit Price(USD/KG)</th>
                                             <th class="text-center">Net Weight(KG)</th>
-                                            <th class="text-center">Price Amount(USD)</th>
                                         </thead>
                                         <tbody id="detail-rows" style="font-size: 12px">
                                             @foreach ($detailTransactions as $detailTransaction)
@@ -337,28 +336,16 @@
                                                     <td>{{ $detailTransaction->detailProduct->name }}</td>
                                                     <td class="carton">{{ $detailTransaction->carton }}</td>
                                                     <td class="inner">{{ $detailTransaction->inner_qty_carton }}</td>
-                                                    <td>{{ $detailTransaction->unit_price }}</td>
                                                     <td class="net-weight">{{ $detailTransaction->net_weight }}</td>
-                                                    <td class="price-amount">{{ $detailTransaction->price_amount }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                         <tfoot>
                                             <tr id="totalRow" style="font-weight: bold;">
                                                 <td class="text-center">Amount</td>
-                                                <td class="text-center bg-primary text-white" id="totalCarton">0</td>
-                                                <td class="text-center bg-primary text-white" id="totalInner">0</td>
-                                                <td class="text-center bg-primary text-white"></td>
-                                                <td class="text-center bg-primary text-white" id="totalNetWeight">0</td>
-                                                <td class="text-center bg-primary text-white" id="PriceAmount">0</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-end" colspan="5">FREIGHT COST</td>
-                                                <td class="text-center">{{ $transaction->freight_cost }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-end" colspan="5">TOTAL</td>
-                                                <td class="text-center bg-primary text-white">{{ $transaction->total }}</td>
+                                                <td class="text-center bg-success text-white" id="totalCarton">0</td>
+                                                <td class="text-center bg-success text-white" id="totalInner">0</td>
+                                                <td class="text-center bg-success text-white" id="totalNetWeight">0</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -367,10 +354,6 @@
                             {{-- akhir tabel detail transaction --}}
                             <!-- Teks total dalam kata -->
                             <div class="text-end mt-3">
-                                <div>
-                                    <p><strong><em>{{ $totalInWords }} USD</em></strong></p>
-                                    <p><em>Payment Condition: FOB (Free on Board)</em></p>
-                                </div>
                                 <div class="mt-7">
                                     <p>Approved By</p>
                                     <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80">

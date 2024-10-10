@@ -1,11 +1,11 @@
 @extends('layouts.layout')
-@section('title', 'Detail Invoice')
+@section('title', 'Detail Proforma Invoice')
 
 @section('content')
     <div class="page-body">
         <div class="container-xl">
             <div class="mb-4 mt-4">
-                <a href="{{ route('transaction.index') }}" class="btn btn-primary">
+                <a href="{{ route('proforma.index') }}" class="btn btn-primary">
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
                     Kembali
                 </a>
@@ -37,6 +37,7 @@
                                     </ul>
                                 </div>
                             @endif
+
                             <!-- Hader -->
                             <div class="container">
                                 <div class="d-flex justify-content-between align-items-start">
@@ -56,17 +57,17 @@
                                                 <tr>
                                                     <td><strong>Date</strong></td>
                                                     <td><strong>:</strong></td>
-                                                    <td class="text-end">{{ $transaction->date }}</td>
+                                                    <td class="text-end">{{ $ApprovedData->date }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Code</strong></td>
                                                     <td><strong>:</strong></td>
-                                                    <td class="text-end">{{ $transaction->code }}</td>
+                                                    <td class="text-end">{{ $ApprovedData->code }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Number</strong></td>
                                                     <td><strong>:</strong></td>
-                                                    <td class="text-end">{{ $transaction->number }}</td>
+                                                    <td class="text-end">{{ $ApprovedData->number }}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -77,7 +78,7 @@
                             
                             <div class="row mt-6 mb-5">
                                 <div class="col-md-12 text-center">
-                                    <h1>INVOICE</h1>
+                                    <h1>PROFORMA INVOICE</h1>
                                 </div>
                             </div>
 
@@ -91,9 +92,9 @@
                                         </div>
                                         <div class="card-body p-1">
                                             <p>
-                                                {{ $transaction->consignee->name }} <br>
-                                                {{ $transaction->consignee->address }} <br>
-                                                {{ $transaction->consignee->tel }}
+                                                {{ $ApprovedData->consignee->name }} <br>
+                                                {{ $ApprovedData->consignee->address }} <br>
+                                                {{ $ApprovedData->consignee->tel }}
                                             </p>
                                         </div>
                                     </div>
@@ -107,7 +108,7 @@
                                         </div>
                                         <div class="card-body p-1">
                                             <p>
-                                                {{ $transaction->notify }} <br>
+                                                {{ $ApprovedData->notify }} <br>
                                             </p>
                                         </div>
                                     </div>
@@ -121,9 +122,9 @@
                                         </div>
                                         <div class="card-body p-1">
                                             <p>
-                                                {{ $transaction->client->name }} <br>
-                                                {{ $transaction->client->address }} <br>
-                                                {{ $transaction->client->tel }}
+                                                {{ $ApprovedData->client->name }} <br>
+                                                {{ $ApprovedData->client->address }} <br>
+                                                {{ $ApprovedData->client->tel }}
                                             </p>
                                         </div>
                                     </div>
@@ -139,7 +140,7 @@
                                             <h5 class="card-title">Port of loading</h5>
                                         </div>
                                         <div class="card-body p-1">
-                                            <p>{{ $transaction->port_of_loading }}</p>
+                                            <p>{{ $ApprovedData->port_of_loading }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -151,7 +152,7 @@
                                             <h5 class="card-title">Place of receipt</h5>
                                         </div>
                                         <div class="card-body p-1">
-                                            <p>{{ $transaction->place_of_receipt }}</p>
+                                            <p>{{ $ApprovedData->place_of_receipt }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +164,7 @@
                                             <h5 class="card-title">Port of discharge</h5>
                                         </div>
                                         <div class="card-body p-1">
-                                            <p>{{ $transaction->port_of_discharge }}</p>
+                                            <p>{{ $ApprovedData->port_of_discharge }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -175,7 +176,7 @@
                                             <h5 class="card-title">Place of delivery</h5>
                                         </div>
                                         <div class="card-body p-1">
-                                            <p>{{ $transaction->place_of_delivery }}</p>
+                                            <p>{{ $ApprovedData->place_of_delivery }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -194,7 +195,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->product->name }}</p>
+                                                <p>{{ $ApprovedData->product->name }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -205,7 +206,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->commodity->name }}</p>
+                                                <p>{{ $ApprovedData->commodity->name }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -216,29 +217,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->container }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Net Weight</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->net_weight }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Gross Weight</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->gross_weight }}</p>
+                                                <p>{{ $ApprovedData->container }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -249,7 +228,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->payment_term }}</p>
+                                                <p>{{ $ApprovedData->payment_term }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -258,51 +237,26 @@
                                     <div class="col-6">
                                         <div class="row mt-2">
                                             <div class="col-4">
-                                                <p><strong>Stuffing Date</strong></p>
+                                                <p><strong>Net Weight</strong></p>
                                             </div>
                                             <div class="col-2 text-center">
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->stuffing_date }}</p>
+                                                <p>{{ $ApprovedData->net_weight }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
                                             <div class="col-4">
-                                                <p><strong>BL Number</strong></p>
+                                                <p><strong>Gross Weight</strong></p>
                                             </div>
                                             <div class="col-2 text-center">
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->bl_number }}</p>
+                                                <p>{{ $ApprovedData->gross_weight }}</p>
                                             </div>
                                         </div>
-
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Container Number</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->container_number }}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Seal Number</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->seal_number }}</p>
-                                            </div>
-                                        </div>
-
                                         <div class="row mt-2">
                                             <div class="col-4">
                                                 <p><strong>Product NCM</strong></p>
@@ -311,7 +265,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $transaction->product_ncm }}</p>
+                                                <p>{{ $ApprovedData->product_ncm }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -334,7 +288,9 @@
                                         <tbody id="detail-rows" style="font-size: 12px">
                                             @foreach ($detailTransactions as $detailTransaction)
                                                 <tr>
-                                                    <td>{{ $detailTransaction->detailProduct->name }}</td>
+                                                    <td><strong>{{ $detailTransaction->detailProduct->name }}
+                                                    {{ $detailTransaction->detailProduct->pcs }} PCS/ {{ $detailTransaction->qty }} KG</strong><br>
+                                                    {{ $detailTransaction->detailProduct->dimension }} {{ $detailTransaction->detailProduct->color }} {{ $detailTransaction->detailProduct->type }}</td>
                                                     <td class="carton">{{ $detailTransaction->carton }}</td>
                                                     <td class="inner">{{ $detailTransaction->inner_qty_carton }}</td>
                                                     <td>{{ $detailTransaction->unit_price }}</td>
@@ -346,19 +302,19 @@
                                         <tfoot>
                                             <tr id="totalRow" style="font-weight: bold;">
                                                 <td class="text-center">Amount</td>
-                                                <td class="text-center bg-primary text-white" id="totalCarton">0</td>
-                                                <td class="text-center bg-primary text-white" id="totalInner">0</td>
-                                                <td class="text-center bg-primary text-white"></td>
-                                                <td class="text-center bg-primary text-white" id="totalNetWeight">0</td>
-                                                <td class="text-center bg-primary text-white" id="PriceAmount">0</td>
+                                                <td class="text-center bg-danger text-white" id="totalCarton">0</td>
+                                                <td class="text-center bg-danger text-white" id="totalInner">0</td>
+                                                <td class="text-center bg-danger text-white"></td>
+                                                <td class="text-center bg-danger text-white" id="totalNetWeight">0</td>
+                                                <td class="text-center bg-danger text-white" id="PriceAmount">0</td>
                                             </tr>
                                             <tr>
                                                 <td class="text-end" colspan="5">FREIGHT COST</td>
-                                                <td class="text-center">{{ $transaction->freight_cost }}</td>
+                                                <td class="text-center">{{ $ApprovedData->freight_cost }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="text-end" colspan="5">TOTAL</td>
-                                                <td class="text-center bg-primary text-white">{{ $transaction->total }}</td>
+                                                <td class="text-center bg-danger text-white">{{ $ApprovedData->total }}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -383,7 +339,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            
                     </div>
                 </div>
             </div>
