@@ -76,6 +76,9 @@ Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->nam
 // Route untuk update transaksi
 Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 
+// Route untuk delete detail transaction
+Route::delete('/detail-transaction/delete/{id_detail_product}', [DetailTransactionController::class, 'destroy'])->name('detail-transaction.delete');
+
 // Route Packing List
 Route::get('/packing-list/{hashId}', [TransactionController::class, 'packingListShow'])->name('packingList.show');
 

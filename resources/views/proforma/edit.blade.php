@@ -101,10 +101,9 @@
                                 </div>
                             </div>
 
-                            <form id="formProformaInvoice" method="POST" action="{{ route('proforma.store') }}">
+                            <form id="formProformaInvoice" method="POST">
                                 @csrf
-                                <input type="date" name="date" id="date" value="{{ $transaction->date }}"
-                                    hidden>
+                                <input type="date" name="date" id="date" value="{{ $transaction->date }}" hidden>
                                 <input type="text" name="code" id="code" value="{{ $transaction->code }}"
                                     hidden>
                                 <input type="text" name="number" id="number" value="{{ $transaction->number }}"
@@ -401,8 +400,8 @@
                                                                     :</label>
                                                                 <input type="number" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
-                                                                    placeholder="Enter Freight Cost" min="0"
-                                                                    max="99999999.99">
+                                                                    placeholder="masukkan freight cost"
+                                                                    min="0" max="99999999.99">
                                                             </div>
                                                         </td>
                                                         <td></td>
@@ -413,7 +412,8 @@
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
                                                                 <label for="total" class="mr-2">Total:</label>
-                                                                <input type="number" step="0.01" class="form-control"
+                                                                <input type="number" step="0.01" class="form-control total" style="width: 150px;" disabled>
+                                                                <input type="hidden" step="0.01" class="form-control"
                                                                     id="total" name="total" style="width: 150px;">
                                                             </div>
                                                         </td>
@@ -566,7 +566,13 @@
         // modal datatables
         $(document).ready(function() {
             // Saat halaman dimuat, tombol "Tambah" dinonaktifkan
-            $('#submitButton').prop('disabled', true);
+            if ($('#country').val() === '') {
+                $('#submitButton').prop('disabled', true);
+            } else {
+                $('#submitButton').prop('disabled', false);
+                $('#error-message').hide();
+            }
+
 
             // Deteksi perubahan pada dropdown negara
             $('#country').on('change', function() {
@@ -777,31 +783,42 @@
 
                         if (response.length > 0) {
                             response.forEach(function(data) {
+                                var deleteUrl =
+                                    `/detail-transaction/delete/${data.id_detail_product}`; // Rute hapus
+
                                 var newRow = `
-                        <tr>
-                            <td class="text-center id-detail-product">${data.id_detail_product}</td>
-                            <td class="text-center">
-                                <strong>${data.product_name} 
-                                PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
-                                ${data.dimension} ${data.color} - ${data.type}
-                            </td>
-                            <td class="text-center">
-                                <input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" min="1" value="${data.carton}" />
-                            </td>
-                            <td class="text-center inner-result">${data.inner_qty_carton}</td>
-                            <td class="text-center price" data-price="${data.unit_price}">${data.unit_price}</td>
-                            <td class="text-center net-weight">${data.net_weight}</td>
-                            <td class="text-center price-result">${data.price_amount}</td>
-                            <td class="text-center">
-                                <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
-                            </td>
-                        </tr>
-                    `;
+                    <tr>
+                        <td class="text-center id-detail-product">${data.id_detail_product}</td>
+                        <td class="text-center">
+                            <strong>${data.product_name} 
+                            PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
+                            ${data.dimension} ${data.color} - ${data.type}
+                        </td>
+                        <td class="text-center">
+                            <input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" min="1" value="${data.carton}" />
+                        </td>
+                        <td class="text-center inner-result">${data.inner_qty_carton}</td>
+                        <td class="text-center price" data-price="${data.unit_price}">${data.unit_price}</td>
+                        <td class="text-center net-weight">${data.net_weight}</td>
+                        <td class="text-center price-result">${data.price_amount}</td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-danger btn-sm old-remove-btn" data-url="${deleteUrl}">Hapus</button>
+                        </td>
+                    </tr>
+                `;
 
                                 $('#tableDetailTransaction tbody').append(newRow);
+                                // Tambahkan event listener untuk tombol hapus
+                                $('#tableDetailTransaction').on('click', '.old-remove-btn',
+                                    function() {
+                                        var deleteUrl = $(this).data(
+                                            'url'); // Ambil URL dari atribut data-url
+                                        confirmDelete(
+                                            deleteUrl); // Panggil fungsi konfirmasi hapus
+                                    });
                             });
 
-                            // Add event listeners for input changes
+                            // Tambahkan event listener untuk perubahan input
                             addDynamicEventListeners();
                         } else {
                             $('#tableDetailTransaction tbody').append(`
@@ -811,11 +828,53 @@
                 `);
                         }
 
-                        // Panggil fungsi updateAmounts untuk menghitung total nilai setelah data dimuat
+                        // Panggil fungsi untuk menghitung total nilai setelah data dimuat
+                        updateFormDetailTransaction();
                         updateAmounts();
+                        updateTotals();
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching detail transactions:', error);
+                    }
+                });
+            }
+
+            function confirmDelete(deleteUrl) {
+                Swal.fire({
+                    title: 'Anda yakin?',
+                    text: "Data ini akan dihapus!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE',
+                            data: {
+                                _token: $('meta[name="csrf-token"]').attr(
+                                    'content') // Pastikan CSRF token disertakan
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Terhapus!',
+                                    'Data telah dihapus.',
+                                    'success'
+                                );
+                                loadDetailTransaction
+                                    (); // Panggil ulang untuk memuat ulang data tanpa yang dihapus
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Terjadi kesalahan saat menghapus data.',
+                                    'error'
+                                );
+                            }
+                        });
                     }
                 });
             }
@@ -841,6 +900,41 @@
 
                     // Call updateAmounts to recalculate the total for all rows
                     updateAmounts();
+                });
+            }
+
+            function updateFormDetailTransaction() {
+                // Clear previous inputs
+                $('#formDetailTransaction').empty();
+
+                $('#formDetailTransaction').append(`
+                    <input type="" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
+                `);
+
+                // Iterate through each row of the table
+                $('#tableDetailTransaction tbody tr').each(function(index, row) {
+                    // Skip the row if it is the 'No data' row
+                    if ($(row).attr('id') === 'nullDetailTransaction') return;
+
+                    var idDetailProduct = $(row).find('.id-detail-product').text().trim();
+                    var qty = $(row).find('.qty-input').val();
+                    var carton = $(row).find('.carton-input').val();
+                    var inner = $(row).find('.inner-result').text().trim();
+                    var unitPrice = $(row).find('.price').text().trim();
+                    var netWeight = $(row).find('.net-weight').text().trim();
+                    var priceAmount = $(row).find('.price-result').text().trim();
+
+                    // Create hidden inputs and append to the form
+                    $('#formDetailTransaction').append(`
+                                                                <!-- ID Detail Product (Validasi exists:detail_products,id) -->
+                                                                        <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+                                                                        <input type="" name="transactions[${index}][qty]" value="${qty}">
+                                                                        <input type="" name="transactions[${index}][carton]" value="${carton}">
+                                                                        <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+                                                                        <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
+                                                                        <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
+                                                                        <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
+                                                                `);
                 });
             }
 
@@ -914,22 +1008,34 @@
                 var total = priceAmount + freightCost;
 
                 $('#total').val(total);
-            }
-
-            // Panggil fungsi untuk memuat detail transaksi saat halaman dimuat
-            var transactionId = "{{ $transaction->id }}"; // Dapatkan id_transaction dari backend
-            if (transactionId) {
-                loadDetailTransaction(transactionId);
+                $('.total').val(total);
             }
 
             // Event listener untuk input Freight Cost
             $('#freight_cost').on('input', function() {
                 updateTotals();
             });
+
             // Event handler ketika tombol "Pilih" diklik
+            // Ambil daftar ID produk yang sudah dipilih dari backend
+            var selectedProductIds = @json($selectedProductIds);
+            var newSelectedProductIds = []; // Produk baru yang dipilih dalam sesi ini
+
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
                 var data = table.row($(this).parents('tr'))
                     .data(); // Mengambil data dari baris yang dipilih
+
+                // Cek apakah produk sudah ada di daftar yang sudah dipilih
+                if (selectedProductIds.includes(data.id) || newSelectedProductIds.includes(data.id)) {
+                    // Gunakan SweetAlert2 untuk menampilkan alert jika produk sudah dipilih
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Produk sudah dipilih',
+                        text: 'Detail product ini sudah dipilih. Silakan pilih produk lain.',
+                        confirmButtonText: 'OK'
+                    });
+                    return; // Hentikan proses jika produk sudah ada
+                }
 
                 // Membuat elemen tr untuk ditambahkan ke tabel #tableDetailTransaction
                 var newRow = `
@@ -951,6 +1057,9 @@
                                     </td>
                                 </tr>
                                 `;
+
+                // Tambahkan produk baru ke array newSelectedProductIds
+                newSelectedProductIds.push(data.id);
 
                 // Menambahkan elemen tr baru ke tabel #tableDetailTransaction
                 $('#tableDetailTransaction tbody').append(newRow);
@@ -983,12 +1092,12 @@
                 });
 
                 function updateFormDetailTransaction() {
-                    $('#formDetailTransaction').append(`
-                        <input type="hidden" name="id_transaction" id="id_transaction">
-                    `);
-
                     // Clear previous inputs
                     $('#formDetailTransaction').empty();
+
+                    $('#formDetailTransaction').append(`
+                    <input type="" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
+                `);
 
                     // Iterate through each row of the table
                     $('#tableDetailTransaction tbody tr').each(function(index, row) {
@@ -1006,13 +1115,13 @@
                         // Create hidden inputs and append to the form
                         $('#formDetailTransaction').append(`
                                                                 <!-- ID Detail Product (Validasi exists:detail_products,id) -->
-                                                                        <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-                                                                        <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
-                                                                        <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
-                                                                        <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-                                                                        <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
-                                                                        <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
-                                                                        <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
+                                                                        <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+                                                                        <input type="" name="transactions[${index}][qty]" value="${qty}">
+                                                                        <input type="" name="transactions[${index}][carton]" value="${carton}">
+                                                                        <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+                                                                        <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
+                                                                        <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
+                                                                        <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
                                                                 `);
                     });
                 }
@@ -1058,28 +1167,36 @@
 
                     // Update elemen dengan total baru
                     $('#total').val(total);
+                    $('.total').val(total);
                 }
 
                 // Event listener untuk input Freight Cost
                 $('#freight_cost').on('input', function() {
                     updateTotals();
-                });
+                });            
 
-                // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
+                // Event listener untuk tombol "Hapus" pada baris produk di tabel
                 $('#tableDetailTransaction tbody').on('click', '.remove-btn', function() {
-                    $(this).closest('tr').remove(); // Menghapus baris saat tombol Hapus diklik
+                    var row = $(this).closest('tr');
+                    var productId = row.find('.id-detail-product').text().trim();
+
+                    // Hapus produk dari array newSelectedProductIds jika produk dihapus dari tabel
+                    var index = newSelectedProductIds.indexOf(parseInt(productId));
+                    if (index !== -1) {
+                        newSelectedProductIds.splice(index,
+                            1); // Hapus ID dari array jika produk dihapus
+                    }
+
+                    // Hapus baris dari tabel
+                    row.remove();
 
                     // Jika tidak ada baris lagi, tambahkan kembali baris "Tidak ada barang"
                     if ($('#tableDetailTransaction tbody tr').length === 0) {
                         $('#tableDetailTransaction tbody').append(`
-                                                                    <tr id="nullDetailTransaction">
-                                                                        <td colspan="7" class="text-center">Tidak ada barang</td>
-                                                                    </tr>`);
+                <tr id="nullDetailTransaction">
+                    <td colspan="7" class="text-center">Tidak ada barang</td>
+                </tr>`);
                     }
-
-                    updateAmounts();
-                    updateTotals();
-                    updateFormDetailTransaction();
                 });
             });
             // Event handler ketika tombol "Pilih" diklik END
@@ -1102,6 +1219,8 @@
             setTodayDate();
 
             $('#submitButton').click(function() {
+                event.preventDefault(); // Mencegah form dari pengiriman
+
                 var formProformaInvoice = $('#formProformaInvoice');
                 var formDetailTransaction = $('#formDetailTransaction');
 

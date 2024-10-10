@@ -233,8 +233,8 @@ class ProformaController extends Controller
         // Dekode hash menjadi ID
         $id = IdHashHelper::decode($hash);
 
-        // Ambil transaksi berdasarkan ID
-        $transaction = Transaction::findOrFail($id);
+        // Ambil transaksi berdasarkan ID dan muat detail transaksi serta produk terkait
+        $transaction = Transaction::with(['detailTransactions'])->findOrFail($id);
 
         // Ambil data lain yang diperlukan untuk form
         $consignees = Consignee::all();
@@ -242,6 +242,9 @@ class ProformaController extends Controller
         $products = Product::all();
         $commodities = Commodity::all();
         $country = Country::all();
+
+        // Ambil ID produk dari detail transaksi yang sudah ada
+        $selectedProductIds = $transaction->detailTransactions->pluck('id_detail_product')->toArray();
 
         // mencari product dan commodity yang terpilih
         $productSelectedID = $transaction->id_product;
@@ -275,10 +278,6 @@ class ProformaController extends Controller
         // Ambil bagian pertama sebelum titik
         $formattedNumber = $parts[0]; // Hasil: 0002/09
 
-        // mencari detail product
-        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
-        $detailTransactions = DetailTransaction::where('id_transaction', $transaction->id)->get();
-
         // Kirim semua data yang dibutuhkan ke view
         return view('proforma.edit', compact(
             'transaction',  // Data transaksi yang perlu diedit
@@ -294,7 +293,9 @@ class ProformaController extends Controller
             'clientSelectedID',
             'clientSelectedAddress',
             'consigneeSelectedID',
-            'consigneeSelectedAddress'
+            'consigneeSelectedAddress',
+            'selectedProductIds',
+            'hash',
         ));
     }
 
