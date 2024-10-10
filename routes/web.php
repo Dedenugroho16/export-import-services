@@ -99,16 +99,14 @@ Route::post('/detailtransaction/store', [DetailTransactionController::class, 'st
 // Logout Route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Register Route (Hanya untuk tamu)
-Route::view('/register', 'auth.register')->name('register')->middleware('guest');
-Route::post('/register', [AuthController::class, 'register'])->middleware('guest');
-
 // Login Routes (Hanya untuk tamu)
 Route::view('/login', 'auth.login')->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 
 Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
 Route::resource('users', UserController::class);
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
 Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');

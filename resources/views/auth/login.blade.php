@@ -69,9 +69,6 @@
             </form>
           </div>
         </div>
-        <div class="text-center text-secondary mt-3">
-          Belum punya akun? <a href="{{ route('register') }}" tabindex="-1">Daftar</a>
-        </div>
       </div>
     </div>
     <!-- Libs JS -->
