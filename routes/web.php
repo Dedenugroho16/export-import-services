@@ -2,19 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ProformaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DetailProductController;
-use App\Http\Controllers\DetailTransactionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProformaInvoiceController;
+use App\Http\Controllers\DetailTransactionController;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
@@ -79,15 +80,15 @@ Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])
 Route::get('/packing-list/{hashId}', [TransactionController::class, 'packingListShow'])->name('packingList.show');
 
 // Proforma invoice route
-Route::get('proforma', [TransactionController::class, 'proformaIndex'])->name('proforma.index');
-Route::get('proforma/create', [TransactionController::class, 'proformaCreate'])->name('proforma.create');
-Route::post('/proforma/store', [TransactionController::class, 'proformaStore'])->name('proforma.store');
-Route::get('/proforma/show/{id}', [TransactionController::class, 'proformaShow'])->name('proforma.show');
-Route::get('/proforma/edit/{hash}', [TransactionController::class, 'proformaEdit'])->name('proforma.edit');
-Route::get('proforma/data', [TransactionController::class, 'getProformaData'])->name('proforma.data');
-Route::get('/approved-proforma/data', [TransactionController::class, 'getApprovedData'])->name('approved.data');
+Route::get('proforma', [ProformaController::class, 'index'])->name('proforma.index');
+Route::get('proforma/create', [ProformaController::class, 'create'])->name('proforma.create');
+Route::post('/proforma/store', [ProformaController::class, 'store'])->name('proforma.store');
+Route::get('/proforma/show/{id}', [ProformaController::class, 'show'])->name('proforma.show');
+Route::get('/proforma/edit/{hash}', [ProformaController::class, 'edit'])->name('proforma.edit');
+Route::get('proforma/data', [ProformaController::class, 'getProformaData'])->name('proforma.data');
+Route::get('/approved-proforma/data', [ProformaController::class, 'getApprovedData'])->name('approved.data');
 // APPROVE
-Route::post('proforma/approve/{id}', [TransactionController::class, 'approveProforma'])->name('proforma.approve');
+Route::post('proforma/approve/{id}', [ProformaController::class, 'approveProforma'])->name('proforma.approve');
 
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
