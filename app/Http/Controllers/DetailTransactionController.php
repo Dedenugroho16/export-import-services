@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Helpers\IdHashHelper;
 use App\Models\DetailTransaction;
 
 class DetailTransactionController extends Controller
@@ -82,8 +83,17 @@ class DetailTransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id_detail_product)
     {
-        //
+        // Mencari dan menghapus DetailTransaction berdasarkan id_detail_product
+        $detailTransaction = DetailTransaction::where('id_detail_product', $id_detail_product)->first();
+
+        if ($detailTransaction) {
+            $detailTransaction->delete(); // Hapus entri
+            return response()->json(['message' => 'Detail transaction deleted successfully.'], 200);
+        }
+
+        return response()->json(['message' => 'Detail transaction not found.'], 404);
     }
+
 }

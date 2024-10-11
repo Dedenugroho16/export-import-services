@@ -76,6 +76,9 @@ Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->nam
 // Route untuk update transaksi
 Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 
+// Route untuk delete detail transaction
+Route::delete('/detail-transaction/delete/{id_detail_product}', [DetailTransactionController::class, 'destroy'])->name('detail-transaction.delete');
+
 // Route Packing List
 Route::get('/packing-list/{hashId}', [TransactionController::class, 'packingListShow'])->name('packingList.show');
 
@@ -87,12 +90,14 @@ Route::get('/proforma/show/{id}', [ProformaController::class, 'show'])->name('pr
 Route::get('/proforma/edit/{hash}', [ProformaController::class, 'edit'])->name('proforma.edit');
 Route::get('proforma/data', [ProformaController::class, 'getProformaData'])->name('proforma.data');
 Route::get('/approved-proforma/data', [ProformaController::class, 'getApprovedData'])->name('approved.data');
+Route::get('/get-detail-transaction/{idTransaction}', [ProformaController::class, 'getDetailTransaction'])->name('get-detail-transaction');
 // APPROVE
-Route::post('proforma/approve/{id}', [TransactionController::class, 'approveProforma'])->name('proforma.approve');
+Route::post('proforma/approve/{id}', [ProformaController::class, 'approveProforma'])->name('proforma.approve');
 
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
 Route::get('/get-detail-products', [TransactionController::class, 'getDetailProducts'])->name('get-detail-products');
+Route::get('/edit-get-detail-products', [ProformaController::class, 'editGetDetailProducts'])->name('edit-get-detail-products');
 
 // Detail Transaction Route
 Route::post('/detailtransaction/store', [DetailTransactionController::class, 'store'])->name('detailtransaction.store');
