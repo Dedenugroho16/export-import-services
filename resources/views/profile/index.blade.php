@@ -68,29 +68,43 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="edit_name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="edit_name" name="name" value="{{ $user->name }}" required>
+                    <div class="text-center mb-3">
+                        <img id="currentProfilePicture" src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" alt="Profile Picture" class="img-fluid img-thumbnail rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+                        <p class="text-muted mt-2">Current Profile Picture</p>
                     </div>
-                    <div class="mb-3">
-                        <label for="edit_email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="edit_email" name="email" value="{{ $user->email }}" required>
+
+                    <div class="form-row">
+                        <div class="form-group mb-3">
+                            <label for="edit_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="edit_name" name="name" value="{{ $user->name }}" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="edit_email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="edit_email" name="email" value="{{ $user->email }}" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
+                    
+                    <div class="form-group mb-3">
                         <label for="edit_profile_picture" class="form-label">Upload Foto Profil</label>
-                        <input type="file" class="form-control" id="edit_profile_picture" name="profile_picture">
+                        <input type="file" class="form-control" id="edit_profile_picture" name="profile_picture" accept="image/*" onchange="previewProfilePicture(event)">
                         <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah foto.</small>
                     </div>
-                    <div class="mb-3">
-                        <label for="edit_password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="edit_password" name="password">
-                        <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password.</small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_password_confirmation" class="form-label">Konfirmasi Password</label>
-                        <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation">
+
+                    <!-- Align Password and Confirm Password -->
+                    <div class="form-row">
+                        <div class="form-group mb-3">
+                            <label for="edit_password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="edit_password" name="password">
+                            <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password.</small>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="edit_password_confirmation" class="form-label">Konfirmasi Password</label>
+                            <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation">
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Buttons at the top of the modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     <button type="submit" class="btn btn-primary">Update Profile</button>
@@ -100,14 +114,24 @@
     </div>
 </div>
 
-<!-- JavaScript to reset form -->
+<!-- JavaScript to reset form and preview image -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('editProfileModal');
         modal.addEventListener('hidden.bs.modal', function () {
             document.getElementById('editProfileForm').reset();
+            document.getElementById('currentProfilePicture').src = "{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}";
         });
     });
+
+    function previewProfilePicture(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('currentProfilePicture');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
 </script>
 
 <!-- CSS for improved appearance -->
@@ -124,14 +148,12 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
 
-    /* Ukuran lebih besar untuk card gambar profil */
     .profile-card {
         width: 200px;  
         height: 200px; 
         margin: 0 auto;
     }
 
-    /* Ukuran lebih besar untuk gambar profil */
     .profile-image {
         width: 100%;
         height: 100%;
@@ -140,7 +162,6 @@
         border: 4px solid #007bff; 
     }
 
-    /* Modern list style */
     .modern-list .list-group-item {
         background-color: #f8f9fa;
         border: none;
@@ -150,7 +171,6 @@
         border-radius: 10px;
     }
 
-    /* Header styling */
     .card-header {
         background: linear-gradient(90deg, #1A5276, #21618C); /* Gradasi biru nefi */
         color: white;
@@ -180,6 +200,26 @@
 
     .alert {
         border-radius: 10px;
+    }
+
+    /* Mengatur tinggi maksimum modal */
+    .modal-lg {
+        max-height: auto; /* Pastikan tidak ada scroll */
+    }
+
+    /* Gabungkan input form menjadi satu baris untuk menghemat ruang */
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .form-row .form-group {
+        flex: 0 0 48%; /* Membagi space menjadi dua bagian */
+    }
+
+    #currentProfilePicture {
+        width: 80px; /* Ukuran gambar dalam modal */
+        height: 80px;
     }
 </style>
 @endsection
