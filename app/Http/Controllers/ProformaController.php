@@ -205,8 +205,8 @@ class ProformaController extends Controller
     {
         $id = IdHashHelper::decode($hash);
         $proformaInvoice = Transaction::findOrFail($id);
-        $company = Company::findOrFail($id);
-
+        $company = Company::first(); // Ambil data pertama dari tabel company
+        
         // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 

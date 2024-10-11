@@ -43,7 +43,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <!-- Kolom Kiri: Logo dan Nama Perusahaan -->
                                     <div class="d-flex align-items-center">
-                                        <img src="{{ asset('dist/img/mefita-logo.png') }}" alt="logo" width="60">
+                                        <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
                                         <div style="padding-left: 10px;">
                                             <em style="font-size: 60px; font-weight:500;">PT. PSN</em><br>
                                             <p style="font-weight:500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>

@@ -8,6 +8,7 @@ use App\Helpers\NumberToWords;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Commodity;
+use App\Models\Company;
 use App\Models\Consignee;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -114,6 +115,7 @@ class TransactionController extends Controller
     {
         $id = IdHashHelper::decode($hash);
         $transaction = Transaction::findOrFail($id);
+        $company = Company::first(); // Ambil data pertama dari tabel company
 
         // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
@@ -122,7 +124,7 @@ class TransactionController extends Controller
         $totalInWords = NumberToWords::convert($transaction->total);
 
 
-        return view('transaction.show', compact('transaction', 'detailTransactions', 'totalInWords'));
+        return view('transaction.show', compact('transaction', 'detailTransactions', 'totalInWords', 'company'));
     }
 
     /**
@@ -202,12 +204,14 @@ class TransactionController extends Controller
     {
         $id = IdHashHelper::decode($hash);
         $transaction = Transaction::findOrFail($id);
+        $company = Company::first(); // Ambil data pertama dari tabel company
+
 
         // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 
 
-        return view('packing_list.show', compact('transaction', 'detailTransactions'));
+        return view('packing_list.show', compact('transaction', 'detailTransactions', 'company'));
     }
     // akhir fungsi tampilan Packing List
 }
