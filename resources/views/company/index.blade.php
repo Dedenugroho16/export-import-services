@@ -3,31 +3,19 @@
 @section('content')
 <div class="page-body">
     <div class="container-xl">
-        <div class="mb-4 d-flex justify-content-between align-items-center">
-            <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addCompanyModal">
-                Tambah Data Perusahaan
-            </button>            
-        </div>
-
         <!-- Modal -->
-        <div class="modal fade" id="addCompanyModal" tabindex="-1" aria-labelledby="addCompanyModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+        <div class="modal fade" id="companyModal" tabindex="-1" aria-labelledby="companyModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: #0054a6;">
-                        <h5 class="modal-title text-white" id="addCompanyModalLabel">Tambah Data Perusahaan</h5>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="companyModalLabel">Tambah/Edit Perusahaan</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <!-- Display Success Message -->
-                        @if (session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
-                        @endif
 
-                        <!-- Form inside Modal -->
-                        <form action="{{ route('company.store') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
+                    <form id="companyForm" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body">
+                            <input type="hidden" id="company_id" name="company_id">
 
                             <div class="mb-3">
                                 <label for="company_name" class="form-label">Nama Perusahaan</label>
@@ -148,14 +136,13 @@
                                 <label for="logo" class="form-label">Logo Perusahaan</label>
                                 <input type="file" id="logo" name="logo" class="form-control" accept="image/*">
                             </div>
-                            
-                            <!-- Modal Footer -->
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
-                                <button type="submit" class="btn btn-primary">Tambah</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -165,41 +152,20 @@
                 <div class="card mb-5">
                     <div class="card-header shadow-sm p-3 d-flex justify-content-between align-items-center">
                         <h3 class="card-title">Informasi Perusahaan</h3>
-                        <div class="dropdown">
-                            <a class="btn btn-light" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-dots-vertical">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                    <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                    <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                </svg>
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                        <path d="M16 5l3 3" />
-                                    </svg>
+                        <div>
+                            @if ($companyExists)
+                                <!-- Jika sudah ada data perusahaan, tampilkan tombol Edit -->
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#companyModal" onclick="openModal({{ $company->id }})">
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
                                     Edit
-                                </a>
-                                <form action="#" method="POST" onsubmit="return confirm('Apakah anda yakin ingin menghapus data ini?')" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="dropdown-item text-danger" style="border: none; background: none; display: block; width: 100%; text-align: left;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                            <path d="M4 7l16 0" />
-                                            <path d="M10 11l0 6" />
-                                            <path d="M14 11l0 6" />
-                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                        </svg>
-                                        Hapus
-                                    </button>
-                                </form>
-                            </ul>
+                                </button>
+                            @else
+                                <!-- Jika belum ada data perusahaan, tampilkan tombol Tambah -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#companyModal" onclick="openModal()">
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+                                    Buat
+                                </button>
+                            @endif
                         </div>
                     </div>
 
@@ -324,4 +290,67 @@
         </div>
     </div>
 </div>
+
+<script>
+    function openModal(company_id = null) {
+    if (company_id) {
+        // Edit Mode: Populate the form with existing data
+        fetch(`/company/${company_id}/edit`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('company_id').value = data.id;
+                document.getElementById('company_name').value = data.company_name;
+                document.getElementById('company_code').value = data.company_code;
+                document.getElementById('registration_number').value = data.registration_number;
+                document.getElementById('address').value = data.address;
+                document.getElementById('city').value = data.city;
+                document.getElementById('country').value = data.country;
+                document.getElementById('postal_code').value = data.postal_code;
+                document.getElementById('phone_number').value = data.phone_number;
+                document.getElementById('email').value = data.email;
+                document.getElementById('website').value = data.website;
+                document.getElementById('contact_person').value = data.contact_person;
+                document.getElementById('industry').value = data.industry;
+                document.getElementById('tax_id').value = data.tax_id;
+                document.getElementById('founded_date').value = data.founded_date;
+                document.getElementById('export_license_number').value = data.export_license_number;
+                document.getElementById('import_license_number').value = data.import_license_number;
+                document.getElementById('bank_account_details').value = data.bank_account_details;
+                document.getElementById('payment_terms').value = data.payment_terms;
+                document.getElementById('incoterms').value = data.incoterms;
+                document.getElementById('shipping_agent').value = data.shipping_agent;
+                document.getElementById('customs_broker').value = data.customs_broker;
+                document.getElementById('address').value = data.address;
+                document.getElementById('consignee_code').value = data.consignee_code;
+                document.getElementById('forwarding_agent').value = data.forwarding_agent;
+                // Populate other fields as necessary
+
+                // Set form action to update route
+                document.getElementById('companyForm').setAttribute('action', `/company/${company_id}`);
+                document.getElementById('companyForm').setAttribute('method', 'POST');
+
+                // Add hidden method for PUT request
+                let methodField = document.createElement('input');
+                methodField.setAttribute('type', 'hidden');
+                methodField.setAttribute('name', '_method');
+                methodField.setAttribute('value', 'PUT');
+                document.getElementById('companyForm').appendChild(methodField);
+            });
+    } else {
+        // Create Mode: Clear form
+        document.getElementById('companyForm').reset();
+
+        // Remove methodField for POST request
+        let methodField = document.querySelector('input[name="_method"]');
+        if (methodField) {
+            methodField.remove();
+        }
+
+        // Set form action to store route
+        document.getElementById('companyForm').setAttribute('action', `/company`);
+        document.getElementById('companyForm').setAttribute('method', 'POST');
+    }
+}
+
+</script>
 @endsection
