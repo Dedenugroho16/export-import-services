@@ -129,31 +129,6 @@ class ProformaController extends Controller
         return view('proforma.create', compact('consignees', 'clients', 'products', 'commodities', 'country', 'formattedNumber'));
     }
 
-    // mengambil detail product
-    public function getDetailProducts(Request $request)
-    {
-        // Jika tidak ada id_product yang dikirim, kembalikan DataTables kosong
-        if (!$request->has('id_product') || empty($request->id_product)) {
-            return datatables()->of(collect([])) // Mengirimkan data kosong
-                ->addColumn('action', function ($row) {
-                    return ''; // Kolom action kosong
-                })
-                ->make(true);
-        }
-
-        // Query ke DetailProduct jika id_product ada
-        $query = DetailProduct::where('id_product', $request->id_product);
-
-        // Jika query tidak mengembalikan data, DataTables akan tetap mengirimkan response
-        return datatables()->of($query)
-            ->addColumn('action', function ($row) {
-                $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
-                return $btn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-    }
-
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -220,14 +195,59 @@ class ProformaController extends Controller
         return view('proforma.show', compact('proformaInvoice', 'detailTransactions', 'totalInWords', 'approved', 'company'));
     }
 
+    // mengambil detail product
+    public function editGetDetailProducts(Request $request)
+    {
+        // Jika tidak ada id_product yang dikirim, kembalikan DataTables kosong
+        if (!$request->has('id_product') || empty($request->id_product)) {
+            return datatables()->of(collect([])) // Mengirimkan data kosong
+                ->addColumn('action', function ($row) {
+                    return ''; // Kolom action kosong
+                })
+                ->make(true);
+        }
+
+        // Query ke DetailProduct jika id_product ada
+        $query = DetailProduct::where('id_product', $request->id_product);
+
+        // Jika query tidak mengembalikan data, DataTables akan tetap mengirimkan response
+        return datatables()->of($query)
+            ->addColumn('action', function ($row) {
+                $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function getDetailTransaction($idTransaction)
+    {
+        // Query untuk mendapatkan detail transaksi berdasarkan id_transaction
+        $detailTransactions = DetailTransaction::where('id_transaction', $idTransaction)
+            ->join('detail_products', 'detail_transactions.id_detail_product', '=', 'detail_products.id')
+            ->select(
+                'detail_transactions.*',
+                'detail_products.name as product_name',
+                'detail_products.pcs',
+                'detail_products.dimension',
+                'detail_products.type',
+                'detail_products.color',
+                'detail_products.price as unit_price'
+            )
+            ->get();
+
+        // Kembalikan data dalam format JSON
+        return response()->json($detailTransactions);
+    }
+
 
     public function edit(string $hash)
     {
         // Dekode hash menjadi ID
         $id = IdHashHelper::decode($hash);
 
-        // Ambil transaksi berdasarkan ID
-        $transaction = Transaction::findOrFail($id);
+        // Ambil transaksi berdasarkan ID dan muat detail transaksi serta produk terkait
+        $transaction = Transaction::with(['detailTransactions'])->findOrFail($id);
 
         // Ambil data lain yang diperlukan untuk form
         $consignees = Consignee::all();
@@ -235,6 +255,9 @@ class ProformaController extends Controller
         $products = Product::all();
         $commodities = Commodity::all();
         $country = Country::all();
+
+        // Ambil ID produk dari detail transaksi yang sudah ada
+        $selectedProductIds = $transaction->detailTransactions->pluck('id_detail_product')->toArray();
 
         // mencari product dan commodity yang terpilih
         $productSelectedID = $transaction->id_product;
@@ -268,10 +291,6 @@ class ProformaController extends Controller
         // Ambil bagian pertama sebelum titik
         $formattedNumber = $parts[0]; // Hasil: 0002/09
 
-        // mencari detail product
-        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
-        $detailTransactions = DetailTransaction::where('id_transaction', $transaction->id)->get();
-
         // Kirim semua data yang dibutuhkan ke view
         return view('proforma.edit', compact(
             'transaction',  // Data transaksi yang perlu diedit
@@ -287,7 +306,9 @@ class ProformaController extends Controller
             'clientSelectedID',
             'clientSelectedAddress',
             'consigneeSelectedID',
-            'consigneeSelectedAddress'
+            'consigneeSelectedAddress',
+            'selectedProductIds',
+            'hash',
         ));
     }
 
