@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
+use App\Models\Company;
 use App\Models\DetailTransaction;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -204,6 +205,7 @@ class ProformaController extends Controller
     {
         $id = IdHashHelper::decode($hash);
         $proformaInvoice = Transaction::findOrFail($id);
+        $company = Company::findOrFail($id);
 
         // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
@@ -215,7 +217,7 @@ class ProformaController extends Controller
         $approved = $proformaInvoice->approved;
 
         // Kirimkan hasil ke view
-        return view('proforma.show', compact('proformaInvoice', 'detailTransactions', 'totalInWords', 'approved'));
+        return view('proforma.show', compact('proformaInvoice', 'detailTransactions', 'totalInWords', 'approved', 'company'));
     }
 
 
