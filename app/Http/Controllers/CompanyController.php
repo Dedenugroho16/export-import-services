@@ -52,18 +52,10 @@ class CompanyController extends Controller
         ]);
 
         // Upload logo jika ada
-        if ($request->hasFile('logo')) {
-            $logo = $request->file('logo');
-            // Dapatkan nama asli file
-            $originalName = pathinfo($logo->getClientOriginalName(), PATHINFO_FILENAME);
-            // Dapatkan ekstensi file
-            $extension = $logo->getClientOriginalExtension();
-            // Buat nama baru dengan menambahkan timestamp
-            $newName = $originalName . '_' . time() . '.' . $extension;
-            // Simpan file dengan nama baru
-            $logoPath = $logo->storeAs('logos', $newName, 'public');
-            $validatedData['logo'] = $logoPath; 
-        }
+    if ($request->hasFile('logo')) {
+        $logoPath = $request->file('logo')->store('logos', 'public'); // Simpan di folder storage/logos
+        $validatedData['logo'] = $logoPath; // Simpan path logo
+    }
         
 
         // Simpan data perusahaan
@@ -71,5 +63,6 @@ class CompanyController extends Controller
 
         return redirect()->route('company.index')->with('success', 'Company created successfully!');
     }
+    
 }
 
