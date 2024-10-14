@@ -169,7 +169,7 @@
                     </h6>
                     <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $transactionsCount }}</span></p>
                     <p class="card-text text-muted">Kelola transaksi Anda di sini.</p>
-                    <a href="{{ route('proforma.create') }}" class="btn btn-warning btn-sm">Lihat Transaksi</a>
+                    <a href="{{ route('proforma.index') }}" class="btn btn-warning btn-sm">Lihat Transaksi</a>
                 </div>
             </div>
         @endif
