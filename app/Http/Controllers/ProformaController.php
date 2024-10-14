@@ -44,17 +44,25 @@ class ProformaController extends Controller
                 $hashId = IdHashHelper::encode($row->id);
                 $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning">Lihat Detail</a> ';
                 $edit = ' <a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger">Edit</a> ';
-                return $lihatDetail . $edit . ' <button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button> ';
-            })
+                
+                // Cek apakah pengguna yang sedang login adalah admin atau director
+                $setujui = '';
+                if (in_array(auth()->user()->role, ['director', 'admin'])) {
+                    // Jika admin atau director, tampilkan tombol "Setujui"
+                    $setujui = ' <button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button>';
+                }
+                
+                return $lihatDetail . $edit . $setujui;
+            })            
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
             ->make(true);
     }
 
     public function approveProforma($id)
     {
-        // Cek apakah pengguna yang sedang login adalah director
-        if (auth()->user()->role !== 'director') {
-            // Jika bukan director, berikan respons error
+        // Cek apakah pengguna yang sedang login adalah director atau admin
+        if (!in_array(auth()->user()->role, ['director', 'admin'])) {
+            // Jika bukan director atau admin, berikan respons error
             return response()->json(['error' => 'Anda tidak memiliki akses untuk menyetujui Proforma.'], 403);
         }
 
@@ -66,6 +74,7 @@ class ProformaController extends Controller
         // Kembalikan respons sukses
         return response()->json(['success' => 'Proforma invoice disetujui.']);
     }
+
 
 
     // Mengambil Proforma yang telah disetujui
