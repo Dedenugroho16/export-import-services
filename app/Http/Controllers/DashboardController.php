@@ -9,6 +9,7 @@ use App\Models\Country;
 use App\Models\User;
 use App\Models\Branch;
 use App\Models\Transaction;
+use App\Models\Company;
 
 class DashboardController extends Controller
 {
@@ -21,6 +22,7 @@ class DashboardController extends Controller
         $usersCount = User::count();
         $branchesCount = Branch::count();
         $transactionsCount = Transaction::count();
+        $companyCount = Company::count(); 
 
         return view('dashboard.index', compact(
             'clientsCount', 
@@ -29,7 +31,8 @@ class DashboardController extends Controller
             'countriesCount', 
             'usersCount', 
             'branchesCount', 
-            'transactionsCount'
+            'transactionsCount',
+            'companyCount'
         ));
     }
 }
