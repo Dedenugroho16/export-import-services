@@ -228,6 +228,20 @@ class ProformaController extends Controller
     }
 
 
+    public function getSelectedProductIds(int $id)
+    {
+        // Ambil transaksi berdasarkan ID dan muat detail transaksi terkait
+        $transaction = Transaction::with(['detailTransactions'])->findOrFail($id);
+
+        // Ambil ID produk dari detail transaksi yang sudah ada
+        $selectedProductIds = $transaction->detailTransactions->pluck('id_detail_product')->toArray();
+
+        // Kembalikan response JSON
+        return response()->json([
+            'selectedProductIds' => $selectedProductIds
+        ]);
+    }
+
     public function edit(string $hash)
     {
         // Dekode hash menjadi ID

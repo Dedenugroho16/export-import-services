@@ -865,6 +865,9 @@
                                 );
 
                                 // Panggil ulang fungsi loadDetailTransaction dengan idTransaction yang diberikan
+                                // Panggil updateSelectedProductIds untuk menyinkronkan data dari server, passing ID transaksi
+                                updateSelectedProductIds(
+                                    idTransaction); // Pastikan transactionId ada di JavaScript
                                 loadDetailTransaction(idTransaction);
                                 updateFormDetailTransaction();
                             },
@@ -1018,8 +1021,25 @@
             });
 
             // Event handler ketika tombol "Pilih" diklik
+            function updateSelectedProductIds(transactionId) {
+                $.ajax({
+                    url: '/get-selected-product-ids/' + transactionId, // Menggunakan ID di URL
+                    type: 'GET',
+                    success: function(response) {
+                        // Update array selectedProductIds dengan data baru dari server
+                        selectedProductIds = response.selectedProductIds;
+
+                        console.log('Selected Product IDs updated: ',
+                            selectedProductIds); // Untuk debugging
+                    },
+                    error: function() {
+                        console.log('Failed to update selectedProductIds');
+                    }
+                });
+            }
+
             // Ambil daftar ID produk yang sudah dipilih dari backend
-            var selectedProductIds = @json($selectedProductIds);
+            // var selectedProductIds = @json($selectedProductIds);
             var newSelectedProductIds = []; // Produk baru yang dipilih dalam sesi ini
 
             // pilih button modal
