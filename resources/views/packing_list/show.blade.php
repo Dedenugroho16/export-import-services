@@ -4,10 +4,14 @@
 @section('content')
     <div class="page-body">
         <div class="container-xl">
-            <div class="mb-4 mt-4">
+            <div class="mb-4 mt-4 d-flex justify-content-between">
                 <a href="{{ route('transaction.index') }}" class="btn btn-primary">
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
                     Kembali
+                </a>
+                <a href="#" class="btn btn-warning">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-printer"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" /></svg>
+                    Ekspor PDF
                 </a>
             </div>
             <!-- Form Section -->
@@ -355,18 +359,32 @@
                             </div>
                             {{-- akhir tabel detail transaction --}}
                             <!-- Teks total dalam kata -->
-                            <div class="text-end mt-3">
+                            <div class=" mt-3">
                                 <div class="mt-7">
-                                    <p>Approved By</p>
-                                    <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80">
-                                    <div>
-                                        <p style="display: inline-block;">
-                                            <strong>Approver</strong><br>
-                                            <u style="width: 100%; display: block; border-bottom: 1px solid black;"></u>
-                                        </p>
-                                        <p><strong>Director</strong></p>
-                                    </div>
+                                    <table class="col-2 text-center" style="float: right;">
+                                        <tr>
+                                            <td>
+                                                <p>Approved By</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p style="margin: 0;  border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>Approver</strong><br></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><strong>Director</strong></p>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
