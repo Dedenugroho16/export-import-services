@@ -122,3 +122,6 @@ Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.de
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 // Route untuk memperbarui profil
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::get('/packing-list/{id}/export-pdf', [TransactionController::class, 'exportPdf'])->name('packing-list.exportPdf');
+Route::get('/packing-list/preview/{hashId}', [TransactionController::class, 'previewPdf'])->name('packing_list.preview');
