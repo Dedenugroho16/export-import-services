@@ -888,26 +888,29 @@
             }
 
             function addDynamicEventListeners() {
-                // Event listener for qty and carton input changes
-                $('#tableDetailTransaction tbody').on('input', '.qty-input, .carton-input', function() {
-                    var row = $(this).closest('tr');
-                    var qty = parseFloat(row.find('.qty-input').val()) || 0;
-                    var carton = parseFloat(row.find('.carton-input').val()) || 0;
-                    var unitPrice = parseFloat(row.find('.price').data('price')) || 0;
+                // Event listener for qty and carton input changes in #loadedData
+                $('#loadedData').on('input', '.qty-input, .carton-input', function() {
+                    var row = $(this).closest('tr'); // Ambil baris tempat input berada
+                    var qty = parseFloat(row.find('.qty-input').val()) || 0; // Ambil nilai qty
+                    var carton = parseFloat(row.find('.carton-input').val()) || 0; // Ambil nilai carton
+                    var unitPrice = parseFloat(row.find('.price').data('price')) ||
+                        0; // Ambil harga unit dari atribut data
 
-                    // Calculate the result based on qty and carton
-                    var innerResult = qty *
-                        carton; // Example logic, can be changed according to your requirements
-                    var netWeight = innerResult; // Assuming net weight is the same as innerResult
-                    var totalPrice = innerResult * unitPrice;
+                    // Lakukan perhitungan berdasarkan qty dan carton
+                    var innerResult = qty * carton; // Contoh logika, sesuaikan sesuai kebutuhan
+                    var netWeight = innerResult; // Asumsi net weight sama dengan innerResult
+                    var totalPrice = innerResult *
+                        unitPrice; // Hitung total harga berdasarkan hasil dan harga unit
 
-                    // Update the inner-result, net-weight, and price-result
-                    row.find('.inner-result').text(innerResult);
-                    row.find('.net-weight').text(netWeight);
-                    row.find('.price-result').text(Math.round(totalPrice));
+                    // Update kolom yang sesuai dalam baris
+                    row.find('.inner-result').text(innerResult); // Update hasil inner
+                    row.find('.net-weight').text(netWeight); // Update berat bersih
+                    row.find('.price-result').text(Math.round(
+                        totalPrice)); // Update harga total (dibulatkan)
 
-                    // Call updateAmounts to recalculate the total for all rows
+                    // Panggil fungsi untuk mengupdate jumlah total semua baris
                     updateAmounts();
+                    updateFormDetailTransaction();
                 });
             }
 
@@ -922,7 +925,7 @@
                 $('#formDetailTransaction').empty();
 
                 $('#formDetailTransaction').append(`
-        <input type="" class="bg-warning" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
+        <input type="hidden" class="bg-warning" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
     `);
 
                 // Iterate through each row of the table
@@ -931,12 +934,17 @@
                     if ($(row).attr('id') === 'nullDetailTransaction') return;
 
                     var idDetailProduct = $(row).find('.id-detail-product').text().trim();
-                    var qty = $(row).find('.qty-input').val();
-                    var carton = $(row).find('.carton-input').val();
-                    var inner = $(row).find('.inner-result').text().trim();
-                    var unitPrice = $(row).find('.price').text().trim();
-                    var netWeight = $(row).find('.net-weight').text().trim();
-                    var priceAmount = $(row).find('.price-result').text().trim();
+                    var qty = parseFloat($(row).find('.qty-input').val()) || 0; // Ambil nilai qty terbaru
+                    var carton = parseFloat($(row).find('.carton-input').val()) ||
+                    0; // Ambil nilai carton terbaru
+                    var inner = parseFloat($(row).find('.inner-result').text().trim()) ||
+                    0; // Ambil hasil inner
+                    var unitPrice = parseFloat($(row).find('.price').data('price')) ||
+                    0; // Ambil harga unit
+                    var netWeight = parseFloat($(row).find('.net-weight').text().trim()) ||
+                    0; // Ambil berat bersih
+                    var priceAmount = parseFloat($(row).find('.price-result').text().trim()) ||
+                    0; // Ambil harga total
 
                     // Create hidden inputs and append to the form
                     $('#formDetailTransaction').append(`
@@ -956,9 +964,9 @@
                 $('#tableDetailTransaction').on('click', '.old-remove-btn', function() {
                     var deleteUrl = $(this).data('url'); // Ambil URL dari atribut data-url
                     var idTransaction =
-                        '{{ $transaction->id }}'; // Ambil ID transaksi dari kontekstual transaksi
+                    '{{ $transaction->id }}'; // Ambil ID transaksi dari kontekstual transaksi
                     confirmDelete(deleteUrl,
-                        idTransaction); // Panggil fungsi dengan deleteUrl dan idTransaction
+                    idTransaction); // Panggil fungsi dengan deleteUrl dan idTransaction
                 });
             }
 
@@ -1153,13 +1161,13 @@
                         var priceAmount = $(row).find('.price-result').text().trim();
 
                         $('#newFormDetailTransaction').append(`
-                <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-                <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
-                <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
-                <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-                <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
-                <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
-                <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
+                <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+                <input type="" name="transactions[${index}][qty]" value="${qty}">
+                <input type="" name="transactions[${index}][carton]" value="${carton}">
+                <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+                <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
+                <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
+                <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
             `);
                     });
                 }
