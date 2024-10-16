@@ -18,12 +18,13 @@
         }
 
         .company-name {
-            font-size: 50px;
-            font-weight: 500;
+            font-size: 40px;
+            font-weight: bold;
         }
 
         .company-details p {
-            font-weight: 500;
+            font-weight: bolder;
+            font-size: 15px;
             margin: 0;
         }
 
@@ -67,11 +68,15 @@
     <div class="container">
         <table class="header-table">
             <tr>
-                <td style="width: 50%;">
-                    <em class="company-name">PT. PSN</em><br>
-                    <div class="company-details">
-                        <p>PRINGGONDANI SETIA NUSANTARA</p>
-                    </div>
+                <td style="width: 60%;">
+                    <table style="vertical-align: top">
+                        <td><img src="{{ $logo }}" alt="Company Logo" style="width: 50px;"></td>
+                        <td style="padding-top: 10px"><em class="company-name">PT. PSN</em><br>
+                            <div class="company-details">
+                                <p>PRINGGONDANI SETIA NUSANTARA</p>
+                            </div>
+                        </td>
+                    </table>
                 </td>
                 <td style="width: 50%;">
                     <table class="header-right-table">
@@ -96,7 +101,7 @@
         </table>
         <h2 style="text-align: center; margin-bottom: 50px">PACKING LIST</h2>
 
-        <div class="info-section" style="width: 100%; margin-bottom: 50px">
+        <div class="info-section" style="width: 100%; margin-bottom: 30px">
             <div class="card" style="display: inline-block; width: 30%; vertical-align: top; margin-right: 10px;">
                 <p style="font-weight: bold">Consignee</p>
                 <p>{{ $transaction->consignee->name }}</p>
@@ -115,7 +120,7 @@
             </div>
         </div>
 
-        <div class="section-tiga" style="width: 100%; text-align: center; margin-bottom: 50px">
+        <div class="section-tiga" style="width: 100%; text-align: center;">
             <div class="card" style="display: inline-block; width: 20%; margin: 10px;">
                 <p style="font-weight: bold">Port of loading</p>
                 <p>{{ $transaction->port_of_loading }}</p>
@@ -134,7 +139,7 @@
             </div>
         </div>
 
-        <div class="group-info" style="width: 100%; margin-top: 20px; margin-bottom: 50px">
+        <div class="group-info" style="width: 100%; margin-top: 20px; margin-bottom: 30px">
             <table style="width: 100%; border-collapse: collapse;">
                 <tr>
                     <!-- Tabel Kiri -->

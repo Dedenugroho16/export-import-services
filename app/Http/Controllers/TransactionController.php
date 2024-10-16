@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\DetailProduct;
 use App\Models\DetailTransaction;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -222,37 +223,25 @@ class TransactionController extends Controller
         // Decode hashed ID menggunakan IdHashHelper
         $decodedId = IdHashHelper::decode($hashId);
 
-        // Ambil data packing list berdasarkan decoded id
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
 
-        // Ambil data detail packing list jika ada
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
 
-        // Load view untuk PDF
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company'));
+        
+        $path = 'storage/'.$company->logo;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        
+        
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo'));
 
         // Setel orientasi halaman jika perlu (optional)
         $pdf->setPaper('A4', 'portrait');
 
         // Return file PDF dengan nama packing_list_<id>.pdf
-        return $pdf->download('packing_list_' . $hashId . '.pdf');
-    }
-
-    public function previewPdf($hashId)
-    {
-        // Decode hashed ID menggunakan IdHashHelper
-        $decodedId = IdHashHelper::decode($hashId);
-
-        // Ambil data packing list berdasarkan decoded id
-        $transaction = Transaction::where('id', $decodedId)->firstOrFail();
-
-        // Ambil data detail packing list jika ada
-        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
-        $company = Company::first();
-
-        // Load view untuk preview
-        return view('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'hashId'));
+        return $pdf->stream('packing_list_' . $hashId . '.pdf');
     }
 
 }
