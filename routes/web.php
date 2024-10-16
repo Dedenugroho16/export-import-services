@@ -124,8 +124,14 @@ Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.de
 
 // Route untuk menampilkan halaman profil
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+
 // Route untuk memperbarui profil
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
+// Route export to pdf
 Route::get('/packing-list/{id}/export-pdf', [TransactionController::class, 'exportPdf'])->name('packing-list.exportPdf');
-Route::get('/packing-list/preview/{hashId}', [TransactionController::class, 'previewPdf'])->name('packing_list.preview');
+Route::get('/packing-list/{id}/download-pdf', [TransactionController::class, 'downloadPdf'])->name('packing-list.downloadPdf');
+Route::get('/transaction/{id}/export-pdf', [TransactionController::class, 'transactionExportPdf'])->name('transaction.exportPdf');
+Route::get('/transaction/{id}/download-pdf', [TransactionController::class, 'transactionDownloadPdf'])->name('transaction.downloadPdf');
+Route::get('/proforma/{id}/export-pdf', [ProformaController::class, 'proformaExportPdf'])->name('proforma.exportPdf');
+Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaDownloadPdf'])->name('proforma.downloadPdf');

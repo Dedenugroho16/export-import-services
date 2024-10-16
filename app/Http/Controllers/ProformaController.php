@@ -15,10 +15,10 @@ use App\Helpers\NumberToWords;
 use App\Models\Company;
 use App\Models\DetailTransaction;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProformaController extends Controller
 {
-    // fungsi - fungsi Proforma Invoice
     public function index()
     {
         $proformaInvoice = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
@@ -174,34 +174,17 @@ class ProformaController extends Controller
         return response()->json(['id' => $transaction->id], 201);
     }
 
-    // public function show($hash)
-    // {
-    //     $id = IdHashHelper::decode($hash);
-    //     $ApprovedData = Transaction::findOrFail($id);
-
-    //     // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
-    //     $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
-
-    //     return view('proforma.show', compact('ApprovedData', 'detailTransactions'));
-    // }
-
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);
         $proformaInvoice = Transaction::findOrFail($id);
-        $company = Company::first(); // Ambil data pertama dari tabel company
-        
-        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $company = Company::first();
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
-
-        // Panggil helper untuk mengonversi total menjadi kata
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
-
-        // Kirim nilai approved ke view
         $approved = $proformaInvoice->approved;
+        $hashedId = IdHashHelper::encode($id);
 
-        // Kirimkan hasil ke view
-        return view('proforma.show', compact('proformaInvoice', 'detailTransactions', 'totalInWords', 'approved', 'company'));
+        return view('proforma.show', compact('proformaInvoice', 'detailTransactions', 'totalInWords', 'approved', 'company', 'hashedId'));
     }
 
     // mengambil detail product
@@ -339,5 +322,39 @@ class ProformaController extends Controller
     public function update(Request $request, string $id)
     {
         //
+    }
+
+    public function proformaExportPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $proformaInvoice = Transaction::where('id', $decodedId)->firstOrFail();
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first();      
+        $path = 'storage/'.$company->logo;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream('proforma' . $hashId . '.pdf');
+    }
+
+    public function proformaDownloadPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $proformaInvoice = Transaction::where('id', $decodedId)->firstOrFail();
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first();      
+        $path = 'storage/'.$company->logo;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('proforma' . $hashId . '.pdf');
     }
 }
