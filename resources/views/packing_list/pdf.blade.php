@@ -6,10 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .header-table {
+         .header-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
@@ -37,56 +34,26 @@
 
         .header-right-table td {
             padding: 3px 10px;
+            font-size: 13px;
         }
 
         .codeTable {
             text-align: right;
         }
 
-        /* Style for Consignee, Notify, and Client section */
-        .info-section {
-            width: 100%;
-            border-spacing: 20px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .info-section td {
-            vertical-align: top;
-            padding: 0 10px;
-        }
-
-        .info-section h3 {
-            margin: 0;
-            font-size: 16px;
-            text-transform: uppercase;
-        }
-
-        .info-section p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        /* To make sure the three sections are aligned side by side */
-        .consignee, .notify, .client {
-            width: 33%;
-        }
-
         .custom-table {
         width: 100%;
         border-collapse: collapse;
         font-size: 12px;
+        margin-bottom: 50px
     }
-
     .custom-table th, .custom-table td {
-        border: 1px solid #000;
+        border: 1px solid #666464;
         padding: 8px;
-
     }
     .custom-table tfoot td {
         font-weight: bold;
     }
-
     .custom-bg-success {
         background-color: #28a745;
         color: white;
@@ -94,195 +61,197 @@
     .text-center{
         text-align: center;
     }
-
     </style>
 </head>
 <body>
-    <table class="header-table">
-        <tr>
-            <td style="width: 50%;">
-                <em class="company-name">PT. PSN</em><br>
-                <div class="company-details">
-                    <p>PRINGGONDANI SETIA NUSANTARA</p>
-                </div>
-            </td>
-            <td style="width: 50%;">
-                <table class="header-right-table">
-                    <tr>
-                        <td>Date</td>
-                        <td>:</td>
-                        <td class="codeTable">{{ $transaction->date }}</td>
-                    </tr>
-                    <tr>
-                        <td>Code</td>
-                        <td>:</td>
-                        <td class="codeTable">{{ $transaction->code }}</td>
-                    </tr>
-                    <tr>
-                        <td>Number</td>
-                        <td>:</td>
-                        <td class="codeTable">{{ $transaction->number }}</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-
-    <h2 style="text-align: center">PACKING LIST</h2>
-
-    <div>
-        <table class="info-section">
+    <div class="container">
+        <table class="header-table">
             <tr>
-                <!-- Consignee Section -->
-                <td class="consignee">
-                    <h3>Consignee</h3>
-                    <p>{{ $transaction->consignee->name }}</p>
-                    <p>{{ $transaction->consignee->address }}</p>
-                    <p>{{ $transaction->consignee->tel }}</p>
+                <td style="width: 50%;">
+                    <em class="company-name">PT. PSN</em><br>
+                    <div class="company-details">
+                        <p>PRINGGONDANI SETIA NUSANTARA</p>
+                    </div>
                 </td>
-        
-                <!-- Notify Section -->
-                <td class="notify">
-                    <h3>Notify</h3>
-                    <p>{{ $transaction->notify }}</p>
-                </td>
-        
-                <!-- Client Section -->
-                <td class="client">
-                    <h3>Client</h3>
-                    <p>{{ $transaction->client->name }}</p>
-                    <p>{{ $transaction->client->address }}</p>
-                    <p>{{ $transaction->client->tel }}</p>
+                <td style="width: 50%;">
+                    <table class="header-right-table">
+                        <tr>
+                            <td>Date</td>
+                            <td>:</td>
+                            <td class="codeTable">{{ $transaction->date }}</td>
+                        </tr>
+                        <tr>
+                            <td>Code</td>
+                            <td>:</td>
+                            <td class="codeTable">{{ $transaction->code }}</td>
+                        </tr>
+                        <tr>
+                            <td>Number</td>
+                            <td>:</td>
+                            <td class="codeTable">{{ $transaction->number }}</td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
-    </div>
+        <h2 style="text-align: center; margin-bottom: 50px">PACKING LIST</h2>
 
-    <div>
-        <table style="width: 100%; border-spacing: 20px; text-align:center;">
-            <tr>
-                <!-- Consignee Section -->
-                <td style="vertical-align: top; width: 33%;">
-                    <h3>Port of loading</h3>
-                    <p><p>{{ $transaction->port_of_loading }}</p></p>
-                </td>
+        <div class="info-section" style="width: 100%; margin-bottom: 50px">
+            <div class="card" style="display: inline-block; width: 30%; vertical-align: top; margin-right: 10px;">
+                <p style="font-weight: bold">Consignee</p>
+                <p>{{ $transaction->consignee->name }}</p>
+                <p>{{ $transaction->consignee->address }}</p>
+                <p>{{ $transaction->consignee->tel }}</p>
+            </div>
+            <div class="card" style="display: inline-block; width: 30%; vertical-align: top; margin-right: 10px;">
+                <p style="font-weight: bold">Notify</p>
+                <p>{{ $transaction->notify }}</p>
+            </div>
+            <div class="card" style="display: inline-block; width: 30%; vertical-align: top;">
+                <p style="font-weight: bold">Client</p>
+                <p>{{ $transaction->client->name }}</p>
+                <p>{{ $transaction->client->address }}</p>
+                <p>{{ $transaction->client->tel }}</p>
+            </div>
+        </div>
+
+        <div class="section-tiga" style="width: 100%; text-align: center; margin-bottom: 50px">
+            <div class="card" style="display: inline-block; width: 20%; margin: 10px;">
+                <p style="font-weight: bold">Port of loading</p>
+                <p>{{ $transaction->port_of_loading }}</p>
+            </div>
+            <div class="card" style="display: inline-block; width: 20%; margin: 10px;">
+                <p style="font-weight: bold">Place of receipt</p>
+                <p>{{ $transaction->place_of_receipt }}</p>
+            </div>
+            <div class="card" style="display: inline-block; width: 20%; margin: 10px;">
+                <p style="font-weight: bold">Place of discharge</p>
+                <p>{{ $transaction->port_of_discharge }}</p>
+            </div>
+            <div class="card" style="display: inline-block; width: 20%; margin: 10px;">
+                <p style="font-weight: bold">Place of delivery</p>
+                <p>{{ $transaction->place_of_delivery }}</p>
+            </div>
+        </div>
+
+        <div class="group-info" style="width: 100%; margin-top: 20px; margin-bottom: 50px">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <!-- Tabel Kiri -->
+                    <td style="width: 60%; vertical-align: top;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 30%;"><strong>Name of Product</strong></td>
+                                <td style="width: 10%; text-align: center;">:</td>
+                                <td style="width: 60%;">{{ $transaction->product->name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Name of Commodity</strong></td>
+                                <td style="text-align: center;">:</td>
+                                <td>{{ $transaction->commodity->name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Container</strong></td>
+                                <td style="text-align: center;">:</td>
+                                <td>{{ $transaction->container }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Net Weight</strong></td>
+                                <td style="text-align: center;">:</td>
+                                <td>{{ $transaction->net_weight }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gross Weight</strong></td>
+                                <td style="text-align: center;">:</td>
+                                <td>{{ $transaction->gross_weight }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payment Term</strong></td>
+                                <td style="text-align: center;">:</td>
+                                <td>{{ $transaction->payment_term }}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <!-- Tabel Kanan -->
+                    <td style="width: 40%; vertical-align: top;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 40%;"><strong>Stuffing Date</strong></td>
+                                <td style="width: 10%; text-align: center;">:</td>
+                                <td style="width: 50%;">{{ $transaction->stuffing_date }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>BL Number</strong></td>
+                                <td style="text-align: center;">:</td>
+                                <td>{{ $transaction->bl_number }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Container Number</strong></td>
+                                <td style="text-align: center;">:</td>
+                                <td>{{ $transaction->container_number }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Seal Number</strong></td>
+                                <td style="text-align: center;">:</td>
+                                <td>{{ $transaction->seal_number }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Product NCM</strong></td>
+                                <td style="text-align: center;">:</td>
+                                <td>{{ $transaction->product_ncm }}</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
         
-                <!-- Notify Section -->
-                <td style="vertical-align: top; width: 33%;">
-                    <h3>Place of receipt</h3>
-                    <p>{{ $transaction->place_of_receipt }}</p>
-                </td>
-        
-                <!-- Client Section -->
-                <td style="vertical-align: top; width: 33%;">
-                    <h3>Port of discharge</h3>
-                    <p>{{ $transaction->port_of_discharge }}</p>
-                </td>
-            </tr>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th class="text-center">Item Description</th>
+                    <th class="text-center">Carton (pcs)</th>
+                    <th class="text-center">Inner (pcs)</th>
+                    <th class="text-center">Net Weight (KG)</th>
+                </tr>
+            </thead>
+            <tbody id="detail-rows">
+                @foreach ($detailTransactions as $detailTransaction)
+                <tr>
+                    <td class="custom-description">
+                        <strong>{{ $detailTransaction->detailProduct->name }}
+                        {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong><br>
+                        {{ $detailTransaction->detailProduct->dimension }} 
+                        {{ $detailTransaction->detailProduct->color }} 
+                        {{ $detailTransaction->detailProduct->type }}
+                    </td>
+                    <td>{{ $detailTransaction->carton }}</td>
+                    <td>{{ $detailTransaction->inner_qty_carton }}</td>
+                    <td>{{ $detailTransaction->net_weight }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr id="totalRow">
+                    <td class="text-center">Amount</td>
+                    <td class="text-center custom-bg-success" id="totalCarton">0</td>
+                    <td class="text-center custom-bg-success" id="totalInner">0</td>
+                    <td class="text-center custom-bg-success" id="totalNetWeight">0</td>
+                </tr>
+            </tfoot>
         </table>
+
+        <div>
+            <table style="width: 100%">
+                <tr>
+                    <td style="text-align: end"><p>Approver</p></td>
+                </tr>
+                <tr>
+                    <td style="text-align: end">Director</td>
+                </tr>
+            </table>
+        </div>
     </div>
-
-    <table class="header-table">
-        <tr>
-            <td style="width: 50%;">
-                <table>
-                    <tr>
-                        <td>Name of product</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->product->name }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Name of Commodity</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->commodity->name }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Container</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->container }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Net weight</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->net_weight }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Gross weight</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->gross_weight }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Payment term</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->payment_term }}</p></td>
-                    </tr>
-                </table>
-            </td>
-            <td style="width: 50%;">
-                <table>
-                    <tr>
-                        <td>Stuffing date</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->stuffing_date }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>BL Number</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->bl_number }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Container number</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->container_number }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Seal number</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->seal_number }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Product NCM</td>
-                        <td>:</td>
-                        <td><p style="margin: 0;">{{ $transaction->product_ncm }}</p></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-
-    <table class="custom-table">
-        <thead>
-            <tr>
-                <th class="text-center">Item Description</th>
-                <th class="text-center">Carton (pcs)</th>
-                <th class="text-center">Inner (pcs)</th>
-                <th class="text-center">Net Weight (KG)</th>
-            </tr>
-        </thead>
-        <tbody id="detail-rows">
-            @foreach ($detailTransactions as $detailTransaction)
-            <tr>
-                <td class="custom-description">
-                    <strong>{{ $detailTransaction->detailProduct->name }}
-                    {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong><br>
-                    {{ $detailTransaction->detailProduct->dimension }} 
-                    {{ $detailTransaction->detailProduct->color }} 
-                    {{ $detailTransaction->detailProduct->type }}
-                </td>
-                <td>{{ $detailTransaction->carton }}</td>
-                <td>{{ $detailTransaction->inner_qty_carton }}</td>
-                <td>{{ $detailTransaction->net_weight }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-        <tfoot>
-            <tr id="totalRow">
-                <td class="text-center">Amount</td>
-                <td class="text-center custom-bg-success" id="totalCarton">0</td>
-                <td class="text-center custom-bg-success" id="totalInner">0</td>
-                <td class="text-center custom-bg-success" id="totalNetWeight">0</td>
-            </tr>
-        </tfoot>
-    </table>
 </body>
 </html>
+
