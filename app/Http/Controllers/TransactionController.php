@@ -14,6 +14,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\DetailProduct;
 use App\Models\DetailTransaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -202,16 +203,56 @@ class TransactionController extends Controller
     // fungsi tampilan Packing List
     public function packingListShow($hash)
     {
-        $id = IdHashHelper::decode($hash);
+        $id = IdHashHelper::decode($hash); // Decode hash untuk mendapatkan ID
         $transaction = Transaction::findOrFail($id);
         $company = Company::first(); // Ambil data pertama dari tabel company
-
 
         // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
 
+        // Encode ID untuk mengirim ke tampilan
+        $hashedId = IdHashHelper::encode($id);
 
-        return view('packing_list.show', compact('transaction', 'detailTransactions', 'company'));
+        return view('packing_list.show', compact('transaction', 'detailTransactions', 'company', 'hashedId'));
     }
     // akhir fungsi tampilan Packing List
+
+    public function exportPdf($hashId)
+    {
+        // Decode hashed ID menggunakan IdHashHelper
+        $decodedId = IdHashHelper::decode($hashId);
+
+        // Ambil data packing list berdasarkan decoded id
+        $transaction = Transaction::where('id', $decodedId)->firstOrFail();
+
+        // Ambil data detail packing list jika ada
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first();
+
+        // Load view untuk PDF
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company'));
+
+        // Setel orientasi halaman jika perlu (optional)
+        $pdf->setPaper('A4', 'portrait');
+
+        // Return file PDF dengan nama packing_list_<id>.pdf
+        return $pdf->download('packing_list_' . $hashId . '.pdf');
+    }
+
+    public function previewPdf($hashId)
+    {
+        // Decode hashed ID menggunakan IdHashHelper
+        $decodedId = IdHashHelper::decode($hashId);
+
+        // Ambil data packing list berdasarkan decoded id
+        $transaction = Transaction::where('id', $decodedId)->firstOrFail();
+
+        // Ambil data detail packing list jika ada
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first();
+
+        // Load view untuk preview
+        return view('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'hashId'));
+    }
+
 }
