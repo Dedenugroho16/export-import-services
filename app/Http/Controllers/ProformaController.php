@@ -33,29 +33,34 @@ class ProformaController extends Controller
             ->where('approved', 0) // Kondisi approved harus 0
             ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
 
-        return DataTables::of($proformaInvoice)
+            return DataTables::of($proformaInvoice)
             ->addColumn('client', function ($row) {
-                return $row->client->name;  // Asumsikan ada relasi `client` di model Transaction
+                return $row->client->name;
             })
             ->addColumn('consignee', function ($row) {
-                return $row->consignee->name;  // Asumsikan ada relasi `consignee` di model Transaction
+                return $row->consignee->name;
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-                $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning">Lihat Detail</a> ';
-                $edit = ' <a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger">Edit</a> ';
-                
-                // Cek apakah pengguna yang sedang login adalah admin atau director
-                $setujui = '';
-                if (in_array(auth()->user()->role, ['director', 'admin'])) {
-                    // Jika admin atau director, tampilkan tombol "Setujui"
-                    $setujui = ' <button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button>';
+                $buttons = '';
+        
+                if (auth()->user()->role === 'admin' || auth()->user()->role === 'operator') {
+                    $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning me-2">Lihat Detail</a>';
+                    $edit = '<a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger me-2">Edit</a>';
+                    
+                    $buttons = $lihatDetail . $edit;
                 }
-                
-                return $lihatDetail . $edit . $setujui;
-            })            
-            ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
+        
+                if (in_array(auth()->user()->role, ['director', 'admin'])) {
+                    $setujui = '<button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button>';
+                    $buttons .= $setujui;
+                }
+        
+                return $buttons;
+            })
+            ->rawColumns(['aksi'])
             ->make(true);
+        
     }
 
     public function approveProforma($id)
