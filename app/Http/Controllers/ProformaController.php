@@ -42,14 +42,10 @@ class ProformaController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-                $buttons = '';
-        
-                if (auth()->user()->role === 'admin' || auth()->user()->role === 'operator') {
                     $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning me-2">Lihat Detail</a>';
                     $edit = '<a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger me-2">Edit</a>';
                     
                     $buttons = $lihatDetail . $edit;
-                }
         
                 if (in_array(auth()->user()->role, ['director', 'admin'])) {
                     $setujui = '<button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button>';
