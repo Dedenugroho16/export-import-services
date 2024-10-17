@@ -101,9 +101,11 @@
                                 </div>
                             </div>
 
-                            <form id="formProformaInvoice" method="POST">
+                            <form id="formProformaInvoice" method="POST"
+                                action="{{ route('proforma.update', $transaction->id) }}">
                                 @csrf
-                                <input type="date" name="date" id="date" value="{{ $transaction->date }}" hidden>
+                                <input type="date" name="date" id="date" value="{{ $transaction->date }}"
+                                    hidden>
                                 <input type="text" name="code" id="code" value="{{ $transaction->code }}"
                                     hidden>
                                 <input type="text" name="number" id="number" value="{{ $transaction->number }}"
@@ -369,7 +371,6 @@
                                                 id="tableDetailTransaction">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center">ID</th>
                                                         <th class="text-center">Item Description</th>
                                                         <th class="text-center">Carton(pcs)</th>
                                                         <th class="text-center">Inner(pcs)</th>
@@ -409,8 +410,8 @@
                                                                     :</label>
                                                                 <input type="number" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
-                                                                    placeholder="masukkan freight cost" min="0"
-                                                                    max="99999999.99">
+                                                                    value="{{ $transaction->freight_cost }}"
+                                                                    min="0" max="99999999.99">
                                                             </div>
                                                         </td>
                                                         <td></td>
@@ -438,7 +439,7 @@
                             </form>
 
                             <form id="formDetailTransaction" class="bg-primary" method="POST"
-                                action="{{ route('detailtransaction.store') }}">
+                                action="{{ route('detail-transaction.update', $transaction->id) }}">
                                 @csrf
                                 <!-- Hidden inputs will be generated here -->
                             </form>
@@ -804,7 +805,8 @@
 
                                 var newRow = `
                                                 <tr>
-                                                    <td class="text-center id-detail-product">${data.id_detail_product}</td>
+                                                    <td class="text-center id-detail-transaction" style="display: none;">${data.id}</td>
+                                                    <td class="text-center id-detail-product" style="display: none;">${data.id_detail_product}</td>
                                                     <td class="text-center">
                                                         <strong>${data.product_name} PCS / 
                                                         <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
@@ -924,8 +926,9 @@
 
                 $('#formDetailTransaction').empty();
 
+                // Tambahkan hidden input untuk id transaksi
                 $('#formDetailTransaction').append(`
-        <input type="" class="bg-warning" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
+        <input type="" name="id_transaction" class="bg-danger" id="id_transaction" value="{{ $transaction->id }}">
     `);
 
                 // Selektor untuk setiap baris di tbody #loadedData
@@ -933,6 +936,8 @@
                     // Skip the row if it is the 'No data' row
                     if ($(row).attr('id') === 'nullDetailTransaction') return;
 
+                    var idDetailTransaction = $(row).find('.id-detail-transaction').text()
+                        .trim(); // Ambil ID Detail Transaction
                     var idDetailProduct = $(row).find('.id-detail-product').text().trim();
                     var qty = $(row).find('.qty-input').val();
                     var carton = $(row).find('.carton-input').val();
@@ -943,14 +948,15 @@
 
                     // Create hidden inputs and append to the form
                     $('#formDetailTransaction').append(`
-        <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-        <input type="" name="transactions[${index}][qty]" value="${qty}">
-        <input type="" name="transactions[${index}][carton]" value="${carton}">
-        <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-        <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
-        <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
-        <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
-    `);
+            <input type="" name="transactions[${index}][id]" value="${idDetailTransaction}"> <!-- Tambahkan ID Detail Transaction -->
+            <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+            <input type="" name="transactions[${index}][qty]" value="${qty}">
+            <input type="" name="transactions[${index}][carton]" value="${carton}">
+            <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+            <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
+            <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
+            <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
+        `);
 
                     // Mark this row as processed
                     $(row).attr('data-processed', 'true');
@@ -1034,6 +1040,50 @@
             });
 
             // Event handler ketika tombol "Pilih" diklik
+            // Fungsi untuk memperbarui form detail transaksi
+            function newUpdateFormDetailTransaction() {
+                // Filter hanya baris yang memiliki atribut 'data-from-process' true
+                var validRows = $('#selectedData tr').filter(function() {
+                    return $(this).attr('data-from-process') === 'true';
+                });
+
+                // Jika tidak ada baris valid, kosongkan form dan return agar tidak mengirim
+                if (validRows.length === 0) {
+                    $('#newFormDetailTransaction').empty();
+                    return; // Tidak ada data baru yang valid, tidak perlu melanjutkan
+                }
+
+                // Kosongkan form sebelum menambahkan input baru
+                $('#newFormDetailTransaction').empty();
+
+                // Tambahkan hidden input untuk id transaksi (hanya jika ada data valid)
+                $('#newFormDetailTransaction').append(`
+        <input type="" class="bg-warning" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
+    `);
+
+                // Loop untuk setiap baris valid dan tambahkan input hidden untuk data transaksi baru
+                validRows.each(function(index, row) {
+                    var idDetailProduct = $(row).find('.id-detail-product').text().trim();
+                    var qty = $(row).find('.qty-input').val();
+                    var carton = $(row).find('.carton-input').val();
+                    var inner = $(row).find('.inner-result').text().trim();
+                    var unitPrice = $(row).find('.price').text().trim();
+                    var netWeight = $(row).find('.net-weight').text().trim();
+                    var priceAmount = $(row).find('.price-result').text().trim();
+
+                    // Append hidden inputs untuk setiap transaksi baru
+                    $('#newFormDetailTransaction').append(`
+            <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+            <input type="" name="transactions[${index}][qty]" value="${qty}">
+            <input type="" name="transactions[${index}][carton]" value="${carton}">
+            <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+            <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
+            <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
+            <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
+        `);
+                });
+            }
+
             // Inisialisasi array selectedProductIds dengan data dari server
             var selectedProductIds = @json($selectedProductIds);
 
@@ -1053,7 +1103,6 @@
                     }
                 });
             }
-
             var newSelectedProductIds = []; // Produk baru yang dipilih dalam sesi ini
 
             // pilih button modal
@@ -1077,7 +1126,7 @@
                 // Membuat elemen tr untuk ditambahkan ke tbody #selectedData
                 var newRow = `
         <tr data-from-process="true"> <!-- Tambahkan atribut penanda -->
-            <td class="text-center id-detail-product">${data.id}</td>
+            <td class="text-center id-detail-product" style="display: none;">${data.id}</td>
             <td class="text-center">
                 <strong>${data.name} ${data.pcs} PCS / 
                 <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
@@ -1121,50 +1170,10 @@
                         totalPrice); // Round the total price to nearest integer
                     row.find('.price-result').text(roundedPrice);
 
-                    // Update total values in the footer
                     updateAmounts();
                     updateTotals();
                     newUpdateFormDetailTransaction();
                 });
-
-                // Fungsi untuk memperbarui form detail transaksi
-                function newUpdateFormDetailTransaction() {
-                    var validRows = $('#selectedData tr').filter(function() {
-                        return $(this).attr('data-from-process') === 'true';
-                    });
-
-                    if (validRows.length === 0) {
-                        $('#newFormDetailTransaction').empty();
-                        return;
-                    }
-
-                    $('#newFormDetailTransaction').empty();
-
-                    $('#newFormDetailTransaction').append(`
-        <input type="" class="bg-warning" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
-    `);
-
-                    validRows.each(function(index, row) {
-                        var idDetailProduct = $(row).find('.id-detail-product').text().trim();
-                        var qty = $(row).find('.qty-input').val();
-                        var carton = $(row).find('.carton-input').val();
-                        var inner = $(row).find('.inner-result').text().trim();
-                        var unitPrice = $(row).find('.price').text().trim();
-                        var netWeight = $(row).find('.net-weight').text().trim();
-                        var priceAmount = $(row).find('.price-result').text().trim();
-
-                        // Append hidden inputs to the new form
-                        $('#newFormDetailTransaction').append(`
-            <input type="" name="new_transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-            <input type="" name="new_transactions[${index}][qty]" value="${qty}">
-            <input type="" name="new_transactions[${index}][carton]" value="${carton}">
-            <input type="" name="new_transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="" name="new_transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="" name="new_transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="" name="new_transactions[${index}][price_amount]" value="${priceAmount}">
-        `);
-                    });
-                }
 
                 // Event listener untuk tombol "Hapus" pada baris produk di tbody #selectedData
                 $('#selectedData').on('click', '.remove-btn', function() {
@@ -1204,59 +1213,164 @@
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
 
-            $('#submitButton').click(function() {
-                event.preventDefault(); // Mencegah form dari pengiriman
+            $('#submitButton').click(function(event) {
+                event.preventDefault(); // Mencegah form dari pengiriman otomatis
 
                 var formProformaInvoice = $('#formProformaInvoice');
                 var formDetailTransaction = $('#formDetailTransaction');
+                var newFormDetailTransaction = $('#newFormDetailTransaction'); // Form baru
 
-                // Nonaktifkan tombol submit
+                // Nonaktifkan tombol submit untuk mencegah pengiriman berulang
                 $('#submitButton').prop('disabled', true);
 
-                // Submit formProformaInvoice terlebih dahulu
-                $.ajax({
-                    url: formProformaInvoice.attr('action'),
-                    method: formProformaInvoice.attr('method'),
-                    data: formProformaInvoice.serialize(),
-                    success: function(response) {
-                        // Pastikan response.id berisi ID transaksi yang valid
-                        if (response.id) {
-                            // Set ID transaksi ke input hidden pada form detail transaksi
-                            $('#id_transaction').val(response.id); // Isi ID transaksi pada form
+                // Panggil fungsi untuk memperbarui form detail transaksi baru dari data di tabel
+                newUpdateFormDetailTransaction(); // <-- Panggil di sini sebelum submit form
+                updateFormDetailTransaction(); // <-- Panggil di sini sebelum submit form
 
-                            // Selanjutnya submit formDetailTransaction
-                            $.ajax({
-                                url: formDetailTransaction.attr('action'),
-                                method: formDetailTransaction.attr('method'),
-                                data: formDetailTransaction.serialize(),
-                                success: function(response) {
-                                    alert('Berhasil menambahkan proforma invoice');
-                                    location
-                                        .reload(); // Reload halaman setelah alert
-                                },
-                                error: function(xhr) {
-                                    // Tangani error untuk detail transaksi
-                                    alert('Error saving detail transaction: ' + xhr
-                                        .responseJSON.message);
-                                },
-                                complete: function() {
-                                    // Aktifkan kembali tombol setelah selesai (sukses/gagal)
-                                    $('#submitButton').prop('disabled', false);
+                function hasInputData(form) {
+                    // Cari input hidden di dalam form, filter hanya yang punya value (bukan input kosong)
+                    return form.find(':input').filter(function() {
+                        return $.trim($(this).val()).length > 0;
+                    }).length > 0;
+                }
+
+                var hasInvoiceData = hasInputData(formProformaInvoice);
+                var hasDetailTransactionData = hasInputData(formDetailTransaction);
+                var hasNewDetailTransactionData = hasInputData(newFormDetailTransaction);
+
+                // Jika tidak ada input pada kedua form detail transaction, beri alert dan aktifkan kembali tombol
+                if (!hasInvoiceData && !hasDetailTransactionData && !hasNewDetailTransactionData) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No data to submit',
+                        text: 'Please fill out at least one form.',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        $('#submitButton').prop('disabled', false);
+                    });
+                    return;
+                }
+
+                // Variable untuk mengecek jika ada beberapa form sukses
+                var detailTransactionSuccess = false;
+                var newDetailTransactionSuccess = false;
+
+                // Submit formProformaInvoice terlebih dahulu jika ada data
+                if (hasInvoiceData) {
+                    $.ajax({
+                        url: formProformaInvoice.attr('action'),
+                        method: formProformaInvoice.attr('method'),
+                        data: formProformaInvoice.serialize(),
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Proforma invoice berhasil diperbarui',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                // Submit formDetailTransaction jika ada input di dalamnya
+                                if (hasDetailTransactionData) {
+                                    $.ajax({
+                                        url: formDetailTransaction.attr(
+                                            'action'),
+                                        method: formDetailTransaction.attr(
+                                            'method'),
+                                        data: formDetailTransaction.serialize(),
+                                        success: function(response) {
+                                            detailTransactionSuccess = true;
+                                            checkAllSuccess
+                                        (); // Cek jika semua berhasil
+                                        },
+                                        error: function(xhr) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: 'Error memperbarui detail transaction dari database: ' +
+                                                    xhr.responseJSON
+                                                    .message,
+                                                confirmButtonText: 'OK'
+                                            });
+                                        }
+                                    });
                                 }
+
+                                // Submit newFormDetailTransaction jika ada data baru yang ditambahkan
+                                if (hasNewDetailTransactionData) {
+                                    $.ajax({
+                                        url: newFormDetailTransaction.attr(
+                                            'action'),
+                                        method: newFormDetailTransaction.attr(
+                                            'method'),
+                                        data: newFormDetailTransaction
+                                            .serialize(),
+                                        success: function(response) {
+                                            newDetailTransactionSuccess =
+                                                true;
+                                            checkAllSuccess
+                                        (); // Cek jika semua berhasil
+                                        },
+                                        error: function(xhr) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: 'Error menambahkan detail transaction baru: ' +
+                                                    xhr.responseJSON
+                                                    .message,
+                                                confirmButtonText: 'OK'
+                                            });
+                                        }
+                                    });
+                                }
+
                             });
-                        } else {
-                            alert('Transaction ID is missing');
-                            // Aktifkan kembali tombol jika ID tidak valid
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error memperbarui proforma invoice: ' + xhr
+                                    .responseJSON.message,
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                $('#submitButton').prop('disabled', false);
+                            });
+                        },
+                        complete: function() {
                             $('#submitButton').prop('disabled', false);
                         }
-                    },
-                    error: function(xhr) {
-                        // Tangani error untuk transaksi
-                        alert('Error saving transaction: ' + xhr.responseJSON.message);
-                        // Aktifkan kembali tombol jika error terjadi
-                        $('#submitButton').prop('disabled', false);
+                    });
+                }
+
+                // Fungsi untuk mengecek apakah kedua transaksi berhasil dan menampilkan alert yang sesuai
+                function checkAllSuccess() {
+                    if (detailTransactionSuccess && newDetailTransactionSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Berhasil memperbarui dan menambahkan detail transaction',
+                            confirmButtonText: 'OK'
+                        }).then(function() {
+                            location.reload(); // Reload halaman setelah semua berhasil
+                        });
+                    } else if (detailTransactionSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Berhasil memperbarui detail transaction dari database!',
+                            confirmButtonText: 'OK'
+                        }).then(function() {
+                            location.reload(); // Reload halaman setelah semua berhasil
+                        });
+                    } else if (newDetailTransactionSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Berhasil menambahkan detail transaction baru!',
+                            confirmButtonText: 'OK'
+                        }).then(function() {
+                            location.reload(); // Reload halaman setelah semua berhasil
+                        });
                     }
-                });
+                }
             });
         });
     </script>

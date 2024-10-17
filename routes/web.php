@@ -76,6 +76,8 @@ Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->nam
 // Route untuk update transaksi
 Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 
+// update detail transaction route
+Route::post('/detail-transaction/update/{id}', [DetailTransactionController::class, 'update'])->name('detail-transaction.update');
 // Route untuk delete detail transaction
 Route::delete('/detail-transaction/delete/{id_detail_product}', [DetailTransactionController::class, 'destroy'])->name('detail-transaction.delete');
 
@@ -88,6 +90,7 @@ Route::get('proforma/create', [ProformaController::class, 'create'])->name('prof
 Route::post('/proforma/store', [ProformaController::class, 'store'])->name('proforma.store');
 Route::get('/proforma/show/{id}', [ProformaController::class, 'show'])->name('proforma.show');
 Route::get('/proforma/edit/{hash}', [ProformaController::class, 'edit'])->name('proforma.edit');
+Route::post('/proforma/update/{id}', [ProformaController::class, 'update'])->name('proforma.update');
 Route::get('proforma/data', [ProformaController::class, 'getProformaData'])->name('proforma.data');
 Route::get('/approved-proforma/data', [ProformaController::class, 'getApprovedData'])->name('approved.data');
 Route::get('/get-detail-transaction/{idTransaction}', [ProformaController::class, 'getDetailTransaction'])->name('get-detail-transaction');
