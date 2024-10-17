@@ -457,9 +457,9 @@
                                     <a href="#" class="dropdown-item">
                                         <i class="fas fa-cog me-2"></i> Pengaturan
                                     </a>
-                                    <form method="POST" action="{{ route('logout') }}">
+                                    <form id="logout-form" method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="dropdown-item">
+                                        <button type="button" class="dropdown-item" onclick="confirmLogout()">
                                             <i class="fas fa-sign-out-alt me-2"></i> Keluar
                                         </button>
                                     </form>
@@ -510,6 +510,38 @@
     {{-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> --}}
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+    function confirmLogout() {
+        Swal.fire({
+            title: 'Apakah Anda yakin ingin keluar?',
+            text: "Anda akan keluar dari sesi ini, pastikan telah menyimpan pekerjaan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33', 
+            confirmButtonText: 'Ya, keluar',
+            cancelButtonText: 'Batal',
+            buttonsStyling: true,  
+            showClass: {
+                popup: 'swal2-show', 
+                backdrop: 'swal2-backdrop-show',
+                icon: 'swal2-icon-show'
+            },
+            hideClass: {
+                popup: 'swal2-hide', 
+                backdrop: 'swal2-backdrop-hide',
+                icon: 'swal2-icon-hide'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit();
+            }
+        })
+        }
+    </script>
 
 </body>
 
