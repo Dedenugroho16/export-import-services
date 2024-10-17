@@ -400,7 +400,6 @@
                                                         <td class="text-center"></td>
                                                         <td class="text-center" id="totalNetWeight">0</td>
                                                         <td class="text-center" id="PriceAmount">0</td>
-                                                        <td></td>
                                                     </tr>
                                                     <tr id="inputRow">
                                                         <td class="text-center" colspan="6"></td>
@@ -414,7 +413,6 @@
                                                                     min="0" max="99999999.99">
                                                             </div>
                                                         </td>
-                                                        <td></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center" colspan="6"></td>
@@ -429,7 +427,6 @@
                                                                     id="total" name="total" style="width: 150px;">
                                                             </div>
                                                         </td>
-                                                        <td></td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
