@@ -12,6 +12,8 @@
                             <h3 class="card-title">Form Proforma Invoice</h3>
                         </div>
                         <div class="card-body">
+                            <p id="error-message" style="color: red;">Harap menginput negara terlebih
+                                dahulu</p>
                             <!-- Display Success Message -->
                             @if (session('success'))
                                 <div class="alert alert-success">
@@ -39,6 +41,24 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <p><strong>Set Country</strong></p>
+                                                        </div>
+                                                        <div class="col-3 text-center">
+                                                            <span>:</span>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <select class="form-control country" id="country">
+                                                                @foreach ($country as $negara)
+                                                                    <option value="{{ $negara->id }}"
+                                                                        data-code="{{ $negara->code }}">
+                                                                        {{ $negara->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                     <div class="row">
                                                         <div class="col-4">
                                                             <p><strong>Date</strong></p>
@@ -74,25 +94,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6 d-flex justify-content-end align-items-start">
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <p><strong>Set Country</strong></p>
-                                                        </div>
-                                                        <div class="col-1 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <select class="form-control country" id="country">
-                                                                <option value="">Pilih Negara</option>
-                                                                @foreach ($country as $negara)
-                                                                    <option value="{{ $negara->id }}"
-                                                                        data-code="{{ $negara->code }}">
-                                                                        {{ $negara->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -423,8 +425,6 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end">
-                                <p id="error-message" style="color: red;">Harap menginput negara terlebih
-                                    dahulu</p>
                                 <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Tambah</button>
                             </div>
@@ -550,8 +550,18 @@
 
         // modal datatables
         $(document).ready(function() {
-            // Saat halaman dimuat, tombol "Tambah" dinonaktifkan
-            $('#submitButton').prop('disabled', true);
+            // Set default country to the one with data-code 'ID' (Indonesia)
+            var defaultCountry = $('#country option[data-code="ID"]').val();
+            $('#country').val(defaultCountry);
+
+            // Update button and error message visibility based on the default value
+            if ($('#country').val() === "") {
+                $('#submitButton').prop('disabled', true);
+                $('#error-message').show();
+            } else {
+                $('#submitButton').prop('disabled', false);
+                $('#error-message').hide();
+            }
 
             // Deteksi perubahan pada dropdown negara
             $('#country').on('change', function() {
