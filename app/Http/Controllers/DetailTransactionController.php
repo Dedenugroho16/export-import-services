@@ -77,7 +77,39 @@ class DetailTransactionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Validasi data yang dikirim
+        $validatedData = $request->validate([
+            'id_transaction' => 'required|exists:transactions,id', // Pastikan id_transaction valid
+            'transactions.*.id' => 'required|exists:detail_transactions,id', // ID detail transaksi harus ada untuk update
+            'transactions.*.id_detail_product' => 'required|exists:detail_products,id',
+            'transactions.*.qty' => 'required|numeric|min:1',
+            'transactions.*.carton' => 'required|numeric|min:0',
+            'transactions.*.inner_qty_carton' => 'required|numeric|min:0',
+            'transactions.*.unit_price' => 'required|numeric|min:0',
+            'transactions.*.net_weight' => 'required|numeric|min:0',
+            'transactions.*.price_amount' => 'required|numeric|min:0',
+        ]);
+
+        // Loop melalui setiap detail transaksi dan perbarui data
+        foreach ($validatedData['transactions'] as $detail) {
+            // Cari detail transaksi berdasarkan ID
+            $detailTransaction = DetailTransaction::findOrFail($detail['id']);
+
+            // Update detail transaksi
+            $detailTransaction->update([
+                'id_transaction' => $validatedData['id_transaction'], // Update ID transaksi jika diperlukan
+                'id_detail_product' => $detail['id_detail_product'],
+                'qty' => $detail['qty'],
+                'carton' => $detail['carton'],
+                'inner_qty_carton' => $detail['inner_qty_carton'],
+                'unit_price' => $detail['unit_price'],
+                'net_weight' => $detail['net_weight'],
+                'price_amount' => $detail['price_amount'],
+            ]);
+        }
+
+        // Kembalikan response JSON dengan status sukses
+        return response()->json(['message' => 'Detail transactions updated successfully'], 200);
     }
 
     /**

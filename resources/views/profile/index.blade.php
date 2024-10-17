@@ -6,7 +6,6 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card shadow border-0 rounded-lg modern-card">
-                <!-- Header card -->
                 <div class="card-header bg-gradient-primary text-white py-4 d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Welcome, {{ $user->name }}!</h4>
                     <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
@@ -14,7 +13,6 @@
                     </button>
                 </div>
 
-                <!-- Body card -->
                 <div class="card-body">
                     @if(session('status'))
                         <div class="alert alert-success">{{ session('status') }}</div>
@@ -30,16 +28,12 @@
                         </div>
                     @endif
 
-                    <!-- Welcome text -->
                     <p class="lead text-muted mb-4">Welcome back! Here's a quick overview of your profile and account details. You can manage your settings and explore additional features below.</p>
 
-                    <!-- User Information -->
                     <div class="row align-items-center mb-4">
-                        <!-- Profile Picture -->
                         <div class="col-md-4 text-center mb-3 mb-md-0 profile-card">
                             <img src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" alt="Profile Picture" class="img-fluid img-thumbnail rounded-circle profile-image">
                         </div>
-                        <!-- User Details -->
                         <div class="col-md-8">
                             <h5 class="fw-bold">User Information</h5>
                             <ul class="list-group list-group-flush modern-list">
@@ -56,7 +50,6 @@
     </div>
 </div>
 
-<!-- Edit Profile Modal -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -72,7 +65,6 @@
                         <img id="currentProfilePicture" src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" alt="Profile Picture" class="img-fluid img-thumbnail rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
                         <p class="text-muted mt-2">Current Profile Picture</p>
                     </div>
-
                     <div class="form-row">
                         <div class="form-group mb-3">
                             <label for="edit_name" class="form-label">Name</label>
@@ -83,14 +75,11 @@
                             <input type="email" class="form-control" id="edit_email" name="email" value="{{ $user->email }}" required>
                         </div>
                     </div>
-                    
                     <div class="form-group mb-3">
                         <label for="edit_profile_picture" class="form-label">Upload Foto Profil</label>
                         <input type="file" class="form-control" id="edit_profile_picture" name="profile_picture" accept="image/*" onchange="previewProfilePicture(event)">
                         <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah foto.</small>
                     </div>
-
-                    <!-- Align Password and Confirm Password -->
                     <div class="form-row">
                         <div class="form-group mb-3">
                             <label for="edit_password" class="form-label">Password</label>
@@ -103,8 +92,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Buttons at the top of the modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     <button type="submit" class="btn btn-primary">Update Profile</button>
@@ -113,8 +100,6 @@
         </div>
     </div>
 </div>
-
-<!-- JavaScript to reset form and preview image -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('editProfileModal');
@@ -133,10 +118,7 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 </script>
-
-<!-- CSS for improved appearance -->
 <style>
-    /* Modern card style */
     .modern-card {
         border-radius: 20px;
         background-color: #fff;
@@ -172,7 +154,7 @@
     }
 
     .card-header {
-        background: linear-gradient(90deg, #1A5276, #21618C); /* Gradasi biru nefi */
+        background: linear-gradient(90deg, #1A5276, #21618C);
         color: white;
         border-radius: 20px 20px 0 0;
     }
@@ -202,23 +184,21 @@
         border-radius: 10px;
     }
 
-    /* Mengatur tinggi maksimum modal */
     .modal-lg {
-        max-height: auto; /* Pastikan tidak ada scroll */
+        max-height: auto;
     }
 
-    /* Gabungkan input form menjadi satu baris untuk menghemat ruang */
     .form-row {
         display: flex;
         justify-content: space-between;
     }
 
     .form-row .form-group {
-        flex: 0 0 48%; /* Membagi space menjadi dua bagian */
+        flex: 0 0 48%;
     }
 
     #currentProfilePicture {
-        width: 80px; /* Ukuran gambar dalam modal */
+        width: 80px;
         height: 80px;
     }
 </style>
