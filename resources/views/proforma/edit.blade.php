@@ -808,7 +808,7 @@
                                                     <td class="text-center id-detail-transaction" style="display: none;">${data.id}</td>
                                                     <td class="text-center id-detail-product" style="display: none;">${data.id_detail_product}</td>
                                                     <td class="text-center">
-                                                        <strong>${data.product_name} PCS / 
+                                                        <strong>${data.product_name} ${data.pcs} PCS / 
                                                         <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
                                                         ${data.dimension} ${data.color} - ${data.type}
                                                     </td>
@@ -1242,8 +1242,8 @@
                 if (!hasInvoiceData && !hasDetailTransactionData && !hasNewDetailTransactionData) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'No data to submit',
-                        text: 'Please fill out at least one form.',
+                        title: 'Tidak ada data untuk diperbarui',
+                        text: 'Tolong isi data yang diperlukan!',
                         confirmButtonText: 'OK'
                     }).then(() => {
                         $('#submitButton').prop('disabled', false);
@@ -1277,24 +1277,93 @@
                                         data: formDetailTransaction.serialize(),
                                         success: function(response) {
                                             detailTransactionSuccess = true;
-                                            checkAllSuccess
-                                        (); // Cek jika semua berhasil
+                                            // Setelah detail transaksi berhasil disimpan
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Detail transaksi berhasil diperbarui!',
+                                                confirmButtonText: 'OK'
+                                            }).then(() => {
+                                                // Submit newFormDetailTransaction jika ada data baru yang ditambahkan
+                                                if (
+                                                    hasNewDetailTransactionData) {
+                                                    $.ajax({
+                                                        url: newFormDetailTransaction
+                                                            .attr(
+                                                                'action'
+                                                                ),
+                                                        method: newFormDetailTransaction
+                                                            .attr(
+                                                                'method'
+                                                                ),
+                                                        data: newFormDetailTransaction
+                                                            .serialize(),
+                                                        success: function(
+                                                            response
+                                                            ) {
+                                                            newDetailTransactionSuccess
+                                                                =
+                                                                true;
+                                                            // Setelah detail transaksi baru berhasil disimpan
+                                                            Swal.fire({
+                                                                    icon: 'success',
+                                                                    title: 'Detail transaksi baru berhasil ditambahkan!',
+                                                                    confirmButtonText: 'OK'
+                                                                })
+                                                                .then(
+                                                                    () => {
+                                                                        location
+                                                                            .reload(); // Reload halaman setelah semua berhasil
+                                                                    }
+                                                                    );
+                                                        },
+                                                        error: function(
+                                                            xhr
+                                                            ) {
+                                                            Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'Error',
+                                                                    text: 'Detail transaksi baru gagal ditambahkan! ' +
+                                                                        xhr
+                                                                        .responseJSON
+                                                                        .message,
+                                                                    confirmButtonText: 'OK'
+                                                                })
+                                                                .then(
+                                                                    () => {
+                                                                        $('#submitButton')
+                                                                            .prop(
+                                                                                'disabled',
+                                                                                false
+                                                                                );
+                                                                    }
+                                                                    );
+                                                        }
+                                                    });
+                                                } else {
+                                                    // Jika tidak ada detail transaksi baru, reload
+                                                    location
+                                                    .reload();
+                                                }
+                                            });
                                         },
                                         error: function(xhr) {
                                             Swal.fire({
                                                 icon: 'error',
                                                 title: 'Error',
-                                                text: 'Error memperbarui detail transaction dari database: ' +
+                                                text: 'Detail transaksi gagal diperbarui: ' +
                                                     xhr.responseJSON
                                                     .message,
                                                 confirmButtonText: 'OK'
+                                            }).then(() => {
+                                                $('#submitButton')
+                                                    .prop(
+                                                        'disabled',
+                                                        false);
                                             });
                                         }
                                     });
-                                }
-
-                                // Submit newFormDetailTransaction jika ada data baru yang ditambahkan
-                                if (hasNewDetailTransactionData) {
+                                } else if (hasNewDetailTransactionData) {
+                                    // Jika tidak ada detail transaksi tetapi ada transaksi baru
                                     $.ajax({
                                         url: newFormDetailTransaction.attr(
                                             'action'),
@@ -1305,29 +1374,43 @@
                                         success: function(response) {
                                             newDetailTransactionSuccess =
                                                 true;
-                                            checkAllSuccess
-                                        (); // Cek jika semua berhasil
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Detail transaksi baru berhasil ditambahkan!',
+                                                confirmButtonText: 'OK'
+                                            }).then(() => {
+                                                location
+                                            .reload(); // Reload halaman setelah semua berhasil
+                                            });
                                         },
                                         error: function(xhr) {
                                             Swal.fire({
                                                 icon: 'error',
                                                 title: 'Error',
-                                                text: 'Error menambahkan detail transaction baru: ' +
+                                                text: 'Detail transaksi baru gagal ditambahkan!: ' +
                                                     xhr.responseJSON
                                                     .message,
                                                 confirmButtonText: 'OK'
+                                            }).then(() => {
+                                                $('#submitButton')
+                                                    .prop(
+                                                        'disabled',
+                                                        false);
                                             });
                                         }
                                     });
+                                } else {
+                                    // Jika tidak ada detail transaksi dan tidak ada transaksi baru
+                                    location
+                                .reload(); // Reload halaman setelah semua berhasil
                                 }
-
                             });
                         },
                         error: function(xhr) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: 'Error memperbarui proforma invoice: ' + xhr
+                                text: 'Gagal memperbarui proforma invoice: ' + xhr
                                     .responseJSON.message,
                                 confirmButtonText: 'OK'
                             }).then(() => {
@@ -1338,38 +1421,9 @@
                             $('#submitButton').prop('disabled', false);
                         }
                     });
-                }
-
-                // Fungsi untuk mengecek apakah kedua transaksi berhasil dan menampilkan alert yang sesuai
-                function checkAllSuccess() {
-                    if (detailTransactionSuccess && newDetailTransactionSuccess) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Berhasil memperbarui dan menambahkan detail transaction',
-                            confirmButtonText: 'OK'
-                        }).then(function() {
-                            location.reload(); // Reload halaman setelah semua berhasil
-                        });
-                    } else if (detailTransactionSuccess) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Berhasil memperbarui detail transaction dari database!',
-                            confirmButtonText: 'OK'
-                        }).then(function() {
-                            location.reload(); // Reload halaman setelah semua berhasil
-                        });
-                    } else if (newDetailTransactionSuccess) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Berhasil menambahkan detail transaction baru!',
-                            confirmButtonText: 'OK'
-                        }).then(function() {
-                            location.reload(); // Reload halaman setelah semua berhasil
-                        });
-                    }
+                } else {
+                    // Jika tidak ada invoice data
+                    $('#submitButton').prop('disabled', false);
                 }
             });
         });
