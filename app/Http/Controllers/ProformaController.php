@@ -383,12 +383,13 @@ class ProformaController extends Controller
         $proformaInvoice = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();      
+        $totalInWords = NumberToWords::convert($proformaInvoice->total);
         $path = 'storage/'.$company->logo;
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
-        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo'));
+        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('proforma' . $hashId . '.pdf');
