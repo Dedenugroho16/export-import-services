@@ -5,258 +5,234 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <style>
-         .header-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-
-        .header-table td {
-            vertical-align: top;
-            padding: 0;
-        }
-
-        .company-name {
-            font-size: 40px;
-            font-weight: bold;
-        }
-
-        .company-details p {
-            font-weight: bolder;
-            font-size: 15px;
-            margin: 0;
-        }
-
-        .header-right-table {
-            width: auto;
-            margin-left: auto;
-        }
-
-        .header-right-table td {
-            padding: 3px 10px;
-            font-size: 13px;
-        }
-
-        .codeTable {
-            text-align: right;
-        }
-
-        .custom-table {
+</head>
+<style>
+    body{
+        font-size: 14px;
+    }
+    .section-satu {
         width: 100%;
         border-collapse: collapse;
+        margin-bottom: 10mm;
+    }
+
+    .section-dua {
+        width: 100%;
+        margin-top: 10mm;
+    }
+
+    .section-tiga {
+        width: 100%;
+        margin-top: 10mm;
+        text-align: center;
+        font-size: 17px;
+    }
+
+    .section-empat {
+        width: 100%;
+        margin-top: 10mm;
+    }
+
+    .section-empat th {
+        text-align: left;
+    }
+
+    .custom-table {
+        width: 100%;
+        border: 1px solid black;
+        border-collapse: collapse;
         font-size: 12px;
-        margin-bottom: 50px
+        margin-top: 10mm;
     }
     .custom-table th, .custom-table td {
-        border: 1px solid #666464;
-        padding: 8px;
+        border: 1px solid black;
+        padding: 5px;
     }
     .custom-table tfoot td {
         font-weight: bold;
     }
-    .custom-bg-success {
-        background-color: #28a745;
+    .custom-bg-red {
+        background-color: #28a745;;
         color: white;
-    }
-    .text-center{
         text-align: center;
     }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <table class="header-table">
-            <tr>
-                <td style="width: 60%;">
-                    <table style="vertical-align: top">
-                        <td><img src="{{ $logo }}" alt="Company Logo" style="width: 50px;"></td>
-                        <td style="padding-top: 10px"><em class="company-name">PT. PSN</em><br>
-                            <div class="company-details">
-                                <p>PRINGGONDANI SETIA NUSANTARA</p>
-                            </div>
-                        </td>
-                    </table>
-                </td>
-                <td style="width: 50%;">
-                    <table class="header-right-table">
-                        <tr>
-                            <td>Date</td>
-                            <td>:</td>
-                            <td class="codeTable">{{ $transaction->date }}</td>
-                        </tr>
-                        <tr>
-                            <td>Code</td>
-                            <td>:</td>
-                            <td class="codeTable">{{ $transaction->code }}</td>
-                        </tr>
-                        <tr>
-                            <td>Number</td>
-                            <td>:</td>
-                            <td class="codeTable">{{ $transaction->number }}</td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-        <h2 style="text-align: center; margin-bottom: 50px">PACKING LIST</h2>
-
-        <div class="info-section" style="width: 100%; margin-bottom: 30px">
-            <div class="card" style="display: inline-block; width: 30%; vertical-align: top; margin-right: 10px;">
-                <p style="font-weight: bold">Consignee</p>
-                <p>{{ $transaction->consignee->name }}</p>
-                <p>{{ $transaction->consignee->address }}</p>
-                <p>{{ $transaction->consignee->tel }}</p>
-            </div>
-            <div class="card" style="display: inline-block; width: 30%; vertical-align: top; margin-right: 10px;">
-                <p style="font-weight: bold">Notify</p>
-                <p>{{ $transaction->notify }}</p>
-            </div>
-            <div class="card" style="display: inline-block; width: 30%; vertical-align: top;">
-                <p style="font-weight: bold">Client</p>
-                <p>{{ $transaction->client->name }}</p>
-                <p>{{ $transaction->client->address }}</p>
-                <p>{{ $transaction->client->tel }}</p>
-            </div>
-        </div>
-
-        <div class="section-tiga" style="width: 100%; text-align: center;">
-            <div class="card" style="display: inline-block; width: 20%; margin: 10px;">
-                <p style="font-weight: bold">Port of loading</p>
-                <p>{{ $transaction->port_of_loading }}</p>
-            </div>
-            <div class="card" style="display: inline-block; width: 20%; margin: 10px;">
-                <p style="font-weight: bold">Place of receipt</p>
-                <p>{{ $transaction->place_of_receipt }}</p>
-            </div>
-            <div class="card" style="display: inline-block; width: 20%; margin: 10px;">
-                <p style="font-weight: bold">Place of discharge</p>
-                <p>{{ $transaction->port_of_discharge }}</p>
-            </div>
-            <div class="card" style="display: inline-block; width: 20%; margin: 10px;">
-                <p style="font-weight: bold">Place of delivery</p>
-                <p>{{ $transaction->place_of_delivery }}</p>
-            </div>
-        </div>
-
-        <div class="group-info" style="width: 100%; margin-top: 20px; margin-bottom: 30px">
-            <table style="width: 100%; border-collapse: collapse;">
-                <tr>
-                    <!-- Tabel Kiri -->
-                    <td style="width: 60%; vertical-align: top;">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <tr>
-                                <td style="width: 30%;"><strong>Name of Product</strong></td>
-                                <td style="width: 10%; text-align: center;">:</td>
-                                <td style="width: 60%;">{{ $transaction->product->name }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Name of Commodity</strong></td>
-                                <td style="text-align: center;">:</td>
-                                <td>{{ $transaction->commodity->name }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Container</strong></td>
-                                <td style="text-align: center;">:</td>
-                                <td>{{ $transaction->container }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Net Weight</strong></td>
-                                <td style="text-align: center;">:</td>
-                                <td>{{ $transaction->net_weight }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Gross Weight</strong></td>
-                                <td style="text-align: center;">:</td>
-                                <td>{{ $transaction->gross_weight }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Payment Term</strong></td>
-                                <td style="text-align: center;">:</td>
-                                <td>{{ $transaction->payment_term }}</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <!-- Tabel Kanan -->
-                    <td style="width: 40%; vertical-align: top;">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <tr>
-                                <td style="width: 40%;"><strong>Stuffing Date</strong></td>
-                                <td style="width: 10%; text-align: center;">:</td>
-                                <td style="width: 50%;">{{ $transaction->stuffing_date }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>BL Number</strong></td>
-                                <td style="text-align: center;">:</td>
-                                <td>{{ $transaction->bl_number }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Container Number</strong></td>
-                                <td style="text-align: center;">:</td>
-                                <td>{{ $transaction->container_number }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Seal Number</strong></td>
-                                <td style="text-align: center;">:</td>
-                                <td>{{ $transaction->seal_number }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Product NCM</strong></td>
-                                <td style="text-align: center;">:</td>
-                                <td>{{ $transaction->product_ncm }}</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
         
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th class="text-center">Item Description</th>
-                    <th class="text-center">Carton (pcs)</th>
-                    <th class="text-center">Inner (pcs)</th>
-                    <th class="text-center">Net Weight (KG)</th>
-                </tr>
-            </thead>
-            <tbody id="detail-rows">
-                @foreach ($detailTransactions as $detailTransaction)
-                <tr>
-                    <td class="custom-description">
-                        <strong>{{ $detailTransaction->detailProduct->name }}
-                        {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong><br>
-                        {{ $detailTransaction->detailProduct->dimension }} 
-                        {{ $detailTransaction->detailProduct->color }} 
-                        {{ $detailTransaction->detailProduct->type }}
-                    </td>
-                    <td>{{ $detailTransaction->carton }}</td>
-                    <td>{{ $detailTransaction->inner_qty_carton }}</td>
-                    <td>{{ $detailTransaction->net_weight }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr id="totalRow">
-                    <td class="text-center">Amount</td>
-                    <td class="text-center custom-bg-success" id="totalCarton">0</td>
-                    <td class="text-center custom-bg-success" id="totalInner">0</td>
-                    <td class="text-center custom-bg-success" id="totalNetWeight">0</td>
-                </tr>
-            </tfoot>
-        </table>
+</style>
+<body>
+    <table class="section-satu">
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td><img src="{{ $logo }}" alt="Company Logo" style="width: 50px;"></td>
+                        <td><em style="font-size: 50px; font-weight: bold;">PT.PSN</em>
+                            <br>PRINGGONDANI SETIA NUSANTARA
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table style="width: 100%; font-size: 12px;">
+                    <tr>
+                        <td>Date</td>
+                        <td>:</td>
+                        <td style="text-align: right">{{ $transaction->date }}</td>
+                    </tr>
+                    <tr>
+                        <td>Code</td>
+                        <td>:</td>
+                        <td style="text-align: right">{{ $transaction->code }}</td>
+                    </tr>
+                    <tr>
+                        <td>Number</td>
+                        <td>:</td>
+                        <td style="text-align: right">{{ $transaction->number }}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 
-        <div>
-            <table style="width: 100%">
-                <tr>
-                    <td style="text-align: end"><p>Approver</p></td>
-                </tr>
-                <tr>
-                    <td style="text-align: end">Director</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+    <h2 style="text-align: center">PACKING LIST</h2>
+
+    <table class="section-dua">
+            <tr>
+                <td style="width: 33%; font-weight: bold; font-size: 15px">CONSIGNEE</td>
+                <td style="width: 33%; font-weight: bold; font-size: 15px">NOTIFY</td>
+                <td style="width: 33%; font-weight: bold; font-size: 15px">CLIENT</td>
+            </tr>
+            <tr>
+                <td style="font-weight: 300">{{ $transaction->consignee->name }}</td>
+                <td style="font-weight: 300">{{ $transaction->notify }}</td>
+                <td style="font-weight: 300">{{ $transaction->client->name }}</td>
+            </tr>
+            <tr>
+                <td>{{ $transaction->consignee->address }}</td>
+                <td></td>
+                <td>{{ $transaction->client->address }}</td>
+            </tr>
+            <tr>
+                <td>{{ $transaction->consignee->tel }}</td>
+                <td></td>
+                <td>{{ $transaction->client->tel }}</td>
+            </tr>
+    </table>
+
+    <table class="section-tiga">
+        <tr>
+            <td style="font-weight: bold">Port of loading</td>
+            <td style="font-weight: bold">Place of receipt</td>
+            <td style="font-weight: bold">Port of discharge</td>
+            <td style="font-weight: bold">Place of delivery</td>
+        </tr>
+        <tr>
+            <td>{{ $transaction->port_of_loading }}</td>
+            <td>{{ $transaction->place_of_receipt }}</td>
+            <td>{{ $transaction->port_of_discharge}}</td>
+            <td>{{ $transaction->place_of_delivery }}</td>
+        </tr>
+    </table>
+
+    <table class="section-empat">
+        <tr>
+            <th style="width: 25%">Name of Product</th>
+            <td style="width: 2%;">:</td>
+            <td style="width: 40%">{{ $transaction->product->name }}</td>
+            <th>Stuffing Date</th>
+            <td style="width: 2%;">:</td>
+            <td>{{ $transaction->stuffing_date }}</td>
+        </tr>
+        <tr>
+            <th>Name of Commodity</th>
+            <td>:</td>
+            <td>{{ $transaction->commodity->name }}</td>
+            <th>BL Number</th>
+            <td>:</td>
+            <td>{{ $transaction->bl_number }}</td>
+        </tr>
+        <tr>
+            <th>Container</th>
+            <td>:</td>
+            <td>{{ $transaction->container }}</td>
+            <th>Container Number</th>
+            <td>:</td>
+            <td>{{ $transaction->container_number }}</td>
+        </tr>
+        <tr>
+            <th>Net Weight</th>
+            <td>:</td>
+            <td>{{ $transaction->net_weight }}</td>
+            <th>Seal Number</th>
+            <td>:</td>
+            <td>{{ $transaction->seal_number }}</td>
+        </tr>
+        <tr>
+            <th>Gross Weight</th>
+            <td>:</td>
+            <td>{{ $transaction->gross_weight }}</td>
+            <th>Product NCM</th>
+            <td>:</td>
+            <td>{{ $transaction->product_ncm }}</td>
+        </tr>
+        <tr>
+            <th>Payment Term</th>
+            <td>:</td>
+            <td>{{ $transaction->payment_term }}</td>
+            <th></th>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th class="text-center" style="width: 30%">Item Description</th>
+                <th class="text-center">Carton (PCS)</th>
+                <th class="text-center">Inner<br>(PCS)</th>
+                <th class="text-center">Unit Price (USD/KG)</th>
+                <th class="text-center">Net Weight (KG)</th>
+                <th class="text-center">Price Amount (USD)</th>
+            </tr>
+        </thead>
+        <tbody id="detail-rows">
+            @foreach ($detailTransactions as $detailTransaction)
+            <tr>
+                <td class="custom-description">
+                    <strong>{{ $detailTransaction->detailProduct->name }}
+                    {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong><br>
+                    {{ $detailTransaction->detailProduct->dimension }} 
+                    {{ $detailTransaction->detailProduct->color }} 
+                    {{ $detailTransaction->detailProduct->type }}
+                </td>
+                <td>{{ $detailTransaction->carton }}</td>
+                <td>{{ $detailTransaction->inner_qty_carton }}</td>
+                <td>{{ $detailTransaction->unit_price }}</td>
+                <td>{{ $detailTransaction->net_weight }}</td>
+                <td>{{ $detailTransaction->price_amount }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr id="totalRow">
+                <td style="text-align: center">Amount</td>
+                <td class="custom-bg-red" id="totalCarton">0</td>
+                <td class="custom-bg-red" id="totalInner">0</td>
+                <td class="custom-bg-red"></td>
+                <td class="custom-bg-red" id="totalNetWeight">0</td>
+                <td class="custom-bg-red" id="PriceAmount">0</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <table style="width: 100%; margin-top: 5mm">
+        <tr>
+            <td style="text-align: right"><p>Approver</p></td>
+        </tr>
+        <tr><div style="height : 30px"></div></tr>
+        <tr>
+            <td style="text-align: right">Director</td>
+        </tr>
+    </table>
 </body>
 </html>
-

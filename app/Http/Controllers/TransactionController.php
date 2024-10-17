@@ -209,8 +209,7 @@ class TransactionController extends Controller
         $decodedId = IdHashHelper::decode($hashId);
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
-        $company = Company::first();   
-        $totalInWords = NumberToWords::convert($transaction->total);   
+        $company = Company::first(); 
         $path = 'storage/'.$company->logo;
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
@@ -228,15 +227,14 @@ class TransactionController extends Controller
         $decodedId = IdHashHelper::decode($hashId);
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
-        $company = Company::first();    
-        $totalInWords = NumberToWords::convert($transaction->total);  
+        $company = Company::first();
         $path = 'storage/'.$company->logo;
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
         
         
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords'));
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('packing_list_' . $hashId . '.pdf');
