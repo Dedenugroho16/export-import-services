@@ -394,32 +394,32 @@
 
                                                 <tfoot>
                                                     <tr id="totalRow" style="font-weight: bold;">
-                                                        <td class="text-center" colspan="2">Amount</td>
+                                                        <td class="text-center" colspan="1">Amount</td>
                                                         <td class="text-center" id="totalCarton">0</td>
                                                         <td class="text-center" id="totalInner">0</td>
                                                         <td class="text-center"></td>
                                                         <td class="text-center" id="totalNetWeight">0</td>
                                                         <td class="text-center" id="PriceAmount">0</td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr id="inputRow">
-                                                        <td class="text-center" colspan="6"></td>
+                                                        <td class="text-end" colspan="5"><label for="additionalInput" class="mr-2">Freight Cost
+                                                            :</label></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                <label for="additionalInput" class="mr-2">Freight Cost
-                                                                    :</label>
                                                                 <input type="number" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
                                                                     value="{{ $transaction->freight_cost }}"
                                                                     min="0" max="99999999.99">
                                                             </div>
                                                         </td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="text-center" colspan="6"></td>
+                                                        <td class="text-end" colspan="5">Total :</td>
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
-                                                                <label for="total" class="mr-2">Total:</label>
                                                                 <input type="number" step="0.01"
                                                                     class="form-control total" style="width: 150px;"
                                                                     disabled>
@@ -427,6 +427,7 @@
                                                                     id="total" name="total" style="width: 150px;">
                                                             </div>
                                                         </td>
+                                                        <td></td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -909,6 +910,7 @@
 
                     // Update total amounts and form for loadedData
                     updateAmounts();
+                    updateTotals();
                     updateFormDetailTransaction(); // Ensure this only updates formDetailTransaction
                 });
             }
