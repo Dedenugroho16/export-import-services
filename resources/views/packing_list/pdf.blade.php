@@ -39,7 +39,6 @@
 
     .custom-table {
         width: 100%;
-        border: 1px solid black;
         border-collapse: collapse;
         font-size: 12px;
         margin-top: 10mm;
@@ -51,7 +50,7 @@
     .custom-table tfoot td {
         font-weight: bold;
     }
-    .custom-bg-red {
+    .custom-bg-success {
         background-color: #28a745;;
         color: white;
         text-align: center;
@@ -184,46 +183,40 @@
         </tr>
     </table>
 
-    <table class="custom-table">
-        <thead>
-            <tr>
-                <th class="text-center" style="width: 30%">Item Description</th>
-                <th class="text-center">Carton (PCS)</th>
-                <th class="text-center">Inner<br>(PCS)</th>
-                <th class="text-center">Unit Price (USD/KG)</th>
-                <th class="text-center">Net Weight (KG)</th>
-                <th class="text-center">Price Amount (USD)</th>
-            </tr>
-        </thead>
-        <tbody id="detail-rows">
-            @foreach ($detailTransactions as $detailTransaction)
-            <tr>
-                <td class="custom-description">
-                    <strong>{{ $detailTransaction->detailProduct->name }}
-                    {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong><br>
-                    {{ $detailTransaction->detailProduct->dimension }} 
-                    {{ $detailTransaction->detailProduct->color }} 
-                    {{ $detailTransaction->detailProduct->type }}
-                </td>
-                <td>{{ $detailTransaction->carton }}</td>
-                <td>{{ $detailTransaction->inner_qty_carton }}</td>
-                <td>{{ $detailTransaction->unit_price }}</td>
-                <td>{{ $detailTransaction->net_weight }}</td>
-                <td>{{ $detailTransaction->price_amount }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-        <tfoot>
-            <tr id="totalRow">
-                <td style="text-align: center">Amount</td>
-                <td class="custom-bg-red" id="totalCarton">0</td>
-                <td class="custom-bg-red" id="totalInner">0</td>
-                <td class="custom-bg-red"></td>
-                <td class="custom-bg-red" id="totalNetWeight">0</td>
-                <td class="custom-bg-red" id="PriceAmount">0</td>
-            </tr>
-        </tfoot>
-    </table>
+     <table class="custom-table">
+            <thead>
+                <tr>
+                    <th class="text-center">Item Description</th>
+                    <th class="text-center">Carton (pcs)</th>
+                    <th class="text-center">Inner (pcs)</th>
+                    <th class="text-center">Net Weight (KG)</th>
+                </tr>
+            </thead>
+            <tbody id="detail-rows">
+                @foreach ($detailTransactions as $detailTransaction)
+                <tr>
+                    <td class="custom-description">
+                        <strong>{{ $detailTransaction->detailProduct->name }}
+                        {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong><br>
+                        {{ $detailTransaction->detailProduct->dimension }} 
+                        {{ $detailTransaction->detailProduct->color }} 
+                        {{ $detailTransaction->detailProduct->type }}
+                    </td>
+                    <td>{{ $detailTransaction->carton }}</td>
+                    <td>{{ $detailTransaction->inner_qty_carton }}</td>
+                    <td>{{ $detailTransaction->net_weight }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr id="totalRow">
+                    <td class="text-center">Amount</td>
+                    <td class="text-center custom-bg-success" id="totalCarton">0</td>
+                    <td class="text-center custom-bg-success" id="totalInner">0</td>
+                    <td class="text-center custom-bg-success" id="totalNetWeight">0</td>
+                </tr>
+            </tfoot>
+        </table>
 
     <table style="width: 100%; margin-top: 5mm">
         <tr>
