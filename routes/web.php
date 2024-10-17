@@ -12,6 +12,7 @@ use App\Http\Controllers\ProformaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\ProformaInvoiceController;
@@ -67,6 +68,9 @@ Route::resource('countries', CountryController::class);
 // Branch Routes
 Route::resource('branches', BranchController::class);
 
+// Company Routes using resource
+Route::resource('company', CompanyController::class);
+
 // Transaction Routes using resource
 // Route::resource('transaction', TransactionController::class);
 Route::get('/get-invoice', [TransactionController::class, 'getInvoice'])->name('getInvoice');
@@ -112,16 +116,25 @@ Route::post('/detailtransaction/store', [DetailTransactionController::class, 'st
 // Logout Route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Register Route (Hanya untuk tamu)
-Route::view('/register', 'auth.register')->name('register')->middleware('guest');
-Route::post('/register', [AuthController::class, 'register'])->middleware('guest');
-
 // Login Routes (Hanya untuk tamu)
 Route::view('/login', 'auth.login')->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 
 Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
 Route::resource('users', UserController::class);
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
-Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+// Route untuk menampilkan halaman profil
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+
+// Route untuk memperbarui profil
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+// Route export to pdf
+Route::get('/packing-list/{id}/export-pdf', [TransactionController::class, 'exportPdf'])->name('packing-list.exportPdf');
+Route::get('/packing-list/{id}/download-pdf', [TransactionController::class, 'downloadPdf'])->name('packing-list.downloadPdf');
+Route::get('/transaction/{id}/export-pdf', [TransactionController::class, 'transactionExportPdf'])->name('transaction.exportPdf');
+Route::get('/transaction/{id}/download-pdf', [TransactionController::class, 'transactionDownloadPdf'])->name('transaction.downloadPdf');
+Route::get('/proforma/{id}/export-pdf', [ProformaController::class, 'proformaExportPdf'])->name('proforma.exportPdf');
+Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaDownloadPdf'])->name('proforma.downloadPdf');

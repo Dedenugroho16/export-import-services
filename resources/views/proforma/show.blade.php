@@ -4,11 +4,36 @@
 @section('content')
     <div class="page-body">
         <div class="container-xl">
-            <div class="mb-4 mt-4">
+            <div class="mb-4 mt-4 d-flex justify-content-between">
                 <a href="{{ route('proforma.index') }}" class="btn btn-primary">
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
                     Kembali
                 </a>
+                @if ($approved == 1)
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-printer">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                            <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                            <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                        </svg>
+                        Ekspor/Download
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('proforma.exportPdf', ['id' => $hashedId]) }}">
+                                Ekspor PDF
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('proforma.downloadPdf', ['id' => $hashedId]) }}">
+                                Download PDF
+                            </a>
+                        </li>
+                    </ul>
+                </div>                
+                @endif
             </div>
             <!-- Form Section -->
             <div class="row row-deck row-cards">
@@ -43,7 +68,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <!-- Kolom Kiri: Logo dan Nama Perusahaan -->
                                     <div class="d-flex align-items-center">
-                                        <img src="{{ asset('dist/img/mefita-logo.png') }}" alt="logo" width="60">
+                                        <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
                                         <div style="padding-left: 10px;">
                                             <em style="font-size: 60px; font-weight:500;">PT. PSN</em><br>
                                             <p style="font-weight:500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
@@ -51,23 +76,23 @@
                                     </div>
                             
                                     <!-- Kolom Kanan: Detail Informasi -->
-                                    <div class="row mb-5 mt-3">
+                                    <div class="row mb-5 mt-3 col-4">
                                         <div>
-                                            <table class="table-sm">
+                                            <table class=" table-sm">
                                                 <tr>
                                                     <td><strong>Date</strong></td>
                                                     <td><strong>:</strong></td>
-                                                    <td class="text-end">{{ $ApprovedData->date }}</td>
+                                                    <td class="text-end">{{ $proformaInvoice->date }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Code</strong></td>
                                                     <td><strong>:</strong></td>
-                                                    <td class="text-end">{{ $ApprovedData->code }}</td>
+                                                    <td class="text-end">{{ $proformaInvoice->code }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Number</strong></td>
                                                     <td><strong>:</strong></td>
-                                                    <td class="text-end">{{ $ApprovedData->number }}</td>
+                                                    <td class="text-end">{{ $proformaInvoice->number }}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -92,9 +117,9 @@
                                         </div>
                                         <div class="card-body p-1">
                                             <p>
-                                                {{ $ApprovedData->consignee->name }} <br>
-                                                {{ $ApprovedData->consignee->address }} <br>
-                                                {{ $ApprovedData->consignee->tel }}
+                                                {{ $proformaInvoice->consignee->name }} <br>
+                                                {{ $proformaInvoice->consignee->address }} <br>
+                                                {{ $proformaInvoice->consignee->tel }}
                                             </p>
                                         </div>
                                     </div>
@@ -108,7 +133,7 @@
                                         </div>
                                         <div class="card-body p-1">
                                             <p>
-                                                {{ $ApprovedData->notify }} <br>
+                                                {{ $proformaInvoice->notify }} <br>
                                             </p>
                                         </div>
                                     </div>
@@ -122,9 +147,9 @@
                                         </div>
                                         <div class="card-body p-1">
                                             <p>
-                                                {{ $ApprovedData->client->name }} <br>
-                                                {{ $ApprovedData->client->address }} <br>
-                                                {{ $ApprovedData->client->tel }}
+                                                {{ $proformaInvoice->client->name }} <br>
+                                                {{ $proformaInvoice->client->address }} <br>
+                                                {{ $proformaInvoice->client->tel }}
                                             </p>
                                         </div>
                                     </div>
@@ -140,7 +165,7 @@
                                             <h5 class="card-title">Port of loading</h5>
                                         </div>
                                         <div class="card-body p-1">
-                                            <p>{{ $ApprovedData->port_of_loading }}</p>
+                                            <p>{{ $proformaInvoice->port_of_loading }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -152,7 +177,7 @@
                                             <h5 class="card-title">Place of receipt</h5>
                                         </div>
                                         <div class="card-body p-1">
-                                            <p>{{ $ApprovedData->place_of_receipt }}</p>
+                                            <p>{{ $proformaInvoice->place_of_receipt }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +189,7 @@
                                             <h5 class="card-title">Port of discharge</h5>
                                         </div>
                                         <div class="card-body p-1">
-                                            <p>{{ $ApprovedData->port_of_discharge }}</p>
+                                            <p>{{ $proformaInvoice->port_of_discharge }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +201,7 @@
                                             <h5 class="card-title">Place of delivery</h5>
                                         </div>
                                         <div class="card-body p-1">
-                                            <p>{{ $ApprovedData->place_of_delivery }}</p>
+                                            <p>{{ $proformaInvoice->place_of_delivery }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -195,7 +220,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $ApprovedData->product->name }}</p>
+                                                <p>{{ $proformaInvoice->product->name }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -206,7 +231,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $ApprovedData->commodity->name }}</p>
+                                                <p>{{ $proformaInvoice->commodity->name }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -217,7 +242,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $ApprovedData->container }}</p>
+                                                <p>{{ $proformaInvoice->container }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -228,7 +253,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $ApprovedData->payment_term }}</p>
+                                                <p>{{ $proformaInvoice->payment_term }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -243,7 +268,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $ApprovedData->net_weight }}</p>
+                                                <p>{{ $proformaInvoice->net_weight }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -254,7 +279,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $ApprovedData->gross_weight }}</p>
+                                                <p>{{ $proformaInvoice->gross_weight }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -265,7 +290,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $ApprovedData->product_ncm }}</p>
+                                                <p>{{ $proformaInvoice->product_ncm }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -310,11 +335,11 @@
                                             </tr>
                                             <tr>
                                                 <td class="text-end" colspan="5">FREIGHT COST</td>
-                                                <td class="text-center">{{ $ApprovedData->freight_cost }}</td>
+                                                <td class="text-center">{{ $proformaInvoice->freight_cost }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="text-end" colspan="5">TOTAL</td>
-                                                <td class="text-center bg-danger text-white">{{ $ApprovedData->total }}</td>
+                                                <td class="text-center bg-danger text-white">{{ $proformaInvoice->total }}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -322,29 +347,44 @@
                             </div>
                             {{-- akhir tabel detail transaction --}}
                             <!-- Teks total dalam kata -->
-                            <div class="text-end mt-3">
-                                <div>
+                            <div class="mt-3">
+                                <div class="text-end">
                                     <p><strong><em>{{ $totalInWords }} USD</em></strong></p>
                                     <p><em>Payment Condition: FOB (Free on Board)</em></p>
                                 </div>
                                 <div class="mt-7">
-                                    <p>Approved By</p>
-                                    <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80">
-                                    <div>
-                                        <p style="display: inline-block;">
-                                            <strong>Approver</strong><br>
-                                            <u style="width: 100%; display: block; border-bottom: 1px solid black;"></u>
-                                        </p>
-                                        <p><strong>Director</strong></p>
-                                    </div>
+                                    <table class="col-2 text-center" style="float: right;">
+                                        <tr>
+                                            <td>
+                                                <p>Approved By</p>
+                                            </td>
+                                        </tr>
+                                        @if ($approved == 1)
+                                            <tr>
+                                                <td>
+                                                    <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p style="margin: 0; border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>Approver</strong><br></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><strong>Director</strong></p>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    </table>
                                 </div>
                             </div>
                             
+                           </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <script>
         $(document).ready(function() {

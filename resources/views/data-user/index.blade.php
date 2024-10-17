@@ -71,6 +71,15 @@
                                                 <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
                                                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                                             </div>
+                                            <div class="mb-3">
+                                                <label for="role" class="form-label">Role</label>
+                                                <select class="form-select" id="role" name="role" required>
+                                                    <option value="" disabled selected>Pilih Role</option>
+                                                    <option value="admin">Admin</option>
+                                                    <option value="operator">Operator</option>
+                                                    <option value="director">Director</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -110,6 +119,14 @@
                                                 <label for="edit_password_confirmation" class="form-label">Konfirmasi Password</label>
                                                 <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation">
                                             </div>
+                                            <div class="mb-3">
+                                                <label for="edit_role" class="form-label">Role</label>
+                                                <select class="form-select" id="edit_role" name="role" required>
+                                                    <option value="admin">Admin</option>
+                                                    <option value="operator">Operator</option>
+                                                    <option value="director">Director</option>
+                                                </select>
+                                            </div>
                                             <input type="hidden" id="edit_user_id" name="user_id">
                                         </div>
                                         <div class="modal-footer">
@@ -130,6 +147,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Password</th>
+                                        <th>Role</th>
                                         <th>Created At</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -159,6 +177,7 @@
                 { data: 'name', name: 'name' },
                 { data: 'email', name: 'email' },
                 { data: 'password', name: 'password' },
+                { data: 'role', name: 'role' },
                 { data: 'created_at', name: 'created_at' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
@@ -172,19 +191,14 @@
                     previous: "Sebelumnya"
                 },
                 search: "Cari :",
-                infoFiltered: "(disaring dari total _MAX_ entri)"
+                infoEmpty: "Tidak ada entri",
+                zeroRecords: "Tidak ada catatan yang cocok",
             },
-            lengthMenu: [5, 10, 25, 50],
-            pageLength: 10,
-            bAutoWidth: false,
-            bLengthChange: true,
-            processing: false,
-            searching: true,
         });
 
-        // Reset form when Add User modal is shown
-        $('#addUserModal').on('shown.bs.modal', function () {
-            $('#addUserForm')[0].reset();
+        // Reset form ketika modal ditutup
+        $('#addUserModal').on('hidden.bs.modal', function() {
+            $('#addUserForm')[0].reset(); // Reset form
         });
 
         // Handle Add User form submission
@@ -203,24 +217,6 @@
                 error: function(xhr) {
                     let errorMessage = 'Terjadi kesalahan: ' + (xhr.responseJSON?.message || xhr.responseText);
                     alert(errorMessage);
-                }
-            });
-        });
-
-        // Handle Edit User button click
-        $('#usersTable').on('click', '.edit-user', function() {
-            var userId = $(this).data('id');
-            $.ajax({
-                url: "/users/" + userId + "/edit",
-                method: 'GET',
-                success: function(data) {
-                    $('#edit_name').val(data.name);
-                    $('#edit_email').val(data.email);
-                    $('#edit_user_id').val(data.id);
-                    $('#editUserModal').modal('show');
-                },
-                error: function(xhr) {
-                    alert('Error fetching user data: ' + xhr.responseText);
                 }
             });
         });
@@ -246,10 +242,29 @@
             });
         });
 
-        // Handle Delete User
+        // Handle Edit User button click
+        $('#usersTable').on('click', '.edit-user', function() {
+            var userId = $(this).data('id');
+            $.ajax({
+                url: "/users/" + userId + "/edit",
+                method: 'GET',
+                success: function(data) {
+                    $('#edit_name').val(data.name);
+                    $('#edit_email').val(data.email);
+                    $('#edit_user_id').val(data.id);
+                    $('#edit_role').val(data.role);
+                    $('#editUserModal').modal('show');
+                },
+                error: function(xhr) {
+                    alert('Error fetching user data: ' + xhr.responseText);
+                }
+            });
+        });
+
+        // Handle Delete User button click
         $('#usersTable').on('click', '.delete-user', function() {
             var userId = $(this).data('id');
-            if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+            if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
                 $.ajax({
                     url: "/users/" + userId,
                     method: 'DELETE',
@@ -257,12 +272,16 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        table.ajax.reload();
-                        var deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
-                        deleteToast.show();
+                        if (response.success) {
+                            table.ajax.reload();
+                            var deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
+                            deleteToast.show();
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
                     },
                     error: function(xhr) {
-                        alert('Terjadi kesalahan saat menghapus pengguna: ' + xhr.responseText);
+                        alert('Error deleting user: ' + xhr.responseText);
                     }
                 });
             }

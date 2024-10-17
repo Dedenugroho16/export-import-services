@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
 use App\Helpers\IdHashHelper;
 use App\Helpers\NumberToWords;
-use App\Models\Country;
-use App\Models\Product;
-use App\Models\Commodity;
+use App\Models\Company;
 use App\Models\Consignee;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\DetailProduct;
 use App\Models\DetailTransaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -51,8 +49,9 @@ class TransactionController extends Controller
         return view('transaction.index', compact('transactions'));
     }
 
-    public function create($id)
+    public function create($hash)
     {
+        $id = IdHashHelper::decode($hash);
         // Logika untuk membuat invoice berdasarkan id proforma yang dipilih
         $transaction = Transaction::findOrFail($id);
 
@@ -113,15 +112,13 @@ class TransactionController extends Controller
     {
         $id = IdHashHelper::decode($hash);
         $transaction = Transaction::findOrFail($id);
-
-        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $company = Company::first();
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
-
-        // Panggil helper untuk mengonversi total menjadi kata
         $totalInWords = NumberToWords::convert($transaction->total);
+        $hashedId = IdHashHelper::encode($id);
 
 
-        return view('transaction.show', compact('transaction', 'detailTransactions', 'totalInWords'));
+        return view('transaction.show', compact('transaction', 'detailTransactions', 'totalInWords', 'company', 'hashedId'));
     }
 
     /**
@@ -194,19 +191,88 @@ class TransactionController extends Controller
     {
         //
     }
-    // Akhir fungsi - fungsi invoice
 
     // fungsi tampilan Packing List
     public function packingListShow($hash)
     {
         $id = IdHashHelper::decode($hash);
         $transaction = Transaction::findOrFail($id);
-
-        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $company = Company::first();
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+        $hashedId = IdHashHelper::encode($id);
 
-
-        return view('packing_list.show', compact('transaction', 'detailTransactions'));
+        return view('packing_list.show', compact('transaction', 'detailTransactions', 'company', 'hashedId'));
     }
-    // akhir fungsi tampilan Packing List
+
+    public function exportPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $transaction = Transaction::where('id', $decodedId)->firstOrFail();
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first(); 
+        $path = 'storage/'.$company->logo;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        
+        
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream('packing_list_' . $hashId . '.pdf');
+    }
+
+    public function downloadPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $transaction = Transaction::where('id', $decodedId)->firstOrFail();
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first();
+        $path = 'storage/'.$company->logo;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        
+        
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('packing_list_' . $hashId . '.pdf');
+    }
+
+    public function transactionExportPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $transaction = Transaction::where('id', $decodedId)->firstOrFail();
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first();     
+        $totalInWords = NumberToWords::convert($transaction->total); 
+        $path = 'storage/'.$company->logo;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream('invoice_' . $hashId . '.pdf');
+    }
+
+    public function transactionDownloadPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $transaction = Transaction::where('id', $decodedId)->firstOrFail();
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first();      
+        $totalInWords = NumberToWords::convert($transaction->total);
+        $path = 'storage/'.$company->logo;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('invoice_' . $hashId . '.pdf');
+    }
 }

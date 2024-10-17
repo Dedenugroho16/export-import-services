@@ -12,12 +12,13 @@ use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
+use App\Models\Company;
 use App\Models\DetailTransaction;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProformaController extends Controller
 {
-    // fungsi - fungsi Proforma Invoice
     public function index()
     {
         $proformaInvoice = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
@@ -32,25 +33,40 @@ class ProformaController extends Controller
             ->where('approved', 0) // Kondisi approved harus 0
             ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
 
-        return DataTables::of($proformaInvoice)
+            return DataTables::of($proformaInvoice)
             ->addColumn('client', function ($row) {
-                return $row->client->name;  // Asumsikan ada relasi `client` di model Transaction
+                return $row->client->name;
             })
             ->addColumn('consignee', function ($row) {
-                return $row->consignee->name;  // Asumsikan ada relasi `consignee` di model Transaction
+                return $row->consignee->name;
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-                $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning">Lihat Detail</a> ';
-                $edit = ' <a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger">Edit</a> ';
-                return $lihatDetail . $edit . ' <button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button> ';
+                    $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning me-2">Lihat Detail</a>';
+                    $edit = '<a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger me-2">Edit</a>';
+                    
+                    $buttons = $lihatDetail . $edit;
+        
+                if (in_array(auth()->user()->role, ['director', 'admin'])) {
+                    $setujui = '<button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button>';
+                    $buttons .= $setujui;
+                }
+        
+                return $buttons;
             })
-            ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
+            ->rawColumns(['aksi'])
             ->make(true);
+        
     }
 
     public function approveProforma($id)
     {
+        // Cek apakah pengguna yang sedang login adalah director atau admin
+        if (!in_array(auth()->user()->role, ['director', 'admin'])) {
+            // Jika bukan director atau admin, berikan respons error
+            return response()->json(['error' => 'Anda tidak memiliki akses untuk menyetujui Proforma.'], 403);
+        }
+
         // Cari transaksi berdasarkan ID dan update field approved menjadi 1
         $transaction = Transaction::findOrFail($id);
         $transaction->approved = 1;
@@ -59,6 +75,8 @@ class ProformaController extends Controller
         // Kembalikan respons sukses
         return response()->json(['success' => 'Proforma invoice disetujui.']);
     }
+
+
 
     // Mengambil Proforma yang telah disetujui
     public function getApprovedData()
@@ -82,7 +100,8 @@ class ProformaController extends Controller
                 // Cek jika stuffing_date bernilai null, tampilkan tombol "Buat Invoice"
                 $buatInvoice = '';
                 if (is_null($row->stuffing_date)) {
-                    $buatInvoice = '<a href="' . route('transaction.create', ['id' => $row->id]) . '" class="btn btn-sm btn-success">Buat Invoice</a>';
+                    $hashId = IdHashHelper::encode($row->id);
+                    $buatInvoice = '<a href="' . route('transaction.create', ['id' => $hashId]) . '" class="btn btn-sm btn-success">Buat Invoice</a>';
                 }
 
                 return $lihatDetail . ' ' . $buatInvoice; // Menggabungkan kedua link
@@ -156,30 +175,17 @@ class ProformaController extends Controller
         return response()->json(['id' => $transaction->id], 201);
     }
 
-    // public function show($hash)
-    // {
-    //     $id = IdHashHelper::decode($hash);
-    //     $ApprovedData = Transaction::findOrFail($id);
-
-    //     // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
-    //     $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
-
-    //     return view('proforma.show', compact('ApprovedData', 'detailTransactions'));
-    // }
-
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);
-        $transaction = Transaction::findOrFail($id);
-
-        // Ambil semua detail transaksi yang berhubungan dengan transaksi tersebut
+        $proformaInvoice = Transaction::findOrFail($id);
+        $company = Company::first();
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+        $totalInWords = NumberToWords::convert($proformaInvoice->total);
+        $approved = $proformaInvoice->approved;
+        $hashedId = IdHashHelper::encode($id);
 
-        // Panggil helper untuk mengonversi total menjadi kata
-        $totalInWords = NumberToWords::convert($transaction->total);
-
-
-        return view('transaction.show', compact('transaction', 'detailTransactions', 'totalInWords'));
+        return view('proforma.show', compact('proformaInvoice', 'detailTransactions', 'totalInWords', 'approved', 'company', 'hashedId'));
     }
 
     // mengambil detail product
@@ -351,5 +357,41 @@ class ProformaController extends Controller
 
         // Kembalikan response JSON dengan status sukses
         return response()->json(['message' => 'Proforma updated successfully'], 200);
+    }
+
+    public function proformaExportPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $proformaInvoice = Transaction::where('id', $decodedId)->firstOrFail();
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first();
+        $totalInWords = NumberToWords::convert($proformaInvoice->total); 
+        $path = 'storage/'.$company->logo;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream('proforma' . $hashId . '.pdf');
+    }
+
+    public function proformaDownloadPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $proformaInvoice = Transaction::where('id', $decodedId)->firstOrFail();
+        $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
+        $company = Company::first();      
+        $totalInWords = NumberToWords::convert($proformaInvoice->total);
+        $path = 'storage/'.$company->logo;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('proforma' . $hashId . '.pdf');
     }
 }

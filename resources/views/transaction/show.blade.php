@@ -4,11 +4,34 @@
 @section('content')
     <div class="page-body">
         <div class="container-xl">
-            <div class="mb-4 mt-4">
+            <div class="mb-4 mt-4 d-flex justify-content-between">
                 <a href="{{ route('transaction.index') }}" class="btn btn-primary">
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
                     Kembali
                 </a>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-printer">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                            <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                            <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                        </svg>
+                        Ekspor/Download
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('transaction.exportPdf', ['id' => $hashedId]) }}">
+                                Ekspor PDF
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('transaction.downloadPdf', ['id' => $hashedId]) }}">
+                                Download PDF
+                            </a>
+                        </li>
+                    </ul>
+                </div> 
             </div>
             <!-- Form Section -->
             <div class="row row-deck row-cards">
@@ -42,7 +65,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <!-- Kolom Kiri: Logo dan Nama Perusahaan -->
                                     <div class="d-flex align-items-center">
-                                        <img src="{{ asset('dist/img/mefita-logo.png') }}" alt="logo" width="60">
+                                        <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
                                         <div style="padding-left: 10px;">
                                             <em style="font-size: 60px; font-weight:500;">PT. PSN</em><br>
                                             <p style="font-weight:500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
@@ -334,7 +357,9 @@
                                         <tbody id="detail-rows" style="font-size: 12px">
                                             @foreach ($detailTransactions as $detailTransaction)
                                                 <tr>
-                                                    <td>{{ $detailTransaction->detailProduct->name }}</td>
+                                                    <td><strong>{{ $detailTransaction->detailProduct->name }}
+                                                        {{ $detailTransaction->detailProduct->pcs }} PCS/ {{ $detailTransaction->qty }} KG</strong><br>
+                                                        {{ $detailTransaction->detailProduct->dimension }} {{ $detailTransaction->detailProduct->color }} {{ $detailTransaction->detailProduct->type }}</td>
                                                     <td class="carton">{{ $detailTransaction->carton }}</td>
                                                     <td class="inner">{{ $detailTransaction->inner_qty_carton }}</td>
                                                     <td>{{ $detailTransaction->unit_price }}</td>
@@ -366,22 +391,36 @@
                             </div>
                             {{-- akhir tabel detail transaction --}}
                             <!-- Teks total dalam kata -->
-                            <div class="text-end mt-3">
-                                <div>
+                            <div class=" mt-3">
+                                <div class="text-end">
                                     <p><strong><em>{{ $totalInWords }} USD</em></strong></p>
                                     <p><em>Payment Condition: FOB (Free on Board)</em></p>
                                 </div>
                                 <div class="mt-7">
-                                    <p>Approved By</p>
-                                    <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80">
-                                    <div>
-                                        <p style="display: inline-block;">
-                                            <strong>Approver</strong><br>
-                                            <u style="width: 100%; display: block; border-bottom: 1px solid black;"></u>
-                                        </p>
-                                        <p><strong>Director</strong></p>
-                                    </div>
+                                    <table class="col-2 text-center" style="float: right;">
+                                        <tr>
+                                            <td>
+                                                <p>Approved By</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p style="margin: 0;  border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>Approver</strong><br></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><strong>Director</strong></p>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>

@@ -4,165 +4,205 @@
 
 @section('content')
 <div class="container mt-4">
-    <div class="row">
-        <!-- Kartu untuk Klien -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
-                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
-                    <h5 class="card-title">
-                        <i class="fas fa-users fa-3x" style="color: #007bff;"></i>
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Klien</h6>
-                    <p class="card-text" style="font-size: 0.85rem;">Kelola data klien Anda di sini.</p>
-                    <div class="mt-auto">
-                        <a href="{{ route('clients.index') }}" class="btn btn-primary btn-sm">Lihat Klien</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="grid-container">
 
-        <!-- Kartu untuk Produk -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
-                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
-                    <h5 class="card-title">
-                        <i class="fas fa-box fa-3x" style="color: #28a745;"></i>
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Produk</h6>
-                    <p class="card-text" style="font-size: 0.85rem;">Kelola data produk Anda di sini.</p>
-                    <div class="mt-auto">
-                        <a href="{{ url('/products') }}" class="btn btn-success btn-sm">Lihat Produk</a>
-                    </div>
+        @if(auth()->user()->role === 'admin')
+            <!-- Kartu untuk Client -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-users text-primary"></i> Clients
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $clientsCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data client Anda di sini.</p>
+                    <a href="{{ route('clients.index') }}" class="btn btn-primary btn-sm">Lihat Client</a>
                 </div>
             </div>
-        </div>
 
-        <!-- Kartu untuk Komoditas -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
-                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
-                    <h5 class="card-title">
-                        <i class="fas fa-gem fa-3x" style="color: #ffc107;"></i>
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Komoditas</h6>
-                    <p class="card-text" style="font-size: 0.85rem;">Kelola data komoditas Anda di sini.</p>
-                    <div class="mt-auto">
-                        <a href="{{ url('/commodities') }}" class="btn btn-warning btn-sm">Lihat Komoditas</a>
-                    </div>
+            <!-- Kartu untuk Produk -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-box text-success"></i> Products
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $productsCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data produk Anda di sini.</p>
+                    <a href="{{ url('/products') }}" class="btn btn-success btn-sm">Lihat Produk</a>
                 </div>
             </div>
-        </div>
 
-        <!-- Kartu untuk Negara -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
-                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
-                    <h5 class="card-title">
-                        <i class="fas fa-flag fa-3x" style="color: #dc3545;"></i>
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Negara</h6>
-                    <p class="card-text" style="font-size: 0.85rem;">Kelola informasi negara di sini.</p>
-                    <div class="mt-auto">
-                        <a href="{{ url('/countries') }}" class="btn btn-danger btn-sm">Lihat Negara</a>
-                    </div>
+            <!-- Kartu untuk Komoditas -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-gem text-warning"></i> Commodities
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $commoditiesCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data komoditas Anda di sini.</p>
+                    <a href="{{ url('/commodities') }}" class="btn btn-warning btn-sm">Lihat Komoditas</a>
                 </div>
             </div>
-        </div>
 
-        <!-- Kartu untuk Pengguna -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
-                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
-                    <h5 class="card-title">
-                        <i class="fas fa-user fa-3x" style="color: #17a2b8;"></i>
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Pengguna</h6>
-                    <p class="card-text" style="font-size: 0.85rem;">Kelola data pengguna di sini.</p>
-                    <div class="mt-auto">
-                        <a href="{{ route('users.index') }}" class="btn btn-info btn-sm">Lihat Pengguna</a>
-                    </div>
+            <!-- Kartu untuk Negara -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-flag text-danger"></i> Countries
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $countriesCount }}</span></p>
+                    <p class="card-text text-muted">Kelola informasi negara di sini.</p>
+                    <a href="{{ url('/countries') }}" class="btn btn-danger btn-sm">Lihat Negara</a>
                 </div>
             </div>
-        </div>
 
-        <!-- Kartu untuk Cabang -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
-                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
-                    <h5 class="card-title">
-                        <i class="fas fa-building fa-3x" style="color: #6f42c1;"></i>
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Cabang</h6>
-                    <p class="card-text" style="font-size: 0.85rem;">Kelola data cabang di sini.</p>
-                    <div class="mt-auto">
-                        <a href="{{ route('branches.index') }}" class="btn btn-purple btn-sm">Lihat Cabang</a>
-                    </div>
+            <!-- Kartu untuk Pengguna -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-user text-info"></i> Users
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $usersCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data pengguna di sini.</p>
+                    <a href="{{ route('users.index') }}" class="btn btn-info btn-sm">Lihat Pengguna</a>
                 </div>
             </div>
-        </div>
 
-        <!-- Kartu untuk Transaksi -->
-        <div class="col-md-4 mb-4">
-            <div class="card border-light shadow-sm" style="background-color: #f8f9fa; height: 160px;">
-                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
-                    <h5 class="card-title">
-                        <i class="fas fa-receipt fa-3x" style="color: #17a2b8;"></i>
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Transaksi</h6>
-                    <p class="card-text" style="font-size: 0.85rem;">Kelola transaksi Anda di sini.</p>
-                    <div class="mt-auto">
-                        <a href="#" class="btn btn-info btn-sm">Lihat Transaksi</a>
-                    </div>
+            <!-- Kartu untuk Cabang -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-building text-secondary"></i> Branches
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $branchesCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data cabang di sini.</p>
+                    <a href="{{ route('branches.index') }}" class="btn btn-secondary btn-sm">Lihat Cabang</a>
                 </div>
             </div>
-        </div>
+
+            <!-- Kartu untuk Data Perusahaan -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-building text-info"></i> Company Data
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $companyCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data perusahaan Anda di sini.</p>
+                    <a href="{{ route('company.index')}}" class="btn btn-info btn-sm">Lihat Data Perusahaan</a>
+                </div>
+            </div>
+
+            <!-- Kartu untuk Transaksi -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-receipt text-warning"></i> Transactions
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $transactionsCount }}</span></p>
+                    <p class="card-text text-muted">Kelola transaksi Anda di sini.</p>
+                    <a href="{{ route('proforma.create') }}" class="btn btn-warning btn-sm">Lihat Transaksi</a>
+                </div>
+            </div>
+        @elseif(auth()->user()->role === 'operator')
+        <!-- Kartu untuk Client -->
+        <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-users text-primary"></i> Clients
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $clientsCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data client Anda di sini.</p>
+                    <a href="{{ route('clients.index') }}" class="btn btn-primary btn-sm">Lihat Client</a>
+                </div>
+            </div>
+
+            <!-- Kartu untuk Produk -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-box text-success"></i> Products
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $productsCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data produk Anda di sini.</p>
+                    <a href="{{ url('/products') }}" class="btn btn-success btn-sm">Lihat Produk</a>
+                </div>
+            </div>
+
+            <!-- Kartu untuk Komoditas -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-gem text-warning"></i> Commodities
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $commoditiesCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data komoditas Anda di sini.</p>
+                    <a href="{{ url('/commodities') }}" class="btn btn-warning btn-sm">Lihat Komoditas</a>
+                </div>
+            </div>
+
+            <!-- Kartu untuk Negara -->
+            <div class="card border-light shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-flag text-danger"></i> Countries
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $countriesCount }}</span></p>
+                    <p class="card-text text-muted">Kelola informasi negara di sini.</p>
+                    <a href="{{ url('/countries') }}" class="btn btn-danger btn-sm">Lihat Negara</a>
+                </div>
+            </div>
+
+            <div class="card border-light shadow-sm full-width">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-receipt text-warning"></i> Transactions
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $transactionsCount }}</span></p>
+                    <p class="card-text text-muted">Kelola transaksi Anda di sini.</p>
+                    <a href="{{ route('proforma.create') }}" class="btn btn-warning btn-sm">Lihat Transaksi</a>
+                </div>
+            </div>
+        @elseif(auth()->user()->role === 'director')
+            <div class="card border-light shadow-sm full-width">
+                <div class="card-body text-center">
+                     <h6 class="card-title">
+                        <i class="fas fa-receipt text-warning"></i> Transactions
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $transactionsCount }}</span></p>
+                    <p class="card-text text-muted">Kelola transaksi Anda di sini.</p>
+                    <a href="{{ route('proforma.index') }}" class="btn btn-warning btn-sm">Lihat Transaksi</a>
+                </div>
+            </div>
+        @endif
+
     </div>
 </div>
 
 <style>
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+    }
+
     .card {
         border-radius: 10px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        background-color: #ffffff; /* Warna latar belakang yang lebih bersih */
     }
 
-    .btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-info, .btn-purple {
-        font-weight: bold;
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
         border-radius: 5px;
-        margin-top: 10px;
+        font-size: 0.9rem; /* Ukuran font tombol */
     }
 
-    .btn-primary:hover {
-        background-color: #0056b3;
-        color: white;
-    }
-
-    .btn-success:hover {
-        background-color: #218838;
-        color: white;
-    }
-
-    .btn-warning:hover {
-        background-color: #e0a800;
-        color: white;
-    }
-
-    .btn-danger:hover {
-        background-color: #c82333;
-        color: white;
-    }
-
-    .btn-info:hover {
-        background-color: #138496;
-        color: white;
-    }
-
-    .btn-purple {
-        background-color: #6f42c1;
-        color: white;
-    }
-    
-    .btn-purple:hover {
-        background-color: #5a32a3;
-        color: white;
+    .full-width {
+        grid-column: span 4; /* Atur kartu transaksi agar mengambil seluruh kolom di grid */
+        width: 100%; /* Pastikan lebar penuh */
     }
 </style>
 
