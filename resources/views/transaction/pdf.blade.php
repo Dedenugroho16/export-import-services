@@ -240,11 +240,13 @@
 
     <table style="width: 100%; margin-top: 5mm">
         <tr>
-            <td style="text-align: right"><p>Approver</p></td>
+            <td style="text-align: right;"><p>Approver</p></td>
         </tr>
-        <tr><div style="height : 30px"></div></tr>
         <tr>
-            <td style="text-align: right">Director</td>
+            <td style="text-align: right;"><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right;">Director</td>
         </tr>
     </table>
 </body>

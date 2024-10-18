@@ -388,7 +388,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
+                                                <img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
                                             </td>
                                         </tr>
                                         <tr>

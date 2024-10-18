@@ -10,6 +10,7 @@ use App\Models\Consignee;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
+use App\Helpers\ImageHelper;
 use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
 use App\Models\Company;
@@ -366,15 +367,14 @@ class ProformaController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
         $totalInWords = NumberToWords::convert($proformaInvoice->total); 
-        $path = 'storage/'.$company->logo;
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
+        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
 
-        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords'));
+
+        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd'));
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->stream('proforma' . $hashId . '.pdf');
+        return $pdf->stream('proforma_' . $hashId . '.pdf');
     }
 
     public function proformaDownloadPdf($hashId)
@@ -384,14 +384,12 @@ class ProformaController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();      
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
-        $path = 'storage/'.$company->logo;
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
+        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
 
-        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords'));
+        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd'));
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->download('proforma' . $hashId . '.pdf');
+        return $pdf->download('proforma_' . $hashId . '.pdf');
     }
 }

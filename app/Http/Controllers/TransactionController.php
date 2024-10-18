@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\IdHashHelper;
+use App\Helpers\ImageHelper;
 use App\Helpers\NumberToWords;
 use App\Models\Company;
 use App\Models\Consignee;
@@ -210,13 +211,10 @@ class TransactionController extends Controller
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first(); 
-        $path = 'storage/'.$company->logo;
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
+        $ttd = ImageHelper::getBase64Image('storage/ttd.png');      
         
-        
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo'));
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('packing_list_' . $hashId . '.pdf');
@@ -228,13 +226,10 @@ class TransactionController extends Controller
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
-        $path = 'storage/'.$company->logo;
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
+        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         
-        
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo'));
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('packing_list_' . $hashId . '.pdf');
@@ -247,12 +242,10 @@ class TransactionController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();     
         $totalInWords = NumberToWords::convert($transaction->total); 
-        $path = 'storage/'.$company->logo;
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
+        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         
-        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords'));
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('invoice_' . $hashId . '.pdf');
@@ -265,12 +258,10 @@ class TransactionController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();      
         $totalInWords = NumberToWords::convert($transaction->total);
-        $path = 'storage/'.$company->logo;
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
+        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         
-        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords'));
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('invoice_' . $hashId . '.pdf');
