@@ -1108,9 +1108,8 @@
             // pilih button modal
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
                 var data = table.row($(this).parents('tr'))
-                    .data(); // Mengambil data dari baris yang dipilih
+                    .data();
 
-                // Cek apakah produk sudah ada di daftar yang sudah dipilih
                 if (selectedProductIds.includes(data.id) || newSelectedProductIds.includes(data.id)) {
                     Swal.fire({
                         icon: 'warning',
@@ -1118,7 +1117,7 @@
                         text: 'Detail product ini sudah dipilih. Silakan pilih produk lain.',
                         confirmButtonText: 'OK'
                     });
-                    return; // Hentikan proses jika produk sudah ada
+                    return;
                 }
 
                 $('#nullDetailTransaction').remove();
@@ -1186,7 +1185,6 @@
                         newSelectedProductIds.splice(index, 1);
                     }
 
-                    // Hapus baris dari tbody #selectedData
                     row.remove();
 
                     updateAmounts();

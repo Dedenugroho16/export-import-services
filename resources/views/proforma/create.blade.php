@@ -360,7 +360,6 @@
                                             <table class="table table-bordered table-hover table-striped table-sm"
                                                 id="tableDetailTransaction">
                                                 <thead>
-                                                    <th class="text-center">ID</th>
                                                     <th class="text-center">Item Description</th>
                                                     <th class="text-center">Carton(pcs)</th>
                                                     <th class="text-center">Inner(pcs)</th>
@@ -376,7 +375,7 @@
                                                 </tbody>
                                                 <tfoot>
                                                     <tr id="totalRow" style="font-weight: bold;">
-                                                        <td class="text-center" colspan="2">Amount</td>
+                                                        <td class="text-center" colspan="1">Amount</td>
                                                         <td class="text-center" id="totalCarton">0</td>
                                                         <td class="text-center" id="totalInner">0</td>
                                                         <td class="text-center"></td>
@@ -385,11 +384,10 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr id="inputRow">
-                                                        <td class="text-center" colspan="6"></td>
+                                                        <td class="text-end" colspan="5"><label for="additionalInput" class="mr-2">Freight Cost
+                                                            :</label></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                <label for="additionalInput" class="mr-2">Freight Cost
-                                                                    :</label>
                                                                 <input type="number" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
                                                                     placeholder="Enter Freight Cost" min="0"
@@ -399,13 +397,15 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="text-center" colspan="6"></td>
+                                                        <td class="text-end" colspan="5">
+                                                            <label for="total" class="mr-2">Total:</label>
+                                                        </td>
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
-                                                                <label for="total" class="mr-2">Total:</label>
-                                                                <input type="number" step="0.01" class="form-control"
-                                                                    id="total" name="total" style="width: 150px;">
+                                                                <input type="number" step="0.01" class="form-control total-display" disabled>
+                                                                <input type="hidden" step="0.01" class="form-control"
+                                                                    id="total" name="total">
                                                             </div>
                                                         </td>
                                                         <td></td>
@@ -774,14 +774,25 @@
 
             // Tabel Detail Transaction
             // Event handler ketika tombol "Pilih" diklik
+            var selectedProductIds = [];
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
                 var data = table.row($(this).parents('tr'))
-                    .data(); // Mengambil data dari baris yang dipilih
+                    .data();
+
+                if (selectedProductIds.includes(data.id)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Produk sudah dipilih',
+                        text: 'Detail product ini sudah dipilih. Silakan pilih produk lain.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
 
                 // Membuat elemen tr untuk ditambahkan ke tabel #tableDetailTransaction
                 var newRow = `
         <tr>
-            <td class="text-center id-detail-product">${data.id}</td>
+            <td class="text-center id-detail-product" style="display: none;">${data.id}</td>
             <td class="text-center">
                 <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
                 ${data.dimension} ${data.color} - ${data.type}
@@ -797,6 +808,8 @@
                 <button class="btn btn-danger btn-sm remove-btn">Hapus</button>
             </td>
         </tr>`;
+
+                selectedProductIds.push(data.id);
 
                 // Menambahkan elemen tr baru ke tabel #tableDetailTransaction
                 $('#tableDetailTransaction tbody').append(newRow);
@@ -904,6 +917,7 @@
 
                     // Update elemen dengan total baru
                     $('#total').val(total);
+                    $('.total-display').val(total);
                 }
 
                 // Event listener untuk input Freight Cost
@@ -913,7 +927,16 @@
 
                 // Event handler untuk tombol "Hapus" pada #tableDetailTransaction
                 $('#tableDetailTransaction tbody').on('click', '.remove-btn', function() {
-                    $(this).closest('tr').remove(); // Menghapus baris saat tombol Hapus diklik
+                    var row = $(this).closest('tr');
+                    var productId = row.find('.id-detail-product').text().trim();
+
+                    // Hapus produk dari array newSelectedProductIds jika dihapus
+                    var index = selectedProductIds.indexOf(parseInt(productId));
+                    if (index !== -1) {
+                        selectedProductIds.splice(index, 1);
+                    }
+
+                    row.remove();
 
                     // Jika tidak ada baris lagi, tambahkan kembali baris "Tidak ada barang"
                     if ($('#tableDetailTransaction tbody tr').length === 0) {
