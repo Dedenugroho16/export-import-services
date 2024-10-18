@@ -210,10 +210,10 @@
             </tbody>
             <tfoot>
                 <tr id="totalRow">
-                    <td class="text-center">Amount</td>
-                    <td class="text-center custom-bg-success" id="totalCarton">0</td>
-                    <td class="text-center custom-bg-success" id="totalInner">0</td>
-                    <td class="text-center custom-bg-success" id="totalNetWeight">0</td>
+                    <td style="text-align: center">Amount</td>
+                    <td class="text-center custom-bg-success" id="totalCarton">{{ $totalCarton }}</td>
+                    <td class="text-center custom-bg-success" id="totalInner">{{ $totalInner }}</td>
+                    <td class="text-center custom-bg-success" id="totalNetWeight">{{ $totalNetWeight }}</td>
                 </tr>
             </tfoot>
         </table>

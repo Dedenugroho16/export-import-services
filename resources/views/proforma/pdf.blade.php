@@ -200,11 +200,11 @@
         <tfoot>
             <tr id="totalRow">
                 <td style="text-align: center">Amount</td>
-                <td class="custom-bg-red" id="totalCarton">0</td>
-                <td class="custom-bg-red" id="totalInner">0</td>
+                <td class="custom-bg-red" id="totalCarton">{{ $totalCarton }}</td>
+                <td class="custom-bg-red" id="totalInner">{{ $totalInner }}</td>
                 <td class="custom-bg-red"></td>
-                <td class="custom-bg-red" id="totalNetWeight">0</td>
-                <td class="custom-bg-red" id="PriceAmount">0</td>
+                <td class="custom-bg-red" id="totalNetWeight">{{ $totalNetWeight }}</td>
+                <td class="custom-bg-red" id="PriceAmount">{{ $priceAmount }}</td>
             </tr>
             <tr>
                 <td style="text-align: right" colspan="5">FREIGHT COST</td>

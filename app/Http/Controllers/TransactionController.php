@@ -212,9 +212,21 @@ class TransactionController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first(); 
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
-        $ttd = ImageHelper::getBase64Image('storage/ttd.png');      
+        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd'));
+        $totalCarton = 0;
+        $totalInner = 0;
+        $totalNetWeight = 0;
+        $priceAmount = 0;
+        
+        foreach ($detailTransactions as $detail) {
+            $totalCarton += $detail->carton;
+            $totalInner += $detail->inner_qty_carton;
+            $totalNetWeight += $detail->net_weight;
+            $priceAmount += $detail->price_amount;
+        }
+        
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('packing_list_' . $hashId . '.pdf');
@@ -228,8 +240,20 @@ class TransactionController extends Controller
         $company = Company::first();
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
+
+        $totalCarton = 0;
+        $totalInner = 0;
+        $totalNetWeight = 0;
+        $priceAmount = 0;
         
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd'));
+        foreach ($detailTransactions as $detail) {
+            $totalCarton += $detail->carton;
+            $totalInner += $detail->inner_qty_carton;
+            $totalNetWeight += $detail->net_weight;
+            $priceAmount += $detail->price_amount;
+        }
+        
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('packing_list_' . $hashId . '.pdf');
@@ -244,8 +268,20 @@ class TransactionController extends Controller
         $totalInWords = NumberToWords::convert($transaction->total); 
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
+
+        $totalCarton = 0;
+        $totalInner = 0;
+        $totalNetWeight = 0;
+        $priceAmount = 0;
         
-        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd'));
+        foreach ($detailTransactions as $detail) {
+            $totalCarton += $detail->carton;
+            $totalInner += $detail->inner_qty_carton;
+            $totalNetWeight += $detail->net_weight;
+            $priceAmount += $detail->price_amount;
+        }
+        
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('invoice_' . $hashId . '.pdf');
@@ -260,8 +296,20 @@ class TransactionController extends Controller
         $totalInWords = NumberToWords::convert($transaction->total);
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
+
+        $totalCarton = 0;
+        $totalInner = 0;
+        $totalNetWeight = 0;
+        $priceAmount = 0;
         
-        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd'));
+        foreach ($detailTransactions as $detail) {
+            $totalCarton += $detail->carton;
+            $totalInner += $detail->inner_qty_carton;
+            $totalNetWeight += $detail->net_weight;
+            $priceAmount += $detail->price_amount;
+        }
+        
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('invoice_' . $hashId . '.pdf');
