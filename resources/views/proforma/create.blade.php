@@ -356,7 +356,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="table-responsive pb-2 border-top" style="max-height: 18rem">
+                                        <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
                                                 id="tableDetailTransaction">
                                                 <thead>
@@ -384,8 +384,9 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr id="inputRow">
-                                                        <td class="text-end" colspan="5"><label for="additionalInput" class="mr-2">Freight Cost
-                                                            :</label></td>
+                                                        <td class="text-end" colspan="5"><label for="additionalInput"
+                                                                class="mr-2">Freight Cost
+                                                                :</label></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
                                                                 <input type="number" step="0.01" class="form-control"
@@ -403,7 +404,8 @@
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
-                                                                <input type="number" step="0.01" class="form-control total-display" disabled>
+                                                                <input type="number" step="0.01"
+                                                                    class="form-control total-display" disabled>
                                                                 <input type="hidden" step="0.01" class="form-control"
                                                                     id="total" name="total">
                                                             </div>
@@ -786,6 +788,7 @@
                         text: 'Detail product ini sudah dipilih. Silakan pilih produk lain.',
                         confirmButtonText: 'OK'
                     });
+                    $('#memberModal').modal('hide');
                     return;
                 }
 
@@ -950,6 +953,8 @@
                     updateTotals();
                     updateFormDetailTransaction();
                 });
+
+                $('#memberModal').modal('hide');
             });
             // Event handler ketika tombol "Pilih" diklik END
 

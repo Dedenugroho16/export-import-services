@@ -1117,6 +1117,7 @@
                         text: 'Detail product ini sudah dipilih. Silakan pilih produk lain.',
                         confirmButtonText: 'OK'
                     });
+                    $('#memberModal').modal('hide');
                     return;
                 }
 
@@ -1191,6 +1192,8 @@
                     updateTotals();
                     newUpdateFormDetailTransaction();
                 });
+
+                $('#memberModal').modal('hide');
             });
             // Event handler ketika tombol "Pilih" diklik END
 
@@ -1284,7 +1287,7 @@
                                                 // Submit newFormDetailTransaction jika ada data baru yang ditambahkan
                                                 if (
                                                     hasNewDetailTransactionData
-                                                    ) {
+                                                ) {
                                                     $.ajax({
                                                         url: newFormDetailTransaction
                                                             .attr(
