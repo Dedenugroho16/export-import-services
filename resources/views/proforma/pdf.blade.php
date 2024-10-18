@@ -200,11 +200,11 @@
         <tfoot>
             <tr id="totalRow">
                 <td style="text-align: center">Amount</td>
-                <td class="custom-bg-red" id="totalCarton">0</td>
-                <td class="custom-bg-red" id="totalInner">0</td>
+                <td class="custom-bg-red" id="totalCarton">{{ $totalCarton }}</td>
+                <td class="custom-bg-red" id="totalInner">{{ $totalInner }}</td>
                 <td class="custom-bg-red"></td>
-                <td class="custom-bg-red" id="totalNetWeight">0</td>
-                <td class="custom-bg-red" id="PriceAmount">0</td>
+                <td class="custom-bg-red" id="totalNetWeight">{{ $totalNetWeight }}</td>
+                <td class="custom-bg-red" id="PriceAmount">{{ $priceAmount }}</td>
             </tr>
             <tr>
                 <td style="text-align: right" colspan="5">FREIGHT COST</td>
@@ -224,12 +224,14 @@
 
     <table style="width: 100%; margin-top: 5mm">
         <tr>
-            <td style="text-align: right"><p>Approver</p></td>
+            <td style="text-align: right;"><p>Approver</p></td>
         </tr>
-        <tr><div style="height : 30px"></div></tr>
         <tr>
-            <td style="text-align: right">Director</td>
+            <td style="text-align: right;"><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
         </tr>
-    </table>
+        <tr>
+            <td style="text-align: right;">Director</td>
+        </tr>
+    </table>    
 </body>
 </html>

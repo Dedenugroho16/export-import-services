@@ -210,22 +210,24 @@
             </tbody>
             <tfoot>
                 <tr id="totalRow">
-                    <td class="text-center">Amount</td>
-                    <td class="text-center custom-bg-success" id="totalCarton">0</td>
-                    <td class="text-center custom-bg-success" id="totalInner">0</td>
-                    <td class="text-center custom-bg-success" id="totalNetWeight">0</td>
+                    <td style="text-align: center">Amount</td>
+                    <td class="text-center custom-bg-success" id="totalCarton">{{ $totalCarton }}</td>
+                    <td class="text-center custom-bg-success" id="totalInner">{{ $totalInner }}</td>
+                    <td class="text-center custom-bg-success" id="totalNetWeight">{{ $totalNetWeight }}</td>
                 </tr>
             </tfoot>
         </table>
 
-    <table style="width: 100%; margin-top: 5mm">
-        <tr>
-            <td style="text-align: right"><p>Approver</p></td>
-        </tr>
-        <tr><div style="height : 30px"></div></tr>
-        <tr>
-            <td style="text-align: right">Director</td>
-        </tr>
-    </table>
+        <table style="width: 100%; margin-top: 5mm">
+            <tr>
+                <td style="text-align: right;"><p>Approver</p></td>
+            </tr>
+            <tr>
+                <td style="text-align: right;"><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">Director</td>
+            </tr>
+        </table>
 </body>
 </html>
