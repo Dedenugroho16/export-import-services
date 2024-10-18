@@ -21,7 +21,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="{{ route('packing-list.exportPdf', ['id' => $hashedId]) }}">
+                            <a class="dropdown-item" href="{{ route('packing-list.exportPdf', ['id' => $hashedId]) }}" target="_blank">
                                 Ekspor PDF
                             </a>
                         </li>
