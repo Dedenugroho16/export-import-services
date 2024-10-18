@@ -22,7 +22,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="{{ route('proforma.exportPdf', ['id' => $hashedId]) }}">
+                            <a class="dropdown-item" href="{{ route('proforma.exportPdf', ['id' => $hashedId]) }}" target="_blank">
                                 Ekspor PDF
                             </a>
                         </li>
@@ -362,7 +362,7 @@
                                         @if ($approved == 1)
                                             <tr>
                                                 <td>
-                                                    <img src="{{ asset('dist/img/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
+                                                    <img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
                                                 </td>
                                             </tr>
                                             <tr>
