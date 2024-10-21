@@ -244,7 +244,7 @@
 
     <table style="width: 100%; margin-top: 3mm">
         <tr style="text-align: right"><td><strong><em>{{ $totalInWords }} USD</em></strong></td></tr>
-        <tr style="text-align: right"><td><em>Payment Condition: FOB (Free on Board)</em></td></tr>
+        <tr style="text-align: right"><td><em>Payment Condition: {{ $transaction->payment_condition}}</em></td></tr>
     </table>
 
     <table class="approve-section">
