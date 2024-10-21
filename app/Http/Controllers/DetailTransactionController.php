@@ -33,10 +33,10 @@ class DetailTransactionController extends Controller
             'id_transaction' => 'required|exists:transactions,id', // Pastikan id_transaction valid
             'transactions.*.id_detail_product' => 'required|exists:detail_products,id',
             'transactions.*.qty' => 'required|numeric|min:1',
-            'transactions.*.carton' => 'required|numeric|min:0',
-            'transactions.*.inner_qty_carton' => 'required|numeric|min:0',
+            'transactions.*.carton' => 'required|numeric|min:1',
+            'transactions.*.inner_qty_carton' => 'required|numeric|min:0|max:9999999.99',
             'transactions.*.unit_price' => 'required|numeric|min:0',
-            'transactions.*.net_weight' => 'required|numeric|min:0',
+            'transactions.*.net_weight' => 'required|numeric|min:0|max:9999999.99',
             'transactions.*.price_amount' => 'required|numeric|min:0',
         ]);
 

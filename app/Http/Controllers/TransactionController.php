@@ -158,6 +158,7 @@ class TransactionController extends Controller
             'container_number' => 'required|string|max:255',
             'seal_number' => 'required|string|max:255',
             'product_ncm' => 'required|string|max:255',
+            'payment_condition' => 'required|string|max:255',
             'freight_cost' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'approved' => 'nullable|boolean',

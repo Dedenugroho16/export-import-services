@@ -31,6 +31,7 @@ class Transaction extends Model
         'container_number',
         'seal_number',
         'product_ncm',
+        'payment_condition',
         'freight_cost',
         'total',
         'approved'
