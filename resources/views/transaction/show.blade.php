@@ -73,9 +73,9 @@
                                     </div>
                             
                                     <!-- Kolom Kanan: Detail Informasi -->
-                                    <div class="row mb-5 mt-3">
+                                    <div class="row mb-5 mt-3 col-4">
                                         <div>
-                                            <table class="table-sm">
+                                            <table class=" table-sm">
                                                 <tr>
                                                     <td><strong>Date</strong></td>
                                                     <td><strong>:</strong></td>
@@ -389,38 +389,27 @@
                                     </table>
                                 </div>
                             </div>
-                            {{-- akhir tabel detail transaction --}}
-                            <!-- Teks total dalam kata -->
                             <div class=" mt-3">
                                 <div class="text-end">
                                     <p><strong><em>{{ $totalInWords }} USD</em></strong></p>
                                     <p><em>Payment Condition: FOB (Free on Board)</em></p>
                                 </div>
                                 <div class="mt-7">
-                                    <table class="col-2 text-center" style="float: right;">
+                                    <table class="text-center" style="width: auto; float:right">
                                         <tr>
-                                            <td>
-                                                <p>Approved By</p>
-                                            </td>
+                                            <td><p style="font-weight: bold">Approved By</p></td>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                <img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
-                                            </td>
+                                            <td><img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;"></td>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                <p style="margin: 0;  border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>Approver</strong><br></p>
-                                            </td>
+                                            <td style="border-bottom: 1px solid black;">{{ $transaction->approverUser->name }}</td>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                <p><strong>Director</strong></p>
-                                            </td>
+                                            <td>{{ $transaction->approverUser->role }}</td>
                                         </tr>
                                     </table>
-                                </div>
-                                
+                                </div>                           
                             </div>
                         </div>
                     </div>

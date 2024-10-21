@@ -353,28 +353,20 @@
                                     <p><em>Payment Condition: FOB (Free on Board)</em></p>
                                 </div>
                                 <div class="mt-7">
-                                    <table class="col-2 text-center" style="float: right;">
+                                    <table class="text-center" style="width: auto; float:right">
                                         <tr>
-                                            <td>
-                                                <p>Approved By</p>
-                                            </td>
+                                            <td><p style="font-weight: bold">Approved By</p></td>
                                         </tr>
                                         @if ($approved == 1)
-                                            <tr>
-                                                <td>
-                                                    <img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p style="margin: 0; border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>Approver</strong><br></p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p><strong>Director</strong></p>
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            <td><img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border-bottom: 1px solid black;">{{ $proformaInvoice->approverUser->name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ $proformaInvoice->approverUser->role }}</td>
+                                        </tr>
                                         @endif
                                     </table>
                                 </div>
