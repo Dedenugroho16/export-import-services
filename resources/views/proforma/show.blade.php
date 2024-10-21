@@ -367,12 +367,12 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <p style="margin: 0; border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>Approver</strong><br></p>
+                                                    <p style="margin: 0; border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>{{ $proformaInvoice->approverUser->name }}</strong><br></p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <p><strong>Director</strong></p>
+                                                    <p><strong>{{ $proformaInvoice->approverUser->role }}</strong></p>
                                                 </td>
                                             </tr>
                                         @endif

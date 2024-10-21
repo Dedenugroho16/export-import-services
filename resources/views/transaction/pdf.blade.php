@@ -246,7 +246,10 @@
             <td style="text-align: right;"><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
         </tr>
         <tr>
-            <td style="text-align: right;">Director</td>
+            <td style="text-align: right;">{{ $transaction->approverUser->name }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: right;">{{ $transaction->approverUser->role }}</td>
         </tr>
     </table>
 </body>

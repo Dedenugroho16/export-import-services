@@ -410,12 +410,12 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <p style="margin: 0;  border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>Approver</strong><br></p>
+                                                <p style="margin: 0;  border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>{{ $transaction->approverUser->name }}</strong><br></p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <p><strong>Director</strong></p>
+                                                <p><strong>{{ $transaction->approverUser->role }}</strong></p>
                                             </td>
                                         </tr>
                                     </table>

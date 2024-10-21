@@ -34,6 +34,8 @@ class CreateTransactionsTable extends Migration
             $table->decimal('freight_cost', 10, 2);
             $table->decimal('total', 10, 2);
             $table->boolean('approved')->default(false);
+            $table->unsignedBigInteger('approver')->nullable();
+            $table->timestamp('approved_at')->nullable();
             $table->timestamps();
 
             $table->foreign('id_consignee')->references('id')->on('consignees')->onDelete('cascade');
