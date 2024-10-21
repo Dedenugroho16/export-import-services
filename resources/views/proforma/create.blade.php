@@ -307,9 +307,9 @@
                                                     </div>
                                                     <div class="col-5">
                                                         <input type="number" class="form-control net_weight_transaction"
-                                                            step="0.01" disabled>
+                                                            step="0.01" max="9999999.99" disabled>
                                                         <input type="hidden" id="net_weight_transaction"
-                                                            name="net_weight" class="form-control" step="0.01"
+                                                            name="net_weight" class="form-control" step="0.01" max="9999999.99"
                                                             placeholder="Contoh: 123.45" required>
                                                     </div>
                                                 </div>
@@ -356,6 +356,10 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
+                                        <p id="error-message-qty" style="color: red;">Nilai maksimum QTY adalah tiga digit
+                                        </p>
+                                        <p id="error-message-carton" style="color: red;">Nilai maksimum Carton adalah
+                                            empat digit</p>
                                         <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
                                                 id="tableDetailTransaction">
@@ -776,6 +780,8 @@
 
             // Tabel Detail Transaction
             // Event handler ketika tombol "Pilih" diklik
+            $('#error-message-qty').hide();
+            $('#error-message-carton').hide();
             var selectedProductIds = [];
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
                 var data = table.row($(this).parents('tr'))
@@ -797,10 +803,10 @@
         <tr>
             <td class="text-center id-detail-product" style="display: none;">${data.id}</td>
             <td class="text-center">
-                <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
+                <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" max="999" /> KG</strong><br>
                 ${data.dimension} ${data.color} - ${data.type}
             </td>
-            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" /></td>
+            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="999" /></td>
             <td class="text-center inner-result">
                 0
             </td>
@@ -823,9 +829,41 @@
                 // Event listener to calculate the result
                 $('#tableDetailTransaction tbody').on('input', '.qty-input, .carton-input', function() {
                     var row = $(this).closest('tr');
-                    var qty = parseFloat(row.find('.qty-input').val()) || 0;
-                    var carton = parseFloat(row.find('.carton-input').val()) || 0;
+                    var qtyInput = row.find('.qty-input');
+                    var cartonInput = row.find('.carton-input');
+
+                    var qty = parseFloat(qtyInput.val()) || 0;
+                    var carton = parseFloat(cartonInput.val()) || 0;
                     var price = parseFloat(row.find('.price').data('price')) || 0;
+
+                    // Batas maksimum untuk qty dan carton
+                    var maxQty = 999; // Maksimum 3 digit
+                    var maxCarton = 9999; // Maksimum 4 digit
+
+                    $('#error-message-qty').hide();
+                    $('#error-message-carton').hide();
+
+                    // Flag to track if input exceeds limits
+                    var exceedsLimit = false;
+
+                    // Check if qty exceeds max value
+                    if (qty > maxQty) {
+                        $('#error-message-qty').show(); // Show error message for qty
+                        exceedsLimit = true;
+                    }
+
+                    // Check if carton exceeds max value
+                    if (carton > maxCarton) {
+                        $('#error-message-carton').show(); // Show error message for carton
+                        exceedsLimit = true;
+                    }
+
+                    // Jika ada yang melebihi batas, disable tombol submit
+                    if (exceedsLimit) {
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#submitButton').prop('disabled', false);
+                    }
 
                     // Multiply qty by carton and update the result
                     var result = qty * carton;
@@ -862,7 +900,8 @@
                         var carton = $(row).find('.carton-input').val();
                         var inner = $(row).find('.inner-result').text().trim();
                         var unitPrice = $(row).find('.price').text().trim();
-                        var netWeight = $(row).find('.net-weight').text().trim();
+                        var netWeight = parseFloat($(row).find('.net-weight').text().trim()) || 0;
+                        netWeight = netWeight.toFixed(2);
                         var priceAmount = $(row).find('.price-result').text().trim();
 
                         // Create hidden inputs and append to the form
