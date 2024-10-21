@@ -309,8 +309,8 @@
                                                         <input type="number" class="form-control net_weight_transaction"
                                                             step="0.01" max="9999999.99" disabled>
                                                         <input type="hidden" id="net_weight_transaction"
-                                                            name="net_weight" class="form-control" step="0.01" max="9999999.99"
-                                                            placeholder="Contoh: 123.45" required>
+                                                            name="net_weight" class="form-control" step="0.01"
+                                                            max="9999999.99" placeholder="Contoh: 123.45" required>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-2">
@@ -347,9 +347,9 @@
                                                         <span>:</span>
                                                     </div>
                                                     <div class="col-5">
-                                                        <input type="text" name="payment_condition" id="payment_condition"
-                                                            class="form-control" placeholder="Masukkan Payment Condition"
-                                                            required>
+                                                        <input type="text" name="payment_condition"
+                                                            id="payment_condition" class="form-control"
+                                                            placeholder="Masukkan Payment Condition" required>
                                                     </div>
                                                 </div>
                                             </div>
