@@ -403,8 +403,9 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr id="inputRow">
-                                                        <td class="text-end" colspan="5"><label for="additionalInput" class="mr-2">Freight Cost
-                                                            :</label></td>
+                                                        <td class="text-end" colspan="5"><label for="additionalInput"
+                                                                class="mr-2">Freight Cost
+                                                                :</label></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
                                                                 <input type="number" step="0.01" class="form-control"
@@ -916,8 +917,8 @@
             }
 
             function updateFormDetailTransaction() {
-                // Periksa apakah tabel kosong atau hanya mengandung baris 'Tidak ada barang'
-                if ($('#tableDetailTransaction tbody tr').length === 0 || $('#nullDetailTransaction').length > 0) {
+                // Periksa apakah tabel di dalam #loadedData kosong atau hanya mengandung baris 'Tidak ada barang'
+                if ($('#loadedData tr').length === 0 || $('#loadedData #nullDetailTransaction').length > 0) {
                     // Kosongkan form jika tidak ada baris produk yang valid
                     $('#formDetailTransaction').empty();
                     return;
@@ -1107,9 +1108,8 @@
             // pilih button modal
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
                 var data = table.row($(this).parents('tr'))
-                    .data(); // Mengambil data dari baris yang dipilih
+                    .data();
 
-                // Cek apakah produk sudah ada di daftar yang sudah dipilih
                 if (selectedProductIds.includes(data.id) || newSelectedProductIds.includes(data.id)) {
                     Swal.fire({
                         icon: 'warning',
@@ -1117,7 +1117,8 @@
                         text: 'Detail product ini sudah dipilih. Silakan pilih produk lain.',
                         confirmButtonText: 'OK'
                     });
-                    return; // Hentikan proses jika produk sudah ada
+                    $('#memberModal').modal('hide');
+                    return;
                 }
 
                 $('#nullDetailTransaction').remove();
@@ -1185,13 +1186,14 @@
                         newSelectedProductIds.splice(index, 1);
                     }
 
-                    // Hapus baris dari tbody #selectedData
                     row.remove();
 
                     updateAmounts();
                     updateTotals();
                     newUpdateFormDetailTransaction();
                 });
+
+                $('#memberModal').modal('hide');
             });
             // Event handler ketika tombol "Pilih" diklik END
 
@@ -1284,21 +1286,22 @@
                                             }).then(() => {
                                                 // Submit newFormDetailTransaction jika ada data baru yang ditambahkan
                                                 if (
-                                                    hasNewDetailTransactionData) {
+                                                    hasNewDetailTransactionData
+                                                ) {
                                                     $.ajax({
                                                         url: newFormDetailTransaction
                                                             .attr(
                                                                 'action'
-                                                                ),
+                                                            ),
                                                         method: newFormDetailTransaction
                                                             .attr(
                                                                 'method'
-                                                                ),
+                                                            ),
                                                         data: newFormDetailTransaction
                                                             .serialize(),
                                                         success: function(
                                                             response
-                                                            ) {
+                                                        ) {
                                                             newDetailTransactionSuccess
                                                                 =
                                                                 true;
@@ -1313,11 +1316,11 @@
                                                                         location
                                                                             .reload(); // Reload halaman setelah semua berhasil
                                                                     }
-                                                                    );
+                                                                );
                                                         },
                                                         error: function(
                                                             xhr
-                                                            ) {
+                                                        ) {
                                                             Swal.fire({
                                                                     icon: 'error',
                                                                     title: 'Error',
@@ -1333,15 +1336,15 @@
                                                                             .prop(
                                                                                 'disabled',
                                                                                 false
-                                                                                );
+                                                                            );
                                                                     }
-                                                                    );
+                                                                );
                                                         }
                                                     });
                                                 } else {
                                                     // Jika tidak ada detail transaksi baru, reload
                                                     location
-                                                    .reload();
+                                                        .reload();
                                                 }
                                             });
                                         },
@@ -1379,7 +1382,7 @@
                                                 confirmButtonText: 'OK'
                                             }).then(() => {
                                                 location
-                                            .reload(); // Reload halaman setelah semua berhasil
+                                                    .reload(); // Reload halaman setelah semua berhasil
                                             });
                                         },
                                         error: function(xhr) {
@@ -1401,7 +1404,7 @@
                                 } else {
                                     // Jika tidak ada detail transaksi dan tidak ada transaksi baru
                                     location
-                                .reload(); // Reload halaman setelah semua berhasil
+                                        .reload(); // Reload halaman setelah semua berhasil
                                 }
                             });
                         },
