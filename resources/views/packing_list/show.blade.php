@@ -67,9 +67,9 @@
                                     <!-- Kolom Kiri: Logo dan Nama Perusahaan -->
                                     <div class="d-flex align-items-center">
                                         <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
-                                        <div style="padding-left: 10px;">
-                                            <em style="font-size: 60px; font-weight:500;">PT. PSN</em><br>
-                                            <p style="font-weight:500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
+                                        <div style="padding-left: 5px;">
+                                            <em style="font-size: 60px; font-weight: 500; line-height: 1;">PT. PSN</em>
+                                            <p style="font-weight: 500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
                                         </div>
                                     </div>
                             

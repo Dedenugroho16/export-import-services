@@ -74,7 +74,7 @@
                 <table>
                     <tr>
                         <td><img src="{{ $logo }}" alt="Company Logo" style="width: 50px;"></td>
-                        <td><em style="font-size: 50px; font-weight: bold;">PT.PSN</em>
+                        <td><em style="font-size: 60px; font-weight: bold;">PT.PSN</em>
                             <br>PRINGGONDANI SETIA NUSANTARA
                         </td>
                     </tr>
