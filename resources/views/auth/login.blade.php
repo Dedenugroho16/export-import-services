@@ -24,7 +24,7 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background: linear-gradient(135deg, #ff007f 0%, #00bfff 100%);
+        background: linear-gradient(135deg, #007bff 0%, #ffffff 100%); /* Updated gradient */
       }
 
       .card {
