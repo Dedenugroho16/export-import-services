@@ -31,6 +31,7 @@ class Transaction extends Model
         'container_number',
         'seal_number',
         'product_ncm',
+        'payment_condition',
         'freight_cost',
         'total',
         'approved'
@@ -65,5 +66,10 @@ class Transaction extends Model
     public function detailTransactions()
     {
         return $this->hasMany(DetailTransaction::class, 'id_transaction');
+    }
+
+    public function approverUser()
+    {
+        return $this->belongsTo(User::class, 'approver', 'id');
     }
 }

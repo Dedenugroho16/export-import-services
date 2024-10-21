@@ -44,6 +44,7 @@
         font-size: 12px;
         margin-top: 10mm;
     }
+
     .custom-table th, .custom-table td {
         border: 1px solid black;
         padding: 5px;
@@ -51,10 +52,19 @@
     .custom-table tfoot td {
         font-weight: bold;
     }
+
     .custom-bg-red {
         background-color: #d82d2d;
         color: white;
         text-align: center;
+    }
+
+    .approve-section {
+        width: auto;
+        font-size: 15px;
+        text-align: center;
+        float: right;
+        margin-top: 10mm;
     }
         
 </style>
@@ -219,19 +229,22 @@
 
     <table style="width: 100%; margin-top: 3mm">
         <tr style="text-align: right"><td><strong><em>{{ $totalInWords }} USD</em></strong></td></tr>
-        <tr style="text-align: right"><td><em>Payment Condition: FOB (Free on Board)</em></td></tr>
+        <tr style="text-align: right"><td><em>Payment Condition: {{ $proformaInvoice->payment_condition}}</em></td></tr>
     </table>
 
-    <table style="width: 100%; margin-top: 5mm">
+    <table class="approve-section">
         <tr>
-            <td style="text-align: right;"><p>Approver</p></td>
+            <td><p style="font-weight: bold">Approved By</p></td>
         </tr>
         <tr>
-            <td style="text-align: right;"><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
+            <td><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
         </tr>
         <tr>
-            <td style="text-align: right;">Director</td>
+            <td style="border-bottom: 1px solid black;">{{ $proformaInvoice->approverUser->name }}</td>
         </tr>
-    </table>    
+        <tr>
+            <td>{{ $proformaInvoice->approverUser->role }}</td>
+        </tr>
+    </table>
 </body>
 </html>

@@ -85,7 +85,7 @@
     <div class="card">
       <!-- Company Logo -->
       <div class="text-center">
-        <img src="{{ asset('dist/img/logo.jpg') }}" alt="Company Logo" class="img-fluid">
+        <img src="{{ Storage::url($company->logo)}}" alt="Company Logo" class="img-fluid">
       </div>
       <!-- Login Form -->
       <h2>Masuk ke akun anda</h2>

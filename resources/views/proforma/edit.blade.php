@@ -345,7 +345,20 @@
                                                     </div>
                                                     <div class="col-5">
                                                         <input type="text" name="product_ncm" id="product_ncm"
-                                                            class="form-control"value="{{ $transaction->product_ncm }}"
+                                                            class="form-control" value="{{ $transaction->product_ncm }}"
+                                                            required>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-4">
+                                                        <p><strong>Payment Condition</strong></p>
+                                                    </div>
+                                                    <div class="col-2 text-center">
+                                                        <span>:</span>
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <input type="text" name="payment_condition" id="payment_condition"
+                                                            class="form-control" value="{{ $transaction->payment_condition }}"
                                                             required>
                                                     </div>
                                                 </div>
