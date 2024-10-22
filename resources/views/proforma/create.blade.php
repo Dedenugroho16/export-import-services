@@ -119,11 +119,12 @@
                                                                             placeholder="Pilih Client" readonly>
                                                                         <input type="hidden" id="selectedClientId"
                                                                             name="id_client">
-                                                                        <div class="input-group-append">
-                                                                            <button type="button" class="btn btn-primary"
-                                                                                data-toggle="modal"
-                                                                                data-target="#clientModal">
-                                                                                Cari
+                                                                        <div class="btn-group">
+                                                                            <button type="button"
+                                                                                class="btn btn-primary btn-sm"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#clientsModal">
+                                                                                <i data-feather="search"></i> Cari Client
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -461,15 +462,14 @@
     </div>
 
     {{-- modal Client --}}
-    <div class="modal fade text-left" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel"
-        aria-hidden="true" style="display: none;">
+    {{-- <div class="modal fade text-left" id="memberModal" tabindex="-1" role="dialog" aria-hidden="true"> --}}
+    <div class="modal fade text-left" id="clientsModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="clientModalLabel">Pilih Client</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <table class="table card-table table-vcenter text-nowrap" id="clientsModalTable">
@@ -490,15 +490,16 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                        aria-label="Close">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- modal Consignee --}}
-    <div class="modal fade text-left" id="consigneeModal" tabindex="-1" role="dialog" aria-labelledby="consigneeModalLabel"
-        aria-hidden="true" style="display: none;">
+    <div class="modal fade text-left" id="consigneeModal" tabindex="-1" role="dialog"
+        aria-labelledby="consigneeModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -578,7 +579,6 @@
 
         $(document).ready(function() {
             // Menginisialisasi Select2
-            $('#consignee').select2();
             $('#product').select2();
             $('#commodity').select2();
             $('#country').select2();
@@ -1238,115 +1238,155 @@
             }
         });
     </script>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#clientsModalTable').DataTable({
-            processing: false,
-            serverSide: true,
-            ajax: "{{ route('clients.index') }}",
-            columns: [
-                { data: 'id', name: 'id', class: 'text-center' },
-                { data: 'name', name: 'name' },
-                { data: 'address', name: 'address' },
-                { data: 'PO_BOX', name: 'PO_BOX', class: 'text-center' },
-                { data: 'tel', name: 'tel', class: 'text-center' },
-                { data: 'fax', name: 'fax', class: 'text-center' },
-                {
-                    data: null,
-                    render: function(data, type, row) {
-                        return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#clientsModalTable').DataTable({
+                processing: false,
+                serverSide: true,
+                ajax: "{{ route('clients.index') }}",
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        class: 'text-center'
                     },
-                    orderable: false,
-                    searchable: false
-                }
-            ],
-            language: {
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                paginate: {
-                    first: "Pertama",
-                    last: "Terakhir",
-                    next: "Selanjutnya",
-                    previous: "Sebelumnya"
-                },
-                search: "Cari :",
-                infoFiltered: "(disaring dari total _MAX_ entri)"
-            },
-            lengthMenu: [5, 10, 25, 50],
-            pageLength: 10,
-            drawCallback: function() {
-                $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
-                    'max-width': '280px',
-                    'overflow': 'hidden',
-                    'text-overflow': 'ellipsis'
-                });
-            }
-        });
-
-        // Event listener untuk tombol "Pilih" di tabel client
-        $('#clientsModalTable tbody').on('click', '.select-client', function() {
-            var clientId = $(this).data('id');
-            var clientName = $(this).data('name');
-
-            $('#selectedClientId').val(clientId);
-            $('#selectedClientName').val(clientName);
-            $('#clientsModal').modal('hide');
-
-            // Memuat data consignee berdasarkan ID client yang dipilih
-            loadConsignees(clientId);
-        });
-
-        var consigneeTable = $('#consigneeModalTable').DataTable({
-            autoWidth: false,
-            processing: false,
-            serverSide: true,
-            ajax: "", // diisi saat loadConsignees dipanggil
-            columns: [
-                { data: 'id', name: 'id', class: 'text-center' },
-                { data: 'name', name: 'name' },
-                { data: 'address', name: 'address', class: 'text-center' },
-                { data: 'tel', name: 'tel', class: 'text-center' },
-                { data: 'id_client', name: 'id_client', class: 'text-center' },
-                {
-                    data: null,
-                    render: function(data, type, row) {
-                        return `<button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                    {
+                        data: 'name',
+                        name: 'name'
                     },
-                    orderable: false,
-                    searchable: false
-                }
-            ],
-            language: {
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                paginate: {
-                    first: "Pertama",
-                    last: "Terakhir",
-                    next: "Selanjutnya",
-                    previous: "Sebelumnya"
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: 'PO_BOX',
+                        name: 'PO_BOX',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'fax',
+                        name: 'fax',
+                        class: 'text-center'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    search: "Cari :",
+                    infoFiltered: "(disaring dari total _MAX_ entri)"
                 },
-                search: "Cari :",
-                infoFiltered: "(disaring dari total _MAX_ entri)"
-            },
-            lengthMenu: [5, 10, 25, 50],
-            pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10,
+                drawCallback: function() {
+                    $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
+                        'max-width': '280px',
+                        'overflow': 'hidden',
+                        'text-overflow': 'ellipsis'
+                    });
+                }
+            });
+
+            // Event listener untuk tombol "Pilih" di tabel client
+            $('#clientsModalTable tbody').on('click', '.select-client', function() {
+                var clientId = $(this).data('id');
+                var clientName = $(this).data('name');
+
+                $('#selectedClientId').val(clientId);
+                $('#selectedClientName').val(clientName);
+                $('#selectedConsigneeId').val(''); // Kosongkan nilai ID consignee
+                $('#selectedConsigneeName').val('');
+                $('#clientsModal').modal('hide');
+
+                // Memuat data consignee berdasarkan ID client yang dipilih
+                loadConsignees(clientId);
+            });
+
+            var consigneeTable = $('#consigneeModalTable').DataTable({
+                autoWidth: false,
+                processing: false,
+                serverSide: true,
+                ajax: "", // diisi saat loadConsignees dipanggil
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'id_client',
+                        name: 'id_client',
+                        class: 'text-center'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    search: "Cari :",
+                    infoFiltered: "(disaring dari total _MAX_ entri)"
+                },
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10,
+            });
+
+            // Fungsi untuk memuat data consignee berdasarkan ID client
+            window.loadConsignees = function(clientId) {
+                consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
+            };
+
+            // Event listener untuk tombol "Pilih" di tabel consignee
+            $('#consigneeModalTable tbody').on('click', '.select-consignee', function() {
+                var consigneeId = $(this).data('id');
+                var consigneeName = $(this).data('name');
+
+                $('#selectedConsigneeId').val(consigneeId);
+                $('#selectedConsigneeName').val(consigneeName);
+                $('#consigneeModal').modal('hide');
+            });
         });
-
-        // Fungsi untuk memuat data consignee berdasarkan ID client
-        window.loadConsignees = function(clientId) {
-            consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
-        };
-
-        // Event listener untuk tombol "Pilih" di tabel consignee
-        $('#consigneeModalTable tbody').on('click', '.select-consignee', function() {
-            var consigneeId = $(this).data('id');
-            var consigneeName = $(this).data('name');
-
-            $('#selectedConsigneeId').val(consigneeId);
-            $('#selectedConsigneeName').val(consigneeName);
-            $('#consigneeModal').modal('hide');
-        });
-    });
-</script>
+    </script>
 @endsection
