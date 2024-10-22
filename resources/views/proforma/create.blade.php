@@ -421,8 +421,8 @@
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
-                                                                <input type="number" step="0.01"
-                                                                    class="form-control total-display" disabled>
+                                                                <input type="text" step="0.01"
+                                                                    class="form-control total-display" readonly>
                                                                 <input type="hidden" step="0.01" class="form-control"
                                                                     id="total" name="total">
                                                             </div>
@@ -870,7 +870,8 @@
                 <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" max="999" /> KG</strong><br>
                 ${data.dimension} ${data.color} - ${data.type}
             </td>
-            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" /></td>
+            <td class="text-center"><input type="text" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
+</td>
             <td class="text-center inner-result">
                 0
             </td>
@@ -890,6 +891,21 @@
                 // Menghapus baris "Tidak ada barang" jika ada
                 $('#nullDetailTransaction').remove();
 
+                $(document).on('input', '.carton-input', function() {
+                    var inputVal = $(this).val().replace(/,/g,
+                        ''); // Hapus pemisah ribuan sebelumnya
+
+                    if (!isNaN(inputVal) && inputVal !== '') {
+                        var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
+                            minimumFractionDigits: 0, // Tanpa desimal
+                            maximumFractionDigits: 0 // Tanpa desimal
+                        });
+
+                        // Set nilai input yang sudah diformat kembali ke elemen input
+                        $(this).val(formattedVal);
+                    }
+                });
+
                 // Event listener to calculate the result
                 $('#tableDetailTransaction tbody').on('input', '.qty-input, .carton-input', function() {
                     var row = $(this).closest('tr');
@@ -897,7 +913,8 @@
                     var cartonInput = row.find('.carton-input');
 
                     var qty = parseFloat(qtyInput.val()) || 0;
-                    var carton = parseFloat(cartonInput.val()) || 0;
+                    var carton = parseFloat(cartonInput.val().replace(/,/g,
+                        '')) || 0;
                     var price = parseFloat(row.find('.price').data('price')) || 0;
 
                     // Batas maksimum untuk qty dan carton
@@ -931,14 +948,16 @@
 
                     // Multiply qty by carton and update the result
                     var result = qty * carton;
-                    row.find('.inner-result').text(result);
-                    row.find('.net-weight').text(result);
+                    var formattedResult = result.toLocaleString('en-US');
+                    row.find('.inner-result').text(formattedResult);
+                    row.find('.net-weight').text(formattedResult);
 
                     // Update the price based on result * data.price
                     var totalPrice = result * data.price;
                     // Round the total price to the nearest integer
                     var roundedPrice = Math.round(totalPrice);
-                    row.find('.price-result').text(roundedPrice);
+                    var formattedPrice = roundedPrice.toLocaleString('en-US');
+                    row.find('.price-result').text(formattedPrice);
 
                     // Update total values in the footer
                     updateAmounts();
@@ -960,24 +979,28 @@
                         if ($(row).attr('id') === 'nullDetailTransaction') return;
 
                         var idDetailProduct = $(row).find('.id-detail-product').text().trim();
-                        var qty = $(row).find('.qty-input').val();
-                        var carton = $(row).find('.carton-input').val();
-                        var inner = $(row).find('.inner-result').text().trim();
-                        var unitPrice = $(row).find('.price').text().trim();
-                        var netWeight = parseFloat($(row).find('.net-weight').text().trim()) || 0;
-                        netWeight = netWeight.toFixed(2);
-                        var priceAmount = $(row).find('.price-result').text().trim();
+                        var qty = parseFloat($(row).find('.qty-input').val().replace(/,/g, '')) ||
+                        0; // Hapus koma dari qty
+                        var carton = parseFloat($(row).find('.carton-input').val().replace(/,/g,
+                            '')) || 0; // Hapus koma dari carton
+                        var inner = parseFloat($(row).find('.inner-result').text().trim().replace(
+                            /,/g, '')) || 0; // Hapus koma dari inner
+                        var unitPrice = parseFloat($(row).find('.price').text().trim().replace(/,/g,
+                            '')) || 0; // Hapus koma dari unit price
+                        var netWeight = parseFloat($(row).find('.net-weight').text().trim().replace(
+                            /,/g, '')) || 0;
+                        var priceAmount = parseFloat($(row).find('.price-result').text().trim()
+                            .replace(/,/g, '')) || 0; // Hapus koma dari price amount
 
                         // Create hidden inputs and append to the form
                         $('#formDetailTransaction').append(`
-    <!-- ID Detail Product (Validasi exists:detail_products,id) -->
-            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
-            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
-            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
+        <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+        <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
+        <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
+        <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+        <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
+        <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
+        <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
     `);
                     });
                 }
@@ -990,10 +1013,15 @@
 
                     // Iterasi setiap baris untuk mendapatkan nilai total
                     $('#tableDetailTransaction tbody tr').each(function() {
-                        var carton = parseFloat($(this).find('.carton-input').val()) || 0;
-                        var inner = parseFloat($(this).find('.inner-result').text()) || 0;
-                        var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
-                        var price = parseFloat($(this).find('.price-result').text()) || 0;
+                        // Ambil nilai carton, inner, netWeight, dan price tanpa format
+                        var carton = parseFloat($(this).find('.carton-input').val().replace(/,/g,
+                            '')) || 0;
+                        var inner = parseFloat($(this).find('.inner-result').text().replace(/,/g,
+                            '')) || 0;
+                        var netWeight = parseFloat($(this).find('.net-weight').text().replace(/,/g,
+                            '')) || 0;
+                        var price = parseFloat($(this).find('.price-result').text().replace(/,/g,
+                            '')) || 0;
 
                         totalCarton += carton;
                         totalInner += inner;
@@ -1001,29 +1029,35 @@
                         PriceAmount += price;
                     });
 
-                    // Update nilai total di footer
-                    $('#totalCarton').text(totalCarton);
-                    $('#totalInner').text(totalInner);
-                    $('#totalNetWeight').text(totalNetWeight);
-                    $('#PriceAmount').text(PriceAmount);
+                    // Format hasil perhitungan dengan pemisah ribuan en-US
+                    var formattedTotalCarton = totalCarton.toLocaleString('en-US');
+                    var formattedTotalInner = totalInner.toLocaleString('en-US');
+                    var formattedTotalNetWeight = totalNetWeight.toLocaleString('en-US');
+                    var formattedPriceAmount = PriceAmount.toLocaleString('en-US');
+
+                    // Update nilai total di footer dengan format yang benar
+                    $('#totalCarton').text(formattedTotalCarton);
+                    $('#totalInner').text(formattedTotalInner);
+                    $('#totalNetWeight').text(formattedTotalNetWeight);
+                    $('#PriceAmount').text(formattedPriceAmount);
+
+                    // Set value total net weight untuk field form
                     $('#net_weight_transaction').val(totalNetWeight);
                     $('.net_weight_transaction').val(totalNetWeight);
                 }
 
                 // Fungsi untuk memperbarui total price amount
                 function updateTotals() {
-                    // Ambil nilai dari Price Amount yang ada di kolom
-                    var priceAmount = parseFloat($('#PriceAmount').text()) || 0;
+                    var priceAmount = parseFloat($('#PriceAmount').text().replace(/,/g, '')) || 0;
 
-                    // Ambil nilai dari input Freight Cost
-                    var freightCost = parseFloat($('#freight_cost').val()) || 0;
+                    var freightCost = parseFloat($('#freight_cost').val().replace(/,/g, '')) || 0;
 
-                    // Hitung total dengan menambahkan priceAmount dan freightCost
                     var total = priceAmount + freightCost;
 
-                    // Update elemen dengan total baru
+                    var formattedGrandTotal = total.toLocaleString('en-US');
+                    $('.total-display').val(formattedGrandTotal);
+                    
                     $('#total').val(total);
-                    $('.total-display').val(total);
                 }
 
                 // Event listener untuk input Freight Cost
