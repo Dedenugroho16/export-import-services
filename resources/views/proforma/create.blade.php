@@ -980,7 +980,7 @@
 
                         var idDetailProduct = $(row).find('.id-detail-product').text().trim();
                         var qty = parseFloat($(row).find('.qty-input').val().replace(/,/g, '')) ||
-                        0; // Hapus koma dari qty
+                            0; // Hapus koma dari qty
                         var carton = parseFloat($(row).find('.carton-input').val().replace(/,/g,
                             '')) || 0; // Hapus koma dari carton
                         var inner = parseFloat($(row).find('.inner-result').text().trim().replace(
@@ -1056,7 +1056,7 @@
 
                     var formattedGrandTotal = total.toLocaleString('en-US');
                     $('.total-display').val(formattedGrandTotal);
-                    
+
                     $('#total').val(total);
                 }
 
@@ -1112,16 +1112,27 @@
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
 
-            // $('#submitButton').on('click', function() {
-            //     $('#formTransaction').submit();
-            // });
-
             $('#submitButton').click(function() {
                 var formProformaInvoice = $('#formProformaInvoice');
                 var formDetailTransaction = $('#formDetailTransaction');
 
                 // Nonaktifkan tombol submit
                 $('#submitButton').prop('disabled', true);
+
+                // Validasi formDetailTransaction terlebih dahulu
+                var isValidDetailTransaction = validateDetailTransactionForm();
+
+                if (!isValidDetailTransaction) {
+                    // Jika validasi form detail transaksi gagal, aktifkan kembali tombol submit
+                    $('#submitButton').prop('disabled', false);
+                    Swal.fire({
+                        title: 'Terjadi Kesalahan!',
+                        text: 'Mohon periksa kembali detail transaksi Anda.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return; // Hentikan proses jika form detail transaksi tidak valid
+                }
 
                 // Submit formProformaInvoice terlebih dahulu
                 $.ajax({
@@ -1140,14 +1151,24 @@
                                 method: formDetailTransaction.attr('method'),
                                 data: formDetailTransaction.serialize(),
                                 success: function(response) {
-                                    alert('Berhasil menambahkan proforma invoice');
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: 'Proforma invoice berhasil ditambahkan.',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    });
                                     location
                                         .reload(); // Reload halaman setelah alert
                                 },
                                 error: function(xhr) {
                                     // Tangani error untuk detail transaksi
-                                    alert('Error saving detail transaction: ' + xhr
-                                        .responseJSON.message);
+                                    Swal.fire({
+                                        title: 'Terjadi Kesalahan!',
+                                        text: 'Gagal menyimpan detail transaksi: ' +
+                                            xhr.responseJSON.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
                                 },
                                 complete: function() {
                                     // Aktifkan kembali tombol setelah selesai (sukses/gagal)
@@ -1162,12 +1183,34 @@
                     },
                     error: function(xhr) {
                         // Tangani error untuk transaksi
-                        alert('Error saving transaction: ' + xhr.responseJSON.message);
+                        Swal.fire({
+                            title: 'Terjadi Kesalahan!',
+                            text: 'Gagal menyimpan transaksi: ' + xhr
+                                .responseJSON.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                         // Aktifkan kembali tombol jika error terjadi
                         $('#submitButton').prop('disabled', false);
                     }
                 });
             });
+
+            function validateDetailTransactionForm() {
+                var isValid = true;
+
+                // Validasi setiap field di form detail transaksi
+                $('#formDetailTransaction input').each(function() {
+                    if ($(this).val() === '') {
+                        isValid = false;
+                        $(this).addClass('is-invalid'); // Tambahkan class invalid jika tidak valid
+                    } else {
+                        $(this).removeClass('is-invalid'); // Hapus class invalid jika valid
+                    }
+                });
+
+                return isValid; // Kembalikan status validasi
+            }
         });
     </script>
 @endsection
