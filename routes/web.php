@@ -105,6 +105,9 @@ Route::get('/get-selected-product-ids/{id}', [ProformaController::class, 'getSel
 // APPROVE
 Route::post('proforma/approve/{id}', [ProformaController::class, 'approveProforma'])->name('proforma.approve');
 
+// Get Clients
+Route::get('/clients/data', [ProformaController::class, 'getClientsData'])->name('clients.data');
+
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
 Route::get('/get-detail-products', [TransactionController::class, 'getDetailProducts'])->name('get-detail-products');

@@ -31,77 +31,6 @@
                                 </div>
                             @endif
 
-                            {{-- Bagian 1 --}}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="card-title">PROFORMA INVOICE</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Set Country</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <select class="form-control country" id="country">
-                                                                @foreach ($country as $negara)
-                                                                    <option value="{{ $negara->id }}"
-                                                                        data-code="{{ $negara->code }}">
-                                                                        {{ $negara->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Date</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <p>{{ date('F d, Y') }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Code</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <p id="product-code">-</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Number</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <p id="numberDisplay">-</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6 d-flex justify-content-end align-items-start">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <form id="formProformaInvoice" method="POST" action="{{ route('proforma.store') }}">
                                 @csrf
                                 <input type="date" name="date" id="date" hidden>
@@ -112,63 +41,134 @@
                                 <input type="text" name="container_number" id="container_number" hidden>
                                 <input type="text" name="seal_number" id="seal_number" hidden>
 
-                                <!-- Bagian 2: Consignee, Notify, Client -->
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Parties Information</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <!-- Client Input -->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="client">Client</label>
-                                                    <select name="id_client" class="form-control client" id="client"
-                                                        required>
-                                                        <option value="">Pilih Client</option>
-                                                        @foreach ($clients as $client)
-                                                            <option value="{{ $client->id }}"
-                                                                data-address="{{ $client->address }}">
-                                                                {{ $client->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <!-- Element to display the address -->
-                                                    <div id="client-address" style="margin-top: 10px;"></div>
-                                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">PROFORMA INVOICE</h3>
                                             </div>
-
-                                            <!-- Notify Input -->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="notify">Notify</label>
-                                                    <input type="text" name="notify" id="notify" class="form-control"
-                                                        placeholder="Enter notify party" required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Consignee Input -->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="consignee">Consignee</label>
-                                                    <select name="id_consignee" class="form-control consignee"
-                                                        id="consignee" required>
-                                                        <option value="">Pilih Consignee</option>
-                                                        @foreach ($consignees as $consignee)
-                                                            <option value="{{ $consignee->id }}"
-                                                                data-address="{{ $consignee->address }}">
-                                                                {{ $consignee->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <!-- Element to display the address -->
-                                                    <div id="consignee-address" style="margin-top: 10px;"></div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <p><strong>Set Country</strong></p>
+                                                            </div>
+                                                            <div class="col-3 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <select class="form-control country" id="country">
+                                                                    @foreach ($country as $negara)
+                                                                        <option value="{{ $negara->id }}"
+                                                                            data-code="{{ $negara->code }}">
+                                                                            {{ $negara->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <p><strong>Date</strong></p>
+                                                            </div>
+                                                            <div class="col-3 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <p>{{ date('F d, Y') }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <p><strong>Code</strong></p>
+                                                            </div>
+                                                            <div class="col-3 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <p id="product-code">-</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <p><strong>Number</strong></p>
+                                                            </div>
+                                                            <div class="col-3 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <p id="numberDisplay">-</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-1"></div>
+                                                    <div class="col-5">
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <p><strong>Client</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control"
+                                                                            id="selectedClientName"
+                                                                            placeholder="Pilih Client" readonly>
+                                                                        <input type="hidden" id="selectedClientId"
+                                                                            name="id_client">
+                                                                        <div class="input-group-append">
+                                                                            <button type="button" class="btn btn-primary"
+                                                                                data-toggle="modal"
+                                                                                data-target="#clientModal">
+                                                                                Cari
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <p><strong>Consignee</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <select name="id_consignee" class="form-control consignee"
+                                                                    id="consignee" required>
+                                                                    <option value="">Pilih Consignee</option>
+                                                                    @foreach ($consignees as $consignee)
+                                                                        <option value="{{ $consignee->id }}"
+                                                                            data-address="{{ $consignee->address }}">
+                                                                            {{ $consignee->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <p><strong>Notify</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <input type="text" name="notify"
+                                                                    id="notify"class="form-control"
+                                                                    placeholder="Enter notify party" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
 
                                 <!-- Bagian 3: Port of Loading, Place of Receipt, Port of Discharge, Place of Delivery -->
                                 <div class="card mt-3">
@@ -454,6 +454,58 @@
         </div>
     </div>
 
+    {{-- modal Client --}}
+    <!-- Modal -->
+    <div class="modal fade text-left" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clientModalLabel">Pilih Client</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table card-table table-vcenter text-nowrap" id="clientsTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">PO BOX</th>
+                                <th class="text-center">Telepon</th>
+                                <th class="text-center">Fax</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($clients as $index => $client)
+                                <tr>
+                                    <td class="text-center">{{ $index + 1 }}</td>
+                                    <td class="text-center">{{ $client->name }}</td>
+                                    <td class="text-center">{{ $client->address }}</td>
+                                    <td class="text-center">{{ $client->PO_BOX }}</td>
+                                    <td class="text-center">{{ $client->tel }}</td>
+                                    <td class="text-center">{{ $client->fax }}</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary select-client"
+                                            data-client-id="{{ $client->id }}" data-client-name="{{ $client->name }}">
+                                            Pilih
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade text-left" id="memberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content modal-centered">
@@ -501,70 +553,69 @@
 
         $(document).ready(function() {
             // Menginisialisasi Select2
-            $('#client').select2();
             $('#consignee').select2();
             $('#product').select2();
             $('#commodity').select2();
             $('#country').select2();
 
             // Ketika client dipilih
-            $('#client').on('change', function() {
-                var clientId = $(this).val(); // Ambil ID client yang dipilih
+            // $('#client').on('change', function() {
+            //     var clientId = $(this).val(); // Ambil ID client yang dipilih
 
-                // Ambil data dari Select2 untuk client yang dipilih
-                var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
+            //     // Ambil data dari Select2 untuk client yang dipilih
+            //     var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
 
-                // Tampilkan address di div jika ada
-                if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
-                        'address')) {
-                    var address = $(selectedClientData.element).data('address');
-                    $('#client-address').html('<strong>Address: </strong>' + address);
-                } else {
-                    $('#client-address').html('');
-                }
+            //     // Tampilkan address di div jika ada
+            //     if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
+            //             'address')) {
+            //         var address = $(selectedClientData.element).data('address');
+            //         $('#client-address').html('<strong>Address: </strong>' + address);
+            //     } else {
+            //         $('#client-address').html('');
+            //     }
 
-                // Jika clientId ada, lakukan AJAX untuk ambil consignees
-                if (clientId) {
-                    $.ajax({
-                        url: '/get-consignees/' + clientId, // Panggil route yang sudah kita buat
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            // Hapus semua opsi lama dari select consignee
-                            $('#consignee').empty();
+            //     // Jika clientId ada, lakukan AJAX untuk ambil consignees
+            //     if (clientId) {
+            //         $.ajax({
+            //             url: '/get-consignees/' + clientId, // Panggil route yang sudah kita buat
+            //             type: 'GET',
+            //             dataType: 'json',
+            //             success: function(data) {
+            //                 // Hapus semua opsi lama dari select consignee
+            //                 $('#consignee').empty();
 
-                            // Tambahkan opsi baru berdasarkan consignees yang diterima
-                            $('#consignee').append('<option value="">Pilih Consignee</option>');
-                            $.each(data, function(key, consignee) {
-                                $('#consignee').append('<option value="' + consignee
-                                    .id + '" data-address="' + consignee.address +
-                                    '">' + consignee.name + '</option>');
-                            });
+            //                 // Tambahkan opsi baru berdasarkan consignees yang diterima
+            //                 $('#consignee').append('<option value="">Pilih Consignee</option>');
+            //                 $.each(data, function(key, consignee) {
+            //                     $('#consignee').append('<option value="' + consignee
+            //                         .id + '" data-address="' + consignee.address +
+            //                         '">' + consignee.name + '</option>');
+            //                 });
 
-                            // Refresh Select2 setelah data diperbarui
-                            $('#consignee').trigger('change');
-                        }
-                    });
-                } else {
-                    $('#consignee').empty();
-                    $('#consignee-address').empty();
-                    $('#consignee').append('<option value="">Pilih Consignee</option>');
-                }
-            });
+            //                 // Refresh Select2 setelah data diperbarui
+            //                 $('#consignee').trigger('change');
+            //             }
+            //         });
+            //     } else {
+            //         $('#consignee').empty();
+            //         $('#consignee-address').empty();
+            //         $('#consignee').append('<option value="">Pilih Consignee</option>');
+            //     }
+            // });
 
-            $('#consignee').on('change', function() {
-                // Ambil data dari Select2 untuk client yang dipilih
-                var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
+            // $('#consignee').on('change', function() {
+            //     // Ambil data dari Select2 untuk client yang dipilih
+            //     var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
 
-                // Tampilkan address di div jika ada
-                if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
-                        'address')) {
-                    var address = $(selectedClientData.element).data('address');
-                    $('#consignee-address').html('<strong>Address: </strong>' + address);
-                } else {
-                    $('#consignee-address').html('');
-                }
-            });
+            //     // Tampilkan address di div jika ada
+            //     if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
+            //             'address')) {
+            //         var address = $(selectedClientData.element).data('address');
+            //         $('#consignee-address').html('<strong>Address: </strong>' + address);
+            //     } else {
+            //         $('#consignee-address').html('');
+            //     }
+            // });
         });
 
         // modal datatables
@@ -819,7 +870,7 @@
                 <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" max="999" /> KG</strong><br>
                 ${data.dimension} ${data.color} - ${data.type}
             </td>
-            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="999" /></td>
+            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" /></td>
             <td class="text-center inner-result">
                 0
             </td>
