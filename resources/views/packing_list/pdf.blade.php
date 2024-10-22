@@ -43,29 +43,19 @@
         font-size: 12px;
         margin-top: 10mm;
     }
-
     .custom-table th, .custom-table td {
         border: 1px solid black;
         padding: 5px;
     }
-
     .custom-table tfoot td {
         font-weight: bold;
     }
-
     .custom-bg-success {
         background-color: #28a745;;
         color: white;
         text-align: center;
     }
-
-    .approve-section {
-        width: auto;
-        font-size: 15px;
-        text-align: center;
-        float: right;
-        margin-top: 10mm;
-    }
+        
 </style>
 <body>
     <table class="section-satu">
@@ -74,7 +64,7 @@
                 <table>
                     <tr>
                         <td><img src="{{ $logo }}" alt="Company Logo" style="width: 50px;"></td>
-                        <td><em style="font-size: 60px; font-weight: bold;">PT.PSN</em>
+                        <td><em style="font-size: 50px; font-weight: bold;">PT.PSN</em>
                             <br>PRINGGONDANI SETIA NUSANTARA
                         </td>
                     </tr>
@@ -228,18 +218,15 @@
             </tfoot>
         </table>
 
-        <table class="approve-section">
+        <table style="width: 100%; margin-top: 5mm">
             <tr>
-                <td><p style="font-weight: bold">Approved By</p></td>
+                <td style="text-align: right;"><p>Approver</p></td>
             </tr>
             <tr>
-                <td><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
+                <td style="text-align: right;"><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
             </tr>
             <tr>
-                <td style="border-bottom: 1px solid black;">{{ $transaction->approverUser->name }}</td>
-            </tr>
-            <tr>
-                <td>{{ $transaction->approverUser->role }}</td>
+                <td style="text-align: right;">Director</td>
             </tr>
         </table>
 </body>

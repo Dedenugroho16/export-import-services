@@ -69,11 +69,11 @@
                                     <!-- Kolom Kiri: Logo dan Nama Perusahaan -->
                                     <div class="d-flex align-items-center">
                                         <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
-                                        <div style="padding-left: 5px;">
-                                            <em style="font-size: 60px; font-weight: 500; line-height: 1;">PT. PSN</em>
-                                            <p style="font-weight: 500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
+                                        <div style="padding-left: 10px;">
+                                            <em style="font-size: 60px; font-weight:500;">PT. PSN</em><br>
+                                            <p style="font-weight:500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
                                         </div>
-                                    </div>                                                   
+                                    </div>
                             
                                     <!-- Kolom Kanan: Detail Informasi -->
                                     <div class="row mb-5 mt-3 col-4">
@@ -350,23 +350,31 @@
                             <div class="mt-3">
                                 <div class="text-end">
                                     <p><strong><em>{{ $totalInWords }} USD</em></strong></p>
-                                    <p><em>Payment Condition: {{ $proformaInvoice->payment_condition}}</em></p>
+                                    <p><em>Payment Condition: FOB (Free on Board)</em></p>
                                 </div>
                                 <div class="mt-7">
-                                    <table class="text-center" style="width: auto; float:right">
+                                    <table class="col-2 text-center" style="float: right;">
                                         <tr>
-                                            <td><p style="font-weight: bold">Approved By</p></td>
+                                            <td>
+                                                <p>Approved By</p>
+                                            </td>
                                         </tr>
                                         @if ($approved == 1)
-                                        <tr>
-                                            <td><img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;"></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="border-bottom: 1px solid black;">{{ $proformaInvoice->approverUser->name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ $proformaInvoice->approverUser->role }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    <img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p style="margin: 0; border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>Approver</strong><br></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><strong>Director</strong></p>
+                                                </td>
+                                            </tr>
                                         @endif
                                     </table>
                                 </div>

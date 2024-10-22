@@ -24,7 +24,7 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background: linear-gradient(135deg, #007bff 0%, #ffffff 100%); /* Updated gradient */
+        background: linear-gradient(135deg, #ff007f 0%, #00bfff 100%);
       }
 
       .card {
@@ -85,7 +85,7 @@
     <div class="card">
       <!-- Company Logo -->
       <div class="text-center">
-        <img src="{{ Storage::url($company->logo)}}" alt="Company Logo" class="img-fluid">
+        <img src="{{ asset('dist/img/logo.jpg') }}" alt="Company Logo" class="img-fluid">
       </div>
       <!-- Login Form -->
       <h2>Masuk ke akun anda</h2>

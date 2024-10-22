@@ -67,9 +67,4 @@ class Transaction extends Model
     {
         return $this->hasMany(DetailTransaction::class, 'id_transaction');
     }
-
-    public function approverUser()
-    {
-        return $this->belongsTo(User::class, 'approver', 'id');
-    }
 }

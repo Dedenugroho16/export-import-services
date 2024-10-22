@@ -67,16 +67,16 @@
                                     <!-- Kolom Kiri: Logo dan Nama Perusahaan -->
                                     <div class="d-flex align-items-center">
                                         <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
-                                        <div style="padding-left: 5px;">
-                                            <em style="font-size: 60px; font-weight: 500; line-height: 1;">PT. PSN</em>
-                                            <p style="font-weight: 500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
+                                        <div style="padding-left: 10px;">
+                                            <em style="font-size: 60px; font-weight:500;">PT. PSN</em><br>
+                                            <p style="font-weight:500; margin: 0;">PRINGGONDANI SETIA NUSANTARA</p>
                                         </div>
                                     </div>
                             
                                     <!-- Kolom Kanan: Detail Informasi -->
-                                    <div class="row mb-5 mt-3 col-4">
+                                    <div class="row mb-5 mt-3">
                                         <div>
-                                            <table class=" table-sm">
+                                            <table class="table-sm">
                                                 <tr>
                                                     <td><strong>Date</strong></td>
                                                     <td><strong>:</strong></td>
@@ -376,23 +376,34 @@
                                     </table>
                                 </div>
                             </div>
+                            {{-- akhir tabel detail transaction --}}
+                            <!-- Teks total dalam kata -->
                             <div class=" mt-3">
                                 <div class="mt-7">
-                                    <table class="text-center" style="width: auto; float:right">
+                                    <table class="col-2 text-center" style="float: right;">
                                         <tr>
-                                            <td><p style="font-weight: bold">Approved By</p></td>
+                                            <td>
+                                                <p>Approved By</p>
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td><img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;"></td>
+                                            <td>
+                                                <img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;">
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td style="border-bottom: 1px solid black;">{{ $transaction->approverUser->name }}</td>
+                                            <td>
+                                                <p style="margin: 0;  border-bottom: 1px solid rgb(46, 46, 46); display: inline-block; width: 50%;"><strong>Approver</strong><br></p>
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $transaction->approverUser->role }}</td>
+                                            <td>
+                                                <p><strong>Director</strong></p>
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
