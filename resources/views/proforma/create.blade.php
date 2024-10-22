@@ -134,20 +134,26 @@
                                                             <div class="col-3">
                                                                 <p><strong>Consignee</strong></p>
                                                             </div>
-                                                            <div class="col-2 text-center">
+                                                            <div class="col-1 text-center">
                                                                 <span>:</span>
                                                             </div>
-                                                            <div class="col-7">
-                                                                <select name="id_consignee" class="form-control consignee"
-                                                                    id="consignee" required>
-                                                                    <option value="">Pilih Consignee</option>
-                                                                    @foreach ($consignees as $consignee)
-                                                                        <option value="{{ $consignee->id }}"
-                                                                            data-address="{{ $consignee->address }}">
-                                                                            {{ $consignee->name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
+                                                            <div class="col-8">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control"
+                                                                            id="selectedConsigneeName"
+                                                                            placeholder="Pilih Consignee" readonly>
+                                                                        <input type="hidden" id="selectedConsigneeId"
+                                                                            name="id_consignee">
+                                                                        <div class="input-group-append">
+                                                                            <button type="button" class="btn btn-primary"
+                                                                                data-toggle="modal"
+                                                                                data-target="#consigneeModal">
+                                                                                Cari
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -455,7 +461,6 @@
     </div>
 
     {{-- modal Client --}}
-    <!-- Modal -->
     <div class="modal fade text-left" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel"
         aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
@@ -476,6 +481,41 @@
                                 <th class="text-center">PO BOX</th>
                                 <th class="text-center">Telepon</th>
                                 <th class="text-center">Fax</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- server side data --}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- modal Consignee --}}
+    <div class="modal fade text-left" id="consigneeModal" tabindex="-1" role="dialog" aria-labelledby="consigneeModalLabel"
+        aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="consigneeModalLabel">Pilih Consignee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table card-table table-vcenter text-nowrap" id="consigneeModalTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">Telepon</th>
+                                <th class="text-center">ID Client</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
