@@ -134,20 +134,26 @@
                                                             <div class="col-3">
                                                                 <p><strong>Consignee</strong></p>
                                                             </div>
-                                                            <div class="col-2 text-center">
+                                                            <div class="col-1 text-center">
                                                                 <span>:</span>
                                                             </div>
-                                                            <div class="col-7">
-                                                                <select name="id_consignee" class="form-control consignee"
-                                                                    id="consignee" required>
-                                                                    <option value="">Pilih Consignee</option>
-                                                                    @foreach ($consignees as $consignee)
-                                                                        <option value="{{ $consignee->id }}"
-                                                                            data-address="{{ $consignee->address }}">
-                                                                            {{ $consignee->name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
+                                                            <div class="col-8">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control"
+                                                                            id="selectedConsigneeName"
+                                                                            placeholder="Pilih Consignee" readonly>
+                                                                        <input type="hidden" id="selectedConsigneeId"
+                                                                            name="id_consignee">
+                                                                        <div class="input-group-append">
+                                                                            <button type="button" class="btn btn-primary"
+                                                                                data-toggle="modal"
+                                                                                data-target="#consigneeModal">
+                                                                                Cari
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -455,9 +461,8 @@
     </div>
 
     {{-- modal Client --}}
-    <!-- Modal -->
     <div class="modal fade text-left" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -467,7 +472,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <table class="table card-table table-vcenter text-nowrap" id="clientsTable">
+                    <table class="table card-table table-vcenter text-nowrap" id="clientsModalTable">
                         <thead>
                             <tr>
                                 <th class="text-center">#</th>
@@ -480,22 +485,42 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($clients as $index => $client)
-                                <tr>
-                                    <td class="text-center">{{ $index + 1 }}</td>
-                                    <td class="text-center">{{ $client->name }}</td>
-                                    <td class="text-center">{{ $client->address }}</td>
-                                    <td class="text-center">{{ $client->PO_BOX }}</td>
-                                    <td class="text-center">{{ $client->tel }}</td>
-                                    <td class="text-center">{{ $client->fax }}</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-primary select-client"
-                                            data-client-id="{{ $client->id }}" data-client-name="{{ $client->name }}">
-                                            Pilih
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
+                            {{-- server side data --}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- modal Consignee --}}
+    <div class="modal fade text-left" id="consigneeModal" tabindex="-1" role="dialog" aria-labelledby="consigneeModalLabel"
+        aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="consigneeModalLabel">Pilih Consignee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table card-table table-vcenter text-nowrap" id="consigneeModalTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">Telepon</th>
+                                <th class="text-center">ID Client</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- server side data --}}
                         </tbody>
                     </table>
                 </div>
@@ -1213,4 +1238,115 @@
             }
         });
     </script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#clientsModalTable').DataTable({
+            processing: false,
+            serverSide: true,
+            ajax: "{{ route('clients.index') }}",
+            columns: [
+                { data: 'id', name: 'id', class: 'text-center' },
+                { data: 'name', name: 'name' },
+                { data: 'address', name: 'address' },
+                { data: 'PO_BOX', name: 'PO_BOX', class: 'text-center' },
+                { data: 'tel', name: 'tel', class: 'text-center' },
+                { data: 'fax', name: 'fax', class: 'text-center' },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                    },
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            language: {
+                lengthMenu: "Tampilkan _MENU_ entri",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                search: "Cari :",
+                infoFiltered: "(disaring dari total _MAX_ entri)"
+            },
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 10,
+            drawCallback: function() {
+                $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
+                    'max-width': '280px',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis'
+                });
+            }
+        });
+
+        // Event listener untuk tombol "Pilih" di tabel client
+        $('#clientsModalTable tbody').on('click', '.select-client', function() {
+            var clientId = $(this).data('id');
+            var clientName = $(this).data('name');
+
+            $('#selectedClientId').val(clientId);
+            $('#selectedClientName').val(clientName);
+            $('#clientsModal').modal('hide');
+
+            // Memuat data consignee berdasarkan ID client yang dipilih
+            loadConsignees(clientId);
+        });
+
+        var consigneeTable = $('#consigneeModalTable').DataTable({
+            autoWidth: false,
+            processing: false,
+            serverSide: true,
+            ajax: "", // diisi saat loadConsignees dipanggil
+            columns: [
+                { data: 'id', name: 'id', class: 'text-center' },
+                { data: 'name', name: 'name' },
+                { data: 'address', name: 'address', class: 'text-center' },
+                { data: 'tel', name: 'tel', class: 'text-center' },
+                { data: 'id_client', name: 'id_client', class: 'text-center' },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        return `<button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                    },
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            language: {
+                lengthMenu: "Tampilkan _MENU_ entri",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                search: "Cari :",
+                infoFiltered: "(disaring dari total _MAX_ entri)"
+            },
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 10,
+        });
+
+        // Fungsi untuk memuat data consignee berdasarkan ID client
+        window.loadConsignees = function(clientId) {
+            consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
+        };
+
+        // Event listener untuk tombol "Pilih" di tabel consignee
+        $('#consigneeModalTable tbody').on('click', '.select-consignee', function() {
+            var consigneeId = $(this).data('id');
+            var consigneeName = $(this).data('name');
+
+            $('#selectedConsigneeId').val(consigneeId);
+            $('#selectedConsigneeName').val(consigneeName);
+            $('#consigneeModal').modal('hide');
+        });
+    });
+</script>
 @endsection

@@ -418,4 +418,20 @@ class ProformaController extends Controller
 
         return $pdf->download('proforma_' . $hashId . '.pdf');
     }
+
+    public function getConsigneesByClient($clientId)
+    {
+        // Mengambil consignee sesuai id_client
+        $query = Consignee::where('id_client', $clientId);
+        $totalRecords = $query->count();
+        $consignees = $query->get();
+
+        // Pastikan tidak ada output lain
+        return response()->json([
+            'draw' => intval(request()->get('draw')),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $consignees
+        ]);
+    }  
 }
