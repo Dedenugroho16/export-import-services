@@ -121,17 +121,17 @@
                                                                             name="id_client">
                                                                         <div class="btn-group">
                                                                             <button type="button"
-                                                                                class="btn btn-primary btn-sm"
+                                                                                class="btn btn-primary btn-md"
                                                                                 data-bs-toggle="modal"
                                                                                 data-bs-target="#clientsModal">
-                                                                                <i data-feather="search"></i> Cari Client
+                                                                                <i data-feather="search"></i> Cari
                                                                             </button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
+                                                        <div class="row mt-2">
                                                             <div class="col-3">
                                                                 <p><strong>Consignee</strong></p>
                                                             </div>
@@ -146,25 +146,26 @@
                                                                             placeholder="Pilih Consignee" readonly>
                                                                         <input type="hidden" id="selectedConsigneeId"
                                                                             name="id_consignee">
-                                                                        <div class="input-group-append">
-                                                                            <button type="button" class="btn btn-primary"
-                                                                                data-toggle="modal"
-                                                                                data-target="#consigneeModal">
-                                                                                Cari
+                                                                        <div class="btn-group">
+                                                                            <button type="button"
+                                                                                class="btn btn-primary btn-md"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#consigneeModal">
+                                                                                <i data-feather="search"></i> Cari
                                                                             </button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
+                                                        <div class="row mt-2">
                                                             <div class="col-3">
                                                                 <p><strong>Notify</strong></p>
                                                             </div>
-                                                            <div class="col-2 text-center">
+                                                            <div class="col-1 text-center">
                                                                 <span>:</span>
                                                             </div>
-                                                            <div class="col-7">
+                                                            <div class="col-8">
                                                                 <input type="text" name="notify"
                                                                     id="notify"class="form-control"
                                                                     placeholder="Enter notify party" required>
@@ -498,15 +499,13 @@
     </div>
 
     {{-- modal Consignee --}}
-    <div class="modal fade text-left" id="consigneeModal" tabindex="-1" role="dialog"
-        aria-labelledby="consigneeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal fade text-left" id="consigneeModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
+            <div class="modal-content modal-centered">
+                <div class="modal-header border-bottom bg-transparent">
                     <h5 class="modal-title" id="consigneeModalLabel">Pilih Consignee</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <table class="table card-table table-vcenter text-nowrap" id="consigneeModalTable">
@@ -521,12 +520,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- server side data --}}
+                            <tr id="nullConsignee">
+                                <td colspan="8" class="text-center">Harap pilih client terlebih dahulu</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                        aria-label="Close">Tutup</button>
                 </div>
             </div>
         </div>
@@ -1226,11 +1228,13 @@
 
                 // Validasi setiap field di form detail transaksi
                 $('#formDetailTransaction input').each(function() {
-                    if ($(this).val() === '') {
-                        isValid = false;
-                        $(this).addClass('is-invalid'); // Tambahkan class invalid jika tidak valid
-                    } else {
-                        $(this).removeClass('is-invalid'); // Hapus class invalid jika valid
+                    if ($(this).attr('id') !== 'id_transaction') {
+                        if ($(this).val() === '') {
+                            isValid = false;
+                            $(this).addClass('is-invalid'); // Tambahkan class invalid jika tidak valid
+                        } else {
+                            $(this).removeClass('is-invalid'); // Hapus class invalid jika valid
+                        }
                     }
                 });
 
@@ -1241,6 +1245,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#clientsModalTable').DataTable({
+                autoWidth: false,
                 processing: false,
                 serverSide: true,
                 ajax: "{{ route('clients.index') }}",
@@ -1315,6 +1320,9 @@
                 $('#selectedConsigneeName').val('');
                 $('#clientsModal').modal('hide');
 
+                // Hapus baris "Harap pilih client terlebih dahulu"
+                $('#nullConsignee').hide();
+
                 // Memuat data consignee berdasarkan ID client yang dipilih
                 loadConsignees(clientId);
             });
@@ -1323,7 +1331,24 @@
                 autoWidth: false,
                 processing: false,
                 serverSide: true,
-                ajax: "", // diisi saat loadConsignees dipanggil
+                ajax: {
+                    url: "{{ route('consignees.byClient', '0') }}", // Set ID client ke '0' atau gunakan route lain yang menghasilkan data kosong
+                    dataSrc: function(json) {
+                        if (json.data.length === 0) {
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
+                                '0') {
+                                // Jika client belum dipilih (clientId = 0 atau kosong), tampilkan pesan ini
+                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Harap pilih client terlebih dahulu";
+                            } else {
+                                // Jika client sudah dipilih tetapi tidak ada consignee, tampilkan pesan ini
+                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Tidak ada consignee untuk client ini";
+                            }
+                        }
+                        return json.data;
+                    }
+                }, // diisi saat loadConsignees dipanggil
                 columns: [{
                         data: 'id',
                         name: 'id',
@@ -1367,7 +1392,8 @@
                         previous: "Sebelumnya"
                     },
                     search: "Cari :",
-                    infoFiltered: "(disaring dari total _MAX_ entri)"
+                    infoFiltered: "(disaring dari total _MAX_ entri)",
+                    emptyTable: "Harap pilih client terlebih dahulu" // Ubah pesan saat tidak ada data
                 },
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
@@ -1375,6 +1401,12 @@
 
             // Fungsi untuk memuat data consignee berdasarkan ID client
             window.loadConsignees = function(clientId) {
+                if (!clientId) {
+                    $('#nullConsignee').show();
+                    consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
+                    return;
+                }
+
                 consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
             };
 
