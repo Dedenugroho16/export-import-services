@@ -457,7 +457,7 @@
     {{-- modal Client --}}
     <!-- Modal -->
     <div class="modal fade text-left" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -467,7 +467,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <table class="table card-table table-vcenter text-nowrap" id="clientsTable">
+                    <table class="table card-table table-vcenter text-nowrap" id="clientsModalTable">
                         <thead>
                             <tr>
                                 <th class="text-center">#</th>
@@ -480,22 +480,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($clients as $index => $client)
-                                <tr>
-                                    <td class="text-center">{{ $index + 1 }}</td>
-                                    <td class="text-center">{{ $client->name }}</td>
-                                    <td class="text-center">{{ $client->address }}</td>
-                                    <td class="text-center">{{ $client->PO_BOX }}</td>
-                                    <td class="text-center">{{ $client->tel }}</td>
-                                    <td class="text-center">{{ $client->fax }}</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-primary select-client"
-                                            data-client-id="{{ $client->id }}" data-client-name="{{ $client->name }}">
-                                            Pilih
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
+                            {{-- server side data --}}
                         </tbody>
                     </table>
                 </div>
@@ -1136,4 +1121,61 @@
             });
         });
     </script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#clientsModalTable').DataTable({
+            autoWidth: true,
+            processing: false,
+            serverSide: true,
+            ajax: "{{ route('clients.index') }}",
+            columns: [
+                { data: 'id', name: 'id', class: 'text-center' },
+                { data: 'name', name: 'name' },
+                { data: 'address', name: 'address' },
+                { data: 'PO_BOX', name: 'PO_BOX', class: 'text-center' },
+                { data: 'tel', name: 'tel', class: 'text-center' },
+                { data: 'fax', name: 'fax', class: 'text-center' },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                    },
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            language: {
+                lengthMenu: "Tampilkan _MENU_ entri",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                search: "Cari :",
+                infoFiltered: "(disaring dari total _MAX_ entri)"
+            },
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 10,
+            drawCallback: function() {
+                $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
+                    'max-width': '280px',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis'
+                });
+            }
+        });
+        // Event listener untuk tombol "Pilih"
+        $('#clientsModalTable tbody').on('click', '.select-client', function() {
+            var clientId = $(this).data('id');
+            var clientName = $(this).data('name');
+
+            $('#selectedClientId').val(clientId);
+            $('#selectedClientName').val(clientName);
+            $('#clientsModal').modal('hide');
+        });
+    });
+</script>
 @endsection
