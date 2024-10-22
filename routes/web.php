@@ -141,3 +141,6 @@ Route::get('/transaction/{id}/export-pdf', [TransactionController::class, 'trans
 Route::get('/transaction/{id}/download-pdf', [TransactionController::class, 'transactionDownloadPdf'])->name('transaction.downloadPdf');
 Route::get('/proforma/{id}/export-pdf', [ProformaController::class, 'proformaExportPdf'])->name('proforma.exportPdf');
 Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaDownloadPdf'])->name('proforma.downloadPdf');
+
+// Route getConsigneeByid
+Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getConsigneesByClient'])->name('consignees.byClient');
