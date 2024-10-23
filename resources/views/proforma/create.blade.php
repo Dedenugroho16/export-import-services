@@ -337,7 +337,7 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number" id="gross_weight"
+                                                                <input type="text" id="gross_weight"
                                                                     name="gross_weight" class="form-control"
                                                                     step="0.01" placeholder="Contoh: 123.45" required>
                                                                 <span class="error-message" id="gross_weight_error"
