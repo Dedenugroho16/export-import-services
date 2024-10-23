@@ -56,6 +56,13 @@
         color: white;
         text-align: center;
     }
+    .approve-section {
+        width: auto;
+        font-size: 15px;
+        text-align: center;
+        float: right;
+        margin-top: 10mm;
+    }
     .footer {
         font-family: Arial, Helvetica, sans-serif;
             text-align: left;
@@ -245,15 +252,18 @@
         <tr style="text-align: right"><td><em>Payment Condition: FOB (Free on Board)</em></td></tr>
     </table>
 
-    <table style="width: 100%; margin-top: 3mm">
+    <table class="approve-section">
         <tr>
-            <td style="text-align: right;"><p>Approver</p></td>
+            <td><p style="font-weight: bold">Approved By</p></td>
         </tr>
         <tr>
-            <td style="text-align: right;"><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
+            <td><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
         </tr>
         <tr>
-            <td style="text-align: right;">Director</td>
+            <td style="border-bottom: 1px solid black;">{{ $transaction->approverUser->name }}</td>
+        </tr>
+        <tr>
+            <td>{{ $transaction->approverUser->role }}</td>
         </tr>
     </table>
     <footer class="footer">
