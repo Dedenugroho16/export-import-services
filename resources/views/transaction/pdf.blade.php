@@ -13,7 +13,7 @@
     .section-satu {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 10mm;
+        margin-bottom: 7mm;
     }
 
     .section-dua {
@@ -42,23 +42,23 @@
         border: 1px solid black;
         border-collapse: collapse;
         font-size: 12px;
-        margin-top: 7mm;
+        margin-top: 3mm;
     }
     .custom-table th, .custom-table td {
         border: 1px solid black;
-        padding: 5px;
+        padding: 3px;
     }
     .custom-table tfoot td {
         font-weight: bold;
     }
     .custom-bg-red {
-        background-color: rgb(65, 65, 197);
+        background-color: blue;
         color: white;
         text-align: center;
     }
     .approve-section {
         width: auto;
-        font-size: 15px;
+        font-size: 14px;
         text-align: center;
         float: right;
         margin-top: 2mm;
@@ -70,7 +70,7 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-    }  
+    } 
 </style>
 <body>
     <table class="section-satu">
@@ -111,9 +111,9 @@
 
     <table class="section-dua">
             <tr>
-                <td style="width: 33%; font-weight: bold; font-size: 15px">CONSIGNEE</td>
-                <td style="width: 33%; font-weight: bold; font-size: 15px">NOTIFY</td>
-                <td style="width: 33%; font-weight: bold; font-size: 15px">CLIENT</td>
+                <td style="width: 33%; font-weight: bold">CONSIGNEE</td>
+                <td style="width: 33%; font-weight: bold">NOTIFY</td>
+                <td style="width: 33%; font-weight: bold">CLIENT</td>
             </tr>
             <tr>
                 <td style="font-weight: 300">{{ $transaction->consignee->name }}</td>
@@ -201,7 +201,7 @@
     <table class="custom-table">
         <thead>
             <tr>
-                <th class="text-center" style="width: 30%">Item Description</th>
+                <th class="text-center" style="width: 35%">Item Description</th>
                 <th class="text-center">Carton (PCS)</th>
                 <th class="text-center">Inner<br>(PCS)</th>
                 <th class="text-center">Unit Price (USD/KG)</th>
@@ -214,7 +214,7 @@
             <tr>
                 <td class="custom-description">
                     <strong>{{ $detailTransaction->detailProduct->name }}
-                    {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong><br>
+                    {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong>
                     {{ $detailTransaction->detailProduct->dimension }} 
                     {{ $detailTransaction->detailProduct->color }} 
                     {{ $detailTransaction->detailProduct->type }}
@@ -247,7 +247,7 @@
         </tfoot>
     </table>
 
-    <table style="width: 100%; margin-top: 2mm">
+    <table style="width: 100%; margin-top: 1mm">
         <tr style="text-align: right"><td><strong><em>{{ $totalInWords }} USD</em></strong></td></tr>
         <tr style="text-align: right"><td><em>Payment Condition: FOB (Free on Board)</em></td></tr>
     </table>
@@ -267,18 +267,27 @@
         </tr>
     </table>
     <footer class="footer">
-        <table style="font-size: 10px">
+        <table style="font-size: 10px; border-collapse: collapse; width: 100%;">
             <tr>
-                <td style="font-weight: bolder">HEAD OFFICE</td>
+                <td style="font-weight: bolder;">HEAD OFFICE</td>
                 <td>:</td>
                 <td>JL.POLINGGA NO.5 KP.WAASRT02/RW13 SABANDAR, KARANG TENGAH, CIANJUR, JAWA BARAT</td>
             </tr>
             <tr>
-                <td style="font-weight: bolder">BRANCH OFFICE</td>
+                <td style="font-weight: bolder;">BRANCH OFFICE</td>
                 <td>:</td>
                 <td>DS.JIKEN SURUHAN NO.45RT02/RW04 JIKEN, BLORA, JAWA TENGAH</td>
             </tr>
         </table>
+        <table>
+            <tr>
+                <td><img src="{{ $phone }}" alt="" style="width: 15px"></td>
+                <td>{{ $company->contact_person}}</td>
+                <td></td>
+                <td><img src="{{ $email }}" alt="" style="width: 15px"></td>
+                <td>{{ $company->email}}</td>
+            </tr>
+        </table>        
     </footer>
 </body>
 </html>

@@ -13,7 +13,7 @@
     .section-satu {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 10mm;
+        margin-bottom: 7mm;
     }
 
     .section-dua {
@@ -42,11 +42,11 @@
         border: 1px solid black;
         border-collapse: collapse;
         font-size: 12px;
-        margin-top: 7mm;
+        margin-top: 3mm;
     }
     .custom-table th, .custom-table td {
         border: 1px solid black;
-        padding: 5px;
+        padding: 3px;
     }
     .custom-table tfoot td {
         font-weight: bold;
@@ -58,7 +58,7 @@
     }
     .approve-section {
         width: auto;
-        font-size: 15px;
+        font-size: 14px;
         text-align: center;
         float: right;
         margin-top: 2mm;
@@ -111,9 +111,9 @@
 
     <table class="section-dua">
             <tr>
-                <td style="width: 33%; font-weight: bold; font-size: 15px">CONSIGNEE</td>
-                <td style="width: 33%; font-weight: bold; font-size: 15px">NOTIFY</td>
-                <td style="width: 33%; font-weight: bold; font-size: 15px">CLIENT</td>
+                <td style="width: 33%; font-weight: bold;">CONSIGNEE</td>
+                <td style="width: 33%; font-weight: bold;">NOTIFY</td>
+                <td style="width: 33%; font-weight: bold;">CLIENT</td>
             </tr>
             <tr>
                 <td style="font-weight: 300">{{ $proformaInvoice->consignee->name }}</td>
@@ -185,7 +185,7 @@
     <table class="custom-table">
         <thead>
             <tr>
-                <th class="text-center" style="width: 30%">Item Description</th>
+                <th class="text-center" style="width: 35%">Item Description</th>
                 <th class="text-center">Carton (PCS)</th>
                 <th class="text-center">Inner<br>(PCS)</th>
                 <th class="text-center">Unit Price (USD/KG)</th>
@@ -198,7 +198,7 @@
             <tr>
                 <td class="custom-description">
                     <strong>{{ $detailTransaction->detailProduct->name }}
-                    {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong><br>
+                    {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong>
                     {{ $detailTransaction->detailProduct->dimension }} 
                     {{ $detailTransaction->detailProduct->color }} 
                     {{ $detailTransaction->detailProduct->type }}
@@ -231,7 +231,7 @@
         </tfoot>
     </table>
 
-    <table style="width: 100%; margin-top: 2mm">
+    <table style="width: 100%; margin-top: 1mm">
         <tr style="text-align: right"><td><strong><em>{{ $totalInWords }} USD</em></strong></td></tr>
         <tr style="text-align: right"><td><em>Payment Condition: FOB (Free on Board)</em></td></tr>
     </table>
