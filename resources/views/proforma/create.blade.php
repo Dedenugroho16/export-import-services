@@ -337,9 +337,8 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" id="gross_weight"
-                                                                    name="gross_weight" class="form-control"
-                                                                    step="0.01" placeholder="Contoh: 123.45" required>
+                                                                <input type="text" id="gross_weight_display" class="form-control" placeholder="Contoh: 123.45" required>
+                                                                <input type="hidden" id="gross_weight" name="gross_weight">
                                                                 <span class="error-message" id="gross_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                             </div>
@@ -431,6 +430,10 @@
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
                                                                 <input type="text" step="0.01" class="form-control"
+                                                                    id="freight_cost_display" name="freight_cost_display"
+                                                                    placeholder="Enter Freight Cost" min="0"
+                                                                    max="99999999.99">
+                                                                <input type="hidden" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
                                                                     placeholder="Enter Freight Cost" min="0"
                                                                     max="99999999.99">
@@ -663,35 +666,45 @@
         });
 
         $(document).ready(function() {
-            // Format untuk gross_weight
-            $(document).on('input', '#gross_weight', function() {
-                var inputVal = $(this).val().replace(/,/g, ''); // Hapus pemisah ribuan sebelumnya
+            const grossWeightDisplay = document.getElementById('gross_weight_display');
+            const grossWeight = document.getElementById('gross_weight');
+            
+            // Event listener untuk memformat input saat user mengetik
+            grossWeightDisplay.addEventListener('input', function (e) {
+                // Ambil nilai yang diinputkan, lalu bersihkan format non-angka
+                let value = e.target.value.replace(/[^,\d]/g, '');
 
-                if (!isNaN(inputVal) && inputVal !== '') {
-                    var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
-                        minimumFractionDigits: 0, // Tanpa desimal
-                        maximumFractionDigits: 0 // Tanpa desimal
-                    });
+                // Update nilai input tersembunyi dengan angka asli tanpa format
+                grossWeight.value = value.replace(/,/g, '');
 
-                    // Set nilai input yang sudah diformat kembali ke elemen input
-                    $(this).val(formattedVal);
-                }
+                // Format input tampilan dengan pemisah ribuan
+                e.target.value = formatAngka(value);
             });
 
-            //format untuk freight cost
-            $(document).on('input', '#freight_cost', function() {
-                var inputVal = $(this).val().replace(/,/g, ''); // Hapus pemisah ribuan sebelumnya
-
-                if (!isNaN(inputVal) && inputVal !== '') {
-                    var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
-                        minimumFractionDigits: 0, // Tanpa desimal
-                        maximumFractionDigits: 0 // Tanpa desimal
-                    });
-
-                    // Set nilai input yang sudah diformat kembali ke elemen input
-                    $(this).val(formattedVal);
-                }
+            const freightCostDisplay = document.getElementById('freight_cost_display');
+            const freightCost = document.getElementById('freight_cost');
+            
+            freightCostDisplay.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/[^,\d]/g, '');
+                freightCost.value = value.replace(/,/g, '');
+                e.target.value = formatAngka(value);
             });
+
+            function formatAngka(angka) {
+                var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                    split   = number_string.split(','),
+                    sisa    = split[0].length % 3,
+                    hasil  = split[0].substr(0, sisa),
+                    ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
+                
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    hasil += separator + ribuan.join('.');
+                }
+                
+                hasil = split[1] !== undefined ? hasil + ',' + split[1] : hasil;
+                return hasil;
+            }
         });
 
         // modal datatables
