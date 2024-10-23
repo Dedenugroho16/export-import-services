@@ -61,7 +61,7 @@
         font-size: 15px;
         text-align: center;
         float: right;
-        margin-top: 10mm;
+        margin-top: 2mm;
     }
     .footer {
         font-family: Arial, Helvetica, sans-serif;
