@@ -173,191 +173,173 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Bagian 3: Port of Loading, Place of Receipt, Port of Discharge, Place of Delivery -->
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Logistics Information</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <!-- Port of Loading Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="port_of_loading">Port of Loading</label>
-                                                    <input type="text" name="port_of_loading" id="port_of_loading"
-                                                        class="form-control" placeholder="Enter port of loading" required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Place of Receipt Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="place_of_receipt">Place of Receipt</label>
-                                                    <input type="text" name="place_of_receipt" id="place_of_receipt"
-                                                        class="form-control" placeholder="Enter place of receipt"
-                                                        required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Port of Discharge Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="port_of_discharge">Port of Discharge</label>
-                                                    <input type="text" name="port_of_discharge" id="port_of_discharge"
-                                                        class="form-control" placeholder="Enter port of discharge"
-                                                        required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Place of Delivery Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="place_of_delivery">Place of Delivery</label>
-                                                    <input type="text" name="place_of_delivery" id="place_of_delivery"
-                                                        class="form-control" placeholder="Enter place of delivery"
-                                                        required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {{-- bagian 4 --}}
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h3 class="card-title">DETAILS</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <!-- Kolom Sebelah Kiri -->
-                                            <div class="col-6">
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Name of Product</strong></p>
+                                                <div class="row mt-6">
+                                                    <!-- Port of Loading Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="port_of_loading">Port of Loading</label>
+                                                            <input type="text" name="port_of_loading" id="port_of_loading"
+                                                                class="form-control" placeholder="Enter port of loading" required>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
+        
+                                                    <!-- Place of Receipt Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="place_of_receipt">Place of Receipt</label>
+                                                            <input type="text" name="place_of_receipt" id="place_of_receipt"
+                                                                class="form-control" placeholder="Enter place of receipt"
+                                                                required>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-5">
-                                                        <select class="form-control product" id="product"
-                                                            name="id_product" required>
-                                                            <option value="">Pilih Product</option>
-                                                            @foreach ($products as $product)
-                                                                <option value="{{ $product->id }}"
-                                                                    data-code="{{ $product->code }}"
-                                                                    data-abbreviation="{{ $product->abbreviation }}">
-                                                                    {{ $product->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+        
+                                                    <!-- Port of Discharge Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="port_of_discharge">Port of Discharge</label>
+                                                            <input type="text" name="port_of_discharge" id="port_of_discharge"
+                                                                class="form-control" placeholder="Enter port of discharge"
+                                                                required>
+                                                        </div>
+                                                    </div>
+        
+                                                    <!-- Place of Delivery Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="place_of_delivery">Place of Delivery</label>
+                                                            <input type="text" name="place_of_delivery" id="place_of_delivery"
+                                                                class="form-control" placeholder="Enter place of delivery"
+                                                                required>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Name of Commodity</strong></p>
+                                                <div class="row mt-6">
+                                                    <!-- Kolom Sebelah Kiri -->
+                                                    <div class="col-6">
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Name of Product</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <select class="form-control product" id="product"
+                                                                    name="id_product" required>
+                                                                    <option value="">Pilih Product</option>
+                                                                    @foreach ($products as $product)
+                                                                        <option value="{{ $product->id }}"
+                                                                            data-code="{{ $product->code }}"
+                                                                            data-abbreviation="{{ $product->abbreviation }}">
+                                                                            {{ $product->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Name of Commodity</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <select class="form-control commodity" id="commodity"
+                                                                    name="id_commodity" required>
+                                                                    <option value="">Pilih Commodity</option>
+                                                                    @foreach ($commodities as $commodity)
+                                                                        <option value="{{ $commodity->id }}">
+                                                                            {{ $commodity->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Container</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="container" id="container"
+                                                                    class="form-control" placeholder="Masukkan Container"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Payment Term</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="payment_term" id="payment_term"
+                                                                    class="form-control" placeholder="Masukkan Payment term"
+                                                                    required>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <select class="form-control commodity" id="commodity"
-                                                            name="id_commodity" required>
-                                                            <option value="">Pilih Commodity</option>
-                                                            @foreach ($commodities as $commodity)
-                                                                <option value="{{ $commodity->id }}">
-                                                                    {{ $commodity->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Container</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="container" id="container"
-                                                            class="form-control" placeholder="Masukkan Container"
-                                                            required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Payment Term</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="payment_term" id="payment_term"
-                                                            class="form-control" placeholder="Masukkan Payment term"
-                                                            required>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Kolom Sebelah Kanan -->
-                                            <div class="col-6">
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Net Weight</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="number" class="form-control net_weight_transaction"
-                                                            step="0.01" max="9999999.99" disabled>
-                                                        <input type="hidden" id="net_weight_transaction"
-                                                            name="net_weight" class="form-control" step="0.01"
-                                                            max="9999999.99" placeholder="Contoh: 123.45" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Gross Weight</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="number" id="gross_weight" name="gross_weight"
-                                                            class="form-control" step="0.01"
-                                                            placeholder="Contoh: 123.45" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Product NCM</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="product_ncm" id="product_ncm"
-                                                            class="form-control" placeholder="Masukkan Product NCM"
-                                                            required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Payment Condition</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="payment_condition"
-                                                            id="payment_condition" class="form-control"
-                                                            placeholder="Masukkan Payment Condition" required>
+        
+                                                    <!-- Kolom Sebelah Kanan -->
+                                                    <div class="col-6">
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Net Weight</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="number" class="form-control net_weight_transaction"
+                                                                    step="0.01" max="9999999.99" disabled>
+                                                                <input type="hidden" id="net_weight_transaction"
+                                                                    name="net_weight" class="form-control" step="0.01"
+                                                                    max="9999999.99" placeholder="Contoh: 123.45" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Gross Weight</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="number" id="gross_weight" name="gross_weight"
+                                                                    class="form-control" step="0.01"
+                                                                    placeholder="Contoh: 123.45" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Product NCM</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="product_ncm" id="product_ncm"
+                                                                    class="form-control" placeholder="Masukkan Product NCM"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Payment Condition</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="payment_condition"
+                                                                    id="payment_condition" class="form-control"
+                                                                    placeholder="Masukkan Payment Condition" required>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
