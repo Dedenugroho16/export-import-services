@@ -68,9 +68,18 @@ class ProformaController extends Controller
             return response()->json(['error' => 'Anda tidak memiliki akses untuk menyetujui Proforma.'], 403);
         }
 
-        // Cari transaksi berdasarkan ID dan update field approved menjadi 1
+        // Cari transaksi berdasarkan ID
         $transaction = Transaction::findOrFail($id);
+
+        // Periksa apakah transaksi sudah disetujui sebelumnya
+        if ($transaction->approved == 1) {
+            return response()->json(['error' => 'Proforma invoice sudah disetujui sebelumnya.'], 400);
+        }
+
+        // Update field approved menjadi 1, simpan ID approver dan waktu persetujuan
         $transaction->approved = 1;
+        $transaction->approver = auth()->user()->id; // Simpan ID user yang menyetujui
+        $transaction->approved_at = now(); // Simpan waktu persetujuan
         $transaction->save();
 
         // Kembalikan respons sukses

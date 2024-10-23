@@ -55,7 +55,21 @@
         color: white;
         text-align: center;
     }
-        
+    .approve-section {
+        width: auto;
+        font-size: 15px;
+        text-align: center;
+        float: right;
+        margin-top: 10mm;
+    }
+    .footer {
+        font-family: Arial, Helvetica, sans-serif;
+            text-align: left;
+            font-size: 12px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+    }
 </style>
 <body>
     <table class="section-satu">
@@ -218,16 +232,33 @@
             </tfoot>
         </table>
 
-        <table style="width: 100%; margin-top: 5mm">
+        <table class="approve-section">
             <tr>
-                <td style="text-align: right;"><p>Approver</p></td>
+                <td><p style="font-weight: bold">Approved By</p></td>
             </tr>
             <tr>
-                <td style="text-align: right;"><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
+                <td><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
             </tr>
             <tr>
-                <td style="text-align: right;">Director</td>
+                <td style="border-bottom: 1px solid black;">{{ $transaction->approverUser->name }}</td>
+            </tr>
+            <tr>
+                <td>{{ $transaction->approverUser->role }}</td>
             </tr>
         </table>
+        <footer class="footer">
+            <table style="font-size: 10px">
+                <tr>
+                    <td style="font-weight: bolder">HEAD OFFICE</td>
+                    <td>:</td>
+                    <td>JL.POLINGGA NO.5 KP.WAASRT02/RW13 SABANDAR, KARANG TENGAH, CIANJUR, JAWA BARAT</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bolder">BRANCH OFFICE</td>
+                    <td>:</td>
+                    <td>DS.JIKEN SURUHAN NO.45RT02/RW04 JIKEN, BLORA, JAWA TENGAH</td>
+                </tr>
+            </table>
+        </footer>
 </body>
 </html>
