@@ -128,6 +128,8 @@
                                                                             </button>
                                                                         </div>
                                                                     </div>
+                                                                    <span class="error-message" id="selectedClientId_error"
+                                                                        style="color: red; display: none;"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -155,6 +157,9 @@
                                                                             </button>
                                                                         </div>
                                                                     </div>
+                                                                    <span class="error-message"
+                                                                        id="selectedConsigneeId_error"
+                                                                        style="color: red; display: none;"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -169,6 +174,8 @@
                                                                 <input type="text" name="notify"
                                                                     id="notify"class="form-control"
                                                                     placeholder="Enter notify party" required>
+                                                                <span class="error-message" id="notify_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -178,38 +185,47 @@
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="port_of_loading">Port of Loading</label>
-                                                            <input type="text" name="port_of_loading" id="port_of_loading"
-                                                                class="form-control" placeholder="Enter port of loading" required>
+                                                            <input type="text" name="port_of_loading"
+                                                                id="port_of_loading" class="form-control"
+                                                                placeholder="Enter port of loading" required>
+                                                            <span class="error-message" id="port_of_loading_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
-        
+
                                                     <!-- Place of Receipt Input -->
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="place_of_receipt">Place of Receipt</label>
-                                                            <input type="text" name="place_of_receipt" id="place_of_receipt"
-                                                                class="form-control" placeholder="Enter place of receipt"
-                                                                required>
+                                                            <input type="text" name="place_of_receipt"
+                                                                id="place_of_receipt" class="form-control"
+                                                                placeholder="Enter place of receipt" required>
+                                                            <span class="error-message" id="place_of_receipt_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
-        
+
                                                     <!-- Port of Discharge Input -->
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="port_of_discharge">Port of Discharge</label>
-                                                            <input type="text" name="port_of_discharge" id="port_of_discharge"
-                                                                class="form-control" placeholder="Enter port of discharge"
-                                                                required>
+                                                            <input type="text" name="port_of_discharge"
+                                                                id="port_of_discharge" class="form-control"
+                                                                placeholder="Enter port of discharge" required>
+                                                            <span class="error-message" id="port_of_discharge_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
-        
+
                                                     <!-- Place of Delivery Input -->
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="place_of_delivery">Place of Delivery</label>
-                                                            <input type="text" name="place_of_delivery" id="place_of_delivery"
-                                                                class="form-control" placeholder="Enter place of delivery"
-                                                                required>
+                                                            <input type="text" name="place_of_delivery"
+                                                                id="place_of_delivery" class="form-control"
+                                                                placeholder="Enter place of delivery" required>
+                                                            <span class="error-message" id="place_of_delivery_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -235,6 +251,8 @@
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
+                                                                <span class="error-message" id="product_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -254,6 +272,8 @@
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
+                                                                <span class="error-message" id="commodity_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -267,6 +287,8 @@
                                                                 <input type="text" name="container" id="container"
                                                                     class="form-control" placeholder="Masukkan Container"
                                                                     required>
+                                                                <span class="error-message" id="container_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -277,13 +299,15 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" name="payment_term" id="payment_term"
-                                                                    class="form-control" placeholder="Masukkan Payment term"
-                                                                    required>
+                                                                <input type="text" name="payment_term"
+                                                                    id="payment_term" class="form-control"
+                                                                    placeholder="Masukkan Payment term" required>
+                                                                <span class="error-message" id="payment_term_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                     </div>
-        
+
                                                     <!-- Kolom Sebelah Kanan -->
                                                     <div class="col-6">
                                                         <div class="row mt-2">
@@ -294,11 +318,15 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number" class="form-control net_weight_transaction"
+                                                                <input type="number"
+                                                                    class="form-control net_weight_transaction"
                                                                     step="0.01" max="9999999.99" disabled>
+                                                                <span class="error-message" id="net_weight_error"
+                                                                    style="color: red; display: none;"></span>
                                                                 <input type="hidden" id="net_weight_transaction"
                                                                     name="net_weight" class="form-control" step="0.01"
-                                                                    max="9999999.99" placeholder="Contoh: 123.45" required>
+                                                                    max="9999999.99" placeholder="Contoh: 123.45"
+                                                                    required>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -309,8 +337,11 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" id="gross_weight" name="gross_weight"
-                                                                    class="form-control gross-input" placeholder="Contoh: 1,000.00" required>
+                                                                <input type="number" id="gross_weight"
+                                                                    name="gross_weight" class="form-control"
+                                                                    step="0.01" placeholder="Contoh: 123.45" required>
+                                                                <span class="error-message" id="gross_weight_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -322,8 +353,10 @@
                                                             </div>
                                                             <div class="col-5">
                                                                 <input type="text" name="product_ncm" id="product_ncm"
-                                                                    class="form-control" placeholder="Masukkan Product NCM"
-                                                                    required>
+                                                                    class="form-control"
+                                                                    placeholder="Masukkan Product NCM" required>
+                                                                <span class="error-message" id="product_ncm_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -337,6 +370,8 @@
                                                                 <input type="text" name="payment_condition"
                                                                     id="payment_condition" class="form-control"
                                                                     placeholder="Masukkan Payment Condition" required>
+                                                                <span class="error-message" id="payment_condition_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -400,6 +435,8 @@
                                                                     placeholder="Enter Freight Cost" min="0"
                                                                     max="99999999.99">
                                                             </div>
+                                                            <span class="error-message" id="freight_cost_error"
+                                                                style="color: red; display: none;"></span>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -444,7 +481,6 @@
     </div>
 
     {{-- modal Client --}}
-    {{-- <div class="modal fade text-left" id="memberModal" tabindex="-1" role="dialog" aria-hidden="true"> --}}
     <div class="modal fade text-left" id="clientsModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -702,9 +738,14 @@
                     }
                 },
                 columns: [{
-                        data: 'id',
-                        name: 'id',
-                        title: "No"
+                        data: null,
+                        name: 'no',
+                        title: "No",
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'name',
@@ -1160,6 +1201,44 @@
                 // Nonaktifkan tombol submit
                 $('#submitButton').prop('disabled', true);
 
+                // Reset pesan kesalahan sebelumnya
+                $('.error-message').hide();
+                $('.form-control').removeClass('is-invalid');
+                $('.input-group').removeClass('has-error');
+
+                var selectedClientId = $('#selectedClientId').val();
+                if (!selectedClientId) {
+                    $('#selectedClientId_error').text('Client harus dipilih').show();
+                    $('#selectedClientName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var selectedConsigneeId = $('#selectedConsigneeId').val();
+                if (!selectedConsigneeId) {
+                    $('#selectedConsigneeId_error').text('Consignee harus dipilih').show();
+                    $('#selectedConsigneeName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var net_weight_transaction = $('#net_weight_transaction').val();
+                if (!net_weight_transaction) {
+                    $('.net_weight_transaction').addClass('is-invalid'); // Tambah border merah pada input
+                }
+
+                // Validasi product (id_product harus dipilih)
+                var product = $('#product').val();
+                if (!product) {
+                    $('#product_error').text('Produk harus dipilih').show();
+                    $('#product').addClass('is-invalid'); // Tambahkan border merah
+                }
+
+                // Validasi commodity (id_commodity harus dipilih)
+                var commodity = $('#commodity').val();
+                if (!commodity) {
+                    $('#commodity_error').text('Komoditas harus dipilih').show();
+                    $('#commodity').addClass('is-invalid'); // Tambahkan border merah
+                }
+
                 // Validasi formDetailTransaction terlebih dahulu
                 var isValidDetailTransaction = validateDetailTransactionForm();
 
@@ -1224,17 +1303,45 @@
                             $('#submitButton').prop('disabled', false);
                         }
                     },
+                    // error: function(xhr) {
+                    //     // Tangani error untuk transaksi
+                    //     Swal.fire({
+                    //         title: 'Terjadi Kesalahan!',
+                    //         text: 'Gagal menyimpan transaksi: ' + xhr
+                    //             .responseJSON.message,
+                    //         icon: 'error',
+                    //         confirmButtonText: 'OK'
+                    //     });
+                    //     // Aktifkan kembali tombol jika error terjadi
+                    //     $('#submitButton').prop('disabled', false);
+                    // }
                     error: function(xhr) {
-                        // Tangani error untuk transaksi
-                        Swal.fire({
-                            title: 'Terjadi Kesalahan!',
-                            text: 'Gagal menyimpan transaksi: ' + xhr
-                                .responseJSON.message,
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                        // Aktifkan kembali tombol jika error terjadi
-                        $('#submitButton').prop('disabled', false);
+                        if (xhr.status === 422) {
+                            // Tangani error validasi dari server
+                            var errors = xhr.responseJSON.errors;
+
+                            // Loop melalui setiap error dan tampilkan di elemen input terkait
+                            $.each(errors, function(key, value) {
+                                var errorElement = $('#' + key + '_error');
+                                var inputElement = $('#' + key);
+
+                                // Tampilkan pesan error
+                                errorElement.text(value[0]).show();
+                                inputElement.addClass(
+                                    'is-invalid'
+                                ); // Tambah kelas is-invalid untuk border merah
+                            });
+                        } else {
+                            // Tangani error umum
+                            Swal.fire({
+                                title: 'Terjadi Kesalahan!',
+                                text: 'Gagal menyimpan transaksi: ' + xhr.responseJSON
+                                    .message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                        $('#submitButton').prop('disabled', false); // Aktifkan tombol kembali
                     }
                 });
             });
