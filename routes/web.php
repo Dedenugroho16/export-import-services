@@ -105,6 +105,9 @@ Route::get('/get-selected-product-ids/{id}', [ProformaController::class, 'getSel
 // APPROVE
 Route::post('proforma/approve/{id}', [ProformaController::class, 'approveProforma'])->name('proforma.approve');
 
+// Get Clients
+Route::get('/clients/data', [ProformaController::class, 'getClientsData'])->name('clients.data');
+
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
 Route::get('/get-detail-products', [TransactionController::class, 'getDetailProducts'])->name('get-detail-products');
@@ -138,3 +141,6 @@ Route::get('/transaction/{id}/export-pdf', [TransactionController::class, 'trans
 Route::get('/transaction/{id}/download-pdf', [TransactionController::class, 'transactionDownloadPdf'])->name('transaction.downloadPdf');
 Route::get('/proforma/{id}/export-pdf', [ProformaController::class, 'proformaExportPdf'])->name('proforma.exportPdf');
 Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaDownloadPdf'])->name('proforma.downloadPdf');
+
+// Route getConsigneeByid
+Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getConsigneesByClient'])->name('consignees.byClient');

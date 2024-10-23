@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Company;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Commodity;
 use App\Models\Consignee;
 use App\Models\Transaction;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
-use App\Helpers\ImageHelper;
 use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
-use App\Models\Company;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\DetailTransaction;
 use Yajra\DataTables\Facades\DataTables;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProformaController extends Controller
 {
@@ -34,7 +34,7 @@ class ProformaController extends Controller
             ->where('approved', 0) // Kondisi approved harus 0
             ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
 
-            return DataTables::of($proformaInvoice)
+        return DataTables::of($proformaInvoice)
             ->addColumn('client', function ($row) {
                 return $row->client->name;
             })
@@ -43,21 +43,21 @@ class ProformaController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-                    $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning me-2">Lihat Detail</a>';
-                    $edit = '<a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger me-2">Edit</a>';
-                    
-                    $buttons = $lihatDetail . $edit;
-        
+                $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-warning me-2">Lihat Detail</a>';
+                $edit = '<a href="' . route('proforma.edit', $hashId) . '" class="btn btn-sm btn-danger me-2">Edit</a>';
+
+                $buttons = $lihatDetail . $edit;
+
                 if (in_array(auth()->user()->role, ['director', 'admin'])) {
                     $setujui = '<button class="btn btn-sm btn-success approve-btn" data-id="' . $row->id . '">Setujui</button>';
                     $buttons .= $setujui;
                 }
-        
+
                 return $buttons;
             })
             ->rawColumns(['aksi'])
             ->make(true);
-        
+
     }
 
     public function approveProforma($id)
@@ -377,7 +377,7 @@ class ProformaController extends Controller
         $proformaInvoice = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
-        $totalInWords = NumberToWords::convert($proformaInvoice->total); 
+        $totalInWords = NumberToWords::convert($proformaInvoice->total);
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
 
@@ -385,7 +385,7 @@ class ProformaController extends Controller
         $totalInner = 0;
         $totalNetWeight = 0;
         $priceAmount = 0;
-        
+
         foreach ($detailTransactions as $detail) {
             $totalCarton += $detail->carton;
             $totalInner += $detail->inner_qty_carton;
@@ -405,7 +405,7 @@ class ProformaController extends Controller
         $decodedId = IdHashHelper::decode($hashId);
         $proformaInvoice = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
-        $company = Company::first();      
+        $company = Company::first();
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
@@ -414,7 +414,7 @@ class ProformaController extends Controller
         $totalInner = 0;
         $totalNetWeight = 0;
         $priceAmount = 0;
-        
+
         foreach ($detailTransactions as $detail) {
             $totalCarton += $detail->carton;
             $totalInner += $detail->inner_qty_carton;
@@ -427,4 +427,20 @@ class ProformaController extends Controller
 
         return $pdf->download('proforma_' . $hashId . '.pdf');
     }
+
+    public function getConsigneesByClient($clientId)
+    {
+        // Mengambil consignee sesuai id_client
+        $query = Consignee::where('id_client', $clientId);
+        $totalRecords = $query->count();
+        $consignees = $query->get();
+
+        // Pastikan tidak ada output lain
+        return response()->json([
+            'draw' => intval(request()->get('draw')),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $consignees
+        ]);
+    }  
 }

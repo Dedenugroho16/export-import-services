@@ -31,77 +31,6 @@
                                 </div>
                             @endif
 
-                            {{-- Bagian 1 --}}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="card-title">PROFORMA INVOICE</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Set Country</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <select class="form-control country" id="country">
-                                                                @foreach ($country as $negara)
-                                                                    <option value="{{ $negara->id }}"
-                                                                        data-code="{{ $negara->code }}">
-                                                                        {{ $negara->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Date</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <p>{{ date('F d, Y') }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Code</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <p id="product-code">-</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Number</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <p id="numberDisplay">-</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6 d-flex justify-content-end align-items-start">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <form id="formProformaInvoice" method="POST" action="{{ route('proforma.store') }}">
                                 @csrf
                                 <input type="date" name="date" id="date" hidden>
@@ -112,244 +41,339 @@
                                 <input type="text" name="container_number" id="container_number" hidden>
                                 <input type="text" name="seal_number" id="seal_number" hidden>
 
-                                <!-- Bagian 2: Consignee, Notify, Client -->
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Parties Information</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <!-- Client Input -->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="client">Client</label>
-                                                    <select name="id_client" class="form-control client" id="client"
-                                                        required>
-                                                        <option value="">Pilih Client</option>
-                                                        @foreach ($clients as $client)
-                                                            <option value="{{ $client->id }}"
-                                                                data-address="{{ $client->address }}">
-                                                                {{ $client->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <!-- Element to display the address -->
-                                                    <div id="client-address" style="margin-top: 10px;"></div>
-                                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">PROFORMA INVOICE</h3>
                                             </div>
-
-                                            <!-- Notify Input -->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="notify">Notify</label>
-                                                    <input type="text" name="notify" id="notify" class="form-control"
-                                                        placeholder="Enter notify party" required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Consignee Input -->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="consignee">Consignee</label>
-                                                    <select name="id_consignee" class="form-control consignee"
-                                                        id="consignee" required>
-                                                        <option value="">Pilih Consignee</option>
-                                                        @foreach ($consignees as $consignee)
-                                                            <option value="{{ $consignee->id }}"
-                                                                data-address="{{ $consignee->address }}">
-                                                                {{ $consignee->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <!-- Element to display the address -->
-                                                    <div id="consignee-address" style="margin-top: 10px;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <!-- Bagian 3: Port of Loading, Place of Receipt, Port of Discharge, Place of Delivery -->
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Logistics Information</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <!-- Port of Loading Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="port_of_loading">Port of Loading</label>
-                                                    <input type="text" name="port_of_loading" id="port_of_loading"
-                                                        class="form-control" placeholder="Enter port of loading" required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Place of Receipt Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="place_of_receipt">Place of Receipt</label>
-                                                    <input type="text" name="place_of_receipt" id="place_of_receipt"
-                                                        class="form-control" placeholder="Enter place of receipt"
-                                                        required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Port of Discharge Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="port_of_discharge">Port of Discharge</label>
-                                                    <input type="text" name="port_of_discharge" id="port_of_discharge"
-                                                        class="form-control" placeholder="Enter port of discharge"
-                                                        required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Place of Delivery Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="place_of_delivery">Place of Delivery</label>
-                                                    <input type="text" name="place_of_delivery" id="place_of_delivery"
-                                                        class="form-control" placeholder="Enter place of delivery"
-                                                        required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {{-- bagian 4 --}}
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h3 class="card-title">DETAILS</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <!-- Kolom Sebelah Kiri -->
-                                            <div class="col-6">
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Name of Product</strong></p>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <p><strong>Set Country</strong></p>
+                                                            </div>
+                                                            <div class="col-3 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <select class="form-control country" id="country">
+                                                                    @foreach ($country as $negara)
+                                                                        <option value="{{ $negara->id }}"
+                                                                            data-code="{{ $negara->code }}">
+                                                                            {{ $negara->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <p><strong>Date</strong></p>
+                                                            </div>
+                                                            <div class="col-3 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <p>{{ date('F d, Y') }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <p><strong>Code</strong></p>
+                                                            </div>
+                                                            <div class="col-3 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <p id="product-code">-</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <p><strong>Number</strong></p>
+                                                            </div>
+                                                            <div class="col-3 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <p id="numberDisplay">-</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
+                                                    <div class="col-1"></div>
                                                     <div class="col-5">
-                                                        <select class="form-control product" id="product"
-                                                            name="id_product" required>
-                                                            <option value="">Pilih Product</option>
-                                                            @foreach ($products as $product)
-                                                                <option value="{{ $product->id }}"
-                                                                    data-code="{{ $product->code }}"
-                                                                    data-abbreviation="{{ $product->abbreviation }}">
-                                                                    {{ $product->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <p><strong>Client</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control"
+                                                                            id="selectedClientName"
+                                                                            placeholder="Pilih Client" readonly>
+                                                                        <input type="hidden" id="selectedClientId"
+                                                                            name="id_client">
+                                                                        <div class="btn-group">
+                                                                            <button type="button"
+                                                                                class="btn btn-primary btn-md"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#clientsModal">
+                                                                                <i data-feather="search"></i> Cari
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <span class="error-message" id="selectedClientId_error"
+                                                                        style="color: red; display: none;"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-3">
+                                                                <p><strong>Consignee</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control"
+                                                                            id="selectedConsigneeName"
+                                                                            placeholder="Pilih Consignee" readonly>
+                                                                        <input type="hidden" id="selectedConsigneeId"
+                                                                            name="id_consignee">
+                                                                        <div class="btn-group">
+                                                                            <button type="button"
+                                                                                class="btn btn-primary btn-md"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#consigneeModal">
+                                                                                <i data-feather="search"></i> Cari
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <span class="error-message"
+                                                                        id="selectedConsigneeId_error"
+                                                                        style="color: red; display: none;"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-3">
+                                                                <p><strong>Notify</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" name="notify"
+                                                                    id="notify"class="form-control"
+                                                                    placeholder="Enter notify party" required>
+                                                                <span class="error-message" id="notify_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Name of Commodity</strong></p>
+                                                <div class="row mt-6">
+                                                    <!-- Port of Loading Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="port_of_loading">Port of Loading</label>
+                                                            <input type="text" name="port_of_loading"
+                                                                id="port_of_loading" class="form-control"
+                                                                placeholder="Enter port of loading" required>
+                                                            <span class="error-message" id="port_of_loading_error"
+                                                                style="color: red; display: none;"></span>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <select class="form-control commodity" id="commodity"
-                                                            name="id_commodity" required>
-                                                            <option value="">Pilih Commodity</option>
-                                                            @foreach ($commodities as $commodity)
-                                                                <option value="{{ $commodity->id }}">
-                                                                    {{ $commodity->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Container</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="container" id="container"
-                                                            class="form-control" placeholder="Masukkan Container"
-                                                            required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Payment Term</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="payment_term" id="payment_term"
-                                                            class="form-control" placeholder="Masukkan Payment term"
-                                                            required>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <!-- Kolom Sebelah Kanan -->
-                                            <div class="col-6">
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Net Weight</strong></p>
+                                                    <!-- Place of Receipt Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="place_of_receipt">Place of Receipt</label>
+                                                            <input type="text" name="place_of_receipt"
+                                                                id="place_of_receipt" class="form-control"
+                                                                placeholder="Enter place of receipt" required>
+                                                            <span class="error-message" id="place_of_receipt_error"
+                                                                style="color: red; display: none;"></span>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
+
+                                                    <!-- Port of Discharge Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="port_of_discharge">Port of Discharge</label>
+                                                            <input type="text" name="port_of_discharge"
+                                                                id="port_of_discharge" class="form-control"
+                                                                placeholder="Enter port of discharge" required>
+                                                            <span class="error-message" id="port_of_discharge_error"
+                                                                style="color: red; display: none;"></span>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-5">
-                                                        <input type="number" class="form-control net_weight_transaction"
-                                                            step="0.01" max="9999999.99" disabled>
-                                                        <input type="hidden" id="net_weight_transaction"
-                                                            name="net_weight" class="form-control" step="0.01"
-                                                            max="9999999.99" placeholder="Contoh: 123.45" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Gross Weight</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="number" id="gross_weight" name="gross_weight"
-                                                            class="form-control" step="0.01"
-                                                            placeholder="Contoh: 123.45" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Product NCM</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="product_ncm" id="product_ncm"
-                                                            class="form-control" placeholder="Masukkan Product NCM"
-                                                            required>
+
+                                                    <!-- Place of Delivery Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="place_of_delivery">Place of Delivery</label>
+                                                            <input type="text" name="place_of_delivery"
+                                                                id="place_of_delivery" class="form-control"
+                                                                placeholder="Enter place of delivery" required>
+                                                            <span class="error-message" id="place_of_delivery_error"
+                                                                style="color: red; display: none;"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Payment Condition</strong></p>
+                                                <div class="row mt-6">
+                                                    <!-- Kolom Sebelah Kiri -->
+                                                    <div class="col-6">
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Name of Product</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <select class="form-control product" id="product"
+                                                                    name="id_product" required>
+                                                                    <option value="">Pilih Product</option>
+                                                                    @foreach ($products as $product)
+                                                                        <option value="{{ $product->id }}"
+                                                                            data-code="{{ $product->code }}"
+                                                                            data-abbreviation="{{ $product->abbreviation }}">
+                                                                            {{ $product->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <span class="error-message" id="product_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Name of Commodity</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <select class="form-control commodity" id="commodity"
+                                                                    name="id_commodity" required>
+                                                                    <option value="">Pilih Commodity</option>
+                                                                    @foreach ($commodities as $commodity)
+                                                                        <option value="{{ $commodity->id }}">
+                                                                            {{ $commodity->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <span class="error-message" id="commodity_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Container</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="container" id="container"
+                                                                    class="form-control" placeholder="Masukkan Container"
+                                                                    required>
+                                                                <span class="error-message" id="container_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Payment Term</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="payment_term"
+                                                                    id="payment_term" class="form-control"
+                                                                    placeholder="Masukkan Payment term" required>
+                                                                <span class="error-message" id="payment_term_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="payment_condition"
-                                                            id="payment_condition" class="form-control"
-                                                            placeholder="Masukkan Payment Condition" required>
+
+                                                    <!-- Kolom Sebelah Kanan -->
+                                                    <div class="col-6">
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Net Weight</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="number"
+                                                                    class="form-control net_weight_transaction"
+                                                                    step="0.01" max="9999999.99" disabled>
+                                                                <span class="error-message" id="net_weight_error"
+                                                                    style="color: red; display: none;"></span>
+                                                                <input type="hidden" id="net_weight_transaction"
+                                                                    name="net_weight" class="form-control" step="0.01"
+                                                                    max="9999999.99" placeholder="Contoh: 123.45"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Gross Weight</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="number" id="gross_weight"
+                                                                    name="gross_weight" class="form-control"
+                                                                    step="0.01" placeholder="Contoh: 123.45" required>
+                                                                <span class="error-message" id="gross_weight_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Product NCM</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="product_ncm" id="product_ncm"
+                                                                    class="form-control"
+                                                                    placeholder="Masukkan Product NCM" required>
+                                                                <span class="error-message" id="product_ncm_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Payment Condition</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="payment_condition"
+                                                                    id="payment_condition" class="form-control"
+                                                                    placeholder="Masukkan Payment Condition" required>
+                                                                <span class="error-message" id="payment_condition_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -411,6 +435,8 @@
                                                                     placeholder="Enter Freight Cost" min="0"
                                                                     max="99999999.99">
                                                             </div>
+                                                            <span class="error-message" id="freight_cost_error"
+                                                                style="color: red; display: none;"></span>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -421,8 +447,8 @@
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
-                                                                <input type="number" step="0.01"
-                                                                    class="form-control total-display" disabled>
+                                                                <input type="text" step="0.01"
+                                                                    class="form-control total-display" readonly>
                                                                 <input type="hidden" step="0.01" class="form-control"
                                                                     id="total" name="total">
                                                             </div>
@@ -449,6 +475,77 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- modal Client --}}
+    <div class="modal fade text-left" id="clientsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clientModalLabel">Pilih Client</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table card-table table-vcenter text-nowrap" id="clientsModalTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">PO BOX</th>
+                                <th class="text-center">Telepon</th>
+                                <th class="text-center">Fax</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- server side data --}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                        aria-label="Close">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- modal Consignee --}}
+    <div class="modal fade text-left" id="consigneeModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content modal-centered">
+                <div class="modal-header border-bottom bg-transparent">
+                    <h5 class="modal-title" id="consigneeModalLabel">Pilih Consignee</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table card-table table-vcenter text-nowrap" id="consigneeModalTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">Telepon</th>
+                                <th class="text-center">ID Client</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="nullConsignee">
+                                <td colspan="8" class="text-center">Harap pilih client terlebih dahulu</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                        aria-label="Close">Tutup</button>
                 </div>
             </div>
         </div>
@@ -501,70 +598,68 @@
 
         $(document).ready(function() {
             // Menginisialisasi Select2
-            $('#client').select2();
-            $('#consignee').select2();
             $('#product').select2();
             $('#commodity').select2();
             $('#country').select2();
 
             // Ketika client dipilih
-            $('#client').on('change', function() {
-                var clientId = $(this).val(); // Ambil ID client yang dipilih
+            // $('#client').on('change', function() {
+            //     var clientId = $(this).val(); // Ambil ID client yang dipilih
 
-                // Ambil data dari Select2 untuk client yang dipilih
-                var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
+            //     // Ambil data dari Select2 untuk client yang dipilih
+            //     var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
 
-                // Tampilkan address di div jika ada
-                if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
-                        'address')) {
-                    var address = $(selectedClientData.element).data('address');
-                    $('#client-address').html('<strong>Address: </strong>' + address);
-                } else {
-                    $('#client-address').html('');
-                }
+            //     // Tampilkan address di div jika ada
+            //     if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
+            //             'address')) {
+            //         var address = $(selectedClientData.element).data('address');
+            //         $('#client-address').html('<strong>Address: </strong>' + address);
+            //     } else {
+            //         $('#client-address').html('');
+            //     }
 
-                // Jika clientId ada, lakukan AJAX untuk ambil consignees
-                if (clientId) {
-                    $.ajax({
-                        url: '/get-consignees/' + clientId, // Panggil route yang sudah kita buat
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            // Hapus semua opsi lama dari select consignee
-                            $('#consignee').empty();
+            //     // Jika clientId ada, lakukan AJAX untuk ambil consignees
+            //     if (clientId) {
+            //         $.ajax({
+            //             url: '/get-consignees/' + clientId, // Panggil route yang sudah kita buat
+            //             type: 'GET',
+            //             dataType: 'json',
+            //             success: function(data) {
+            //                 // Hapus semua opsi lama dari select consignee
+            //                 $('#consignee').empty();
 
-                            // Tambahkan opsi baru berdasarkan consignees yang diterima
-                            $('#consignee').append('<option value="">Pilih Consignee</option>');
-                            $.each(data, function(key, consignee) {
-                                $('#consignee').append('<option value="' + consignee
-                                    .id + '" data-address="' + consignee.address +
-                                    '">' + consignee.name + '</option>');
-                            });
+            //                 // Tambahkan opsi baru berdasarkan consignees yang diterima
+            //                 $('#consignee').append('<option value="">Pilih Consignee</option>');
+            //                 $.each(data, function(key, consignee) {
+            //                     $('#consignee').append('<option value="' + consignee
+            //                         .id + '" data-address="' + consignee.address +
+            //                         '">' + consignee.name + '</option>');
+            //                 });
 
-                            // Refresh Select2 setelah data diperbarui
-                            $('#consignee').trigger('change');
-                        }
-                    });
-                } else {
-                    $('#consignee').empty();
-                    $('#consignee-address').empty();
-                    $('#consignee').append('<option value="">Pilih Consignee</option>');
-                }
-            });
+            //                 // Refresh Select2 setelah data diperbarui
+            //                 $('#consignee').trigger('change');
+            //             }
+            //         });
+            //     } else {
+            //         $('#consignee').empty();
+            //         $('#consignee-address').empty();
+            //         $('#consignee').append('<option value="">Pilih Consignee</option>');
+            //     }
+            // });
 
-            $('#consignee').on('change', function() {
-                // Ambil data dari Select2 untuk client yang dipilih
-                var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
+            // $('#consignee').on('change', function() {
+            //     // Ambil data dari Select2 untuk client yang dipilih
+            //     var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
 
-                // Tampilkan address di div jika ada
-                if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
-                        'address')) {
-                    var address = $(selectedClientData.element).data('address');
-                    $('#consignee-address').html('<strong>Address: </strong>' + address);
-                } else {
-                    $('#consignee-address').html('');
-                }
-            });
+            //     // Tampilkan address di div jika ada
+            //     if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
+            //             'address')) {
+            //         var address = $(selectedClientData.element).data('address');
+            //         $('#consignee-address').html('<strong>Address: </strong>' + address);
+            //     } else {
+            //         $('#consignee-address').html('');
+            //     }
+            // });
         });
 
         // modal datatables
@@ -611,9 +706,14 @@
                     }
                 },
                 columns: [{
-                        data: 'id',
-                        name: 'id',
-                        title: "No"
+                        data: null,
+                        name: 'no',
+                        title: "No",
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'name',
@@ -819,7 +919,8 @@
                 <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" max="999" /> KG</strong><br>
                 ${data.dimension} ${data.color} - ${data.type}
             </td>
-            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="999" /></td>
+            <td class="text-center"><input type="text" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
+</td>
             <td class="text-center inner-result">
                 0
             </td>
@@ -839,6 +940,21 @@
                 // Menghapus baris "Tidak ada barang" jika ada
                 $('#nullDetailTransaction').remove();
 
+                $(document).on('input', '.carton-input', function() {
+                    var inputVal = $(this).val().replace(/,/g,
+                        ''); // Hapus pemisah ribuan sebelumnya
+
+                    if (!isNaN(inputVal) && inputVal !== '') {
+                        var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
+                            minimumFractionDigits: 0, // Tanpa desimal
+                            maximumFractionDigits: 0 // Tanpa desimal
+                        });
+
+                        // Set nilai input yang sudah diformat kembali ke elemen input
+                        $(this).val(formattedVal);
+                    }
+                });
+
                 // Event listener to calculate the result
                 $('#tableDetailTransaction tbody').on('input', '.qty-input, .carton-input', function() {
                     var row = $(this).closest('tr');
@@ -846,7 +962,8 @@
                     var cartonInput = row.find('.carton-input');
 
                     var qty = parseFloat(qtyInput.val()) || 0;
-                    var carton = parseFloat(cartonInput.val()) || 0;
+                    var carton = parseFloat(cartonInput.val().replace(/,/g,
+                        '')) || 0;
                     var price = parseFloat(row.find('.price').data('price')) || 0;
 
                     // Batas maksimum untuk qty dan carton
@@ -880,14 +997,16 @@
 
                     // Multiply qty by carton and update the result
                     var result = qty * carton;
-                    row.find('.inner-result').text(result);
-                    row.find('.net-weight').text(result);
+                    var formattedResult = result.toLocaleString('en-US');
+                    row.find('.inner-result').text(formattedResult);
+                    row.find('.net-weight').text(formattedResult);
 
                     // Update the price based on result * data.price
                     var totalPrice = result * data.price;
                     // Round the total price to the nearest integer
                     var roundedPrice = Math.round(totalPrice);
-                    row.find('.price-result').text(roundedPrice);
+                    var formattedPrice = roundedPrice.toLocaleString('en-US');
+                    row.find('.price-result').text(formattedPrice);
 
                     // Update total values in the footer
                     updateAmounts();
@@ -909,24 +1028,28 @@
                         if ($(row).attr('id') === 'nullDetailTransaction') return;
 
                         var idDetailProduct = $(row).find('.id-detail-product').text().trim();
-                        var qty = $(row).find('.qty-input').val();
-                        var carton = $(row).find('.carton-input').val();
-                        var inner = $(row).find('.inner-result').text().trim();
-                        var unitPrice = $(row).find('.price').text().trim();
-                        var netWeight = parseFloat($(row).find('.net-weight').text().trim()) || 0;
-                        netWeight = netWeight.toFixed(2);
-                        var priceAmount = $(row).find('.price-result').text().trim();
+                        var qty = parseFloat($(row).find('.qty-input').val().replace(/,/g, '')) ||
+                            0; // Hapus koma dari qty
+                        var carton = parseFloat($(row).find('.carton-input').val().replace(/,/g,
+                            '')) || 0; // Hapus koma dari carton
+                        var inner = parseFloat($(row).find('.inner-result').text().trim().replace(
+                            /,/g, '')) || 0; // Hapus koma dari inner
+                        var unitPrice = parseFloat($(row).find('.price').text().trim().replace(/,/g,
+                            '')) || 0; // Hapus koma dari unit price
+                        var netWeight = parseFloat($(row).find('.net-weight').text().trim().replace(
+                            /,/g, '')) || 0;
+                        var priceAmount = parseFloat($(row).find('.price-result').text().trim()
+                            .replace(/,/g, '')) || 0; // Hapus koma dari price amount
 
                         // Create hidden inputs and append to the form
                         $('#formDetailTransaction').append(`
-    <!-- ID Detail Product (Validasi exists:detail_products,id) -->
-            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
-            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
-            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
+        <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+        <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
+        <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
+        <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+        <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
+        <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
+        <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
     `);
                     });
                 }
@@ -939,10 +1062,15 @@
 
                     // Iterasi setiap baris untuk mendapatkan nilai total
                     $('#tableDetailTransaction tbody tr').each(function() {
-                        var carton = parseFloat($(this).find('.carton-input').val()) || 0;
-                        var inner = parseFloat($(this).find('.inner-result').text()) || 0;
-                        var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
-                        var price = parseFloat($(this).find('.price-result').text()) || 0;
+                        // Ambil nilai carton, inner, netWeight, dan price tanpa format
+                        var carton = parseFloat($(this).find('.carton-input').val().replace(/,/g,
+                            '')) || 0;
+                        var inner = parseFloat($(this).find('.inner-result').text().replace(/,/g,
+                            '')) || 0;
+                        var netWeight = parseFloat($(this).find('.net-weight').text().replace(/,/g,
+                            '')) || 0;
+                        var price = parseFloat($(this).find('.price-result').text().replace(/,/g,
+                            '')) || 0;
 
                         totalCarton += carton;
                         totalInner += inner;
@@ -950,29 +1078,35 @@
                         PriceAmount += price;
                     });
 
-                    // Update nilai total di footer
-                    $('#totalCarton').text(totalCarton);
-                    $('#totalInner').text(totalInner);
-                    $('#totalNetWeight').text(totalNetWeight);
-                    $('#PriceAmount').text(PriceAmount);
+                    // Format hasil perhitungan dengan pemisah ribuan en-US
+                    var formattedTotalCarton = totalCarton.toLocaleString('en-US');
+                    var formattedTotalInner = totalInner.toLocaleString('en-US');
+                    var formattedTotalNetWeight = totalNetWeight.toLocaleString('en-US');
+                    var formattedPriceAmount = PriceAmount.toLocaleString('en-US');
+
+                    // Update nilai total di footer dengan format yang benar
+                    $('#totalCarton').text(formattedTotalCarton);
+                    $('#totalInner').text(formattedTotalInner);
+                    $('#totalNetWeight').text(formattedTotalNetWeight);
+                    $('#PriceAmount').text(formattedPriceAmount);
+
+                    // Set value total net weight untuk field form
                     $('#net_weight_transaction').val(totalNetWeight);
                     $('.net_weight_transaction').val(totalNetWeight);
                 }
 
                 // Fungsi untuk memperbarui total price amount
                 function updateTotals() {
-                    // Ambil nilai dari Price Amount yang ada di kolom
-                    var priceAmount = parseFloat($('#PriceAmount').text()) || 0;
+                    var priceAmount = parseFloat($('#PriceAmount').text().replace(/,/g, '')) || 0;
 
-                    // Ambil nilai dari input Freight Cost
-                    var freightCost = parseFloat($('#freight_cost').val()) || 0;
+                    var freightCost = parseFloat($('#freight_cost').val().replace(/,/g, '')) || 0;
 
-                    // Hitung total dengan menambahkan priceAmount dan freightCost
                     var total = priceAmount + freightCost;
 
-                    // Update elemen dengan total baru
+                    var formattedGrandTotal = total.toLocaleString('en-US');
+                    $('.total-display').val(formattedGrandTotal);
+
                     $('#total').val(total);
-                    $('.total-display').val(total);
                 }
 
                 // Event listener untuk input Freight Cost
@@ -1027,16 +1161,65 @@
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
 
-            // $('#submitButton').on('click', function() {
-            //     $('#formTransaction').submit();
-            // });
-
             $('#submitButton').click(function() {
                 var formProformaInvoice = $('#formProformaInvoice');
                 var formDetailTransaction = $('#formDetailTransaction');
 
                 // Nonaktifkan tombol submit
                 $('#submitButton').prop('disabled', true);
+
+                // Reset pesan kesalahan sebelumnya
+                $('.error-message').hide();
+                $('.form-control').removeClass('is-invalid');
+                $('.input-group').removeClass('has-error');
+
+                var selectedClientId = $('#selectedClientId').val();
+                if (!selectedClientId) {
+                    $('#selectedClientId_error').text('Client harus dipilih').show();
+                    $('#selectedClientName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var selectedConsigneeId = $('#selectedConsigneeId').val();
+                if (!selectedConsigneeId) {
+                    $('#selectedConsigneeId_error').text('Consignee harus dipilih').show();
+                    $('#selectedConsigneeName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var net_weight_transaction = $('#net_weight_transaction').val();
+                if (!net_weight_transaction) {
+                    $('.net_weight_transaction').addClass('is-invalid'); // Tambah border merah pada input
+                }
+
+                // Validasi product (id_product harus dipilih)
+                var product = $('#product').val();
+                if (!product) {
+                    $('#product_error').text('Produk harus dipilih').show();
+                    $('#product').addClass('is-invalid'); // Tambahkan border merah
+                }
+
+                // Validasi commodity (id_commodity harus dipilih)
+                var commodity = $('#commodity').val();
+                if (!commodity) {
+                    $('#commodity_error').text('Komoditas harus dipilih').show();
+                    $('#commodity').addClass('is-invalid'); // Tambahkan border merah
+                }
+
+                // Validasi formDetailTransaction terlebih dahulu
+                var isValidDetailTransaction = validateDetailTransactionForm();
+
+                if (!isValidDetailTransaction) {
+                    // Jika validasi form detail transaksi gagal, aktifkan kembali tombol submit
+                    $('#submitButton').prop('disabled', false);
+                    Swal.fire({
+                        title: 'Terjadi Kesalahan!',
+                        text: 'Mohon periksa kembali detail transaksi Anda.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return; // Hentikan proses jika form detail transaksi tidak valid
+                }
 
                 // Submit formProformaInvoice terlebih dahulu
                 $.ajax({
@@ -1055,14 +1238,26 @@
                                 method: formDetailTransaction.attr('method'),
                                 data: formDetailTransaction.serialize(),
                                 success: function(response) {
-                                    alert('Berhasil menambahkan proforma invoice');
-                                    location
-                                        .reload(); // Reload halaman setelah alert
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: 'Proforma invoice berhasil ditambahkan.',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
                                 },
                                 error: function(xhr) {
                                     // Tangani error untuk detail transaksi
-                                    alert('Error saving detail transaction: ' + xhr
-                                        .responseJSON.message);
+                                    Swal.fire({
+                                        title: 'Terjadi Kesalahan!',
+                                        text: 'Gagal menyimpan detail transaksi: ' +
+                                            xhr.responseJSON.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
                                 },
                                 complete: function() {
                                     // Aktifkan kembali tombol setelah selesai (sukses/gagal)
@@ -1075,13 +1270,244 @@
                             $('#submitButton').prop('disabled', false);
                         }
                     },
+                    // error: function(xhr) {
+                    //     // Tangani error untuk transaksi
+                    //     Swal.fire({
+                    //         title: 'Terjadi Kesalahan!',
+                    //         text: 'Gagal menyimpan transaksi: ' + xhr
+                    //             .responseJSON.message,
+                    //         icon: 'error',
+                    //         confirmButtonText: 'OK'
+                    //     });
+                    //     // Aktifkan kembali tombol jika error terjadi
+                    //     $('#submitButton').prop('disabled', false);
+                    // }
                     error: function(xhr) {
-                        // Tangani error untuk transaksi
-                        alert('Error saving transaction: ' + xhr.responseJSON.message);
-                        // Aktifkan kembali tombol jika error terjadi
-                        $('#submitButton').prop('disabled', false);
+                        if (xhr.status === 422) {
+                            // Tangani error validasi dari server
+                            var errors = xhr.responseJSON.errors;
+
+                            // Loop melalui setiap error dan tampilkan di elemen input terkait
+                            $.each(errors, function(key, value) {
+                                var errorElement = $('#' + key + '_error');
+                                var inputElement = $('#' + key);
+
+                                // Tampilkan pesan error
+                                errorElement.text(value[0]).show();
+                                inputElement.addClass(
+                                    'is-invalid'
+                                ); // Tambah kelas is-invalid untuk border merah
+                            });
+                        } else {
+                            // Tangani error umum
+                            Swal.fire({
+                                title: 'Terjadi Kesalahan!',
+                                text: 'Gagal menyimpan transaksi: ' + xhr.responseJSON
+                                    .message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                        $('#submitButton').prop('disabled', false); // Aktifkan tombol kembali
                     }
                 });
+            });
+
+            function validateDetailTransactionForm() {
+                var isValid = true;
+
+                // Validasi setiap field di form detail transaksi
+                $('#formDetailTransaction input').each(function() {
+                    if ($(this).attr('id') !== 'id_transaction') {
+                        if ($(this).val() === '') {
+                            isValid = false;
+                            $(this).addClass('is-invalid'); // Tambahkan class invalid jika tidak valid
+                        } else {
+                            $(this).removeClass('is-invalid'); // Hapus class invalid jika valid
+                        }
+                    }
+                });
+
+                return isValid; // Kembalikan status validasi
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#clientsModalTable').DataTable({
+                autoWidth: false,
+                processing: false,
+                serverSide: true,
+                ajax: "{{ route('clients.index') }}",
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: 'PO_BOX',
+                        name: 'PO_BOX',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'fax',
+                        name: 'fax',
+                        class: 'text-center'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    search: "Cari :",
+                    infoFiltered: "(disaring dari total _MAX_ entri)"
+                },
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10,
+                drawCallback: function() {
+                    $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
+                        'max-width': '280px',
+                        'overflow': 'hidden',
+                        'text-overflow': 'ellipsis'
+                    });
+                }
+            });
+
+            // Event listener untuk tombol "Pilih" di tabel client
+            $('#clientsModalTable tbody').on('click', '.select-client', function() {
+                var clientId = $(this).data('id');
+                var clientName = $(this).data('name');
+
+                $('#selectedClientId').val(clientId);
+                $('#selectedClientName').val(clientName);
+                $('#selectedConsigneeId').val(''); // Kosongkan nilai ID consignee
+                $('#selectedConsigneeName').val('');
+                $('#clientsModal').modal('hide');
+
+                // Hapus baris "Harap pilih client terlebih dahulu"
+                $('#nullConsignee').hide();
+
+                // Memuat data consignee berdasarkan ID client yang dipilih
+                loadConsignees(clientId);
+            });
+
+            var consigneeTable = $('#consigneeModalTable').DataTable({
+                autoWidth: false,
+                processing: false,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('consignees.byClient', '0') }}", // Set ID client ke '0' atau gunakan route lain yang menghasilkan data kosong
+                    dataSrc: function(json) {
+                        if (json.data.length === 0) {
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
+                                '0') {
+                                // Jika client belum dipilih (clientId = 0 atau kosong), tampilkan pesan ini
+                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Harap pilih client terlebih dahulu";
+                            } else {
+                                // Jika client sudah dipilih tetapi tidak ada consignee, tampilkan pesan ini
+                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Tidak ada consignee untuk client ini";
+                            }
+                        }
+                        return json.data;
+                    }
+                }, // diisi saat loadConsignees dipanggil
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'id_client',
+                        name: 'id_client',
+                        class: 'text-center'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    search: "Cari :",
+                    infoFiltered: "(disaring dari total _MAX_ entri)",
+                    emptyTable: "Harap pilih client terlebih dahulu" // Ubah pesan saat tidak ada data
+                },
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10,
+            });
+
+            // Fungsi untuk memuat data consignee berdasarkan ID client
+            window.loadConsignees = function(clientId) {
+                if (!clientId) {
+                    $('#nullConsignee').show();
+                    consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
+                    return;
+                }
+
+                consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
+            };
+
+            // Event listener untuk tombol "Pilih" di tabel consignee
+            $('#consigneeModalTable tbody').on('click', '.select-consignee', function() {
+                var consigneeId = $(this).data('id');
+                var consigneeName = $(this).data('name');
+
+                $('#selectedConsigneeId').val(consigneeId);
+                $('#selectedConsigneeName').val(consigneeName);
+                $('#consigneeModal').modal('hide');
             });
         });
     </script>
