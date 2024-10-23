@@ -178,38 +178,39 @@
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="port_of_loading">Port of Loading</label>
-                                                            <input type="text" name="port_of_loading" id="port_of_loading"
-                                                                class="form-control" placeholder="Enter port of loading" required>
+                                                            <input type="text" name="port_of_loading"
+                                                                id="port_of_loading" class="form-control"
+                                                                placeholder="Enter port of loading" required>
                                                         </div>
                                                     </div>
-        
+
                                                     <!-- Place of Receipt Input -->
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="place_of_receipt">Place of Receipt</label>
-                                                            <input type="text" name="place_of_receipt" id="place_of_receipt"
-                                                                class="form-control" placeholder="Enter place of receipt"
-                                                                required>
+                                                            <input type="text" name="place_of_receipt"
+                                                                id="place_of_receipt" class="form-control"
+                                                                placeholder="Enter place of receipt" required>
                                                         </div>
                                                     </div>
-        
+
                                                     <!-- Port of Discharge Input -->
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="port_of_discharge">Port of Discharge</label>
-                                                            <input type="text" name="port_of_discharge" id="port_of_discharge"
-                                                                class="form-control" placeholder="Enter port of discharge"
-                                                                required>
+                                                            <input type="text" name="port_of_discharge"
+                                                                id="port_of_discharge" class="form-control"
+                                                                placeholder="Enter port of discharge" required>
                                                         </div>
                                                     </div>
-        
+
                                                     <!-- Place of Delivery Input -->
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="place_of_delivery">Place of Delivery</label>
-                                                            <input type="text" name="place_of_delivery" id="place_of_delivery"
-                                                                class="form-control" placeholder="Enter place of delivery"
-                                                                required>
+                                                            <input type="text" name="place_of_delivery"
+                                                                id="place_of_delivery" class="form-control"
+                                                                placeholder="Enter place of delivery" required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -277,13 +278,13 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" name="payment_term" id="payment_term"
-                                                                    class="form-control" placeholder="Masukkan Payment term"
-                                                                    required>
+                                                                <input type="text" name="payment_term"
+                                                                    id="payment_term" class="form-control"
+                                                                    placeholder="Masukkan Payment term" required>
                                                             </div>
                                                         </div>
                                                     </div>
-        
+
                                                     <!-- Kolom Sebelah Kanan -->
                                                     <div class="col-6">
                                                         <div class="row mt-2">
@@ -294,11 +295,13 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number" class="form-control net_weight_transaction"
+                                                                <input type="number"
+                                                                    class="form-control net_weight_transaction"
                                                                     step="0.01" max="9999999.99" disabled>
                                                                 <input type="hidden" id="net_weight_transaction"
                                                                     name="net_weight" class="form-control" step="0.01"
-                                                                    max="9999999.99" placeholder="Contoh: 123.45" required>
+                                                                    max="9999999.99" placeholder="Contoh: 123.45"
+                                                                    required>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -309,9 +312,9 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number" id="gross_weight" name="gross_weight"
-                                                                    class="form-control" step="0.01"
-                                                                    placeholder="Contoh: 123.45" required>
+                                                                <input type="number" id="gross_weight"
+                                                                    name="gross_weight" class="form-control"
+                                                                    step="0.01" placeholder="Contoh: 123.45" required>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -323,8 +326,8 @@
                                                             </div>
                                                             <div class="col-5">
                                                                 <input type="text" name="product_ncm" id="product_ncm"
-                                                                    class="form-control" placeholder="Masukkan Product NCM"
-                                                                    required>
+                                                                    class="form-control"
+                                                                    placeholder="Masukkan Product NCM" required>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -445,7 +448,6 @@
     </div>
 
     {{-- modal Client --}}
-    {{-- <div class="modal fade text-left" id="memberModal" tabindex="-1" role="dialog" aria-hidden="true"> --}}
     <div class="modal fade text-left" id="clientsModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -671,9 +673,14 @@
                     }
                 },
                 columns: [{
-                        data: 'id',
-                        name: 'id',
-                        title: "No"
+                        data: null,
+                        name: 'no',
+                        title: "No",
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'name',
