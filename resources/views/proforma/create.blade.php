@@ -1183,9 +1183,11 @@
                                         text: 'Proforma invoice berhasil ditambahkan.',
                                         icon: 'success',
                                         confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
                                     });
-                                    location
-                                        .reload(); // Reload halaman setelah alert
                                 },
                                 error: function(xhr) {
                                     // Tangani error untuk detail transaksi
