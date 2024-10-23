@@ -380,6 +380,8 @@ class ProformaController extends Controller
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
+        $phone = ImageHelper::getBase64Image('storage/phone.png');
+        $email = ImageHelper::getBase64Image('storage/mail.png');
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -394,7 +396,7 @@ class ProformaController extends Controller
         }
 
 
-        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount'));
+        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('proforma_' . $hashId . '.pdf');
@@ -409,6 +411,7 @@ class ProformaController extends Controller
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
+        $phone = ImageHelper::getBase64Image('storage/phone.png');
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -422,7 +425,7 @@ class ProformaController extends Controller
             $priceAmount += $detail->price_amount;
         }
 
-        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount'));
+        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('proforma_' . $hashId . '.pdf');

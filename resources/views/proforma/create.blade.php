@@ -337,7 +337,7 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number" id="gross_weight"
+                                                                <input type="text" id="gross_weight"
                                                                     name="gross_weight" class="form-control"
                                                                     step="0.01" placeholder="Contoh: 123.45" required>
                                                                 <span class="error-message" id="gross_weight_error"
@@ -430,7 +430,7 @@
                                                                 :</label></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                <input type="number" step="0.01" class="form-control"
+                                                                <input type="text" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
                                                                     placeholder="Enter Freight Cost" min="0"
                                                                     max="99999999.99">
@@ -660,6 +660,38 @@
             //         $('#consignee-address').html('');
             //     }
             // });
+        });
+
+        $(document).ready(function() {
+            // Format untuk gross_weight
+            $(document).on('input', '#gross_weight', function() {
+                var inputVal = $(this).val().replace(/,/g, ''); // Hapus pemisah ribuan sebelumnya
+
+                if (!isNaN(inputVal) && inputVal !== '') {
+                    var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
+                        minimumFractionDigits: 0, // Tanpa desimal
+                        maximumFractionDigits: 0 // Tanpa desimal
+                    });
+
+                    // Set nilai input yang sudah diformat kembali ke elemen input
+                    $(this).val(formattedVal);
+                }
+            });
+
+            //format untuk freight cost
+            $(document).on('input', '#freight_cost', function() {
+                var inputVal = $(this).val().replace(/,/g, ''); // Hapus pemisah ribuan sebelumnya
+
+                if (!isNaN(inputVal) && inputVal !== '') {
+                    var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
+                        minimumFractionDigits: 0, // Tanpa desimal
+                        maximumFractionDigits: 0 // Tanpa desimal
+                    });
+
+                    // Set nilai input yang sudah diformat kembali ke elemen input
+                    $(this).val(formattedVal);
+                }
+            });
         });
 
         // modal datatables
@@ -919,8 +951,9 @@
                 <strong>${data.name} ${data.pcs} PCS / <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" max="999" /> KG</strong><br>
                 ${data.dimension} ${data.color} - ${data.type}
             </td>
-            <td class="text-center"><input type="text" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
-</td>
+            <td class="text-center">
+                <input type="text" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
+            </td>
             <td class="text-center inner-result">
                 0
             </td>
