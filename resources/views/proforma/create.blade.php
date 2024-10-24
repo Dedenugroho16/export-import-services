@@ -1105,23 +1105,26 @@
                     var totalNetWeight = 0;
                     var PriceAmount = 0;
 
-                    // Iterasi setiap baris untuk mendapatkan nilai total
-                    $('#tableDetailTransaction tbody tr').each(function() {
-                        // Ambil nilai carton, inner, netWeight, dan price tanpa format
-                        var carton = parseFloat($(this).find('.carton-input').val().replace(/,/g,
-                            '')) || 0;
-                        var inner = parseFloat($(this).find('.inner-result').text().replace(/,/g,
-                            '')) || 0;
-                        var netWeight = parseFloat($(this).find('.net-weight').text().replace(/,/g,
-                            '')) || 0;
-                        var price = parseFloat($(this).find('.price-result').text().replace(/,/g,
-                            '')) || 0;
+                    // Jika tabel kosong atau hanya ada baris "Tidak ada barang", reset semua nilai ke 0
+                    if ($('#tableDetailTransaction tbody tr').length === 0 || $('#tableDetailTransaction tbody').find('#nullDetailTransaction').length > 0) {
+                        totalCarton = 0;
+                        totalInner = 0;
+                        totalNetWeight = 0;
+                        PriceAmount = 0;
+                    } else {
+                        // Iterasi setiap baris untuk mendapatkan nilai total
+                        $('#tableDetailTransaction tbody tr').each(function() {
+                            var carton = parseFloat($(this).find('.carton-input').val().replace(/,/g, '')) || 0;
+                            var inner = parseFloat($(this).find('.inner-result').text().replace(/,/g, '')) || 0;
+                            var netWeight = parseFloat($(this).find('.net-weight').text().replace(/,/g, '')) || 0;
+                            var price = parseFloat($(this).find('.price-result').text().replace(/,/g, '')) || 0;
 
-                        totalCarton += carton;
-                        totalInner += inner;
-                        totalNetWeight += netWeight;
-                        PriceAmount += price;
-                    });
+                            totalCarton += carton;
+                            totalInner += inner;
+                            totalNetWeight += netWeight;
+                            PriceAmount += price;
+                        });
+                    }
 
                     // Format hasil perhitungan dengan pemisah ribuan en-US
                     var formattedTotalCarton = totalCarton.toLocaleString('en-US');
