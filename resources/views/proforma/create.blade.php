@@ -392,9 +392,9 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <p id="error-message-qty" style="color: red;">Nilai maksimum QTY adalah tiga digit
+                                        <p id="error-message-qty" style="color: red; display:none">Nilai maksimum QTY adalah tiga digit
                                         </p>
-                                        <p id="error-message-carton" style="color: red;">Nilai maksimum Carton adalah
+                                        <p id="error-message-carton" style="color: red; display:none">Nilai maksimum Carton adalah
                                             empat digit</p>
                                         <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
@@ -933,8 +933,6 @@
 
             // Tabel Detail Transaction
             // Event handler ketika tombol "Pilih" diklik
-            $('#error-message-qty').hide();
-            $('#error-message-carton').hide();
             var selectedProductIds = [];
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
                 var data = table.row($(this).parents('tr'))
@@ -1016,22 +1014,23 @@
                     var maxQty = 999; // Maksimum 3 digit
                     var maxCarton = 9999; // Maksimum 4 digit
 
-                    $('#error-message-qty').hide();
-                    $('#error-message-carton').hide();
-
                     // Flag to track if input exceeds limits
                     var exceedsLimit = false;
 
                     // Check if qty exceeds max value
                     if (qty > maxQty) {
-                        $('#error-message-qty').show(); // Show error message for qty
+                        $('#error-message-qty').show();
                         exceedsLimit = true;
+                    } else {
+                        $('#error-message-qty').hide();
                     }
 
                     // Check if carton exceeds max value
                     if (carton > maxCarton) {
-                        $('#error-message-carton').show(); // Show error message for carton
+                        $('#error-message-carton').show();
                         exceedsLimit = true;
+                    } else {
+                        $('#error-message-carton').hide();
                     }
 
                     // Jika ada yang melebihi batas, disable tombol submit
