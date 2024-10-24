@@ -318,7 +318,7 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number"
+                                                                <input type="text"
                                                                     class="form-control net_weight_transaction"
                                                                     step="0.01" max="9999999.99" disabled>
                                                                 <span class="error-message" id="net_weight_error"
@@ -337,7 +337,7 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" id="gross_weight_display" class="form-control" placeholder="Contoh: 123.45" required>
+                                                                <input type="text" id="gross_weight_display" class="form-control" placeholder="Masukkan gross weight" required>
                                                                 <input type="hidden" id="gross_weight" name="gross_weight">
                                                                 <span class="error-message" id="gross_weight_error"
                                                                     style="color: red; display: none;"></span>
@@ -1138,7 +1138,7 @@
 
                     // Set value total net weight untuk field form
                     $('#net_weight_transaction').val(totalNetWeight);
-                    $('.net_weight_transaction').val(totalNetWeight);
+                    $('.net_weight_transaction').val(formattedTotalNetWeight);
                 }
 
                 // Fungsi untuk memperbarui total price amount
