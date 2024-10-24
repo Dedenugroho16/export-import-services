@@ -12,7 +12,7 @@
                             <h3 class="card-title">Form Proforma Invoice</h3>
                         </div>
                         <div class="card-body">
-                            <p id="error-message" style="color: red;">Harap menginput negara terlebih
+                            <p id="country_error" style="color: red; display: none;">Harap menginput negara terlebih
                                 dahulu</p>
                             <!-- Display Success Message -->
                             @if (session('success'))
@@ -711,10 +711,10 @@
             // Update button and error message visibility based on the default value
             if ($('#country').val() === "") {
                 $('#submitButton').prop('disabled', true);
-                $('#error-message').show();
+                $('#country_error').show();
             } else {
                 $('#submitButton').prop('disabled', false);
-                $('#error-message').hide();
+                $('#country_error').hide();
             }
 
             // Deteksi perubahan pada dropdown negara
