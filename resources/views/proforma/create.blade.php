@@ -668,44 +668,39 @@
         $(document).ready(function() {
             const grossWeightDisplay = document.getElementById('gross_weight_display');
             const grossWeight = document.getElementById('gross_weight');
-            
-            // Event listener untuk memformat input saat user mengetik
-            grossWeightDisplay.addEventListener('input', function (e) {
-                // Ambil nilai yang diinputkan, lalu bersihkan format non-angka
-                let value = e.target.value.replace(/[^,\d]/g, '');
 
+            // Event listener untuk memformat input saat user mengetik (Gross Weight)
+            grossWeightDisplay.addEventListener('input', function (e) {
+                // Ambil nilai yang diinputkan, lalu bersihkan format non-angka kecuali titik dan angka
+                let value = e.target.value.replace(/[^.\d]/g, '');
                 // Update nilai input tersembunyi dengan angka asli tanpa format
                 grossWeight.value = value.replace(/,/g, '');
-
-                // Format input tampilan dengan pemisah ribuan
-                e.target.value = formatAngka(value);
-            });
-
+                // Format input tampilan dengan pemisah ribuan (koma) dan titik sebagai desimal
+                e.target.value = formatDollar(value);
+            });           
+            // Bagian untuk freight cost
             const freightCostDisplay = document.getElementById('freight_cost_display');
             const freightCost = document.getElementById('freight_cost');
             
             freightCostDisplay.addEventListener('input', function (e) {
-                let value = e.target.value.replace(/[^,\d]/g, '');
+                let value = e.target.value.replace(/[^.\d]/g, '');
                 freightCost.value = value.replace(/,/g, '');
-                e.target.value = formatAngka(value);
+                e.target.value = formatDollar(value);
             });
 
-            function formatAngka(angka) {
-                var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                    split   = number_string.split(','),
-                    sisa    = split[0].length % 3,
-                    hasil  = split[0].substr(0, sisa),
-                    ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
-                
-                if (ribuan) {
-                    separator = sisa ? '.' : '';
-                    hasil += separator + ribuan.join('.');
-                }
-                
-                hasil = split[1] !== undefined ? hasil + ',' + split[1] : hasil;
-                return hasil;
+            // Fungsi untuk memformat angka dalam format dolar
+            function formatDollar(angka) {
+                // Pisahkan angka menjadi bagian sebelum dan setelah titik desimal
+                let parts = angka.split('.');
+    
+                // Format bagian sebelum desimal (ribuan) dengan koma
+                let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+                // Gabungkan kembali jika ada bagian desimal
+                return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
             }
         });
+
 
         // modal datatables
         $(document).ready(function() {
