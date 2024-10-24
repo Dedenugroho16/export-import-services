@@ -12,7 +12,7 @@
                             <h3 class="card-title">Form Proforma Invoice</h3>
                         </div>
                         <div class="card-body">
-                            <p id="error-message" style="color: red;">Harap menginput negara terlebih
+                            <p id="country_error" style="color: red; display: none;">Harap menginput negara terlebih
                                 dahulu</p>
                             <!-- Display Success Message -->
                             @if (session('success'))
@@ -318,7 +318,7 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number"
+                                                                <input type="text"
                                                                     class="form-control net_weight_transaction"
                                                                     step="0.01" max="9999999.99" disabled>
                                                                 <span class="error-message" id="net_weight_error"
@@ -337,7 +337,7 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" id="gross_weight_display" class="form-control" placeholder="Contoh: 123.45" required>
+                                                                <input type="text" id="gross_weight_display" class="form-control" placeholder="Masukkan gross weight" required>
                                                                 <input type="hidden" id="gross_weight" name="gross_weight">
                                                                 <span class="error-message" id="gross_weight_error"
                                                                     style="color: red; display: none;"></span>
@@ -711,10 +711,10 @@
             // Update button and error message visibility based on the default value
             if ($('#country').val() === "") {
                 $('#submitButton').prop('disabled', true);
-                $('#error-message').show();
+                $('#country_error').show();
             } else {
                 $('#submitButton').prop('disabled', false);
-                $('#error-message').hide();
+                $('#country_error').hide();
             }
 
             // Deteksi perubahan pada dropdown negara
@@ -1137,14 +1137,14 @@
 
                     // Set value total net weight untuk field form
                     $('#net_weight_transaction').val(totalNetWeight);
-                    $('.net_weight_transaction').val(totalNetWeight);
+                    $('.net_weight_transaction').val(formattedTotalNetWeight);
                 }
 
                 // Fungsi untuk memperbarui total price amount
                 function updateTotals() {
                     var priceAmount = parseFloat($('#PriceAmount').text().replace(/,/g, '')) || 0;
 
-                    var freightCost = parseFloat($('#freight_cost').val().replace(/,/g, '')) || 0;
+                    var freightCost = parseFloat($('#freight_cost_display').val().replace(/,/g, '')) || 0;
 
                     var total = priceAmount + freightCost;
 
@@ -1155,7 +1155,7 @@
                 }
 
                 // Event listener untuk input Freight Cost
-                $('#freight_cost').on('input', function() {
+                $('#freight_cost_display').on('input', function() {
                     updateTotals();
                 });
 
