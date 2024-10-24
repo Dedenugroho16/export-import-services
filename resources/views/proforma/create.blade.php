@@ -337,8 +337,11 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" id="gross_weight_display" class="form-control" placeholder="Masukkan gross weight" required>
-                                                                <input type="hidden" id="gross_weight" name="gross_weight">
+                                                                <input type="text" id="gross_weight_display"
+                                                                    class="form-control"
+                                                                    placeholder="Masukkan gross weight" required>
+                                                                <input type="hidden" id="gross_weight"
+                                                                    name="gross_weight">
                                                                 <span class="error-message" id="gross_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                             </div>
@@ -392,9 +395,11 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <p id="error-message-qty" style="color: red; display:none">Nilai maksimum QTY adalah tiga digit
+                                        <p id="error-message-qty" style="color: red; display:none">Nilai maksimum QTY
+                                            adalah tiga digit
                                         </p>
-                                        <p id="error-message-carton" style="color: red; display:none">Nilai maksimum Carton adalah
+                                        <p id="error-message-carton" style="color: red; display:none">Nilai maksimum
+                                            Carton adalah
                                             empat digit</p>
                                         <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
@@ -670,19 +675,19 @@
             const grossWeight = document.getElementById('gross_weight');
 
             // Event listener untuk memformat input saat user mengetik (Gross Weight)
-            grossWeightDisplay.addEventListener('input', function (e) {
+            grossWeightDisplay.addEventListener('input', function(e) {
                 // Ambil nilai yang diinputkan, lalu bersihkan format non-angka kecuali titik dan angka
                 let value = e.target.value.replace(/[^.\d]/g, '');
                 // Update nilai input tersembunyi dengan angka asli tanpa format
                 grossWeight.value = value.replace(/,/g, '');
                 // Format input tampilan dengan pemisah ribuan (koma) dan titik sebagai desimal
                 e.target.value = formatDollar(value);
-            });           
+            });
             // Bagian untuk freight cost
             const freightCostDisplay = document.getElementById('freight_cost_display');
             const freightCost = document.getElementById('freight_cost');
-            
-            freightCostDisplay.addEventListener('input', function (e) {
+
+            freightCostDisplay.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/[^.\d]/g, '');
                 freightCost.value = value.replace(/,/g, '');
                 e.target.value = formatDollar(value);
@@ -692,10 +697,10 @@
             function formatDollar(angka) {
                 // Pisahkan angka menjadi bagian sebelum dan setelah titik desimal
                 let parts = angka.split('.');
-    
+
                 // Format bagian sebelum desimal (ribuan) dengan koma
                 let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    
+
                 // Gabungkan kembali jika ada bagian desimal
                 return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
             }
@@ -984,7 +989,7 @@
                     const cartonInputDisplay = document.getElementById('carton_input_display');
                     const cartonInput = document.getElementById('carton_input');
 
-                    cartonInputDisplay.addEventListener('input', function (e) {
+                    cartonInputDisplay.addEventListener('input', function(e) {
                         let value = e.target.value.replace(/[^.\d]/g, '');
                         cartonInput.value = value.replace(/,/g, '');
                         e.target.value = formatCarton(value);
@@ -1088,13 +1093,13 @@
 
                         // Create hidden inputs and append to the form
                         $('#formDetailTransaction').append(`
-        <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-        <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
-        <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
-        <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-        <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
-        <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
-        <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
+        <input type="hidden" name="transactions[${index}][id_detail_product]" id="id_detail_product" value="${idDetailProduct}">
+        <input type="hidden" name="transactions[${index}][qty]" id="qty" value="${qty}">
+        <input type="hidden" name="transactions[${index}][carton]" id="carton" value="${carton}">
+        <input type="hidden" name="transactions[${index}][inner_qty_carton]" id="inner_qty_carton" value="${inner}">
+        <input type="hidden" name="transactions[${index}][unit_price]" id="unit_price" value="${unitPrice}">
+        <input type="hidden" name="transactions[${index}][net_weight]" id="net_weight" value="${netWeight}">
+        <input type="hidden" name="transactions[${index}][price_amount]" id="price_amount" value="${priceAmount}">
     `);
                     });
                 }
@@ -1106,7 +1111,8 @@
                     var PriceAmount = 0;
 
                     // Jika tabel kosong atau hanya ada baris "Tidak ada barang", reset semua nilai ke 0
-                    if ($('#tableDetailTransaction tbody tr').length === 0 || $('#tableDetailTransaction tbody').find('#nullDetailTransaction').length > 0) {
+                    if ($('#tableDetailTransaction tbody tr').length === 0 || $(
+                            '#tableDetailTransaction tbody').find('#nullDetailTransaction').length > 0) {
                         totalCarton = 0;
                         totalInner = 0;
                         totalNetWeight = 0;
@@ -1114,10 +1120,14 @@
                     } else {
                         // Iterasi setiap baris untuk mendapatkan nilai total
                         $('#tableDetailTransaction tbody tr').each(function() {
-                            var carton = parseFloat($(this).find('.carton-input').val().replace(/,/g, '')) || 0;
-                            var inner = parseFloat($(this).find('.inner-result').text().replace(/,/g, '')) || 0;
-                            var netWeight = parseFloat($(this).find('.net-weight').text().replace(/,/g, '')) || 0;
-                            var price = parseFloat($(this).find('.price-result').text().replace(/,/g, '')) || 0;
+                            var carton = parseFloat($(this).find('.carton-input').val().replace(
+                                /,/g, '')) || 0;
+                            var inner = parseFloat($(this).find('.inner-result').text().replace(
+                                /,/g, '')) || 0;
+                            var netWeight = parseFloat($(this).find('.net-weight').text().replace(
+                                /,/g, '')) || 0;
+                            var price = parseFloat($(this).find('.price-result').text().replace(
+                                /,/g, '')) || 0;
 
                             totalCarton += carton;
                             totalInner += inner;
@@ -1209,6 +1219,21 @@
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
 
+            function validateDetailTransactionForm() {
+                var isValid = true;
+
+                // Cek apakah ada input selain yang memiliki id="id_transaction"
+                var totalInputs = $('#formDetailTransaction input').length; // Total input dalam form
+                var otherInputs = $('#formDetailTransaction input').not('#id_transaction')
+                .length; // Input selain id_transaction
+
+                if (otherInputs === 0) {
+                    isValid = false; // Jika tidak ada input selain id_transaction, form tidak valid
+                }
+
+                return isValid; // Kembalikan status validasi
+            }
+
             $('#submitButton').click(function() {
                 var formProformaInvoice = $('#formProformaInvoice');
                 var formDetailTransaction = $('#formDetailTransaction');
@@ -1262,7 +1287,7 @@
                     $('#submitButton').prop('disabled', false);
                     Swal.fire({
                         title: 'Terjadi Kesalahan!',
-                        text: 'Mohon periksa kembali detail transaksi Anda.',
+                        text: 'Mohon isi data detail transaksi!',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -1318,18 +1343,6 @@
                             $('#submitButton').prop('disabled', false);
                         }
                     },
-                    // error: function(xhr) {
-                    //     // Tangani error untuk transaksi
-                    //     Swal.fire({
-                    //         title: 'Terjadi Kesalahan!',
-                    //         text: 'Gagal menyimpan transaksi: ' + xhr
-                    //             .responseJSON.message,
-                    //         icon: 'error',
-                    //         confirmButtonText: 'OK'
-                    //     });
-                    //     // Aktifkan kembali tombol jika error terjadi
-                    //     $('#submitButton').prop('disabled', false);
-                    // }
                     error: function(xhr) {
                         if (xhr.status === 422) {
                             // Tangani error validasi dari server
@@ -1360,24 +1373,6 @@
                     }
                 });
             });
-
-            function validateDetailTransactionForm() {
-                var isValid = true;
-
-                // Validasi setiap field di form detail transaksi
-                $('#formDetailTransaction input').each(function() {
-                    if ($(this).attr('id') !== 'id_transaction') {
-                        if ($(this).val() === '') {
-                            isValid = false;
-                            $(this).addClass('is-invalid'); // Tambahkan class invalid jika tidak valid
-                        } else {
-                            $(this).removeClass('is-invalid'); // Hapus class invalid jika valid
-                        }
-                    }
-                });
-
-                return isValid; // Kembalikan status validasi
-            }
         });
     </script>
     <script type="text/javascript">
