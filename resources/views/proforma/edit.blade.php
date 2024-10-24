@@ -29,85 +29,11 @@
                                 </div>
                             @endif
 
-                            {{-- Bagian 1 --}}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="card-title">PROFORMA INVOICE</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Date</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <p>{{ $transaction->date }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Code</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <p id="product-code">{{ $transaction->code }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <p><strong>Number</strong></p>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <p id="numberDisplay">{{ $transaction->number }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6 d-flex justify-content-end align-items-start">
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <p><strong>Set Country</strong></p>
-                                                        </div>
-                                                        <div class="col-1 text-center">
-                                                            <span>:</span>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <select class="form-control country" id="country">
-                                                                <option value="">Pilih Negara</option>
-                                                                @foreach ($country as $negara)
-                                                                    <option value="{{ $negara->id }}"
-                                                                        data-code="{{ $negara->code }}"
-                                                                        {{ $negara->id == $countrySelected ? 'selected' : '' }}>
-                                                                        {{ $negara->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <form id="formProformaInvoice" method="POST"
                                 action="{{ route('proforma.update', $transaction->id) }}">
                                 @csrf
-                                <input type="date" name="date" id="date" value="{{ $transaction->date }}"
-                                    hidden>
-                                <input type="text" name="code" id="code" value="{{ $transaction->code }}"
-                                    hidden>
+                                <input type="date" name="date" id="date" value="{{ $transaction->date }}" hidden>
+                                <input type="text" name="code" id="code" value="{{ $transaction->code }}" hidden>
                                 <input type="text" name="number" id="number" value="{{ $transaction->number }}"
                                     hidden>
                                 <input type="date" name="stuffing_date" id="stuffing_date" hidden>
@@ -115,251 +41,332 @@
                                 <input type="text" name="container_number" id="container_number" hidden>
                                 <input type="text" name="seal_number" id="seal_number" hidden>
 
-                                <!-- Bagian 2: Consignee, Notify, Client -->
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Parties Information</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <!-- Client Input -->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="client">Client</label>
-                                                    <select name="id_client" class="form-control client" id="client"
-                                                        required>
-                                                        <option value="">Pilih Client</option>
-                                                        @foreach ($clients as $client)
-                                                            <option value="{{ $client->id }}"
-                                                                data-address="{{ $client->address }}"
-                                                                {{ $client->id == $clientSelectedID ? 'selected' : '' }}>
-                                                                {{ $client->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <!-- Element to display the address -->
-                                                    <div id="client-address" style="margin-top: 10px;"></div>
-                                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">PROFORMA INVOICE</h3>
                                             </div>
-
-                                            <!-- Notify Input -->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="notify">Notify</label>
-                                                    <input type="text" name="notify" id="notify" class="form-control"
-                                                        placeholder="Enter notify party" value="{{ $transaction->notify }}"
-                                                        required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Consignee Input -->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="consignee">Consignee</label>
-                                                    <select name="id_consignee" class="form-control consignee"
-                                                        id="consignee" required>
-                                                        <option value="">Pilih Consignee</option>
-                                                        @foreach ($consignees as $consignee)
-                                                            <option value="{{ $consignee->id }}"
-                                                                data-address="{{ $consignee->address }}"
-                                                                {{ $consignee->id == $consigneeSelectedID ? 'selected' : '' }}>
-                                                                {{ $consignee->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <!-- Element to display the address -->
-                                                    <div id="consignee-address" style="margin-top: 10px;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <!-- Bagian 3: Port of Loading, Place of Receipt, Port of Discharge, Place of Delivery -->
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Logistics Information</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <!-- Port of Loading Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="port_of_loading">Port of Loading</label>
-                                                    <input type="text" name="port_of_loading" id="port_of_loading"
-                                                        class="form-control" placeholder="Enter port of loading"
-                                                        value="{{ $transaction->port_of_loading }}" required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Place of Receipt Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="place_of_receipt">Place of Receipt</label>
-                                                    <input type="text" name="place_of_receipt" id="place_of_receipt"
-                                                        class="form-control" placeholder="Enter place of receipt"
-                                                        value="{{ $transaction->place_of_receipt }}" required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Port of Discharge Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="port_of_discharge">Port of Discharge</label>
-                                                    <input type="text" name="port_of_discharge" id="port_of_discharge"
-                                                        class="form-control" placeholder="Enter port of discharge"
-                                                        value="{{ $transaction->port_of_discharge }}" required>
-                                                </div>
-                                            </div>
-
-                                            <!-- Place of Delivery Input -->
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="place_of_delivery">Place of Delivery</label>
-                                                    <input type="text" name="place_of_delivery" id="place_of_delivery"
-                                                        class="form-control" placeholder="Enter place of delivery"
-                                                        value="{{ $transaction->place_of_delivery }}" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {{-- bagian 4 --}}
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h3 class="card-title">DETAILS</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <!-- Kolom Sebelah Kiri -->
-                                            <div class="col-6">
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Name of Product</strong></p>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <p><strong>Set Country</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <select class="form-control country" id="country">
+                                                                    <option value="">Pilih Negara</option>
+                                                                    @foreach ($country as $negara)
+                                                                        <option value="{{ $negara->id }}"
+                                                                            data-code="{{ $negara->code }}"
+                                                                            {{ $negara->id == $countrySelected ? 'selected' : '' }}>
+                                                                            {{ $negara->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <p><strong>Date</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <p>{{ $transaction->date }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <p><strong>Code</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <p id="product-code">{{ $transaction->code }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <p><strong>Number</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <p id="numberDisplay">{{ $transaction->number }}</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
+                                                    <div class="col-1"></div>
                                                     <div class="col-5">
-                                                        <select class="form-control product" id="product"
-                                                            name="id_product" required>
-                                                            <option value="">Pilih Product</option>
-                                                            @foreach ($products as $product)
-                                                                <option value="{{ $product->id }}"
-                                                                    data-code="{{ $product->code }}"
-                                                                    data-abbreviation="{{ $product->abbreviation }}"
-                                                                    {{ $product->id == $productSelectedID ? 'selected' : '' }}>
-                                                                    {{ $product->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <p><strong>Client</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control"
+                                                                            id="selectedClientName"
+                                                                            placeholder="Pilih Client"
+                                                                            value="{{ $transaction->client->name }}"
+                                                                            readonly>
+                                                                        <input type="hidden" id="selectedClientId"
+                                                                            name="id_client"
+                                                                            value="{{ $transaction->id_client }}">
+                                                                        <div class="btn-group">
+                                                                            <button type="button"
+                                                                                class="btn btn-primary btn-md"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#clientsModal">
+                                                                                <i data-feather="search"></i> Cari
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <span class="error-message" id="selectedClientId_error"
+                                                                        style="color: red; display: none;"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-3">
+                                                                <p><strong>Consignee</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control"
+                                                                            id="selectedConsigneeName"
+                                                                            placeholder="Pilih Consignee"
+                                                                            value="{{ $transaction->consignee->name }}"
+                                                                            readonly>
+                                                                        <input type="hidden" id="selectedConsigneeId"
+                                                                            name="id_consignee"
+                                                                            value="{{ $transaction->id_consignee }}">
+                                                                        <div class="btn-group">
+                                                                            <button type="button"
+                                                                                class="btn btn-primary btn-md"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#consigneeModal">
+                                                                                <i data-feather="search"></i> Cari
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <span class="error-message"
+                                                                        id="selectedConsigneeId_error"
+                                                                        style="color: red; display: none;"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-3">
+                                                                <p><strong>Notify</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" name="notify"
+                                                                    id="notify"class="form-control"
+                                                                    placeholder="Enter notify party"
+                                                                    value="{{ $transaction->notify }}" required>
+                                                                <span class="error-message" id="notify_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Name of Commodity</strong></p>
+                                                <div class="row mt-6">
+                                                    <!-- Port of Loading Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="port_of_loading">Port of Loading</label>
+                                                            <input type="text" name="port_of_loading"
+                                                                id="port_of_loading" class="form-control"
+                                                                placeholder="Enter port of loading"
+                                                                value="{{ $transaction->port_of_loading }}" required>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <select class="form-control commodity" id="commodity"
-                                                            name="id_commodity" required>
-                                                            <option value="">Pilih Commodity</option>
-                                                            @foreach ($commodities as $commodity)
-                                                                <option value="{{ $commodity->id }}"
-                                                                    {{ $commodity->id == $commoditySelectedID ? 'selected' : '' }}>
-                                                                    {{ $commodity->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Container</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="container" id="container"
-                                                            class="form-control" placeholder="Masukkan Container"
-                                                            value="{{ $transaction->container }}" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Payment Term</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="payment_term" id="payment_term"
-                                                            class="form-control" placeholder="Masukkan Payment term"
-                                                            value="{{ $transaction->payment_term }}" required>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <!-- Kolom Sebelah Kanan -->
-                                            <div class="col-6">
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Net Weight</strong></p>
+                                                    <!-- Place of Receipt Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="place_of_receipt">Place of Receipt</label>
+                                                            <input type="text" name="place_of_receipt"
+                                                                id="place_of_receipt" class="form-control"
+                                                                placeholder="Enter place of receipt"
+                                                                value="{{ $transaction->place_of_receipt }}" required>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
+
+                                                    <!-- Port of Discharge Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="port_of_discharge">Port of Discharge</label>
+                                                            <input type="text" name="port_of_discharge"
+                                                                id="port_of_discharge" class="form-control"
+                                                                placeholder="Enter port of discharge"
+                                                                value="{{ $transaction->port_of_discharge }}" required>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-5">
-                                                        <input type="number" class="form-control net_weight_transaction"
-                                                            step="0.01" disabled>
-                                                        <input type="hidden" id="net_weight_transaction"
-                                                            name="net_weight" class="form-control" step="0.01"
-                                                            required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Gross Weight</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="number" id="gross_weight" name="gross_weight"
-                                                            class="form-control" step="0.01"
-                                                            placeholder="Contoh: 123.45"
-                                                            value="{{ $transaction->gross_weight }}" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Product NCM</strong></p>
-                                                    </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="product_ncm" id="product_ncm"
-                                                            class="form-control" value="{{ $transaction->product_ncm }}"
-                                                            required>
+
+                                                    <!-- Place of Delivery Input -->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="place_of_delivery">Place of Delivery</label>
+                                                            <input type="text" name="place_of_delivery"
+                                                                id="place_of_delivery" class="form-control"
+                                                                placeholder="Enter place of delivery"
+                                                                value="{{ $transaction->place_of_delivery }}" required>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p><strong>Payment Condition</strong></p>
+                                                <div class="row mt-6">
+                                                    <!-- Kolom Sebelah Kiri -->
+                                                    <div class="col-6">
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Name of Product</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <select class="form-control product" id="product"
+                                                                    name="id_product" required>
+                                                                    <option value="">Pilih Product</option>
+                                                                    @foreach ($products as $product)
+                                                                        <option value="{{ $product->id }}"
+                                                                            data-code="{{ $product->code }}"
+                                                                            data-abbreviation="{{ $product->abbreviation }}"
+                                                                            {{ $product->id == $productSelectedID ? 'selected' : '' }}>
+                                                                            {{ $product->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Name of Commodity</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <select class="form-control commodity" id="commodity"
+                                                                    name="id_commodity" required>
+                                                                    <option value="">Pilih Commodity</option>
+                                                                    @foreach ($commodities as $commodity)
+                                                                        <option value="{{ $commodity->id }}"
+                                                                            {{ $commodity->id == $commoditySelectedID ? 'selected' : '' }}>
+                                                                            {{ $commodity->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Container</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="container" id="container"
+                                                                    class="form-control" placeholder="Masukkan Container"
+                                                                    value="{{ $transaction->container }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Payment Term</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="payment_term"
+                                                                    id="payment_term" class="form-control"
+                                                                    placeholder="Masukkan Payment term"
+                                                                    value="{{ $transaction->payment_term }}" required>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-2 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <input type="text" name="payment_condition" id="payment_condition"
-                                                            class="form-control" value="{{ $transaction->payment_condition }}"
-                                                            required>
+
+                                                    <!-- Kolom Sebelah Kanan -->
+                                                    <div class="col-6">
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Net Weight</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="number"
+                                                                    class="form-control net_weight_transaction"
+                                                                    step="0.01" disabled>
+                                                                <input type="hidden" id="net_weight_transaction"
+                                                                    name="net_weight" class="form-control" step="0.01"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Gross Weight</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="number" id="gross_weight"
+                                                                    name="gross_weight" class="form-control"
+                                                                    step="0.01" placeholder="Contoh: 123.45"
+                                                                    value="{{ $transaction->gross_weight }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Product NCM</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="product_ncm" id="product_ncm"
+                                                                    class="form-control"
+                                                                    value="{{ $transaction->product_ncm }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Payment Condition</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="payment_condition"
+                                                                    id="payment_condition" class="form-control"
+                                                                    value="{{ $transaction->payment_condition }}"
+                                                                    required>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -471,6 +478,75 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade text-left" id="clientsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clientModalLabel">Pilih Client</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table card-table table-vcenter text-nowrap" id="clientsModalTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No.</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">PO BOX</th>
+                                <th class="text-center">Telepon</th>
+                                <th class="text-center">Fax</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- server side data --}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                        aria-label="Close">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade text-left" id="consigneeModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content modal-centered">
+                <div class="modal-header border-bottom bg-transparent">
+                    <h5 class="modal-title" id="consigneeModalLabel">Pilih Consignee</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table card-table table-vcenter text-nowrap" id="consigneeModalTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No.</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">Telepon</th>
+                                <th class="text-center">ID Client</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="nullConsignee">
+                                <td colspan="8" class="text-center">Harap pilih client terlebih dahulu</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                        aria-label="Close">Tutup</button>
                 </div>
             </div>
         </div>
@@ -632,9 +708,14 @@
                     }
                 },
                 columns: [{
-                        data: 'id',
-                        name: 'id',
-                        title: "No"
+                        data: null,
+                        name: 'no',
+                        title: "No",
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'name',
@@ -1440,6 +1521,186 @@
                     // Jika tidak ada invoice data
                     $('#submitButton').prop('disabled', false);
                 }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#clientsModalTable').DataTable({
+                autoWidth: false,
+                processing: false,
+                serverSide: true,
+                ajax: "{{ route('clients.index') }}",
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: 'PO_BOX',
+                        name: 'PO_BOX',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'fax',
+                        name: 'fax',
+                        class: 'text-center'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    search: "Cari :",
+                    infoFiltered: "(disaring dari total _MAX_ entri)"
+                },
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10,
+                drawCallback: function() {
+                    $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
+                        'max-width': '280px',
+                        'overflow': 'hidden',
+                        'text-overflow': 'ellipsis'
+                    });
+                }
+            });
+
+            // Event listener untuk tombol "Pilih" di tabel client
+            $('#clientsModalTable tbody').on('click', '.select-client', function() {
+                var clientId = $(this).data('id');
+                var clientName = $(this).data('name');
+
+                $('#selectedClientId').val(clientId);
+                $('#selectedClientName').val(clientName);
+                $('#selectedConsigneeId').val(''); // Kosongkan nilai ID consignee
+                $('#selectedConsigneeName').val('');
+                $('#clientsModal').modal('hide');
+
+                // Hapus baris "Harap pilih client terlebih dahulu"
+                $('#nullConsignee').hide();
+
+                // Memuat data consignee berdasarkan ID client yang dipilih
+                loadConsignees(clientId);
+            });
+
+            var consigneeTable = $('#consigneeModalTable').DataTable({
+                autoWidth: false,
+                processing: false,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('consignees.byClient', '0') }}", // Set ID client ke '0' atau gunakan route lain yang menghasilkan data kosong
+                    dataSrc: function(json) {
+                        if (json.data.length === 0) {
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
+                                '0') {
+                                // Jika client belum dipilih (clientId = 0 atau kosong), tampilkan pesan ini
+                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Harap pilih client terlebih dahulu";
+                            } else {
+                                // Jika client sudah dipilih tetapi tidak ada consignee, tampilkan pesan ini
+                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Tidak ada consignee untuk client ini";
+                            }
+                        }
+                        return json.data;
+                    }
+                }, // diisi saat loadConsignees dipanggil
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'id_client',
+                        name: 'id_client',
+                        class: 'text-center'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    search: "Cari :",
+                    infoFiltered: "(disaring dari total _MAX_ entri)",
+                    emptyTable: "Harap pilih client terlebih dahulu" // Ubah pesan saat tidak ada data
+                },
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10,
+            });
+
+            // Fungsi untuk memuat data consignee berdasarkan ID client
+            window.loadConsignees = function(clientId) {
+                if (!clientId) {
+                    $('#nullConsignee').show();
+                    consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
+                    return;
+                }
+
+                consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
+            };
+
+            // Event listener untuk tombol "Pilih" di tabel consignee
+            $('#consigneeModalTable tbody').on('click', '.select-consignee', function() {
+                var consigneeId = $(this).data('id');
+                var consigneeName = $(this).data('name');
+
+                $('#selectedConsigneeId').val(consigneeId);
+                $('#selectedConsigneeName').val(consigneeName);
+                $('#consigneeModal').modal('hide');
             });
         });
     </script>
