@@ -960,7 +960,8 @@
                 ${data.dimension} ${data.color} - ${data.type}
             </td>
             <td class="text-center">
-                <input type="text" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
+                <input type="text" id="carton_input_display" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
+                <input type="hidden" id="carton_input" name="carton_input">
             </td>
             <td class="text-center inner-result">
                 0
@@ -981,20 +982,24 @@
                 // Menghapus baris "Tidak ada barang" jika ada
                 $('#nullDetailTransaction').remove();
 
-                $(document).on('input', '.carton-input', function() {
-                    var inputVal = $(this).val().replace(/,/g,
-                        ''); // Hapus pemisah ribuan sebelumnya
+                $(document).ready(function() {
+                    const cartonInputDisplay = document.getElementById('carton_input_display');
+                    const cartonInput = document.getElementById('carton_input');
 
-                    if (!isNaN(inputVal) && inputVal !== '') {
-                        var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
-                            minimumFractionDigits: 0, // Tanpa desimal
-                            maximumFractionDigits: 0 // Tanpa desimal
-                        });
+                    cartonInputDisplay.addEventListener('input', function (e) {
+                        let value = e.target.value.replace(/[^.\d]/g, '');
+                        cartonInput.value = value.replace(/,/g, '');
+                        e.target.value = formatCarton(value);
+                    });
 
-                        // Set nilai input yang sudah diformat kembali ke elemen input
-                        $(this).val(formattedVal);
+                    // Fungsi untuk memformat angka dengan pemisah ribuan dan titik desimal
+                    function formatCarton(angka) {
+                        let parts = angka.split('.');
+                        let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
                     }
                 });
+
 
                 // Event listener to calculate the result
                 $('#tableDetailTransaction tbody').on('input', '.qty-input, .carton-input', function() {
