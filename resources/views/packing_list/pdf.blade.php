@@ -13,24 +13,24 @@
     .section-satu {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 10mm;
+        margin-bottom: 7mm;
     }
 
     .section-dua {
         width: 100%;
-        margin-top: 10mm;
+        margin-top: 7mm;
     }
 
     .section-tiga {
         width: 100%;
-        margin-top: 10mm;
+        margin-top: 7mm;
         text-align: center;
         font-size: 17px;
     }
 
     .section-empat {
         width: 100%;
-        margin-top: 10mm;
+        margin-top: 7mm;
     }
 
     .section-empat th {
@@ -41,7 +41,7 @@
         width: 100%;
         border-collapse: collapse;
         font-size: 12px;
-        margin-top: 10mm;
+        margin-top: 5mm;
     }
     .custom-table th, .custom-table td {
         border: 1px solid black;
@@ -54,6 +54,13 @@
         background-color: #28a745;;
         color: white;
         text-align: center;
+    }
+    .approve-section {
+        width: auto;
+        font-size: 15px;
+        text-align: center;
+        float: right;
+        margin-top: 5mm;
     }
     .footer {
         font-family: Arial, Helvetica, sans-serif;
@@ -103,9 +110,9 @@
 
     <table class="section-dua">
             <tr>
-                <td style="width: 33%; font-weight: bold; font-size: 15px">CONSIGNEE</td>
-                <td style="width: 33%; font-weight: bold; font-size: 15px">NOTIFY</td>
-                <td style="width: 33%; font-weight: bold; font-size: 15px">CLIENT</td>
+                <td style="width: 33%; font-weight: bold">CONSIGNEE</td>
+                <td style="width: 33%; font-weight: bold">NOTIFY</td>
+                <td style="width: 33%; font-weight: bold">CLIENT</td>
             </tr>
             <tr>
                 <td style="font-weight: 300">{{ $transaction->consignee->name }}</td>
@@ -225,30 +232,42 @@
             </tfoot>
         </table>
 
-        <table style="width: 100%; margin-top: 5mm">
+        <table class="approve-section">
             <tr>
-                <td style="text-align: right;"><p>Approver</p></td>
+                <td><p style="font-weight: bold">Approved By</p></td>
             </tr>
             <tr>
-                <td style="text-align: right;"><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
+                <td><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
             </tr>
             <tr>
-                <td style="text-align: right;">Director</td>
+                <td style="border-bottom: 1px solid black;">{{ $transaction->approverUser->name }}</td>
+            </tr>
+            <tr>
+                <td>{{ $transaction->approverUser->role }}</td>
             </tr>
         </table>
         <footer class="footer">
-            <table style="font-size: 10px">
+            <table style="font-size: 10px; border-collapse: collapse; width: 100%;">
                 <tr>
-                    <td style="font-weight: bolder">HEAD OFFICE</td>
+                    <td style="font-weight: bolder;">HEAD OFFICE</td>
                     <td>:</td>
                     <td>JL.POLINGGA NO.5 KP.WAASRT02/RW13 SABANDAR, KARANG TENGAH, CIANJUR, JAWA BARAT</td>
                 </tr>
                 <tr>
-                    <td style="font-weight: bolder">BRANCH OFFICE</td>
+                    <td style="font-weight: bolder;">BRANCH OFFICE</td>
                     <td>:</td>
                     <td>DS.JIKEN SURUHAN NO.45RT02/RW04 JIKEN, BLORA, JAWA TENGAH</td>
                 </tr>
             </table>
+            <table>
+                <tr>
+                    <td><img src="{{ $phone }}" alt="" style="width: 15px"></td>
+                    <td>{{ $company->contact_person}}</td>
+                    <td></td>
+                    <td><img src="{{ $email }}" alt="" style="width: 15px"></td>
+                    <td>{{ $company->email}}</td>
+                </tr>
+            </table>        
         </footer>
 </body>
 </html>
