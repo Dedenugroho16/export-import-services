@@ -1145,7 +1145,7 @@
                 function updateTotals() {
                     var priceAmount = parseFloat($('#PriceAmount').text().replace(/,/g, '')) || 0;
 
-                    var freightCost = parseFloat($('#freight_cost').val().replace(/,/g, '')) || 0;
+                    var freightCost = parseFloat($('#freight_cost_display').val().replace(/,/g, '')) || 0;
 
                     var total = priceAmount + freightCost;
 
@@ -1156,7 +1156,7 @@
                 }
 
                 // Event listener untuk input Freight Cost
-                $('#freight_cost').on('input', function() {
+                $('#freight_cost_display').on('input', function() {
                     updateTotals();
                 });
 
