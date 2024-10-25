@@ -12,7 +12,7 @@
                             <h3 class="card-title">Form Proforma Invoice</h3>
                         </div>
                         <div class="card-body">
-                            <p id="error-message" style="color: red;">Harap menginput negara terlebih
+                            <p id="country_error" style="color: red; display: none;">Harap menginput negara terlebih
                                 dahulu</p>
                             <!-- Display Success Message -->
                             @if (session('success'))
@@ -318,7 +318,7 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number"
+                                                                <input type="text"
                                                                     class="form-control net_weight_transaction"
                                                                     step="0.01" max="9999999.99" disabled>
                                                                 <span class="error-message" id="net_weight_error"
@@ -337,9 +337,11 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" id="gross_weight"
-                                                                    name="gross_weight" class="form-control"
-                                                                    step="0.01" placeholder="Contoh: 123.45" required>
+                                                                <input type="text" id="gross_weight_display"
+                                                                    class="form-control"
+                                                                    placeholder="Masukkan gross weight" required>
+                                                                <input type="hidden" id="gross_weight"
+                                                                    name="gross_weight">
                                                                 <span class="error-message" id="gross_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                             </div>
@@ -393,9 +395,11 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <p id="error-message-qty" style="color: red;">Nilai maksimum QTY adalah tiga digit
+                                        <p id="error-message-qty" style="color: red; display:none">Nilai maksimum QTY
+                                            adalah tiga digit
                                         </p>
-                                        <p id="error-message-carton" style="color: red;">Nilai maksimum Carton adalah
+                                        <p id="error-message-carton" style="color: red; display:none">Nilai maksimum
+                                            Carton adalah
                                             empat digit</p>
                                         <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
@@ -431,6 +435,10 @@
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
                                                                 <input type="text" step="0.01" class="form-control"
+                                                                    id="freight_cost_display" name="freight_cost_display"
+                                                                    placeholder="Enter Freight Cost" min="0"
+                                                                    max="99999999.99">
+                                                                <input type="hidden" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
                                                                     placeholder="Enter Freight Cost" min="0"
                                                                     max="99999999.99">
@@ -663,36 +671,41 @@
         });
 
         $(document).ready(function() {
-            // Format untuk gross_weight
-            $(document).on('input', '#gross_weight', function() {
-                var inputVal = $(this).val().replace(/,/g, ''); // Hapus pemisah ribuan sebelumnya
+            const grossWeightDisplay = document.getElementById('gross_weight_display');
+            const grossWeight = document.getElementById('gross_weight');
 
-                if (!isNaN(inputVal) && inputVal !== '') {
-                    var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
-                        minimumFractionDigits: 0, // Tanpa desimal
-                        maximumFractionDigits: 0 // Tanpa desimal
-                    });
+            // Event listener untuk memformat input saat user mengetik (Gross Weight)
+            grossWeightDisplay.addEventListener('input', function(e) {
+                // Ambil nilai yang diinputkan, lalu bersihkan format non-angka kecuali titik dan angka
+                let value = e.target.value.replace(/[^.\d]/g, '');
+                // Update nilai input tersembunyi dengan angka asli tanpa format
+                grossWeight.value = value.replace(/,/g, '');
+                // Format input tampilan dengan pemisah ribuan (koma) dan titik sebagai desimal
+                e.target.value = formatDollar(value);
+            });
+            // Bagian untuk freight cost
+            const freightCostDisplay = document.getElementById('freight_cost_display');
+            const freightCost = document.getElementById('freight_cost');
 
-                    // Set nilai input yang sudah diformat kembali ke elemen input
-                    $(this).val(formattedVal);
-                }
+            freightCostDisplay.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^.\d]/g, '');
+                freightCost.value = value.replace(/,/g, '');
+                e.target.value = formatDollar(value);
             });
 
-            //format untuk freight cost
-            $(document).on('input', '#freight_cost', function() {
-                var inputVal = $(this).val().replace(/,/g, ''); // Hapus pemisah ribuan sebelumnya
+            // Fungsi untuk memformat angka dalam format dolar
+            function formatDollar(angka) {
+                // Pisahkan angka menjadi bagian sebelum dan setelah titik desimal
+                let parts = angka.split('.');
 
-                if (!isNaN(inputVal) && inputVal !== '') {
-                    var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
-                        minimumFractionDigits: 0, // Tanpa desimal
-                        maximumFractionDigits: 0 // Tanpa desimal
-                    });
+                // Format bagian sebelum desimal (ribuan) dengan koma
+                let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-                    // Set nilai input yang sudah diformat kembali ke elemen input
-                    $(this).val(formattedVal);
-                }
-            });
+                // Gabungkan kembali jika ada bagian desimal
+                return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
+            }
         });
+
 
         // modal datatables
         $(document).ready(function() {
@@ -703,10 +716,10 @@
             // Update button and error message visibility based on the default value
             if ($('#country').val() === "") {
                 $('#submitButton').prop('disabled', true);
-                $('#error-message').show();
+                $('#country_error').show();
             } else {
                 $('#submitButton').prop('disabled', false);
-                $('#error-message').hide();
+                $('#country_error').hide();
             }
 
             // Deteksi perubahan pada dropdown negara
@@ -828,11 +841,90 @@
 
             // Event ketika user memilih produk
             $('#product').change(function() {
+                function updateAmounts() {
+                    var totalCarton = 0;
+                    var totalInner = 0;
+                    var totalNetWeight = 0;
+                    var PriceAmount = 0;
+
+                    // Jika tabel kosong atau hanya ada baris "Tidak ada barang", reset semua nilai ke 0
+                    if ($('#tableDetailTransaction tbody tr').length === 0 || $(
+                            '#tableDetailTransaction tbody').find('#nullDetailTransaction').length > 0) {
+                        totalCarton = 0;
+                        totalInner = 0;
+                        totalNetWeight = 0;
+                        PriceAmount = 0;
+                    } else {
+                        // Iterasi setiap baris untuk mendapatkan nilai total
+                        $('#tableDetailTransaction tbody tr').each(function() {
+                            var carton = parseFloat($(this).find('.carton-input').val().replace(
+                                /,/g, '')) || 0;
+                            var inner = parseFloat($(this).find('.inner-result').text().replace(
+                                /,/g, '')) || 0;
+                            var netWeight = parseFloat($(this).find('.net-weight').text().replace(
+                                /,/g, '')) || 0;
+                            var price = parseFloat($(this).find('.price-result').text().replace(
+                                /,/g, '')) || 0;
+
+                            totalCarton += carton;
+                            totalInner += inner;
+                            totalNetWeight += netWeight;
+                            PriceAmount += price;
+                        });
+                    }
+
+                    // Format hasil perhitungan dengan pemisah ribuan en-US
+                    var formattedTotalCarton = totalCarton.toLocaleString('en-US');
+                    var formattedTotalInner = totalInner.toLocaleString('en-US');
+                    var formattedTotalNetWeight = totalNetWeight.toLocaleString('en-US');
+                    var formattedPriceAmount = PriceAmount.toLocaleString('en-US');
+
+                    // Update nilai total di footer dengan format yang benar
+                    $('#totalCarton').text(formattedTotalCarton);
+                    $('#totalInner').text(formattedTotalInner);
+                    $('#totalNetWeight').text(formattedTotalNetWeight);
+                    $('#PriceAmount').text(formattedPriceAmount);
+
+                    // Set value total net weight untuk field form
+                    $('#net_weight_transaction').val(totalNetWeight);
+                    $('.net_weight_transaction').val(formattedTotalNetWeight);
+                }
+
+                // Fungsi untuk memperbarui total price amount
+                function updateTotals() {
+                    var priceAmount = parseFloat($('#PriceAmount').text().replace(/,/g, '')) || 0;
+
+                    var freightCost = parseFloat($('#freight_cost_display').val().replace(/,/g, '')) || 0;
+
+                    var total = priceAmount + freightCost;
+
+                    var formattedGrandTotal = total.toLocaleString('en-US');
+                    $('.total-display').val(formattedGrandTotal);
+
+                    $('#total').val(total);
+                }
+
                 if ($(this).val()) {
                     table.ajax.reload(); // Reload DataTables dengan data produk yang dipilih
                 } else {
                     table.clear().draw(); // Kosongkan tabel jika tidak ada produk yang dipilih
                 }
+
+                // Ketika product diubah, hapus semua baris yang telah ditambahkan dari tabel #tableDetailTransaction
+                $('#tableDetailTransaction tbody tr').remove();
+                $('#formDetailTransaction').empty();
+
+                if ($('#tableDetailTransaction tbody tr').length === 0) {
+                    $('#tableDetailTransaction tbody').append(`
+            <tr id="nullDetailTransaction">
+                <td colspan="7" class="text-center">Tidak ada barang</td>
+            </tr>`);
+                }
+
+                // Kosongkan array selectedProductIds
+                selectedProductIds = [];
+                updateAmounts();
+                updateTotals();
             });
 
             // event untuk code transaksi
@@ -916,17 +1008,15 @@
             // Pantau perubahan pada dropdown product dan country untuk memperbarui kode
             $('#product, #country').on('change', function() {
                 updateProductCode();
-                updateNumber()
+                updateNumber();
             });
 
             // Jalankan fungsi updateProductCode saat halaman dimuat untuk menginisialisasi
             updateProductCode();
-            updateNumber()
+            updateNumber();
 
             // Tabel Detail Transaction
             // Event handler ketika tombol "Pilih" diklik
-            $('#error-message-qty').hide();
-            $('#error-message-carton').hide();
             var selectedProductIds = [];
             $('#detailProductTable tbody').on('click', '.pilih-btn', function() {
                 var data = table.row($(this).parents('tr'))
@@ -952,7 +1042,8 @@
                 ${data.dimension} ${data.color} - ${data.type}
             </td>
             <td class="text-center">
-                <input type="text" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
+                <input type="text" id="carton_input_display" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
+                <input type="hidden" id="carton_input" name="carton_input">
             </td>
             <td class="text-center inner-result">
                 0
@@ -973,20 +1064,24 @@
                 // Menghapus baris "Tidak ada barang" jika ada
                 $('#nullDetailTransaction').remove();
 
-                $(document).on('input', '.carton-input', function() {
-                    var inputVal = $(this).val().replace(/,/g,
-                        ''); // Hapus pemisah ribuan sebelumnya
+                $(document).ready(function() {
+                    const cartonInputDisplay = document.getElementById('carton_input_display');
+                    const cartonInput = document.getElementById('carton_input');
 
-                    if (!isNaN(inputVal) && inputVal !== '') {
-                        var formattedVal = parseFloat(inputVal).toLocaleString('en-US', {
-                            minimumFractionDigits: 0, // Tanpa desimal
-                            maximumFractionDigits: 0 // Tanpa desimal
-                        });
+                    cartonInputDisplay.addEventListener('input', function(e) {
+                        let value = e.target.value.replace(/[^.\d]/g, '');
+                        cartonInput.value = value.replace(/,/g, '');
+                        e.target.value = formatCarton(value);
+                    });
 
-                        // Set nilai input yang sudah diformat kembali ke elemen input
-                        $(this).val(formattedVal);
+                    // Fungsi untuk memformat angka dengan pemisah ribuan dan titik desimal
+                    function formatCarton(angka) {
+                        let parts = angka.split('.');
+                        let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
                     }
                 });
+
 
                 // Event listener to calculate the result
                 $('#tableDetailTransaction tbody').on('input', '.qty-input, .carton-input', function() {
@@ -1003,22 +1098,23 @@
                     var maxQty = 999; // Maksimum 3 digit
                     var maxCarton = 9999; // Maksimum 4 digit
 
-                    $('#error-message-qty').hide();
-                    $('#error-message-carton').hide();
-
                     // Flag to track if input exceeds limits
                     var exceedsLimit = false;
 
                     // Check if qty exceeds max value
                     if (qty > maxQty) {
-                        $('#error-message-qty').show(); // Show error message for qty
+                        $('#error-message-qty').show();
                         exceedsLimit = true;
+                    } else {
+                        $('#error-message-qty').hide();
                     }
 
                     // Check if carton exceeds max value
                     if (carton > maxCarton) {
-                        $('#error-message-carton').show(); // Show error message for carton
+                        $('#error-message-carton').show();
                         exceedsLimit = true;
+                    } else {
+                        $('#error-message-carton').hide();
                     }
 
                     // Jika ada yang melebihi batas, disable tombol submit
@@ -1076,13 +1172,13 @@
 
                         // Create hidden inputs and append to the form
                         $('#formDetailTransaction').append(`
-        <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-        <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
-        <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
-        <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-        <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
-        <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
-        <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
+        <input type="hidden" name="transactions[${index}][id_detail_product]" id="id_detail_product" value="${idDetailProduct}">
+        <input type="hidden" name="transactions[${index}][qty]" id="qty" value="${qty}">
+        <input type="hidden" name="transactions[${index}][carton]" id="carton" value="${carton}">
+        <input type="hidden" name="transactions[${index}][inner_qty_carton]" id="inner_qty_carton" value="${inner}">
+        <input type="hidden" name="transactions[${index}][unit_price]" id="unit_price" value="${unitPrice}">
+        <input type="hidden" name="transactions[${index}][net_weight]" id="net_weight" value="${netWeight}">
+        <input type="hidden" name="transactions[${index}][price_amount]" id="price_amount" value="${priceAmount}">
     `);
                     });
                 }
@@ -1093,23 +1189,31 @@
                     var totalNetWeight = 0;
                     var PriceAmount = 0;
 
-                    // Iterasi setiap baris untuk mendapatkan nilai total
-                    $('#tableDetailTransaction tbody tr').each(function() {
-                        // Ambil nilai carton, inner, netWeight, dan price tanpa format
-                        var carton = parseFloat($(this).find('.carton-input').val().replace(/,/g,
-                            '')) || 0;
-                        var inner = parseFloat($(this).find('.inner-result').text().replace(/,/g,
-                            '')) || 0;
-                        var netWeight = parseFloat($(this).find('.net-weight').text().replace(/,/g,
-                            '')) || 0;
-                        var price = parseFloat($(this).find('.price-result').text().replace(/,/g,
-                            '')) || 0;
+                    // Jika tabel kosong atau hanya ada baris "Tidak ada barang", reset semua nilai ke 0
+                    if ($('#tableDetailTransaction tbody tr').length === 0 || $(
+                            '#tableDetailTransaction tbody').find('#nullDetailTransaction').length > 0) {
+                        totalCarton = 0;
+                        totalInner = 0;
+                        totalNetWeight = 0;
+                        PriceAmount = 0;
+                    } else {
+                        // Iterasi setiap baris untuk mendapatkan nilai total
+                        $('#tableDetailTransaction tbody tr').each(function() {
+                            var carton = parseFloat($(this).find('.carton-input').val().replace(
+                                /,/g, '')) || 0;
+                            var inner = parseFloat($(this).find('.inner-result').text().replace(
+                                /,/g, '')) || 0;
+                            var netWeight = parseFloat($(this).find('.net-weight').text().replace(
+                                /,/g, '')) || 0;
+                            var price = parseFloat($(this).find('.price-result').text().replace(
+                                /,/g, '')) || 0;
 
-                        totalCarton += carton;
-                        totalInner += inner;
-                        totalNetWeight += netWeight;
-                        PriceAmount += price;
-                    });
+                            totalCarton += carton;
+                            totalInner += inner;
+                            totalNetWeight += netWeight;
+                            PriceAmount += price;
+                        });
+                    }
 
                     // Format hasil perhitungan dengan pemisah ribuan en-US
                     var formattedTotalCarton = totalCarton.toLocaleString('en-US');
@@ -1125,14 +1229,14 @@
 
                     // Set value total net weight untuk field form
                     $('#net_weight_transaction').val(totalNetWeight);
-                    $('.net_weight_transaction').val(totalNetWeight);
+                    $('.net_weight_transaction').val(formattedTotalNetWeight);
                 }
 
                 // Fungsi untuk memperbarui total price amount
                 function updateTotals() {
                     var priceAmount = parseFloat($('#PriceAmount').text().replace(/,/g, '')) || 0;
 
-                    var freightCost = parseFloat($('#freight_cost').val().replace(/,/g, '')) || 0;
+                    var freightCost = parseFloat($('#freight_cost_display').val().replace(/,/g, '')) || 0;
 
                     var total = priceAmount + freightCost;
 
@@ -1143,7 +1247,7 @@
                 }
 
                 // Event listener untuk input Freight Cost
-                $('#freight_cost').on('input', function() {
+                $('#freight_cost_display').on('input', function() {
                     updateTotals();
                 });
 
@@ -1194,6 +1298,21 @@
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
 
+            function validateDetailTransactionForm() {
+                var isValid = true;
+
+                // Cek apakah ada input selain yang memiliki id="id_transaction"
+                var totalInputs = $('#formDetailTransaction input').length; // Total input dalam form
+                var otherInputs = $('#formDetailTransaction input').not('#id_transaction')
+                    .length; // Input selain id_transaction
+
+                if (otherInputs === 0) {
+                    isValid = false; // Jika tidak ada input selain id_transaction, form tidak valid
+                }
+
+                return isValid; // Kembalikan status validasi
+            }
+
             $('#submitButton').click(function() {
                 var formProformaInvoice = $('#formProformaInvoice');
                 var formDetailTransaction = $('#formDetailTransaction');
@@ -1243,11 +1362,10 @@
                 var isValidDetailTransaction = validateDetailTransactionForm();
 
                 if (!isValidDetailTransaction) {
-                    // Jika validasi form detail transaksi gagal, aktifkan kembali tombol submit
                     $('#submitButton').prop('disabled', false);
                     Swal.fire({
                         title: 'Terjadi Kesalahan!',
-                        text: 'Mohon periksa kembali detail transaksi Anda.',
+                        text: 'Mohon isi data detail transaksi!',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -1303,18 +1421,6 @@
                             $('#submitButton').prop('disabled', false);
                         }
                     },
-                    // error: function(xhr) {
-                    //     // Tangani error untuk transaksi
-                    //     Swal.fire({
-                    //         title: 'Terjadi Kesalahan!',
-                    //         text: 'Gagal menyimpan transaksi: ' + xhr
-                    //             .responseJSON.message,
-                    //         icon: 'error',
-                    //         confirmButtonText: 'OK'
-                    //     });
-                    //     // Aktifkan kembali tombol jika error terjadi
-                    //     $('#submitButton').prop('disabled', false);
-                    // }
                     error: function(xhr) {
                         if (xhr.status === 422) {
                             // Tangani error validasi dari server
@@ -1345,24 +1451,6 @@
                     }
                 });
             });
-
-            function validateDetailTransactionForm() {
-                var isValid = true;
-
-                // Validasi setiap field di form detail transaksi
-                $('#formDetailTransaction input').each(function() {
-                    if ($(this).attr('id') !== 'id_transaction') {
-                        if ($(this).val() === '') {
-                            isValid = false;
-                            $(this).addClass('is-invalid'); // Tambahkan class invalid jika tidak valid
-                        } else {
-                            $(this).removeClass('is-invalid'); // Hapus class invalid jika valid
-                        }
-                    }
-                });
-
-                return isValid; // Kembalikan status validasi
-            }
         });
     </script>
     <script type="text/javascript">
