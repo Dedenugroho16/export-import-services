@@ -343,7 +343,7 @@
                                                 <th>Logo</th>
                                                 <td>
                                                     @if($company->logo)
-                                                        <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->company_name }} Logo" style="max-width: 100px;">
+                                                    <img src="{{ asset('storage/' . $company->logo) }}" alt="Company Logo" style="max-width: 100px">
                                                     @else
                                                         <span>No logo uploaded</span>
                                                     @endif
