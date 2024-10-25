@@ -111,7 +111,6 @@
         </div>
     </div>
 
-
     <script>
         $(document).ready(function() {
             var approvedTable = $('#approvedTable').DataTable({
@@ -121,44 +120,15 @@
                     url: '{{ route('approved.data') }}',
                     type: 'GET'
                 },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'code',
-                        name: 'code',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'number',
-                        name: 'number',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'client',
-                        name: 'client',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'consignee',
-                        name: 'consignee',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    }
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
+                    { data: 'code', name: 'code', className: 'text-center' },
+                    { data: 'number', name: 'number', className: 'text-center' },  // Mengubah pengurutan ke number
+                    { data: 'client', name: 'client', className: 'text-center' },
+                    { data: 'consignee', name: 'consignee', className: 'text-center' },
+                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
                 ],
-                order: [
-                    [1, 'asc']
-                ],
+                order: [[2, 'asc']],  // Mengubah urutan default berdasarkan kolom number (indeks 2)
                 columnDefs: [{
                     targets: 0,
                     render: function(data, type, row, meta) {
@@ -171,49 +141,23 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('proforma.data') }}', // Endpoint yang memuat data
+                    url: '{{ route('proforma.data') }}',
                     data: function(d) {
-                        d.approved = 0; // Mengirimkan approved = 0 sebagai filter ke server
+                        d.approved = 0;
                     }
                 },
                 responsive: true,
                 autoWidth: false,
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'code',
-                        name: 'code'
-                    },
-                    {
-                        data: 'number',
-                        name: 'number'
-                    },
-                    {
-                        data: 'date',
-                        name: 'date'
-                    },
-                    {
-                        data: 'client',
-                        name: 'client'
-                    },
-                    {
-                        data: 'consignee',
-                        name: 'consignee'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi',
-                        orderable: false,
-                        searchable: false
-                    },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'code', name: 'code' },
+                    { data: 'number', name: 'number' },
+                    { data: 'date', name: 'date' },
+                    { data: 'client', name: 'client' },
+                    { data: 'consignee', name: 'consignee' },
+                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
                 ],
-                order: [
-                    [1, 'asc']
-                ],
+                order: [[2, 'asc']],  // Urutan default berdasarkan number (indeks 2)
                 columnDefs: [{
                     targets: 0,
                     render: function(data, type, row, meta) {
@@ -222,11 +166,8 @@
                 }]
             });
 
-            // Handle approve button click with confirmation using SweetAlert
             $('#waitingProformaTable').on('click', '.approve-btn', function() {
                 var transactionId = $(this).data('id');
-
-                // Menampilkan konfirmasi SweetAlert
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Anda tidak dapat membatalkan setelah ini!",
@@ -238,27 +179,22 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika pengguna menekan tombol "Ya, Setujui!"
                         $.ajax({
-                            url: '{{ route('proforma.approve', ':id') }}'.replace(':id',
-                                transactionId),
+                            url: '{{ route('proforma.approve', ':id') }}'.replace(':id', transactionId),
                             type: 'POST',
                             data: {
-                                _token: '{{ csrf_token() }}' // CSRF token untuk keamanan
+                                _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                // Tampilkan pesan sukses dan reload tabel
                                 Swal.fire(
                                     'Disetujui!',
                                     'Proforma invoice telah disetujui.',
                                     'success'
                                 );
-                                table.ajax.reload(); // Reload tabel setelah sukses
-                                approvedTable.ajax
-                                    .reload(); // Reload tabel setelah sukses
+                                table.ajax.reload();
+                                approvedTable.ajax.reload();
                             },
                             error: function(xhr) {
-                                // Tampilkan pesan error jika terjadi kesalahan
                                 Swal.fire(
                                     'Error!',
                                     'Anda tidak memiliki akses untuk menyetujui Proforma.',
