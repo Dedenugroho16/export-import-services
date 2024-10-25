@@ -203,10 +203,25 @@
                                 <div class="card-body">
                                     <div class="mb-3">
                                         <label for="company_logo" class="form-label">Logo Perusahaan</label>
-                                        <input type="file" id="logo" name="logo" class="form-control" accept="image/*">
+                                        <input type="file" id="logo" name="logo" class="form-control" accept="image/*" onchange="previewLogo(event)">
                                     </div>
+                                    <div class="mb-3">
+                                        <img id="logo_preview" src="{{ asset('storage/' . $company->logo ?? 'default-logo.png') }}" 
+                                        alt="Logo Perusahaan" width="50px">
                                 </div>
-                            </div>      
+                                </div>
+                            </div>  
+                            <script>
+                                // Fungsi untuk menampilkan pratinjau logo baru
+                                function previewLogo(event) {
+                                    var reader = new FileReader();
+                                    reader.onload = function(){
+                                        var output = document.getElementById('logo_preview');
+                                        output.src = reader.result;
+                                    };
+                                    reader.readAsDataURL(event.target.files[0]);
+                                }
+                            </script>
                         </div>
         
                         <div class="modal-footer">
