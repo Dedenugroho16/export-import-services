@@ -841,6 +841,69 @@
 
             // Event ketika user memilih produk
             $('#product').change(function() {
+                function updateAmounts() {
+                    var totalCarton = 0;
+                    var totalInner = 0;
+                    var totalNetWeight = 0;
+                    var PriceAmount = 0;
+
+                    // Jika tabel kosong atau hanya ada baris "Tidak ada barang", reset semua nilai ke 0
+                    if ($('#tableDetailTransaction tbody tr').length === 0 || $(
+                            '#tableDetailTransaction tbody').find('#nullDetailTransaction').length > 0) {
+                        totalCarton = 0;
+                        totalInner = 0;
+                        totalNetWeight = 0;
+                        PriceAmount = 0;
+                    } else {
+                        // Iterasi setiap baris untuk mendapatkan nilai total
+                        $('#tableDetailTransaction tbody tr').each(function() {
+                            var carton = parseFloat($(this).find('.carton-input').val().replace(
+                                /,/g, '')) || 0;
+                            var inner = parseFloat($(this).find('.inner-result').text().replace(
+                                /,/g, '')) || 0;
+                            var netWeight = parseFloat($(this).find('.net-weight').text().replace(
+                                /,/g, '')) || 0;
+                            var price = parseFloat($(this).find('.price-result').text().replace(
+                                /,/g, '')) || 0;
+
+                            totalCarton += carton;
+                            totalInner += inner;
+                            totalNetWeight += netWeight;
+                            PriceAmount += price;
+                        });
+                    }
+
+                    // Format hasil perhitungan dengan pemisah ribuan en-US
+                    var formattedTotalCarton = totalCarton.toLocaleString('en-US');
+                    var formattedTotalInner = totalInner.toLocaleString('en-US');
+                    var formattedTotalNetWeight = totalNetWeight.toLocaleString('en-US');
+                    var formattedPriceAmount = PriceAmount.toLocaleString('en-US');
+
+                    // Update nilai total di footer dengan format yang benar
+                    $('#totalCarton').text(formattedTotalCarton);
+                    $('#totalInner').text(formattedTotalInner);
+                    $('#totalNetWeight').text(formattedTotalNetWeight);
+                    $('#PriceAmount').text(formattedPriceAmount);
+
+                    // Set value total net weight untuk field form
+                    $('#net_weight_transaction').val(totalNetWeight);
+                    $('.net_weight_transaction').val(formattedTotalNetWeight);
+                }
+
+                // Fungsi untuk memperbarui total price amount
+                function updateTotals() {
+                    var priceAmount = parseFloat($('#PriceAmount').text().replace(/,/g, '')) || 0;
+
+                    var freightCost = parseFloat($('#freight_cost_display').val().replace(/,/g, '')) || 0;
+
+                    var total = priceAmount + freightCost;
+
+                    var formattedGrandTotal = total.toLocaleString('en-US');
+                    $('.total-display').val(formattedGrandTotal);
+
+                    $('#total').val(total);
+                }
+
                 if ($(this).val()) {
                     table.ajax.reload(); // Reload DataTables dengan data produk yang dipilih
                 } else {
@@ -849,6 +912,7 @@
 
                 // Ketika product diubah, hapus semua baris yang telah ditambahkan dari tabel #tableDetailTransaction
                 $('#tableDetailTransaction tbody tr').remove();
+                $('#formDetailTransaction').empty();
 
                 if ($('#tableDetailTransaction tbody tr').length === 0) {
                     $('#tableDetailTransaction tbody').append(`
@@ -859,7 +923,8 @@
 
                 // Kosongkan array selectedProductIds
                 selectedProductIds = [];
-                updateFormDetailTransaction();
+                updateAmounts();
+                updateTotals();
             });
 
             // event untuk code transaksi
@@ -943,12 +1008,12 @@
             // Pantau perubahan pada dropdown product dan country untuk memperbarui kode
             $('#product, #country').on('change', function() {
                 updateProductCode();
-                updateNumber()
+                updateNumber();
             });
 
             // Jalankan fungsi updateProductCode saat halaman dimuat untuk menginisialisasi
             updateProductCode();
-            updateNumber()
+            updateNumber();
 
             // Tabel Detail Transaction
             // Event handler ketika tombol "Pilih" diklik
@@ -1297,7 +1362,6 @@
                 var isValidDetailTransaction = validateDetailTransactionForm();
 
                 if (!isValidDetailTransaction) {
-                    // Jika validasi form detail transaksi gagal, aktifkan kembali tombol submit
                     $('#submitButton').prop('disabled', false);
                     Swal.fire({
                         title: 'Terjadi Kesalahan!',
