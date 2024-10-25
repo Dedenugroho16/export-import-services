@@ -846,6 +846,20 @@
                 } else {
                     table.clear().draw(); // Kosongkan tabel jika tidak ada produk yang dipilih
                 }
+
+                // Ketika product diubah, hapus semua baris yang telah ditambahkan dari tabel #tableDetailTransaction
+                $('#tableDetailTransaction tbody tr').remove();
+
+                if ($('#tableDetailTransaction tbody tr').length === 0) {
+                    $('#tableDetailTransaction tbody').append(`
+            <tr id="nullDetailTransaction">
+                <td colspan="7" class="text-center">Tidak ada barang</td>
+            </tr>`);
+                }
+
+                // Kosongkan array selectedProductIds
+                selectedProductIds = [];
+                updateFormDetailTransaction();
             });
 
             // event untuk code transaksi
@@ -1225,7 +1239,7 @@
                 // Cek apakah ada input selain yang memiliki id="id_transaction"
                 var totalInputs = $('#formDetailTransaction input').length; // Total input dalam form
                 var otherInputs = $('#formDetailTransaction input').not('#id_transaction')
-                .length; // Input selain id_transaction
+                    .length; // Input selain id_transaction
 
                 if (otherInputs === 0) {
                     isValid = false; // Jika tidak ada input selain id_transaction, form tidak valid
