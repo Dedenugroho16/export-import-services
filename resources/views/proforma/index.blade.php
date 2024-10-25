@@ -123,12 +123,12 @@
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
                     { data: 'code', name: 'code', className: 'text-center' },
-                    { data: 'number', name: 'number', className: 'text-center' },  // Mengubah pengurutan ke number
+                    { data: 'number', name: 'number', className: 'text-center' },
                     { data: 'client', name: 'client', className: 'text-center' },
                     { data: 'consignee', name: 'consignee', className: 'text-center' },
                     { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
                 ],
-                order: [[2, 'asc']],  // Mengubah urutan default berdasarkan kolom number (indeks 2)
+                order: [[2, 'asc']], 
                 columnDefs: [{
                     targets: 0,
                     render: function(data, type, row, meta) {
@@ -157,7 +157,7 @@
                     { data: 'consignee', name: 'consignee' },
                     { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
                 ],
-                order: [[2, 'asc']],  // Urutan default berdasarkan number (indeks 2)
+                order: [[2, 'asc']],
                 columnDefs: [{
                     targets: 0,
                     render: function(data, type, row, meta) {
