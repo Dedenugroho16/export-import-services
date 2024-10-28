@@ -334,10 +334,11 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number" id="gross_weight"
-                                                                    name="gross_weight" class="form-control"
-                                                                    step="0.01" placeholder="Contoh: 123.45"
-                                                                    value="{{ $transaction->gross_weight }}" required>
+                                                                <input type="text" id="gross_weight_display" class="form-control"
+                                                                    placeholder="Contoh: 10,000" 
+                                                                    value="{{ number_format($transaction->gross_weight, 0, ',', ',') }}" 
+                                                                    required>
+                                                                <input type="hidden" id="gross_weight" name="gross_weight">
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -589,7 +590,37 @@
             </div>
         </div>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fungsi untuk memformat angka dalam format dolar
+            function formatDollar(angka) {
+                // Pisahkan angka menjadi bagian sebelum dan setelah titik desimal
+                let parts = angka.split('.');
+    
+                // Format bagian sebelum desimal (ribuan) dengan koma
+                let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+                // Gabungkan kembali jika ada bagian desimal
+                return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
+            }
+    
+            // Ambil elemen input untuk Gross Weight
+            const grossWeightDisplay = $('#gross_weight_display');
+            const grossWeight = $('#gross_weight');
+    
+            // Event listener untuk memformat input saat user mengetik (Gross Weight)
+            grossWeightDisplay.on('input', function(e) {
+                // Ambil nilai yang diinputkan, lalu bersihkan format non-angka kecuali titik dan angka
+                let value = e.target.value.replace(/[^0-9.]/g, ''); // Hanya ambil angka dan titik
+                // Update nilai input tersembunyi dengan angka asli tanpa format
+                grossWeight.val(value.replace(/,/g, '')); // Hilangkan koma
+                // Format input tampilan dengan pemisah ribuan (koma) dan titik sebagai desimal
+                e.target.value = formatDollar(value);
+            });
+        });
+    </script>
+    
     <script>
         $.ajaxSetup({
             headers: {
@@ -665,6 +696,24 @@
                 } else {
                     $('#consignee-address').html('');
                 }
+            });
+
+            // Fungsi untuk memformat angka dalam format dolar
+            function formatDollar(angka) {
+                let parts = angka.split('.');
+                let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
+            }
+
+            // Ambil elemen input untuk Gross Weight
+            const grossWeightDisplay = $('#gross_weight_display');
+            const grossWeight = $('#gross_weight');
+
+            // Event listener untuk memformat input saat user mengetik (Gross Weight)
+            grossWeightDisplay.on('input', function(e) {
+                let value = e.target.value.replace(/[^0-9.]/g, ''); // Hanya ambil angka dan titik
+                grossWeight.val(value.replace(/,/g, '')); // Hilangkan koma
+                e.target.value = formatDollar(value);
             });
         });
 
