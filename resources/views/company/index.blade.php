@@ -347,7 +347,7 @@
                                                 <th>Logo</th>
                                                 <td>
                                                     @if($company->logo)
-                                                    <img src="{{ asset('storage/' . $company->logo) }}" alt="Company Logo" style="max-width: 100px">
+                                                    <img src="{{ asset('storage/' . $company->logo) }}" alt="Company Logo" style="max-width: 80px">
                                                     @else
                                                         <span>No logo uploaded</span>
                                                     @endif
@@ -395,7 +395,6 @@
                 document.getElementById('incoterms').value = data.incoterms;
                 document.getElementById('shipping_agent').value = data.shipping_agent;
                 document.getElementById('customs_broker').value = data.customs_broker;
-                document.getElementById('address').value = data.address;
                 document.getElementById('consignee_code').value = data.consignee_code;
                 document.getElementById('forwarding_agent').value = data.forwarding_agent;
                 // Populate other fields as necessary
