@@ -198,6 +198,8 @@
                                                                 id="port_of_loading" class="form-control"
                                                                 placeholder="Enter port of loading"
                                                                 value="{{ $transaction->port_of_loading }}" required>
+                                                            <span class="error-message" id="port_of_loading_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
 
@@ -209,6 +211,8 @@
                                                                 id="place_of_receipt" class="form-control"
                                                                 placeholder="Enter place of receipt"
                                                                 value="{{ $transaction->place_of_receipt }}" required>
+                                                            <span class="error-message" id="place_of_receipt_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
 
@@ -220,6 +224,8 @@
                                                                 id="port_of_discharge" class="form-control"
                                                                 placeholder="Enter port of discharge"
                                                                 value="{{ $transaction->port_of_discharge }}" required>
+                                                            <span class="error-message" id="port_of_discharge_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
 
@@ -231,6 +237,8 @@
                                                                 id="place_of_delivery" class="form-control"
                                                                 placeholder="Enter place of delivery"
                                                                 value="{{ $transaction->place_of_delivery }}" required>
+                                                            <span class="error-message" id="place_of_delivery_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -257,6 +265,8 @@
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
+                                                                <span class="error-message" id="product_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -277,6 +287,8 @@
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
+                                                                <span class="error-message" id="commodity_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -290,6 +302,8 @@
                                                                 <input type="text" name="container" id="container"
                                                                     class="form-control" placeholder="Masukkan Container"
                                                                     value="{{ $transaction->container }}" required>
+                                                                <span class="error-message" id="container_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -304,6 +318,8 @@
                                                                     id="payment_term" class="form-control"
                                                                     placeholder="Masukkan Payment term"
                                                                     value="{{ $transaction->payment_term }}" required>
+                                                                <span class="error-message" id="payment_term_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -321,6 +337,8 @@
                                                                 <input type="number"
                                                                     class="form-control net_weight_transaction"
                                                                     step="0.01" disabled>
+                                                                <span class="error-message" id="net_weight_error"
+                                                                    style="color: red; display: none;"></span>
                                                                 <input type="hidden" id="net_weight_transaction"
                                                                     name="net_weight" class="form-control" step="0.01"
                                                                     required>
@@ -334,10 +352,13 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number" id="gross_weight"
-                                                                    name="gross_weight" class="form-control"
-                                                                    step="0.01" placeholder="Contoh: 123.45"
-                                                                    value="{{ $transaction->gross_weight }}" required>
+                                                                <input type="text" id="gross_weight_display" class="form-control"
+                                                                    placeholder="Contoh: 10,000" 
+                                                                    value="{{ number_format($transaction->gross_weight, 0, ',', ',') }}" 
+                                                                    required>
+                                                                <input type="hidden" id="gross_weight" name="gross_weight">
+                                                                <span class="error-message" id="gross_weight_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -351,6 +372,8 @@
                                                                 <input type="text" name="product_ncm" id="product_ncm"
                                                                     class="form-control"
                                                                     value="{{ $transaction->product_ncm }}" required>
+                                                                <span class="error-message" id="product_ncm_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -365,6 +388,8 @@
                                                                     id="payment_condition" class="form-control"
                                                                     value="{{ $transaction->payment_condition }}"
                                                                     required>
+                                                                <span class="error-message" id="payment_condition_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -386,6 +411,12 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
+                                        <p id="error-message-qty" style="color: red; display:none">Nilai maksimum QTY
+                                            adalah tiga digit
+                                        </p>
+                                        <p id="error-message-carton" style="color: red; display:none">Nilai maksimum
+                                            Carton adalah
+                                            empat digit</p>
                                         <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
                                                 id="tableDetailTransaction">
@@ -428,11 +459,18 @@
                                                                 :</label></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                <input type="number" step="0.01" class="form-control"
+                                                                <input type="text" step="0.01" class="form-control"
+                                                                    id="freight_cost_display" name="freight_cost_display"
+                                                                    value="{{ number_format($transaction->freight_cost, 0, ',', ',') }}"
+                                                                    placeholder="Enter Freight Cost" min="0"
+                                                                    max="99999999.99">
+                                                                <input type="hidden" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
-                                                                    value="{{ $transaction->freight_cost }}"
-                                                                    min="0" max="99999999.99">
+                                                                    placeholder="Enter Freight Cost" min="0"
+                                                                    max="99999999.99">
                                                             </div>
+                                                            <span class="error-message" id="freight_cost_error"
+                                                                style="color: red; display: none;"></span>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -474,7 +512,7 @@
                                 <p id="error-message" style="color: red;">Harap menginput negara terlebih
                                     dahulu</p>
                                 <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
-                                <button type="button" id="submitButton" class="btn btn-primary">Tambah</button>
+                                <button type="button" id="submitButton" class="btn btn-primary">Perbarui</button>
                             </div>
                         </div>
                     </div>
@@ -589,7 +627,38 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fungsi untuk memformat angka dalam format dolar
+            function formatDollar(angka) {
+                let parts = angka.split('.');
+                let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
+            }
+    
+            // Ambil elemen input untuk Gross Weight
+            const grossWeightDisplay = $('#gross_weight_display');
+            const grossWeight = $('#gross_weight');
+    
+            // Event listener untuk memformat input saat user mengetik (Gross Weight)
+            grossWeightDisplay.on('input', function(e) {
+                let value = e.target.value.replace(/[^0-9.]/g, '');
+                grossWeight.val(value.replace(/,/g, ''));
+                e.target.value = formatDollar(value);
+            });
+            // Bagian untuk freight cost
+            const freightCostDisplay = document.getElementById('freight_cost_display');
+            const freightCost = document.getElementById('freight_cost');
 
+            freightCostDisplay.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^.\d]/g, '');
+                freightCost.value = value.replace(/,/g, '');
+                e.target.value = formatDollar(value);
+            });
+        });
+    </script>
+    
     <script>
         $.ajaxSetup({
             headers: {
@@ -883,61 +952,6 @@
             updateProductCode();
             updateNumber();
 
-            // Fungsi untuk memuat detail transaksi berdasarkan id_transaction
-            function loadDetailTransaction(idTransaction) {
-                $.ajax({
-                    url: `/get-detail-transaction/${idTransaction}`,
-                    method: 'GET',
-                    success: function(response) {
-                        $('#loadedData').empty(); // Kosongkan tbody khusus untuk data loaded
-
-                        if (response.length > 0) {
-                            response.forEach(function(data) {
-                                var deleteUrl =
-                                    `/detail-transaction/delete/${data.id_detail_product}`;
-
-                                var newRow = `
-                                                <tr>
-                                                    <td class="text-center id-detail-transaction" style="display: none;">${data.id}</td>
-                                                    <td class="text-center id-detail-product" style="display: none;">${data.id_detail_product}</td>
-                                                    <td class="text-center">
-                                                        <strong>${data.product_name} ${data.pcs} PCS / 
-                                                        <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
-                                                        ${data.dimension} ${data.color} - ${data.type}
-                                                    </td>
-                                                    <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" min="1" value="${data.carton}" /></td>
-                                                    <td class="text-center inner-result">${data.inner_qty_carton}</td>
-                                                    <td class="text-center price" data-price="${data.unit_price}">${data.unit_price}</td>
-                                                    <td class="text-center net-weight">${data.net_weight}</td>
-                                                    <td class="text-center price-result">${data.price_amount}</td>
-                                                    <td class="text-center">
-                                                        <button type="button" class="btn btn-danger btn-sm old-remove-btn" data-url="${deleteUrl}">Hapus</button>
-                                                    </td>
-                                                </tr>
-                                            `;
-                                $('#loadedData').append(newRow);
-                            });
-
-                            addDynamicEventListeners();
-                            updateAmounts();
-                        } else {
-                            $('#loadedData').append(`
-                                                        <tr id="nullDetailTransaction">
-                                                            <td colspan="8" class="text-center">Seluruh detail transaksi yang tersimpan terhapus!</td>
-                                                        </tr>
-                                                    `);
-                        }
-
-                        updateFormDetailTransaction();
-                        updateAmounts();
-                        updateTotals();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching detail transactions:', error);
-                    }
-                });
-            }
-
             function confirmDelete(deleteUrl, idTransaction) {
                 Swal.fire({
                     title: 'Anda yakin?',
@@ -958,27 +972,77 @@
                                     'content') // Sertakan CSRF token
                             },
                             success: function(response) {
-                                Swal.fire(
-                                    'Terhapus!',
-                                    'Data telah dihapus.',
-                                    'success'
-                                );
-
-                                // Panggil ulang fungsi loadDetailTransaction dengan idTransaction yang diberikan
-                                // Panggil updateSelectedProductIds untuk menyinkronkan data dari server, passing ID transaksi
-                                updateSelectedProductIds(
-                                    idTransaction); // Pastikan transactionId ada di JavaScript
+                                Swal.fire('Berhasil!', 'Data telah dihapus.', 'success');
                                 loadDetailTransaction(idTransaction);
                                 updateFormDetailTransaction();
                             },
                             error: function(xhr, status, error) {
-                                Swal.fire(
-                                    'Gagal!',
-                                    'Terjadi kesalahan saat menghapus data.',
-                                    'error'
-                                );
+                                Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.',
+                                    'error');
+                                console.error(xhr
+                                .responseText); // Log untuk melihat kesalahan lebih rinci
                             }
                         });
+                    }
+                });
+            }
+
+            function loadDetailTransaction(idTransaction) {
+                $.ajax({
+                    url: `/get-detail-transaction/${idTransaction}`,
+                    method: 'GET',
+                    success: function(response) {
+                        $('#loadedData').empty(); // Kosongkan tbody khusus untuk data loaded
+
+                        if (response.length > 0) {
+                            response.forEach(function(data) {
+                                var deleteUrl =
+                                    `/detail-transaction/delete/${data.detail_transaction_id}/${data.id_detail_product}`;
+
+                                var newRow = `
+                        <tr>
+                            <td class="text-center id-detail-transaction" style="display: none;">${data.id}</td>
+                            <td class="text-center id-detail-product" style="display: none;">${data.id_detail_product}</td>
+                            <td class="text-center">
+                                <strong>${data.product_name} ${data.pcs} PCS / 
+                                <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
+                                ${data.dimension} ${data.color} - ${data.type}
+                            </td>
+                            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" min="1" value="${data.carton}" /></td>
+                            <td class="text-center inner-result">${data.inner_qty_carton}</td>
+                            <td class="text-center price" data-price="${data.unit_price}">${data.unit_price}</td>
+                            <td class="text-center net-weight">${data.net_weight}</td>
+                            <td class="text-center price-result">${data.price_amount}</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-danger btn-sm old-remove-btn" data-url="${deleteUrl}">Hapus</button>
+                            </td>
+                        </tr>
+                    `;
+                                $('#loadedData').append(newRow);
+                            });
+
+                            // Event listener untuk tombol hapus
+                            $('#loadedData').on('click', '.old-remove-btn', function() {
+                                var deleteUrl = $(this).data('url');
+                                confirmDelete(deleteUrl, idTransaction);
+                            });
+
+                            addDynamicEventListeners();
+                            updateAmounts();
+                        } else {
+                            $('#loadedData').append(`
+                    <tr id="nullDetailTransaction">
+                        <td colspan="8" class="text-center">Seluruh detail transaksi yang tersimpan terhapus!</td>
+                    </tr>
+                `);
+                        }
+
+                        updateFormDetailTransaction();
+                        updateAmounts();
+                        updateTotals();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching detail transactions:', error);
                     }
                 });
             }
@@ -991,6 +1055,36 @@
                     var carton = parseFloat(row.find('.carton-input').val()) || 0; // Get carton value
                     var unitPrice = parseFloat(row.find('.price').data('price')) ||
                         0; // Get unit price from data attribute
+
+                    // Batas maksimum untuk qty dan carton
+                    var maxQty = 999; // Maksimum 3 digit
+                    var maxCarton = 9999; // Maksimum 4 digit
+
+                    // Flag to track if input exceeds limits
+                    var exceedsLimit = false;
+
+                    // Check if qty exceeds max value
+                    if (qty > maxQty) {
+                        $('#error-message-qty').show();
+                        exceedsLimit = true;
+                    } else {
+                        $('#error-message-qty').hide();
+                    }
+
+                    // Check if carton exceeds max value
+                    if (carton > maxCarton) {
+                        $('#error-message-carton').show();
+                        exceedsLimit = true;
+                    } else {
+                        $('#error-message-carton').hide();
+                    }
+
+                    // Jika ada yang melebihi batas, disable tombol submit
+                    if (exceedsLimit) {
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#submitButton').prop('disabled', false);
+                    }
 
                     // Perform calculations based on qty and carton
                     var innerResult = qty * carton; // Example logic, adjust as needed
@@ -1056,15 +1150,6 @@
                     $(row).attr('data-processed', 'true');
                 });
             }
-
-            // pencegahan hapus data old detail product
-            $('#tableDetailTransaction').on('click', '.old-remove-btn', function() {
-                var deleteUrl = $(this).data('url'); // Ambil URL dari atribut data-url
-                var idTransaction =
-                    '{{ $transaction->id }}'; // Ambil ID transaksi dari kontekstual transaksi
-                confirmDelete(deleteUrl,
-                    idTransaction); // Panggil fungsi dengan deleteUrl dan idTransaction
-            });
 
             // Panggil fungsi untuk memuat detail transaksi ketika halaman dimuat
             var transactionId = "{{ $transaction->id }}"; // Ambil id_transaction dari backend
@@ -1253,6 +1338,36 @@
                     var carton = parseFloat(row.find('.carton-input').val()) || 0;
                     var price = parseFloat(row.find('.price').text()) || 0;
 
+                    // Batas maksimum untuk qty dan carton
+                    var maxQty = 999; // Maksimum 3 digit
+                    var maxCarton = 9999; // Maksimum 4 digit
+
+                    // Flag to track if input exceeds limits
+                    var exceedsLimit = false;
+
+                    // Check if qty exceeds max value
+                    if (qty > maxQty) {
+                        $('#error-message-qty').show();
+                        exceedsLimit = true;
+                    } else {
+                        $('#error-message-qty').hide();
+                    }
+
+                    // Check if carton exceeds max value
+                    if (carton > maxCarton) {
+                        $('#error-message-carton').show();
+                        exceedsLimit = true;
+                    } else {
+                        $('#error-message-carton').hide();
+                    }
+
+                    // Jika ada yang melebihi batas, disable tombol submit
+                    if (exceedsLimit) {
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#submitButton').prop('disabled', false);
+                    }
+
                     // Multiply qty by carton and update the result
                     var result = qty * carton;
                     row.find('.inner-result').text(result);
@@ -1308,6 +1423,25 @@
             // Panggil fungsi untuk mengatur tanggal saat ini pada input date
             setTodayDate();
 
+            function validateDetailTransactionForm() {
+                var isValid = true;
+
+                // Cek apakah ada input selain yang memiliki id="id_transaction"
+                var totalInputs = $('#formDetailTransaction input').length; // Total input dalam form
+                var otherInputs = $('#formDetailTransaction input').not('#id_transaction')
+                    .length; // Input selain id_transaction
+
+                var totalInputsNew = $('#newFormDetailTransaction input').length; // Total input dalam form
+                var otherInputsNew = $('#newFormDetailTransaction input').not('#id_transaction')
+                    .length; // Input selain id_transaction
+
+                if (otherInputs === 0 && otherInputsNew === 0) {
+                    isValid = false; // Jika tidak ada input selain id_transaction, form tidak valid
+                }
+
+                return isValid; // Kembalikan status validasi
+            }
+
             $('#submitButton').click(function(event) {
                 event.preventDefault(); // Mencegah form dari pengiriman otomatis
 
@@ -1317,6 +1451,44 @@
 
                 // Nonaktifkan tombol submit untuk mencegah pengiriman berulang
                 $('#submitButton').prop('disabled', true);
+
+                // Reset pesan kesalahan sebelumnya
+                $('.error-message').hide();
+                $('.form-control').removeClass('is-invalid');
+                $('.input-group').removeClass('has-error');
+
+                var selectedClientId = $('#selectedClientId').val();
+                if (!selectedClientId) {
+                    $('#selectedClientId_error').text('Client harus dipilih').show();
+                    $('#selectedClientName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var selectedConsigneeId = $('#selectedConsigneeId').val();
+                if (!selectedConsigneeId) {
+                    $('#selectedConsigneeId_error').text('Consignee harus dipilih').show();
+                    $('#selectedConsigneeName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var net_weight_transaction = $('#net_weight_transaction').val();
+                if (!net_weight_transaction) {
+                    $('.net_weight_transaction').addClass('is-invalid'); // Tambah border merah pada input
+                }
+
+                // Validasi product (id_product harus dipilih)
+                var product = $('#product').val();
+                if (!product) {
+                    $('#product_error').text('Produk harus dipilih').show();
+                    $('#product').addClass('is-invalid'); // Tambahkan border merah
+                }
+
+                // Validasi commodity (id_commodity harus dipilih)
+                var commodity = $('#commodity').val();
+                if (!commodity) {
+                    $('#commodity_error').text('Komoditas harus dipilih').show();
+                    $('#commodity').addClass('is-invalid'); // Tambahkan border merah
+                }
 
                 // Panggil fungsi untuk memperbarui form detail transaksi baru dari data di tabel
                 newUpdateFormDetailTransaction(); // <-- Panggil di sini sebelum submit form
@@ -1333,194 +1505,163 @@
                 var hasDetailTransactionData = hasInputData(formDetailTransaction);
                 var hasNewDetailTransactionData = hasInputData(newFormDetailTransaction);
 
-                // Jika tidak ada input pada kedua form detail transaction, beri alert dan aktifkan kembali tombol
-                if (!hasInvoiceData && !hasDetailTransactionData && !hasNewDetailTransactionData) {
+                // Validasi formDetailTransaction terlebih dahulu
+                var isValidDetailTransaction = validateDetailTransactionForm();
+
+                if (!isValidDetailTransaction) {
+                    $('#submitButton').prop('disabled', false);
                     Swal.fire({
-                        icon: 'warning',
-                        title: 'Tidak ada data untuk diperbarui',
-                        text: 'Tolong isi data yang diperlukan!',
+                        title: 'Terjadi Kesalahan!',
+                        text: 'Mohon isi data detail transaksi!',
+                        icon: 'error',
                         confirmButtonText: 'OK'
-                    }).then(() => {
-                        $('#submitButton').prop('disabled', false);
                     });
-                    return;
+                    return; // Hentikan proses jika form detail transaksi tidak valid
                 }
 
-                // Variable untuk mengecek jika ada beberapa form sukses
-                var detailTransactionSuccess = false;
-                var newDetailTransactionSuccess = false;
-
-                // Submit formProformaInvoice terlebih dahulu jika ada data
-                if (hasInvoiceData) {
-                    $.ajax({
-                        url: formProformaInvoice.attr('action'),
-                        method: formProformaInvoice.attr('method'),
-                        data: formProformaInvoice.serialize(),
-                        success: function(response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Proforma invoice berhasil diperbarui',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                // Submit formDetailTransaction jika ada input di dalamnya
-                                if (hasDetailTransactionData) {
-                                    $.ajax({
-                                        url: formDetailTransaction.attr(
-                                            'action'),
-                                        method: formDetailTransaction.attr(
-                                            'method'),
-                                        data: formDetailTransaction.serialize(),
-                                        success: function(response) {
-                                            detailTransactionSuccess = true;
-                                            // Setelah detail transaksi berhasil disimpan
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: 'Detail transaksi berhasil diperbarui!',
-                                                confirmButtonText: 'OK'
-                                            }).then(() => {
-                                                // Submit newFormDetailTransaction jika ada data baru yang ditambahkan
-                                                if (
-                                                    hasNewDetailTransactionData
-                                                ) {
-                                                    $.ajax({
-                                                        url: newFormDetailTransaction
-                                                            .attr(
-                                                                'action'
-                                                            ),
-                                                        method: newFormDetailTransaction
-                                                            .attr(
-                                                                'method'
-                                                            ),
-                                                        data: newFormDetailTransaction
-                                                            .serialize(),
-                                                        success: function(
-                                                            response
-                                                        ) {
-                                                            newDetailTransactionSuccess
-                                                                =
-                                                                true;
-                                                            // Setelah detail transaksi baru berhasil disimpan
-                                                            Swal.fire({
-                                                                    icon: 'success',
-                                                                    title: 'Detail transaksi baru berhasil ditambahkan!',
-                                                                    confirmButtonText: 'OK'
-                                                                })
-                                                                .then(
-                                                                    () => {
-                                                                        location
-                                                                            .reload(); // Reload halaman setelah semua berhasil
-                                                                    }
-                                                                );
-                                                        },
-                                                        error: function(
-                                                            xhr
-                                                        ) {
-                                                            Swal.fire({
-                                                                    icon: 'error',
-                                                                    title: 'Error',
-                                                                    text: 'Detail transaksi baru gagal ditambahkan! ' +
-                                                                        xhr
-                                                                        .responseJSON
-                                                                        .message,
-                                                                    confirmButtonText: 'OK'
-                                                                })
-                                                                .then(
-                                                                    () => {
-                                                                        $('#submitButton')
-                                                                            .prop(
-                                                                                'disabled',
-                                                                                false
-                                                                            );
-                                                                    }
-                                                                );
-                                                        }
-                                                    });
-                                                } else {
-                                                    // Jika tidak ada detail transaksi baru, reload
+                $.ajax({
+                    url: formProformaInvoice.attr('action'),
+                    method: formProformaInvoice.attr('method'),
+                    data: formProformaInvoice.serialize(),
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Proforma invoice berhasil diperbarui',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            // Submit formDetailTransaction jika ada input di dalamnya
+                            if (hasDetailTransactionData) {
+                                $.ajax({
+                                    url: formDetailTransaction.attr(
+                                        'action'),
+                                    method: formDetailTransaction.attr(
+                                        'method'),
+                                    data: formDetailTransaction.serialize(),
+                                    success: function(response) {
+                                        detailTransactionSuccess = true;
+                                        // Setelah detail transaksi berhasil disimpan
+                                        if (hasNewDetailTransactionData) {
+                                            $.ajax({
+                                                url: newFormDetailTransaction
+                                                    .attr('action'),
+                                                method: newFormDetailTransaction
+                                                    .attr('method'),
+                                                data: newFormDetailTransaction
+                                                    .serialize(),
+                                                success: function(
+                                                    response) {
+                                                    newDetailTransactionSuccess
+                                                        = true;
+                                                    // Setelah detail transaksi baru berhasil disimpan, reload halaman
                                                     location
                                                         .reload();
+                                                },
+                                                error: function(
+                                                    xhr) {
+                                                    $('#submitButton')
+                                                        .prop(
+                                                            'disabled',
+                                                            false
+                                                        );
+                                                    console
+                                                        .error(
+                                                            'Detail transaksi baru gagal ditambahkan! ' +
+                                                            xhr
+                                                            .responseJSON
+                                                            .message
+                                                        );
                                                 }
                                             });
-                                        },
-                                        error: function(xhr) {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Error',
-                                                text: 'Detail transaksi gagal diperbarui: ' +
-                                                    xhr.responseJSON
-                                                    .message,
-                                                confirmButtonText: 'OK'
-                                            }).then(() => {
-                                                $('#submitButton')
-                                                    .prop(
-                                                        'disabled',
-                                                        false);
-                                            });
+                                        } else {
+                                            // Jika tidak ada detail transaksi baru, reload halaman
+                                            location.reload();
                                         }
-                                    });
-                                } else if (hasNewDetailTransactionData) {
-                                    // Jika tidak ada detail transaksi tetapi ada transaksi baru
-                                    $.ajax({
-                                        url: newFormDetailTransaction.attr(
-                                            'action'),
-                                        method: newFormDetailTransaction.attr(
-                                            'method'),
-                                        data: newFormDetailTransaction
-                                            .serialize(),
-                                        success: function(response) {
-                                            newDetailTransactionSuccess =
-                                                true;
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: 'Detail transaksi baru berhasil ditambahkan!',
-                                                confirmButtonText: 'OK'
-                                            }).then(() => {
-                                                location
-                                                    .reload(); // Reload halaman setelah semua berhasil
-                                            });
-                                        },
-                                        error: function(xhr) {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Error',
-                                                text: 'Detail transaksi baru gagal ditambahkan!: ' +
-                                                    xhr.responseJSON
-                                                    .message,
-                                                confirmButtonText: 'OK'
-                                            }).then(() => {
-                                                $('#submitButton')
-                                                    .prop(
-                                                        'disabled',
-                                                        false);
-                                            });
-                                        }
-                                    });
-                                } else {
-                                    // Jika tidak ada detail transaksi dan tidak ada transaksi baru
-                                    location
-                                        .reload(); // Reload halaman setelah semua berhasil
-                                }
+                                    },
+                                    error: function(xhr) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'Detail transaksi gagal diperbarui: ' +
+                                                xhr.responseJSON
+                                                .message,
+                                            confirmButtonText: 'OK'
+                                        }).then(() => {
+                                            $('#submitButton')
+                                                .prop(
+                                                    'disabled',
+                                                    false);
+                                        });
+                                    }
+                                });
+                            } else if (hasNewDetailTransactionData) {
+                                // Jika tidak ada detail transaksi tetapi ada transaksi baru
+                                $.ajax({
+                                    url: newFormDetailTransaction.attr(
+                                        'action'),
+                                    method: newFormDetailTransaction.attr(
+                                        'method'),
+                                    data: newFormDetailTransaction
+                                        .serialize(),
+                                    success: function(response) {
+                                        newDetailTransactionSuccess =
+                                            true;
+                                        location
+                                            .reload(); // Reload halaman setelah semua berhasil
+                                    },
+                                    error: function(xhr) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'Detail transaksi baru gagal ditambahkan!: ' +
+                                                xhr.responseJSON
+                                                .message,
+                                            confirmButtonText: 'OK'
+                                        }).then(() => {
+                                            $('#submitButton')
+                                                .prop(
+                                                    'disabled',
+                                                    false);
+                                        });
+                                    }
+                                });
+                            } else {
+                                // Jika tidak ada detail transaksi dan tidak ada transaksi baru
+                                location
+                                    .reload(); // Reload halaman setelah semua berhasil
+                            }
+                        });
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            // Tangani error validasi dari server
+                            var errors = xhr.responseJSON.errors;
+
+                            // Loop melalui setiap error dan tampilkan di elemen input terkait
+                            $.each(errors, function(key, value) {
+                                var errorElement = $('#' + key + '_error');
+                                var inputElement = $('#' + key);
+
+                                // Tampilkan pesan error
+                                errorElement.text(value[0]).show();
+                                inputElement.addClass(
+                                    'is-invalid'
+                                ); // Tambah kelas is-invalid untuk border merah
                             });
-                        },
-                        error: function(xhr) {
+                        } else {
+                            // Tangani error umum
                             Swal.fire({
+                                title: 'Terjadi Kesalahan!',
+                                text: 'Gagal menyimpan transaksi: ' + xhr
+                                    .responseJSON
+                                    .message,
                                 icon: 'error',
-                                title: 'Error',
-                                text: 'Gagal memperbarui proforma invoice: ' + xhr
-                                    .responseJSON.message,
                                 confirmButtonText: 'OK'
-                            }).then(() => {
-                                $('#submitButton').prop('disabled', false);
                             });
-                        },
-                        complete: function() {
-                            $('#submitButton').prop('disabled', false);
                         }
-                    });
-                } else {
-                    // Jika tidak ada invoice data
-                    $('#submitButton').prop('disabled', false);
-                }
+                        $('#submitButton').prop('disabled',
+                            false); // Aktifkan tombol kembali
+                    }
+                });
             });
         });
     </script>
