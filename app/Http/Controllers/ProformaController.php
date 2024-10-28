@@ -226,11 +226,18 @@ class ProformaController extends Controller
 
     public function getDetailTransaction($idTransaction)
     {
-        // Query untuk mendapatkan detail transaksi berdasarkan id_transaction
-        $detailTransactions = DetailTransaction::where('id_transaction', $idTransaction)
+        // Query untuk mendapatkan detail transaksi berdasarkan id_transaction dengan alias untuk menghindari konflik nama kolom
+        $detailTransactions = DetailTransaction::where('detail_transactions.id_transaction', $idTransaction)
             ->join('detail_products', 'detail_transactions.id_detail_product', '=', 'detail_products.id')
             ->select(
                 'detail_transactions.*',
+                'detail_transactions.id as detail_transaction_id', // Alias id transaksi detail
+                'detail_transactions.id_transaction',               // Menambahkan id_transaction
+                'detail_transactions.id_detail_product',            // Alias id produk detail
+                'detail_transactions.qty',
+                'detail_transactions.carton',
+                'detail_transactions.price_amount',
+                'detail_transactions.net_weight',
                 'detail_products.name as product_name',
                 'detail_products.pcs',
                 'detail_products.dimension',
@@ -243,7 +250,6 @@ class ProformaController extends Controller
         // Kembalikan data dalam format JSON
         return response()->json($detailTransactions);
     }
-
 
     public function getSelectedProductIds(int $id)
     {
@@ -446,5 +452,5 @@ class ProformaController extends Controller
             'recordsFiltered' => $totalRecords,
             'data' => $consignees
         ]);
-    }  
+    }
 }

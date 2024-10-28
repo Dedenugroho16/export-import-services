@@ -915,7 +915,41 @@
             updateProductCode();
             updateNumber();
 
-            // Fungsi untuk memuat detail transaksi berdasarkan id_transaction
+            function confirmDelete(deleteUrl, idTransaction) {
+                Swal.fire({
+                    title: 'Anda yakin?',
+                    text: "Data ini akan dihapus!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE',
+                            data: {
+                                _token: $('meta[name="csrf-token"]').attr(
+                                    'content') // Sertakan CSRF token
+                            },
+                            success: function(response) {
+                                Swal.fire('Berhasil!', 'Data telah dihapus.', 'success');
+                                loadDetailTransaction(idTransaction);
+                                updateFormDetailTransaction();
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.',
+                                    'error');
+                                console.error(xhr
+                                .responseText); // Log untuk melihat kesalahan lebih rinci
+                            }
+                        });
+                    }
+                });
+            }
+
             function loadDetailTransaction(idTransaction) {
                 $.ajax({
                     url: `/get-detail-transaction/${idTransaction}`,
@@ -926,97 +960,44 @@
                         if (response.length > 0) {
                             response.forEach(function(data) {
                                 var deleteUrl =
-                                    `/detail-transaction/delete/${data.id_detail_product}`;
+                                    `/detail-transaction/delete/${data.detail_transaction_id}/${data.id_detail_product}`;
 
                                 var newRow = `
-                                                <tr>
-                                                    <td class="text-center id-detail-transaction" style="display: none;">${data.id}</td>
-                                                    <td class="text-center id-detail-product" style="display: none;">${data.id_detail_product}</td>
-                                                    <td class="text-center">
-                                                        <strong>${data.product_name} ${data.pcs} PCS / 
-                                                        <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
-                                                        ${data.dimension} ${data.color} - ${data.type}
-                                                    </td>
-                                                    <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" min="1" value="${data.carton}" /></td>
-                                                    <td class="text-center inner-result">${data.inner_qty_carton}</td>
-                                                    <td class="text-center price" data-price="${data.unit_price}">${data.unit_price}</td>
-                                                    <td class="text-center net-weight">${data.net_weight}</td>
-                                                    <td class="text-center price-result">${data.price_amount}</td>
-                                                    <td class="text-center">
-                                                        <button type="button" class="btn btn-danger btn-sm old-remove-btn" data-url="${deleteUrl}">Hapus</button>
-                                                    </td>
-                                                </tr>
-                                            `;
+                        <tr>
+                            <td class="text-center id-detail-transaction" style="display: none;">${data.id}</td>
+                            <td class="text-center id-detail-product" style="display: none;">${data.id_detail_product}</td>
+                            <td class="text-center">
+                                <strong>${data.product_name} ${data.pcs} PCS / 
+                                <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
+                                ${data.dimension} ${data.color} - ${data.type}
+                            </td>
+                            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" min="1" value="${data.carton}" /></td>
+                            <td class="text-center inner-result">${data.inner_qty_carton}</td>
+                            <td class="text-center price" data-price="${data.unit_price}">${data.unit_price}</td>
+                            <td class="text-center net-weight">${data.net_weight}</td>
+                            <td class="text-center price-result">${data.price_amount}</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-danger btn-sm old-remove-btn" data-url="${deleteUrl}">Hapus</button>
+                            </td>
+                        </tr>
+                    `;
                                 $('#loadedData').append(newRow);
                             });
 
-                            function confirmDelete(deleteUrl, idTransaction) {
-                                Swal.fire({
-                                    title: 'Anda yakin?',
-                                    text: "Data ini akan dihapus!",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#d33',
-                                    cancelButtonColor: '#3085d6',
-                                    confirmButtonText: 'Ya, hapus!',
-                                    cancelButtonText: 'Batal'
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        $.ajax({
-                                            url: deleteUrl,
-                                            type: 'DELETE',
-                                            data: {
-                                                _token: $('meta[name="csrf-token"]')
-                                                    .attr(
-                                                        'content'
-                                                        ) // Sertakan CSRF token
-                                            },
-                                            success: function(response) {
-                                                Swal.fire(
-                                                    'Berhasil!',
-                                                    'Data telah dihapus.',
-                                                    'success'
-                                                );
-
-                                                // Panggil ulang fungsi loadDetailTransaction dengan idTransaction yang diberikan
-                                                // Panggil updateSelectedProductIds untuk menyinkronkan data dari server, passing ID transaksi
-                                                updateSelectedProductIds(
-                                                    idTransaction
-                                                    ); // Pastikan transactionId ada di JavaScript
-                                                loadDetailTransaction(
-                                                idTransaction);
-                                                updateFormDetailTransaction();
-                                            },
-                                            error: function(xhr, status, error) {
-                                                Swal.fire(
-                                                    'Gagal!',
-                                                    'Terjadi kesalahan saat menghapus data.',
-                                                    'error'
-                                                );
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-
+                            // Event listener untuk tombol hapus
                             $('#loadedData').on('click', '.old-remove-btn', function() {
-                                var deleteUrl = $(this).data(
-                                    'url'); // Ambil URL dari atribut data-url
-                                var idTransaction =
-                                    '{{ $transaction->id }}'; // Ambil ID transaksi dari kontekstual transaksi
-                                confirmDelete(deleteUrl,
-                                    idTransaction
-                                ); // Panggil fungsi dengan deleteUrl dan idTransaction
+                                var deleteUrl = $(this).data('url');
+                                confirmDelete(deleteUrl, idTransaction);
                             });
 
                             addDynamicEventListeners();
                             updateAmounts();
                         } else {
                             $('#loadedData').append(`
-                                                        <tr id="nullDetailTransaction">
-                                                            <td colspan="8" class="text-center">Seluruh detail transaksi yang tersimpan terhapus!</td>
-                                                        </tr>
-                                                    `);
+                    <tr id="nullDetailTransaction">
+                        <td colspan="8" class="text-center">Seluruh detail transaksi yang tersimpan terhapus!</td>
+                    </tr>
+                `);
                         }
 
                         updateFormDetailTransaction();
