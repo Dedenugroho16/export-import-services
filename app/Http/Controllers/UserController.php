@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     // Menampilkan data pengguna
-    // Menampilkan data pengguna
-public function index(Request $request)
+    public function index(Request $request)
 {
     if ($request->ajax()) {
         $users = User::where('id', '!=', auth()->id())->get(); // Ambil semua pengguna kecuali pengguna yang sedang login
@@ -25,7 +24,13 @@ public function index(Request $request)
             ->addColumn('role', function (User $user) {
                 return $user->role; // Menampilkan role
             })
+            ->addColumn('status', function (User $user) {
+                return $user->is_active ? 'Aktif' : 'Tidak Aktif'; // Menampilkan status
+            })
             ->addColumn('action', function (User $user) {
+                $activeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-circle me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3v0a9 9 0 1 0 9 9a9 9 0 0 0 -9 -9z" /></svg>'; // Icon untuk aktif
+                $inactiveIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-circle me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3v0a9 9 0 1 0 9 9a9 9 0 0 0 -9 -9z" /></svg>'; // Icon untuk tidak aktif
+
                 return '
                 <div class="dropdown">
                     <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">
@@ -33,12 +38,12 @@ public function index(Request $request)
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <a href="#" class="dropdown-item edit-user" data-id="' . $user->id . '">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
                             Edit
                         </a>
-                        <a href="#" class="dropdown-item delete-user" data-id="' . $user->id . '">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                        Hapus</a>
+                        <a href="#" class="dropdown-item toggle-active" data-id="' . $user->id . '" data-status="' . $user->is_active . '">
+                            ' . ($user->is_active ? $inactiveIcon . ' Nonaktifkan' : $activeIcon . ' Aktifkan') . '
+                        </a>
                     </div>
                 </div>';
             })
@@ -56,14 +61,15 @@ public function index(Request $request)
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed',
-            'role' => 'required|string|max:255', // Validasi role
+            'role' => 'required|string|max:255',
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role, // Simpan role
+            'role' => $request->role,
+            'is_active' => true, // Set akun baru aktif secara default
         ]);
 
         return response()->json(['success' => true, 'message' => 'User created successfully.']);
@@ -72,7 +78,7 @@ public function index(Request $request)
     // Menampilkan form edit pengguna
     public function edit($id)
     {
-        $user = User::findOrFail($id); 
+        $user = User::findOrFail($id);
         return response()->json($user);
     }
 
@@ -83,32 +89,31 @@ public function index(Request $request)
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|string|confirmed',
-            'role' => 'required|string|max:255', // Validasi role
+            'role' => 'required|string|max:255',
         ]);
 
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->role = $request->role; // Update role
+        $user->role = $request->role;
 
         // Hanya update password jika diisi
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
 
-        $user->save(); // Simpan perubahan
+        $user->save();
 
         return response()->json(['success' => true, 'message' => 'User updated successfully.']);
     }
 
-    // Fungsi untuk menghapus pengguna
-    public function destroy($id)
+    // Mengaktifkan atau menonaktifkan akun pengguna
+    public function toggleActive(Request $request, $id)
     {
-        $user = User::find($id);
-        if ($user) {
-            $user->delete();
-            return response()->json(['success' => true, 'message' => 'User deleted successfully.']);
-        }
-        return response()->json(['success' => false, 'message' => 'User not found.'], 404);
+        $user = User::findOrFail($id);
+        $user->is_active = !$user->is_active; // Toggle status
+        $user->save();
+
+        return response()->json(['success' => true, 'message' => 'User status updated successfully.']);
     }
 }

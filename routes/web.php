@@ -126,6 +126,7 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
 Route::resource('users', UserController::class);
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+Route::post('users/{id}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggleActive');
 
 
 // Route untuk menampilkan halaman profil
