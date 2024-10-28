@@ -352,10 +352,11 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number" id="gross_weight"
-                                                                    name="gross_weight" class="form-control"
-                                                                    step="0.01" placeholder="Contoh: 123.45"
-                                                                    value="{{ $transaction->gross_weight }}" required>
+                                                                <input type="text" id="gross_weight_display" class="form-control"
+                                                                    placeholder="Contoh: 10,000" 
+                                                                    value="{{ number_format($transaction->gross_weight, 0, ',', ',') }}" 
+                                                                    required>
+                                                                <input type="hidden" id="gross_weight" name="gross_weight">
                                                                 <span class="error-message" id="gross_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                             </div>
@@ -458,10 +459,15 @@
                                                                 :</label></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                <input type="number" step="0.01" class="form-control"
+                                                                <input type="text" step="0.01" class="form-control"
+                                                                    id="freight_cost_display" name="freight_cost_display"
+                                                                    value="{{ number_format($transaction->freight_cost, 0, ',', ',') }}"
+                                                                    placeholder="Enter Freight Cost" min="0"
+                                                                    max="99999999.99">
+                                                                <input type="hidden" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
-                                                                    value="{{ $transaction->freight_cost }}"
-                                                                    min="0" max="99999999.99">
+                                                                    placeholder="Enter Freight Cost" min="0"
+                                                                    max="99999999.99">
                                                             </div>
                                                             <span class="error-message" id="freight_cost_error"
                                                                 style="color: red; display: none;"></span>
@@ -621,7 +627,38 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fungsi untuk memformat angka dalam format dolar
+            function formatDollar(angka) {
+                let parts = angka.split('.');
+                let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
+            }
+    
+            // Ambil elemen input untuk Gross Weight
+            const grossWeightDisplay = $('#gross_weight_display');
+            const grossWeight = $('#gross_weight');
+    
+            // Event listener untuk memformat input saat user mengetik (Gross Weight)
+            grossWeightDisplay.on('input', function(e) {
+                let value = e.target.value.replace(/[^0-9.]/g, '');
+                grossWeight.val(value.replace(/,/g, ''));
+                e.target.value = formatDollar(value);
+            });
+            // Bagian untuk freight cost
+            const freightCostDisplay = document.getElementById('freight_cost_display');
+            const freightCost = document.getElementById('freight_cost');
 
+            freightCostDisplay.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^.\d]/g, '');
+                freightCost.value = value.replace(/,/g, '');
+                e.target.value = formatDollar(value);
+            });
+        });
+    </script>
+    
     <script>
         $.ajaxSetup({
             headers: {
