@@ -5,7 +5,7 @@
     <div class="container-xl">
         <!-- Modal -->
         <div class="modal fade" id="companyModal" tabindex="-1" aria-labelledby="companyModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg"> <!-- Tambah ukuran dialog jadi lebih besar -->
+            <div class="modal-dialog modal-xl modal-dialog-centered"> <!-- Tambah ukuran dialog jadi lebih besar -->
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="companyModalLabel">Informasi Perusahaan</h5>
@@ -23,37 +23,37 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="company_name" class="form-label">Nama Perusahaan</label>
                                                 <input type="text" id="company_name" name="company_name" class="form-control" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="company_code" class="form-label">Kode Perusahaan</label>
                                                 <input type="text" id="company_code" name="company_code" class="form-control" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="registration_number" class="form-label">Nomor Registrasi</label>
                                                 <input type="text" id="registration_number" name="registration_number" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="postal_code" class="form-label">Kode Pos</label>
                                                 <input type="text" id="postal_code" name="postal_code" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="city" class="form-label">Kota</label>
                                                 <input type="text" id="city" name="city" class="form-control" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="country" class="form-label">Negara</label>
                                                 <input type="text" id="country" name="country" class="form-control" required>
@@ -62,13 +62,13 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="address" class="form-label">Alamat Lengkap</label>
-                                                <textarea id="address" name="address" class="form-control" required></textarea>
+                                                <textarea id="address" name="address" class="form-control" rows="3" required></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="bank_account_details" class="form-label">Detail Rekening Bank</label>
-                                                <textarea id="bank_account_details" name="bank_account_details" class="form-control"></textarea>
+                                                <label for="bank_account_details" class="form-label">Rekening Bank</label>
+                                                <textarea id="bank_account_details" name="bank_account_details" class="form-control" rows="3"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -90,6 +90,12 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
+                                                <label for="contact_person" class="form-label">Kontak Person</label>
+                                                <input type="text" id="contact_person" name="contact_person" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
                                                 <label for="email" class="form-label">Email</label>
                                                 <input type="email" id="email" name="email" class="form-control">
                                             </div>
@@ -98,12 +104,6 @@
                                             <div class="mb-3">
                                                 <label for="website" class="form-label">Website</label>
                                                 <input type="text" id="website" name="website" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="contact_person" class="form-label">Kontak Person</label>
-                                                <input type="text" id="contact_person" name="contact_person" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -117,35 +117,35 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="industry" class="form-label">Industri</label>
                                                 <input type="text" id="industry" name="industry" class="form-control">
                                             </div>
                                             
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="tax_id" class="form-label">Nomor Pajak</label>
                                                 <input type="text" id="tax_id" name="tax_id" class="form-control">
                                             </div>
                                         </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="export_license_number" class="form-label">Nomor Lisensi Ekspor</label>
-                                                    <input type="text" id="export_license_number" name="export_license_number" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="import_license_number" class="form-label">Nomor Lisensi Impor</label>
-                                                    <input type="text" id="import_license_number" name="import_license_number" class="form-control">
-                                                </div>
-                                            </div>
-                                        <div class="col">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="founded_date" class="form-label">Tanggal Didirikan</label>
                                                 <input type="date" id="founded_date" name="founded_date" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="export_license_number" class="form-label">Nomor Lisensi Ekspor</label>
+                                                <input type="text" id="export_license_number" name="export_license_number" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="import_license_number" class="form-label">Nomor Lisensi Impor</label>
+                                                <input type="text" id="import_license_number" name="import_license_number" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -159,39 +159,39 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="payment_terms" class="form-label">Ketentuan Pembayaran</label>
                                                 <input type="text" id="payment_terms" name="payment_terms" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="shipping_agent" class="form-label">Agen Pengiriman</label>
-                                                <input type="text" id="shipping_agent" name="shipping_agent" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="incoterms" class="form-label">Incoterms</label>
-                                                <input type="text" id="incoterms" name="incoterms" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="customs_broker" class="form-label">Brokers Bea Cukai</label>
-                                                <input type="text" id="customs_broker" name="customs_broker" class="form-control">
-                                            </div>
-                                        </div>
-					                    <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="consignee_code" class="form-label">Kode Consignee</label>
                                 		        <input type="text" id="consignee_code" name="consignee_code" class="form-control">
                                             </div>
                                         </div>
-					                    <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
-                                		        <label for="forwarding_agent" class="form-label">Agen Pengiriman</label>
+                                                <label for="incoterms" class="form-label">Incoterms</label>
+                                                <input type="text" id="incoterms" name="incoterms" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="customs_broker" class="form-label">Brokers Bea Cukai</label>
+                                                <input type="text" id="customs_broker" name="customs_broker" class="form-control">
+                                            </div>
+                                        </div>
+					                    <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="shipping_agent" class="form-label">Shipping agent</label>
+                                                <input type="text" id="shipping_agent" name="shipping_agent" class="form-control">
+                                            </div>
+                                        </div>
+					                    <div class="col-md-4">
+                                            <div class="mb-3">
+                                		        <label for="forwarding_agent" class="form-label">Forwarding agent</label>
                                			         <input type="text" id="forwarding_agent" name="forwarding_agent" class="form-control">
                             			    </div>
                                         </div>
@@ -203,10 +203,14 @@
                                 <div class="card-body">
                                     <div class="mb-3">
                                         <label for="company_logo" class="form-label">Logo Perusahaan</label>
-                                        <input type="file" id="logo" name="logo" class="form-control" accept="image/*">
+                                        <input type="file" id="logo" name="logo" class="form-control" accept="image/*" onchange="previewLogo(event)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <img id="logo_preview" src="{{ asset('storage/' . ($company->logo ?? 'default-logo.png')) }}" 
+                                            alt="Logo Perusahaan" width="50px">
                                     </div>
                                 </div>
-                            </div>      
+                            </div>
                         </div>
         
                         <div class="modal-footer">
@@ -343,7 +347,7 @@
                                                 <th>Logo</th>
                                                 <td>
                                                     @if($company->logo)
-                                                        <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->company_name }} Logo" style="max-width: 100px;">
+                                                    <img src="{{ asset('storage/' . $company->logo) }}" alt="Company Logo" style="max-width: 100px">
                                                     @else
                                                         <span>No logo uploaded</span>
                                                     @endif
@@ -420,8 +424,17 @@
         // Set form action to store route
         document.getElementById('companyForm').setAttribute('action', `/company`);
         document.getElementById('companyForm').setAttribute('method', 'POST');
+        }
     }
-}
+    // Fungsi untuk menampilkan pratinjau logo baru
+    function previewLogo(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('logo_preview');
+                output.src = reader.result; // Set image source ke gambar yang diunggah
+            };
+            reader.readAsDataURL(event.target.files[0]); // Baca file gambar
+        }
 
 </script>
 @endsection
