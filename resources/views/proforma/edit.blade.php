@@ -198,6 +198,8 @@
                                                                 id="port_of_loading" class="form-control"
                                                                 placeholder="Enter port of loading"
                                                                 value="{{ $transaction->port_of_loading }}" required>
+                                                            <span class="error-message" id="port_of_loading_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
 
@@ -209,6 +211,8 @@
                                                                 id="place_of_receipt" class="form-control"
                                                                 placeholder="Enter place of receipt"
                                                                 value="{{ $transaction->place_of_receipt }}" required>
+                                                            <span class="error-message" id="place_of_receipt_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
 
@@ -220,6 +224,8 @@
                                                                 id="port_of_discharge" class="form-control"
                                                                 placeholder="Enter port of discharge"
                                                                 value="{{ $transaction->port_of_discharge }}" required>
+                                                            <span class="error-message" id="port_of_discharge_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
 
@@ -231,6 +237,8 @@
                                                                 id="place_of_delivery" class="form-control"
                                                                 placeholder="Enter place of delivery"
                                                                 value="{{ $transaction->place_of_delivery }}" required>
+                                                            <span class="error-message" id="place_of_delivery_error"
+                                                                style="color: red; display: none;"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -257,6 +265,8 @@
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
+                                                                <span class="error-message" id="product_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -277,6 +287,8 @@
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
+                                                                <span class="error-message" id="commodity_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -290,6 +302,8 @@
                                                                 <input type="text" name="container" id="container"
                                                                     class="form-control" placeholder="Masukkan Container"
                                                                     value="{{ $transaction->container }}" required>
+                                                                <span class="error-message" id="container_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -304,6 +318,8 @@
                                                                     id="payment_term" class="form-control"
                                                                     placeholder="Masukkan Payment term"
                                                                     value="{{ $transaction->payment_term }}" required>
+                                                                <span class="error-message" id="payment_term_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -321,6 +337,8 @@
                                                                 <input type="number"
                                                                     class="form-control net_weight_transaction"
                                                                     step="0.01" disabled>
+                                                                <span class="error-message" id="net_weight_error"
+                                                                    style="color: red; display: none;"></span>
                                                                 <input type="hidden" id="net_weight_transaction"
                                                                     name="net_weight" class="form-control" step="0.01"
                                                                     required>
@@ -338,6 +356,8 @@
                                                                     name="gross_weight" class="form-control"
                                                                     step="0.01" placeholder="Contoh: 123.45"
                                                                     value="{{ $transaction->gross_weight }}" required>
+                                                                <span class="error-message" id="gross_weight_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -351,6 +371,8 @@
                                                                 <input type="text" name="product_ncm" id="product_ncm"
                                                                     class="form-control"
                                                                     value="{{ $transaction->product_ncm }}" required>
+                                                                <span class="error-message" id="product_ncm_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -365,6 +387,8 @@
                                                                     id="payment_condition" class="form-control"
                                                                     value="{{ $transaction->payment_condition }}"
                                                                     required>
+                                                                <span class="error-message" id="payment_condition_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -386,6 +410,12 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
+                                        <p id="error-message-qty" style="color: red; display:none">Nilai maksimum QTY
+                                            adalah tiga digit
+                                        </p>
+                                        <p id="error-message-carton" style="color: red; display:none">Nilai maksimum
+                                            Carton adalah
+                                            empat digit</p>
                                         <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
                                                 id="tableDetailTransaction">
@@ -433,6 +463,8 @@
                                                                     value="{{ $transaction->freight_cost }}"
                                                                     min="0" max="99999999.99">
                                                             </div>
+                                                            <span class="error-message" id="freight_cost_error"
+                                                                style="color: red; display: none;"></span>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -992,6 +1024,36 @@
                     var unitPrice = parseFloat(row.find('.price').data('price')) ||
                         0; // Get unit price from data attribute
 
+                    // Batas maksimum untuk qty dan carton
+                    var maxQty = 999; // Maksimum 3 digit
+                    var maxCarton = 9999; // Maksimum 4 digit
+
+                    // Flag to track if input exceeds limits
+                    var exceedsLimit = false;
+
+                    // Check if qty exceeds max value
+                    if (qty > maxQty) {
+                        $('#error-message-qty').show();
+                        exceedsLimit = true;
+                    } else {
+                        $('#error-message-qty').hide();
+                    }
+
+                    // Check if carton exceeds max value
+                    if (carton > maxCarton) {
+                        $('#error-message-carton').show();
+                        exceedsLimit = true;
+                    } else {
+                        $('#error-message-carton').hide();
+                    }
+
+                    // Jika ada yang melebihi batas, disable tombol submit
+                    if (exceedsLimit) {
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#submitButton').prop('disabled', false);
+                    }
+
                     // Perform calculations based on qty and carton
                     var innerResult = qty * carton; // Example logic, adjust as needed
                     var netWeight = innerResult; // Assume net weight is the same as innerResult
@@ -1253,6 +1315,36 @@
                     var carton = parseFloat(row.find('.carton-input').val()) || 0;
                     var price = parseFloat(row.find('.price').text()) || 0;
 
+                    // Batas maksimum untuk qty dan carton
+                    var maxQty = 999; // Maksimum 3 digit
+                    var maxCarton = 9999; // Maksimum 4 digit
+
+                    // Flag to track if input exceeds limits
+                    var exceedsLimit = false;
+
+                    // Check if qty exceeds max value
+                    if (qty > maxQty) {
+                        $('#error-message-qty').show();
+                        exceedsLimit = true;
+                    } else {
+                        $('#error-message-qty').hide();
+                    }
+
+                    // Check if carton exceeds max value
+                    if (carton > maxCarton) {
+                        $('#error-message-carton').show();
+                        exceedsLimit = true;
+                    } else {
+                        $('#error-message-carton').hide();
+                    }
+
+                    // Jika ada yang melebihi batas, disable tombol submit
+                    if (exceedsLimit) {
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#submitButton').prop('disabled', false);
+                    }
+
                     // Multiply qty by carton and update the result
                     var result = qty * carton;
                     row.find('.inner-result').text(result);
@@ -1317,6 +1409,44 @@
 
                 // Nonaktifkan tombol submit untuk mencegah pengiriman berulang
                 $('#submitButton').prop('disabled', true);
+
+                // Reset pesan kesalahan sebelumnya
+                $('.error-message').hide();
+                $('.form-control').removeClass('is-invalid');
+                $('.input-group').removeClass('has-error');
+
+                var selectedClientId = $('#selectedClientId').val();
+                if (!selectedClientId) {
+                    $('#selectedClientId_error').text('Client harus dipilih').show();
+                    $('#selectedClientName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var selectedConsigneeId = $('#selectedConsigneeId').val();
+                if (!selectedConsigneeId) {
+                    $('#selectedConsigneeId_error').text('Consignee harus dipilih').show();
+                    $('#selectedConsigneeName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var net_weight_transaction = $('#net_weight_transaction').val();
+                if (!net_weight_transaction) {
+                    $('.net_weight_transaction').addClass('is-invalid'); // Tambah border merah pada input
+                }
+
+                // Validasi product (id_product harus dipilih)
+                var product = $('#product').val();
+                if (!product) {
+                    $('#product_error').text('Produk harus dipilih').show();
+                    $('#product').addClass('is-invalid'); // Tambahkan border merah
+                }
+
+                // Validasi commodity (id_commodity harus dipilih)
+                var commodity = $('#commodity').val();
+                if (!commodity) {
+                    $('#commodity_error').text('Komoditas harus dipilih').show();
+                    $('#commodity').addClass('is-invalid'); // Tambahkan border merah
+                }
 
                 // Panggil fungsi untuk memperbarui form detail transaksi baru dari data di tabel
                 newUpdateFormDetailTransaction(); // <-- Panggil di sini sebelum submit form
@@ -1503,18 +1633,34 @@
                             });
                         },
                         error: function(xhr) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Gagal memperbarui proforma invoice: ' + xhr
-                                    .responseJSON.message,
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                $('#submitButton').prop('disabled', false);
-                            });
-                        },
-                        complete: function() {
-                            $('#submitButton').prop('disabled', false);
+                            if (xhr.status === 422) {
+                                // Tangani error validasi dari server
+                                var errors = xhr.responseJSON.errors;
+
+                                // Loop melalui setiap error dan tampilkan di elemen input terkait
+                                $.each(errors, function(key, value) {
+                                    var errorElement = $('#' + key + '_error');
+                                    var inputElement = $('#' + key);
+
+                                    // Tampilkan pesan error
+                                    errorElement.text(value[0]).show();
+                                    inputElement.addClass(
+                                        'is-invalid'
+                                    ); // Tambah kelas is-invalid untuk border merah
+                                });
+                            } else {
+                                // Tangani error umum
+                                Swal.fire({
+                                    title: 'Terjadi Kesalahan!',
+                                    text: 'Gagal menyimpan transaksi: ' + xhr
+                                        .responseJSON
+                                        .message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                            $('#submitButton').prop('disabled',
+                                false); // Aktifkan tombol kembali
                         }
                     });
                 } else {
