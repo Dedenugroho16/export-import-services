@@ -697,7 +697,9 @@
                     $('#consignee-address').html('');
                 }
             });
+        });
 
+        $(document).ready(function() {
             // Fungsi untuk memformat angka dalam format dolar
             function formatDollar(angka) {
                 let parts = angka.split('.');
@@ -705,14 +707,15 @@
                 return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
             }
 
-            // Ambil elemen input untuk Gross Weight
             const grossWeightDisplay = $('#gross_weight_display');
             const grossWeight = $('#gross_weight');
 
             // Event listener untuk memformat input saat user mengetik (Gross Weight)
             grossWeightDisplay.on('input', function(e) {
                 let value = e.target.value.replace(/[^0-9.]/g, ''); // Hanya ambil angka dan titik
-                grossWeight.val(value.replace(/,/g, '')); // Hilangkan koma
+                // Update nilai input tersembunyi dengan angka asli tanpa format
+                grossWeight.val(value.replace(/,/g, ''));
+                // Format input tampilan dengan pemisah ribuan (koma) dan titik sebagai desimal
                 e.target.value = formatDollar(value);
             });
         });
