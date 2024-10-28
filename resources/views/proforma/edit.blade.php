@@ -429,10 +429,15 @@
                                                                 :</label></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                <input type="number" step="0.01" class="form-control"
+                                                                <input type="text" step="0.01" class="form-control"
+                                                                    id="freight_cost_display" name="freight_cost_display"
+                                                                    value="{{ number_format($transaction->freight_cost, 0, ',', ',') }}"
+                                                                    placeholder="Enter Freight Cost" min="0"
+                                                                    max="99999999.99">
+                                                                <input type="hidden" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
-                                                                    value="{{ $transaction->freight_cost }}"
-                                                                    min="0" max="99999999.99">
+                                                                    placeholder="Enter Freight Cost" min="0"
+                                                                    max="99999999.99">
                                                             </div>
                                                         </td>
                                                         <td></td>
@@ -595,13 +600,8 @@
         $(document).ready(function() {
             // Fungsi untuk memformat angka dalam format dolar
             function formatDollar(angka) {
-                // Pisahkan angka menjadi bagian sebelum dan setelah titik desimal
                 let parts = angka.split('.');
-    
-                // Format bagian sebelum desimal (ribuan) dengan koma
                 let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    
-                // Gabungkan kembali jika ada bagian desimal
                 return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
             }
     
@@ -611,11 +611,17 @@
     
             // Event listener untuk memformat input saat user mengetik (Gross Weight)
             grossWeightDisplay.on('input', function(e) {
-                // Ambil nilai yang diinputkan, lalu bersihkan format non-angka kecuali titik dan angka
-                let value = e.target.value.replace(/[^0-9.]/g, ''); // Hanya ambil angka dan titik
-                // Update nilai input tersembunyi dengan angka asli tanpa format
-                grossWeight.val(value.replace(/,/g, '')); // Hilangkan koma
-                // Format input tampilan dengan pemisah ribuan (koma) dan titik sebagai desimal
+                let value = e.target.value.replace(/[^0-9.]/g, '');
+                grossWeight.val(value.replace(/,/g, ''));
+                e.target.value = formatDollar(value);
+            });
+            // Bagian untuk freight cost
+            const freightCostDisplay = document.getElementById('freight_cost_display');
+            const freightCost = document.getElementById('freight_cost');
+
+            freightCostDisplay.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^.\d]/g, '');
+                freightCost.value = value.replace(/,/g, '');
                 e.target.value = formatDollar(value);
             });
         });
@@ -696,27 +702,6 @@
                 } else {
                     $('#consignee-address').html('');
                 }
-            });
-        });
-
-        $(document).ready(function() {
-            // Fungsi untuk memformat angka dalam format dolar
-            function formatDollar(angka) {
-                let parts = angka.split('.');
-                let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
-            }
-
-            const grossWeightDisplay = $('#gross_weight_display');
-            const grossWeight = $('#gross_weight');
-
-            // Event listener untuk memformat input saat user mengetik (Gross Weight)
-            grossWeightDisplay.on('input', function(e) {
-                let value = e.target.value.replace(/[^0-9.]/g, ''); // Hanya ambil angka dan titik
-                // Update nilai input tersembunyi dengan angka asli tanpa format
-                grossWeight.val(value.replace(/,/g, ''));
-                // Format input tampilan dengan pemisah ribuan (koma) dan titik sebagai desimal
-                e.target.value = formatDollar(value);
             });
         });
 
