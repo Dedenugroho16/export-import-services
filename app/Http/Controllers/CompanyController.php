@@ -59,11 +59,10 @@ class CompanyController extends Controller
         ]);
 
         // Upload logo jika ada
-    if ($request->hasFile('logo')) {
-        $logoPath = $request->file('logo')->store('logos', 'public'); // Simpan di folder storage/logos
-        $validatedData['logo'] = $logoPath; // Simpan path logo
-    }
-        
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('logos', 'public'); // Simpan di folder storage/logos
+            $validatedData['logo'] = $logoPath; // Simpan path logo
+        }
 
         // Simpan data perusahaan
         Company::create($validatedData);
@@ -75,7 +74,7 @@ class CompanyController extends Controller
         $company = Company::findOrFail($id);
         return response()->json($company);
     }
-    
+
     public function update(Request $request, $id)
     {
         // Validasi input
@@ -112,13 +111,13 @@ class CompanyController extends Controller
         // Jika ada logo yang di-upload, simpan file dan update path-nya
         if ($request->hasFile('logo')) {
             // Hapus logo lama jika ada
-            if ($company->logo && file_exists(public_path($company->logo))) {
-                unlink(public_path($company->logo));
+            if ($company->logo && file_exists(storage_path('app/public/' . $company->logo))) {
+                unlink(storage_path('app/public/' . $company->logo));
             }
 
             // Simpan file logo baru
             $logoPath = $request->file('logo')->store('logos', 'public');
-            $company->logo = '/storage/' . $logoPath;
+            $company->logo = $logoPath;
         }
 
         // Update data perusahaan dengan data baru dari request
@@ -151,6 +150,4 @@ class CompanyController extends Controller
         // Redirect ke halaman yang diinginkan setelah berhasil update
         return redirect()->route('company.index')->with('success', 'Data perusahaan berhasil diperbarui.');
     }
-    
 }
-
