@@ -501,7 +501,7 @@
                     <table class="table card-table table-vcenter text-nowrap" id="clientsModalTable">
                         <thead>
                             <tr>
-                                <th class="text-center">#</th>
+                                <th class="text-center">No</th>
                                 <th class="text-center">Nama</th>
                                 <th class="text-center">Alamat</th>
                                 <th class="text-center">PO BOX</th>
@@ -536,11 +536,10 @@
                     <table class="table card-table table-vcenter text-nowrap" id="consigneeModalTable">
                         <thead>
                             <tr>
-                                <th class="text-center">#</th>
+                                <th class="text-center">No</th>
                                 <th class="text-center">Nama</th>
                                 <th class="text-center">Alamat</th>
                                 <th class="text-center">Telepon</th>
-                                <th class="text-center">ID Client</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -1460,10 +1459,14 @@
                 processing: false,
                 serverSide: true,
                 ajax: "{{ route('clients.index') }}",
-                columns: [{
-                        data: 'id',
-                        name: 'id',
-                        class: 'text-center'
+                columns: [{ 
+                        data: null, 
+                        class: 'text-center',
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'name',
@@ -1560,10 +1563,14 @@
                         return json.data;
                     }
                 }, // diisi saat loadConsignees dipanggil
-                columns: [{
-                        data: 'id',
-                        name: 'id',
-                        class: 'text-center'
+                columns: [{ 
+                        data: null, 
+                        class: 'text-center',
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'name',
@@ -1580,18 +1587,15 @@
                         class: 'text-center'
                     },
                     {
-                        data: 'id_client',
-                        name: 'id_client',
-                        class: 'text-center'
+                    data: null,
+                    render: function(data, type, row) {
+                        return `<div class="text-center">
+                                    <button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>
+                                </div>`;
                     },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `<button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
-                        },
-                        orderable: false,
-                        searchable: false
-                    }
+                    orderable: false,
+                    searchable: false
+                }
                 ],
                 language: {
                     lengthMenu: "Tampilkan _MENU_ entri",
