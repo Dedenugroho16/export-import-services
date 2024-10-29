@@ -37,7 +37,7 @@
                                 <input type="text" id="tel" name="tel" class="form-control" value="{{ old('tel', $consignee->tel) }}" required>
                             </div>
                             <div class="mb-5">
-                                <label for="id_client" class="form-label">ID Client</label>
+                                <label for="id_client" class="form-label">Nama Client</label>
                                 <select name="id_client" id="id_client" class="form-control" required>
                                     @foreach($clients as $client)
                                         <option value="{{ $client->id }}" {{ $client->id == $consignee->id_client ? 'selected' : '' }}>

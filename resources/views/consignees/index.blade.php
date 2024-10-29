@@ -62,7 +62,15 @@
             serverSide: true, 
             ajax: "{{ route('consignees.index') }}", // URL untuk AJAX
             columns: [
-                { data: 'id', name: 'id', class: 'text-center' },
+                { 
+                    data: null, 
+                    class: 'text-center',
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut
+                    },
+                    orderable: false,
+                    searchable: false
+                },
                 { data: 'name', name: 'name' },
                 { data: 'address', name: 'address', class: 'text-center' },
                 { data: 'tel', name: 'tel', class: 'text-center' },
