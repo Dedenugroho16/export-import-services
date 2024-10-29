@@ -352,11 +352,12 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" id="gross_weight_display" class="form-control"
-                                                                    placeholder="Contoh: 10,000" 
-                                                                    value="{{ number_format($transaction->gross_weight, 0, ',', ',') }}" 
+                                                                <input type="text" id="gross_weight_display"
+                                                                    class="form-control"
+                                                                    value="{{ number_format($transaction->gross_weight, 0, ',', ',') }}"
                                                                     required>
-                                                                <input type="hidden" id="gross_weight" name="gross_weight">
+                                                                <input type="hidden" id="gross_weight"
+                                                                    name="gross_weight">
                                                                 <span class="error-message" id="gross_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                             </div>
@@ -479,9 +480,8 @@
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
-                                                                <input type="number" step="0.01"
-                                                                    class="form-control total" style="width: 150px;"
-                                                                    disabled>
+                                                                <input type="text" step="0.01"
+                                                                    class="form-control total-display" readonly>
                                                                 <input type="hidden" step="0.01" class="form-control"
                                                                     id="total" name="total" style="width: 150px;">
                                                             </div>
@@ -636,17 +636,22 @@
                 let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
             }
-    
+
             // Ambil elemen input untuk Gross Weight
-            const grossWeightDisplay = $('#gross_weight_display');
-            const grossWeight = $('#gross_weight');
-    
+            const grossWeightDisplay = document.getElementById('gross_weight_display');
+            const grossWeight = document.getElementById('gross_weight');
+
+            // Sinkronisasi awal ketika halaman pertama kali dimuat
+            let initialValue = grossWeightDisplay.value.replace(/[^0-9.]/g, '');
+            grossWeight.value = initialValue;
+
             // Event listener untuk memformat input saat user mengetik (Gross Weight)
-            grossWeightDisplay.on('input', function(e) {
+            grossWeightDisplay.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/[^0-9.]/g, '');
-                grossWeight.val(value.replace(/,/g, ''));
-                e.target.value = formatDollar(value);
+                grossWeight.value = value; // Perbarui nilai di input hidden tanpa format
+                e.target.value = formatDollar(value); // Tampilkan nilai terformat di display
             });
+
             // Bagian untuk freight cost
             const freightCostDisplay = document.getElementById('freight_cost_display');
             const freightCost = document.getElementById('freight_cost');
@@ -658,7 +663,7 @@
             });
         });
     </script>
-    
+
     <script>
         $.ajaxSetup({
             headers: {
@@ -980,7 +985,7 @@
                                 Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.',
                                     'error');
                                 console.error(xhr
-                                .responseText); // Log untuk melihat kesalahan lebih rinci
+                                    .responseText); // Log untuk melihat kesalahan lebih rinci
                             }
                         });
                     }
@@ -1200,21 +1205,22 @@
             // Fungsi untuk memperbarui total price amount
             function updateTotals() {
                 // Ambil nilai dari Price Amount yang ada di kolom
-                var priceAmount = parseFloat($('#PriceAmount').text()) || 0;
+                var priceAmount = parseFloat($('#PriceAmount').text().replace(/,/g, '')) || 0;
 
                 // Ambil nilai dari input Freight Cost
-                var freightCost = parseFloat($('#freight_cost').val()) || 0;
+                var freightCost = parseFloat($('#freight_cost_display').val().replace(/,/g, '')) || 0;
 
                 // Hitung total dengan menambahkan priceAmount dan freightCost
                 var total = priceAmount + freightCost;
 
                 // Update elemen dengan total baru
+                var formattedGrandTotal = total.toLocaleString('en-US');
+                $('.total-display').val(formattedGrandTotal);
                 $('#total').val(total);
-                $('.total').val(total);
             }
 
             // Event listener untuk input Freight Cost
-            $('#freight_cost').on('input', function() {
+            $('#freight_cost_display').on('input', function() {
                 updateTotals();
             });
 
