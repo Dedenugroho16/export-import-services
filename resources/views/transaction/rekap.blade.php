@@ -8,8 +8,8 @@
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <form class="d-flex align-items-center" method="GET" action="{{ route('transactions.rekap') }}">
                 <div class="input-group">
-                    <input type="date" class="form-control" name="start_date" placeholder="Start Date" required>
-                    <input type="date" class="form-control" name="end_date" placeholder="End Date" required>
+                    <input type="date" class="form-control" name="start_date" aria-label="Tanggal Awal" required>
+                    <input type="date" class="form-control" name="end_date" aria-label="Tanggal Akhir" required>
                     <button type="submit" class="btn btn-primary d-flex align-items-center">
                         Filter
                     </button>
@@ -36,8 +36,8 @@
                                         <th>Seal Number</th>
                                         <th>Net Weight</th>
                                         <th>Gross Weight</th>
-                                        <th>Freight Cost</th>
-                                        <th>Price Amount</th>
+                                        <th>Kurs</th>
+                                        <th>Ocean Freight</th>
                                         <th>Amount</th>
                                         <th>Total</th>
                                     </tr>
@@ -55,9 +55,9 @@
                                                 <td>{{ $transaction->seal_number }}</td>
                                                 <td>{{ $transaction->net_weight }}</td>
                                                 <td>{{ $transaction->gross_weight }}</td>
+                                                <td>14,00</td>
                                                 <td>{{ $transaction->freight_cost }}</td>
                                                 <td>{{ $detail->price_amount }}</td>
-                                                <td>{{ $detail->qty }}</td>
                                                 <td>{{ $transaction->total }}</td>
                                             </tr>
                                         @endforeach

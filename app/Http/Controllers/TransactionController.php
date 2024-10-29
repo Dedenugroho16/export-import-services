@@ -324,13 +324,28 @@ class TransactionController extends Controller
         return $pdf->download('invoice_' . $hashId . '.pdf');
     }
 
-    public function rekapSales()
+    public function rekapSales(Request $request)
     {
-        // Mengambil data transaksi yang approved = 1 beserta detailnya
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Ubah endDate agar mencakup seluruh hari
+        if ($endDate) {
+            $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
+        }
+
+        // Log untuk debugging
+        \Log::info("Start Date: $startDate");
+        \Log::info("End Date: $endDate");
+
         $transactions = Transaction::with('detailTransactions.detailProduct')
-            ->where('approved', 1) // Filter transaksi yang approved = 1
-            ->get(); 
+            ->where('approved', 1)
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween('created_at', [$startDate, $endDate]);
+            })
+            ->get();
 
         return view('transaction.rekap', compact('transactions'));
     }
+
 }
