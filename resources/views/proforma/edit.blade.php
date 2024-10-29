@@ -655,9 +655,13 @@
             const freightCostDisplay = document.getElementById('freight_cost_display');
             const freightCost = document.getElementById('freight_cost');
 
+            // Sinkronisasi awal ketika halaman pertama kali dimuat
+            let initialValueFC = freightCostDisplay.value.replace(/[^0-9.]/g, '');
+            freightCost.value = initialValueFC;
+
             freightCostDisplay.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/[^.\d]/g, '');
-                freightCost.value = value.replace(/,/g, '');
+                freightCost.value = value;
                 e.target.value = formatDollar(value);
             });
         });
