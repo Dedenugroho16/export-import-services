@@ -320,7 +320,7 @@
                                                             <div class="col-5">
                                                                 <input type="text"
                                                                     class="form-control net_weight_transaction"
-                                                                    step="0.01" max="9999999.99" disabled>
+                                                                    step="0.01" max="9999999.99" readonly>
                                                                 <span class="error-message" id="net_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                                 <input type="hidden" id="net_weight_transaction"

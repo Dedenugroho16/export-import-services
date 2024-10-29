@@ -334,9 +334,9 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text"
+                                                                <input type="number"
                                                                     class="form-control net_weight_transaction"
-                                                                    step="0.01" readonly>
+                                                                    step="0.01" disabled>
                                                                 <span class="error-message" id="net_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                                 <input type="hidden" id="net_weight_transaction"
@@ -352,12 +352,10 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="text" id="gross_weight_display"
-                                                                    class="form-control"
-                                                                    value="{{ number_format($transaction->gross_weight, 0, ',', ',') }}"
-                                                                    required>
-                                                                <input type="hidden" id="gross_weight"
-                                                                    name="gross_weight">
+                                                                <input type="number" id="gross_weight"
+                                                                    name="gross_weight" class="form-control"
+                                                                    step="0.01" placeholder="Contoh: 123.45"
+                                                                    value="{{ $transaction->gross_weight }}" required>
                                                                 <span class="error-message" id="gross_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                             </div>
@@ -460,15 +458,10 @@
                                                                 :</label></td>
                                                         <td class="text-center">
                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                <input type="text" step="0.01" class="form-control"
-                                                                    id="freight_cost_display" name="freight_cost_display"
-                                                                    value="{{ number_format($transaction->freight_cost, 0, ',', ',') }}"
-                                                                    placeholder="Enter Freight Cost" min="0"
-                                                                    max="99999999.99">
-                                                                <input type="hidden" step="0.01" class="form-control"
+                                                                <input type="number" step="0.01" class="form-control"
                                                                     id="freight_cost" name="freight_cost"
-                                                                    placeholder="Enter Freight Cost" min="0"
-                                                                    max="99999999.99">
+                                                                    value="{{ $transaction->freight_cost }}"
+                                                                    min="0" max="99999999.99">
                                                             </div>
                                                             <span class="error-message" id="freight_cost_error"
                                                                 style="color: red; display: none;"></span>
@@ -480,8 +473,9 @@
                                                         <td class="text-center" id="amount-total-price">
                                                             <div
                                                                 class="form-group d-flex align-items-center justify-content-center">
-                                                                <input type="text" step="0.01"
-                                                                    class="form-control total-display" readonly>
+                                                                <input type="number" step="0.01"
+                                                                    class="form-control total" style="width: 150px;"
+                                                                    disabled>
                                                                 <input type="hidden" step="0.01" class="form-control"
                                                                     id="total" name="total" style="width: 150px;">
                                                             </div>
@@ -627,42 +621,6 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Fungsi untuk memformat angka dalam format dolar
-            function formatDollar(angka) {
-                let parts = angka.split('.');
-                let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
-            }
-
-            // Ambil elemen input untuk Gross Weight
-            const grossWeightDisplay = document.getElementById('gross_weight_display');
-            const grossWeight = document.getElementById('gross_weight');
-
-            // Sinkronisasi awal ketika halaman pertama kali dimuat
-            let initialValue = grossWeightDisplay.value.replace(/[^0-9.]/g, '');
-            grossWeight.value = initialValue;
-
-            // Event listener untuk memformat input saat user mengetik (Gross Weight)
-            grossWeightDisplay.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/[^0-9.]/g, '');
-                grossWeight.value = value; // Perbarui nilai di input hidden tanpa format
-                e.target.value = formatDollar(value); // Tampilkan nilai terformat di display
-            });
-
-            // Bagian untuk freight cost
-            const freightCostDisplay = document.getElementById('freight_cost_display');
-            const freightCost = document.getElementById('freight_cost');
-
-            freightCostDisplay.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/[^.\d]/g, '');
-                freightCost.value = value.replace(/,/g, '');
-                e.target.value = formatDollar(value);
-            });
-        });
-    </script>
 
     <script>
         $.ajaxSetup({
@@ -673,6 +631,8 @@
 
         $(document).ready(function() {
             // Menginisialisasi Select2
+            $('#client').select2();
+            $('#consignee').select2();
             $('#product').select2();
             $('#commodity').select2();
             $('#country').select2();
@@ -983,7 +943,7 @@
                                 Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.',
                                     'error');
                                 console.error(xhr
-                                    .responseText); // Log untuk melihat kesalahan lebih rinci
+                                .responseText); // Log untuk melihat kesalahan lebih rinci
                             }
                         });
                     }
@@ -1188,42 +1148,36 @@
                 // Hitung total dari #selectedData
                 calculateTotals($('#selectedData'));
 
-                // Format hasil perhitungan dengan pemisah ribuan en-US
-                var formattedTotalCarton = totalCarton.toLocaleString('en-US');
-                var formattedTotalInner = totalInner.toLocaleString('en-US');
-                var formattedTotalNetWeight = totalNetWeight.toLocaleString('en-US');
-                var formattedPriceAmount = totalPriceAmount.toLocaleString('en-US');
-
                 // Update nilai total di footer (tfoot)
-                $('#totalCarton').text(formattedTotalCarton);
-                $('#totalInner').text(formattedTotalInner);
-                $('#totalNetWeight').text(formattedTotalNetWeight);
-                $('#PriceAmount').text(formattedPriceAmount);
+                $('#totalCarton').text(totalCarton);
+                $('#totalInner').text(totalInner);
+                $('#totalNetWeight').text(totalNetWeight);
+                $('#PriceAmount').text(
+                    totalPriceAmount); // Pastikan elemen ini ada di tfoot untuk menampilkan total
 
                 // Update nilai hidden input untuk form pengiriman atau data lainnya
                 $('#net_weight_transaction').val(totalNetWeight);
-                $('.net_weight_transaction').val(formattedTotalNetWeight);
+                $('.net_weight_transaction').val(totalNetWeight);
             }
 
             // Fungsi untuk memperbarui total price amount
             function updateTotals() {
                 // Ambil nilai dari Price Amount yang ada di kolom
-                var priceAmount = parseFloat($('#PriceAmount').text().replace(/,/g, '')) || 0;
+                var priceAmount = parseFloat($('#PriceAmount').text()) || 0;
 
                 // Ambil nilai dari input Freight Cost
-                var freightCost = parseFloat($('#freight_cost_display').val().replace(/,/g, '')) || 0;
+                var freightCost = parseFloat($('#freight_cost').val()) || 0;
 
                 // Hitung total dengan menambahkan priceAmount dan freightCost
                 var total = priceAmount + freightCost;
 
                 // Update elemen dengan total baru
-                var formattedGrandTotal = total.toLocaleString('en-US');
-                $('.total-display').val(formattedGrandTotal);
                 $('#total').val(total);
+                $('.total').val(total);
             }
 
             // Event listener untuk input Freight Cost
-            $('#freight_cost_display').on('input', function() {
+            $('#freight_cost').on('input', function() {
                 updateTotals();
             });
 
