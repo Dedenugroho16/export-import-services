@@ -334,9 +334,9 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <input type="number"
+                                                                <input type="text"
                                                                     class="form-control net_weight_transaction"
-                                                                    step="0.01" disabled>
+                                                                    step="0.01" readonly>
                                                                 <span class="error-message" id="net_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                                 <input type="hidden" id="net_weight_transaction"
@@ -673,8 +673,6 @@
 
         $(document).ready(function() {
             // Menginisialisasi Select2
-            $('#client').select2();
-            $('#consignee').select2();
             $('#product').select2();
             $('#commodity').select2();
             $('#country').select2();
@@ -1190,16 +1188,21 @@
                 // Hitung total dari #selectedData
                 calculateTotals($('#selectedData'));
 
+                // Format hasil perhitungan dengan pemisah ribuan en-US
+                var formattedTotalCarton = totalCarton.toLocaleString('en-US');
+                var formattedTotalInner = totalInner.toLocaleString('en-US');
+                var formattedTotalNetWeight = totalNetWeight.toLocaleString('en-US');
+                var formattedPriceAmount = totalPriceAmount.toLocaleString('en-US');
+
                 // Update nilai total di footer (tfoot)
-                $('#totalCarton').text(totalCarton);
-                $('#totalInner').text(totalInner);
-                $('#totalNetWeight').text(totalNetWeight);
-                $('#PriceAmount').text(
-                    totalPriceAmount); // Pastikan elemen ini ada di tfoot untuk menampilkan total
+                $('#totalCarton').text(formattedTotalCarton);
+                $('#totalInner').text(formattedTotalInner);
+                $('#totalNetWeight').text(formattedTotalNetWeight);
+                $('#PriceAmount').text(formattedPriceAmount);
 
                 // Update nilai hidden input untuk form pengiriman atau data lainnya
                 $('#net_weight_transaction').val(totalNetWeight);
-                $('.net_weight_transaction').val(totalNetWeight);
+                $('.net_weight_transaction').val(formattedTotalNetWeight);
             }
 
             // Fungsi untuk memperbarui total price amount
