@@ -11,35 +11,38 @@ class AuthController extends Controller
     // Login User
     public function login(Request $request)
     {
-        // Validate
+        // Validasi input
         $fields = $request->validate([
             'email' => ['required', 'max:255', 'email'],
             'password' => ['required']
         ]);
 
-        // Try to login the user
-        if (Auth::attempt($fields, $request->remember)) {
+        // Cek apakah pengguna ada dan aktif
+        $user = User::where('email', $fields['email'])->first();
+
+        // Pastikan pengguna ada dan aktif
+        if ($user && $user->is_active && Auth::attempt($fields, $request->remember)) {
             return redirect()->intended('home');
         } else {
             return back()->withErrors([
-                'failed' => 'The provided credentials do not match our records.'
-            ]);
+                'failed' => 'Akun yang Anda masukkan tidak sesuai atau akun Anda tidak aktif.'
+            ]);            
         }
     }
 
     // Logout User
     public function logout(Request $request)
     {
-        // Logout the user
+        // Logout pengguna
         Auth::logout();
 
-        // Invalidate user's session
+        // Invalidate session pengguna
         $request->session()->invalidate();
 
         // Regenerate CSRF token
         $request->session()->regenerateToken();
 
-        // Redirect to home
+        // Redirect ke halaman utama
         return redirect('/');
     }
 }

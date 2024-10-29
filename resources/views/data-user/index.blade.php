@@ -34,14 +34,6 @@
                                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                                 </div>
                             </div>
-                            <div id="deleteToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                                <div class="d-flex">
-                                    <div class="toast-body">
-                                        User berhasil dihapus!
-                                    </div>
-                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                                </div>
-                            </div>
                         </div>
 
                         <!-- Add User Modal -->
@@ -143,7 +135,7 @@
                             <table class="table card-table table-vcenter text-nowrap" id="usersTable">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>No</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Password</th>
@@ -169,11 +161,11 @@
     $(document).ready(function() {
         // Initialize DataTable
         var table = $('#usersTable').DataTable({
-            processing: true, 
+            processing: true,
             serverSide: true,
             ajax: "{{ route('users.index') }}",
             columns: [
-                { data: 'id', name: 'id' },
+                { data: null, name: 'id', render: function(data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; } }, // Menampilkan nomor urut
                 { data: 'name', name: 'name' },
                 { data: 'email', name: 'email' },
                 { data: 'password', name: 'password' },
@@ -261,31 +253,53 @@
             });
         });
 
-        // Handle Delete User button click
-        $('#usersTable').on('click', '.delete-user', function() {
+        // Handle toggle active status with SweetAlert
+        $(document).on('click', '.toggle-active', function(e) {
+            e.preventDefault();
             var userId = $(this).data('id');
-            if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
-                $.ajax({
-                    url: "/users/" + userId,
-                    method: 'DELETE',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
+            var currentStatus = $(this).data('status');
+
+            const actionText = currentStatus ? 'nonaktifkan' : 'aktifkan';
+            const confirmText = currentStatus ? 'Anda yakin ingin menonaktifkan pengguna ini?' : 'Anda yakin ingin mengaktifkan pengguna ini?';
+            const successText = currentStatus ? 'Pengguna berhasil dinonaktifkan!' : 'Pengguna berhasil diaktifkan!';
+
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: confirmText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/users/' + userId + '/toggle-active',
+                        type: 'POST',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                        },
+                        success: function(response) {
                             table.ajax.reload();
-                            var deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
-                            deleteToast.show();
-                        } else {
-                            alert('Error: ' + response.message);
+                            Swal.fire(
+                                'Berhasil!',
+                                successText,
+                                'success'
+                            );
+                        },
+                        error: function() {
+                            Swal.fire(
+                                'Gagal!',
+                                'Error updating user status.',
+                                'error'
+                            );
                         }
-                    },
-                    error: function(xhr) {
-                        alert('Error deleting user: ' + xhr.responseText);
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
     });
 </script>
+
 @endsection

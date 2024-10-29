@@ -83,7 +83,7 @@ Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])
 // update detail transaction route
 Route::post('/detail-transaction/update/{id}', [DetailTransactionController::class, 'update'])->name('detail-transaction.update');
 // Route untuk delete detail transaction
-Route::delete('/detail-transaction/delete/{id_detail_product}', [DetailTransactionController::class, 'destroy'])->name('detail-transaction.delete');
+Route::delete('/detail-transaction/delete/{id_detail_transaction}/{id_detail_product}', [DetailTransactionController::class, 'destroy']);
 
 // Route Packing List
 Route::get('/packing-list/{hashId}', [TransactionController::class, 'packingListShow'])->name('packingList.show');
@@ -126,6 +126,7 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
 Route::resource('users', UserController::class);
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+Route::post('users/{id}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggleActive');
 
 
 // Route untuk menampilkan halaman profil

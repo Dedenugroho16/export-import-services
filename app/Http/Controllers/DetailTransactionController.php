@@ -115,10 +115,12 @@ class DetailTransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id_detail_product)
+    public function destroy($id_detail_transaction, $id_detail_product)
     {
-        // Mencari dan menghapus DetailTransaction berdasarkan id_detail_product
-        $detailTransaction = DetailTransaction::where('id_detail_product', $id_detail_product)->first();
+        // Mencari detail transaksi yang cocok dengan kedua ID
+        $detailTransaction = DetailTransaction::where('id', $id_detail_transaction)
+            ->where('id_detail_product', $id_detail_product)
+            ->first();
 
         if ($detailTransaction) {
             $detailTransaction->delete(); // Hapus entri
