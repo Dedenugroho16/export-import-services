@@ -323,4 +323,14 @@ class TransactionController extends Controller
 
         return $pdf->download('invoice_' . $hashId . '.pdf');
     }
+
+    public function rekapSales()
+    {
+        // Mengambil data transaksi yang approved = 1 beserta detailnya
+        $transactions = Transaction::with('detailTransactions.detailProduct')
+            ->where('approved', 1) // Filter transaksi yang approved = 1
+            ->get(); 
+
+        return view('transaction.rekap', compact('transactions'));
+    }
 }
