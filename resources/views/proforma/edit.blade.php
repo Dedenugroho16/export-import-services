@@ -253,18 +253,25 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <select class="form-control product" id="product"
-                                                                    name="id_product" required>
-                                                                    <option value="">Pilih Product</option>
-                                                                    @foreach ($products as $product)
-                                                                        <option value="{{ $product->id }}"
-                                                                            data-code="{{ $product->code }}"
-                                                                            data-abbreviation="{{ $product->abbreviation }}"
-                                                                            {{ $product->id == $productSelectedID ? 'selected' : '' }}>
-                                                                            {{ $product->name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
+                                                                <div class="d-flex align-items-center">
+                                                                    <select class="form-control product" id="product"
+                                                                        name="id_product" required>
+                                                                        <option value="">Pilih Product</option>
+                                                                        @foreach ($products as $product)
+                                                                            <option value="{{ $product->id }}"
+                                                                                data-code="{{ $product->code }}"
+                                                                                data-abbreviation="{{ $product->abbreviation }}"
+                                                                                {{ $product->id == $productSelectedID ? 'selected' : '' }}>
+                                                                                {{ $product->name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <button id="infoButton" class="btn btn-warning btn-sm ms-2"
+                                                                        title="Informasi">
+                                                                        <i class="fas fa-info-circle"></i>
+                                                                        <!-- Using Font Awesome icon -->
+                                                                    </button>
+                                                                </div>
                                                                 <span class="error-message" id="product_error"
                                                                     style="color: red; display: none;"></span>
                                                             </div>
@@ -655,9 +662,13 @@
             const freightCostDisplay = document.getElementById('freight_cost_display');
             const freightCost = document.getElementById('freight_cost');
 
+            // Sinkronisasi awal ketika halaman pertama kali dimuat
+            let initialValueFC = freightCostDisplay.value.replace(/[^0-9.]/g, '');
+            freightCost.value = initialValueFC;
+
             freightCostDisplay.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/[^.\d]/g, '');
-                freightCost.value = value.replace(/,/g, '');
+                freightCost.value = value;
                 e.target.value = formatDollar(value);
             });
         });
@@ -985,6 +996,18 @@
                     }
                 });
             }
+
+            // Optional: Handle click on info button to show the alert
+            $('#infoButton').on('click', function(event) {
+                event.preventDefault(); // Prevent default action (just in case)
+                Swal.fire({
+                    title: 'Informasi!',
+                    text: 'Kosongkan detail transaksi sebelumnya untuk mengganti produk.',
+                    icon: 'info',
+                    showCloseButton: true,
+                    confirmButtonText: 'Tutup',
+                });
+            });
 
             function addDynamicEventListeners() {
                 // Event listener for qty and carton input changes in #loadedData (related to formDetailTransaction)
