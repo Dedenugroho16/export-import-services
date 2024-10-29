@@ -320,7 +320,7 @@
                                                             <div class="col-5">
                                                                 <input type="text"
                                                                     class="form-control net_weight_transaction"
-                                                                    step="0.01" max="9999999.99" disabled>
+                                                                    step="0.01" max="9999999.99" readonly>
                                                                 <span class="error-message" id="net_weight_error"
                                                                     style="color: red; display: none;"></span>
                                                                 <input type="hidden" id="net_weight_transaction"
@@ -608,65 +608,6 @@
             $('#product').select2();
             $('#commodity').select2();
             $('#country').select2();
-
-            // Ketika client dipilih
-            // $('#client').on('change', function() {
-            //     var clientId = $(this).val(); // Ambil ID client yang dipilih
-
-            //     // Ambil data dari Select2 untuk client yang dipilih
-            //     var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
-
-            //     // Tampilkan address di div jika ada
-            //     if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
-            //             'address')) {
-            //         var address = $(selectedClientData.element).data('address');
-            //         $('#client-address').html('<strong>Address: </strong>' + address);
-            //     } else {
-            //         $('#client-address').html('');
-            //     }
-
-            //     // Jika clientId ada, lakukan AJAX untuk ambil consignees
-            //     if (clientId) {
-            //         $.ajax({
-            //             url: '/get-consignees/' + clientId, // Panggil route yang sudah kita buat
-            //             type: 'GET',
-            //             dataType: 'json',
-            //             success: function(data) {
-            //                 // Hapus semua opsi lama dari select consignee
-            //                 $('#consignee').empty();
-
-            //                 // Tambahkan opsi baru berdasarkan consignees yang diterima
-            //                 $('#consignee').append('<option value="">Pilih Consignee</option>');
-            //                 $.each(data, function(key, consignee) {
-            //                     $('#consignee').append('<option value="' + consignee
-            //                         .id + '" data-address="' + consignee.address +
-            //                         '">' + consignee.name + '</option>');
-            //                 });
-
-            //                 // Refresh Select2 setelah data diperbarui
-            //                 $('#consignee').trigger('change');
-            //             }
-            //         });
-            //     } else {
-            //         $('#consignee').empty();
-            //         $('#consignee-address').empty();
-            //         $('#consignee').append('<option value="">Pilih Consignee</option>');
-            //     }
-            // });
-
-            // $('#consignee').on('change', function() {
-            //     // Ambil data dari Select2 untuk client yang dipilih
-            //     var selectedClientData = $(this).select2('data')[0]; // Ambil objek data dari Select2
-
-            //     // Tampilkan address di div jika ada
-            //     if (selectedClientData && selectedClientData.element && $(selectedClientData.element).data(
-            //             'address')) {
-            //         var address = $(selectedClientData.element).data('address');
-            //         $('#consignee-address').html('<strong>Address: </strong>' + address);
-            //     } else {
-            //         $('#consignee-address').html('');
-            //     }
-            // });
         });
 
         $(document).ready(function() {
