@@ -79,6 +79,7 @@ Route::get('incomplete-invoice', [TransactionController::class, 'incomplete'])->
 Route::get('transaction', [TransactionController::class, 'index'])->name('transaction.index');
 Route::get('transaction/create/{id}', [TransactionController::class, 'create'])->name('transaction.create');
 Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->name('transaction.show');
+Route::post('/invoice/completing/{id}', [TransactionController::class, 'completingInvoice'])->name('invoice.compliting');
 // Route untuk update transaksi
 Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 

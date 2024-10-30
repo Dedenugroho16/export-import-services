@@ -349,6 +349,47 @@ class TransactionController extends Controller
         return $pdf->stream('packing_list_' . $hashId . '.pdf');
     }
 
+    public function completingInvoice(Request $request, string $id)
+    {
+        // Validasi data yang dikirim
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'code' => 'required|string|max:255',
+            'number' => 'required|string|max:255',
+            'id_consignee' => 'required|exists:consignees,id',
+            'notify' => 'required|string|max:255',
+            'id_client' => 'required|exists:clients,id',
+            'port_of_loading' => 'required|string|max:255',
+            'place_of_receipt' => 'required|string|max:255',
+            'port_of_discharge' => 'required|string|max:255',
+            'place_of_delivery' => 'required|string|max:255',
+            'id_product' => 'required|exists:products,id',
+            'id_commodity' => 'required|exists:commodities,id',
+            'container' => 'required|string|max:255',
+            'net_weight' => 'required|numeric|min:0',
+            'gross_weight' => 'required|numeric|min:0',
+            'payment_term' => 'required|string|max:255',
+            'stuffing_date' => 'required|date',
+            'bl_number' => 'nullable|string|max:255',
+            'container_number' => 'nullable|string|max:255',
+            'seal_number' => 'nullable|string|max:255',
+            'product_ncm' => 'required|string|max:255',
+            'payment_condition' => 'required|string|max:255',
+            'freight_cost' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0',
+            'approved' => 'nullable|boolean',
+        ]);
+
+        // Cari transaksi berdasarkan ID
+        $transaction = Transaction::findOrFail($id);
+
+        // Update data transaksi dengan data yang sudah divalidasi
+        $transaction->update($validatedData);
+
+        // Kembalikan response JSON dengan status sukses
+        return response()->json(['message' => 'Proforma updated successfully'], 200);
+    }
+
     public function downloadPdf($hashId)
     {
         $decodedId = IdHashHelper::decode($hashId);

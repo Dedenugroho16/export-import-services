@@ -30,7 +30,7 @@
                             @endif
 
                             <form id="formIncompleteInvoice" method="POST"
-                                action="{{ route('proforma.update', $transaction->id) }}">
+                                action="{{ route('invoice.compliting', $transaction->id) }}">
                                 @csrf
                                 <input type="date" name="date" id="date" value="{{ $transaction->date }}" hidden>
                                 <input type="text" name="code" id="code" value="{{ $transaction->code }}" hidden>
@@ -262,7 +262,9 @@
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
-                                                                    <input type="hidden" id="old-product" name="id_product" value="{{ $productSelectedID }}">
+                                                                    <input type="hidden" id="old-product"
+                                                                        name="id_product"
+                                                                        value="{{ $productSelectedID }}">
                                                                     <button id="infoButton"
                                                                         class="btn btn-warning btn-sm ms-2"
                                                                         title="Informasi">
@@ -1576,8 +1578,7 @@
                                                     newDetailTransactionSuccess
                                                         = true;
                                                     // Setelah detail transaksi baru berhasil disimpan, reload halaman
-                                                    location
-                                                        .reload();
+                                                    window.location.href = "{{ route('transaction.index') }}";
                                                 },
                                                 error: function(
                                                     xhr) {
@@ -1597,7 +1598,7 @@
                                             });
                                         } else {
                                             // Jika tidak ada detail transaksi baru, reload halaman
-                                            location.reload();
+                                            window.location.href = "{{ route('transaction.index') }}";
                                         }
                                     },
                                     error: function(xhr) {
@@ -1628,8 +1629,7 @@
                                     success: function(response) {
                                         newDetailTransactionSuccess =
                                             true;
-                                        location
-                                            .reload(); // Reload halaman setelah semua berhasil
+                                            window.location.href = "{{ route('transaction.index') }}";
                                     },
                                     error: function(xhr) {
                                         Swal.fire({
@@ -1649,52 +1649,40 @@
                                 });
                             } else {
                                 // Jika tidak ada detail transaksi dan tidak ada transaksi baru
-                                location
-                                    .reload(); // Reload halaman setelah semua berhasil
+                                window.location.href = "{{ route('transaction.index') }}"; // Reload halaman setelah semua berhasil
                             }
                         });
                     },
                     error: function(xhr) {
-                        console.log("Error:", xhr.responseJSON); // Cek error response JSON
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: xhr.responseJSON?.message ||
-                                'Terjadi kesalahan pada server',
-                            confirmButtonText: 'OK'
-                        });
-                        $('#submitButton').prop('disabled', false); // Aktifkan kembali tombol
+                        if (xhr.status === 422) {
+                            // Tangani error validasi dari server
+                            var errors = xhr.responseJSON.errors;
+
+                            // Loop melalui setiap error dan tampilkan di elemen input terkait
+                            $.each(errors, function(key, value) {
+                                var errorElement = $('#' + key + '_error');
+                                var inputElement = $('#' + key);
+
+                                // Tampilkan pesan error
+                                errorElement.text(value[0]).show();
+                                inputElement.addClass(
+                                    'is-invalid'
+                                ); // Tambah kelas is-invalid untuk border merah
+                            });
+                        } else {
+                            // Tangani error umum
+                            Swal.fire({
+                                title: 'Terjadi Kesalahan!',
+                                text: 'Gagal menyimpan transaksi: ' + xhr
+                                    .responseJSON
+                                    .message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                        $('#submitButton').prop('disabled',
+                            false); // Aktifkan tombol kembali
                     }
-                    // error: function(xhr) {
-                    //     if (xhr.status === 422) {
-                    //         // Tangani error validasi dari server
-                    //         var errors = xhr.responseJSON.errors;
-
-                    //         // Loop melalui setiap error dan tampilkan di elemen input terkait
-                    //         $.each(errors, function(key, value) {
-                    //             var errorElement = $('#' + key + '_error');
-                    //             var inputElement = $('#' + key);
-
-                    //             // Tampilkan pesan error
-                    //             errorElement.text(value[0]).show();
-                    //             inputElement.addClass(
-                    //                 'is-invalid'
-                    //             ); // Tambah kelas is-invalid untuk border merah
-                    //         });
-                    //     } else {
-                    //         // Tangani error umum
-                    //         Swal.fire({
-                    //             title: 'Terjadi Kesalahan!',
-                    //             text: 'Gagal menyimpan transaksi: ' + xhr
-                    //                 .responseJSON
-                    //                 .message,
-                    //             icon: 'error',
-                    //             confirmButtonText: 'OK'
-                    //         });
-                    //     }
-                    //     $('#submitButton').prop('disabled',
-                    //         false); // Aktifkan tombol kembali
-                    // }
                 });
             });
         });
