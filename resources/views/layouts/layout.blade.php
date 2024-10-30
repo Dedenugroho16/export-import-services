@@ -268,10 +268,13 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('proforma.index') }}">
-                                <span class="nav-link-title">Proforma Invoice</span>
+                                <span class="nav-link-title">Proforma Invoices</span>
+                            </a>
+                            <a class="dropdown-item" href="{{ url('/incomplete-invoice') }}">
+                                <span class="nav-link-title">Incomplete Invoices</span>
                             </a>
                             <a class="dropdown-item" href="{{ url('/transaction') }}">
-                                <span class="nav-link-title">Invoice</span>
+                                <span class="nav-link-title">Completed Invoices</span>
                             </a>
                         </div>
                     </li>
