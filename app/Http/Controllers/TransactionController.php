@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\DetailTransaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
