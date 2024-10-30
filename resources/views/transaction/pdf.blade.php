@@ -281,11 +281,26 @@
         </table>
         <table>
             <tr>
-                <td><img src="{{ $phone }}" alt="" style="width: 15px"></td>
-                <td>{{ $company->contact_person}}</td>
+                @if ($company)
+                <td>
+                    <img src="{{ $phoneIcon ?? '' }}" alt="Phone Icon" style="width: 15px">
+                </td>
+                <td>
+                    {{ $company->phone_number ?? '' }}
+                </td>
                 <td></td>
-                <td><img src="{{ $email }}" alt="" style="width: 15px"></td>
-                <td>{{ $company->email}}</td>
+                <td>
+                    <img src="{{ $emailIcon ?? '' }}" alt="Email Icon" style="width: 15px">
+                </td>
+                <td>
+                    {{ $company->email ?? '' }}
+                </td>
+            @else
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            @endif
             </tr>
         </table>        
     </footer>

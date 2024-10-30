@@ -24,10 +24,6 @@
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <th>ID</th>
-                                <td>{{ $product->id }}</td>
-                            </tr>
-                            <tr>
                                 <th>Kode Produk</th>
                                 <td>{{ $product->code }}</td>
                             </tr>
@@ -65,6 +61,7 @@
                             <table id="detailProductTable" class="table card-table table-bordered table-hover table-vcenter text-nowrap">
                                 <thead class="thead-dark">
                                     <tr>
+                                        <th class="text-center">No</th>
                                         <th class="text-center">Nama</th>
                                         <th class="text-center">Pcs</th>
                                         <th class="text-center">Dimensi</th>
@@ -94,6 +91,15 @@
                 type: 'GET'
             },
             columns: [
+                { 
+                    data: null, 
+                    class: 'text-center',
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                },
                 { data: 'name', name: 'name' },
                 { data: 'pcs', name: 'pcs', className: 'text-center' },
                 { data: 'dimension', name: 'dimension', className: 'text-center' },
@@ -115,7 +121,15 @@
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50],
-            pageLength: 10
+            pageLength: 10,
+            drawCallback: function() {
+                // Terapkan style khusus untuk kolom kedua (name)
+                $('#detailProductTable td:nth-child(2), #detailProductTable th:nth-child(2)').css({
+                    'max-width': '200px',
+                    'white-space': 'normal',
+                    'word-wrap': 'break-word'
+                });
+            }
         });
     });
 </script>

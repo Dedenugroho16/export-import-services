@@ -51,7 +51,7 @@
                             <table id="productTable" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">#</th>
+                                        <th class="text-center">No</th>
                                         <th class="text-center">Kode Produk</th>
                                         <th class="text-center">Nama Produk</th>
                                         <th class="text-center">Singkatan Produk</th>
@@ -77,7 +77,15 @@
             serverSide: true, // Mengambil data dari server
             ajax: "{{ route('products.index') }}", // Endpoint untuk mengambil data
             columns: [
-                { data: 'id', name: 'id', class: 'text-center' },
+                { 
+                    data: null, 
+                    class: 'text-center',
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                },
                 { data: 'code', name: 'code', class: 'text-center' },
                 { data: 'name', name: 'name' },
                 { data: 'abbreviation', name: 'abbreviation', class: 'text-center' },

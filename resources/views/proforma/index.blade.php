@@ -128,7 +128,7 @@
                     { data: 'consignee', name: 'consignee', className: 'text-center' },
                     { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
                 ],
-                order: [[2, 'asc']], 
+                order: [[2, 'dsc']], 
                 columnDefs: [{
                     targets: 0,
                     render: function(data, type, row, meta) {
@@ -157,7 +157,7 @@
                     { data: 'consignee', name: 'consignee' },
                     { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
                 ],
-                order: [[2, 'asc']],
+                order: [[2, 'dsc']],
                 columnDefs: [{
                     targets: 0,
                     render: function(data, type, row, meta) {

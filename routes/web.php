@@ -148,3 +148,4 @@ Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaD
 
 // Route getConsigneeByid
 Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getConsigneesByClient'])->name('consignees.byClient');
+Route::get('/transactions/rekap', [TransactionController::class, 'rekapSales'])->name('transactions.rekap');

@@ -101,7 +101,7 @@
                     }
                 ],
                 order: [
-                    [0, 'asc']
+                    [2, 'dsc']
                 ], // Mengurutkan berdasarkan kolom pertama (No)
                 pageLength: 10
             });
