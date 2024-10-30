@@ -67,18 +67,6 @@
                 </div>
             </div>
 
-            <!-- Kartu untuk Cabang -->
-            <div class="card border-light shadow-sm">
-                <div class="card-body text-center">
-                    <h6 class="card-title">
-                        <i class="fas fa-building text-secondary"></i> Branches
-                    </h6>
-                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $branchesCount }}</span></p>
-                    <p class="card-text text-muted">Kelola data cabang di sini.</p>
-                    <a href="{{ route('branches.index') }}" class="btn btn-secondary btn-sm">Lihat Cabang</a>
-                </div>
-            </div>
-
             <!-- Kartu untuk Data Perusahaan -->
             <div class="card border-light shadow-sm">
                 <div class="card-body text-center">
