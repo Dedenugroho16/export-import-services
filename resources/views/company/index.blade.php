@@ -31,14 +31,14 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="company_code" class="form-label">Kode Perusahaan</label>
-                                                <input type="text" id="company_code" name="company_code" class="form-control" required>
+                                                <label for="postal_code" class="form-label">Nomor registrasi</label>
+                                                <input type="text" id="registration_number" name="registration_number" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="registration_number" class="form-label">Nomor Registrasi</label>
-                                                <input type="text" id="registration_number" name="registration_number" class="form-control">
+                                                <label for="tax_id" class="form-label">NPWP</label>
+                                                <input type="text" id="tax_id" name="tax_id" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -78,56 +78,26 @@
                             <!-- Card Kontak -->
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <h3>Kontak</h3>
+                                    <h3>Informasi lainnya</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="phone_number" class="form-label">Nomor Telepon</label>
                                                 <input type="text" id="phone_number" name="phone_number" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="contact_person" class="form-label">Kontak Person</label>
-                                                <input type="text" id="contact_person" name="contact_person" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="email" class="form-label">Email</label>
                                                 <input type="email" id="email" name="email" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="website" class="form-label">Website</label>
                                                 <input type="text" id="website" name="website" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-        
-                            <!-- Card Informasi Legal -->
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h3>Informasi Legal & Lisensi</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="industry" class="form-label">Industri</label>
-                                                <input type="text" id="industry" name="industry" class="form-control">
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="tax_id" class="form-label">Nomor Pajak</label>
-                                                <input type="text" id="tax_id" name="tax_id" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -150,54 +120,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-        
-                            <!-- Card Informasi Pengiriman -->
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h3>Informasi Pengiriman</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="payment_terms" class="form-label">Ketentuan Pembayaran</label>
-                                                <input type="text" id="payment_terms" name="payment_terms" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="consignee_code" class="form-label">Kode Consignee</label>
-                                		        <input type="text" id="consignee_code" name="consignee_code" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="incoterms" class="form-label">Incoterms</label>
-                                                <input type="text" id="incoterms" name="incoterms" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="customs_broker" class="form-label">Brokers Bea Cukai</label>
-                                                <input type="text" id="customs_broker" name="customs_broker" class="form-control">
-                                            </div>
-                                        </div>
-					                    <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="shipping_agent" class="form-label">Shipping agent</label>
-                                                <input type="text" id="shipping_agent" name="shipping_agent" class="form-control">
-                                            </div>
-                                        </div>
-					                    <div class="col-md-4">
-                                            <div class="mb-3">
-                                		        <label for="forwarding_agent" class="form-label">Forwarding agent</label>
-                               			         <input type="text" id="forwarding_agent" name="forwarding_agent" class="form-control">
-                            			    </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>      
+                            </div>     
                             <!-- Card Logo -->
                             <div class="card mb-3">
                                 <div class="card-body">
@@ -220,7 +143,7 @@
                     </form>
                 </div>
             </div>
-        </div>             
+        </div>            
 
         <div class="row row-deck row-cards">
             <div class="col-12">
@@ -256,12 +179,12 @@
                                                 <td>{{ $company->company_name }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Kode Perusahaan</th>
-                                                <td>{{ $company->company_code }}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Nomor Registrasi</th>
                                                 <td>{{ $company->registration_number }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>NPWP</th>
+                                                <td>{{ $company->tax_id }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Alamat</th>
@@ -292,16 +215,8 @@
                                                 <td>{{ $company->website }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Kontak Person</th>
-                                                <td>{{ $company->contact_person }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Industri</th>
-                                                <td>{{ $company->industry }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Nomor NPWP</th>
-                                                <td>{{ $company->tax_id }}</td>
+                                                <th>Detail Rekening Bank</th>
+                                                <td>{{ $company->bank_account_details }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Tanggal Didirikan</th>
@@ -314,34 +229,6 @@
                                             <tr>
                                                 <th>Nomor Lisensi Impor</th>
                                                 <td>{{ $company->import_license_number }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Detail Rekening Bank</th>
-                                                <td>{{ $company->bank_account_details }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Syarat Pembayaran</th>
-                                                <td>{{ $company->payment_terms }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Incoterms</th>
-                                                <td>{{ $company->incoterms }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Shipping Agent</th>
-                                                <td>{{ $company->shipping_agent }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Customs Broker</th>
-                                                <td>{{ $company->customs_broker }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Consignee Code</th>
-                                                <td>{{ $company->consignee_code }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Forwarding Agent</th>
-                                                <td>{{ $company->forwarding_agent }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Logo</th>

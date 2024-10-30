@@ -33,7 +33,6 @@ class CompanyController extends Controller
         // Validasi input
         $validatedData = $request->validate([
             'company_name' => 'required|string|max:255',
-            'company_code' => 'required|string|max:50|unique:companies,company_code',
             'registration_number' => 'nullable|string|max:50',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:100',
@@ -42,19 +41,11 @@ class CompanyController extends Controller
             'phone_number' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'website' => 'nullable|string|max:255',
-            'contact_person' => 'nullable|string|max:255',
-            'industry' => 'nullable|string|max:255',
             'tax_id' => 'nullable|string|max:50',
             'founded_date' => 'nullable|date',
             'export_license_number' => 'nullable|string|max:50',
             'import_license_number' => 'nullable|string|max:50',
             'bank_account_details' => 'nullable|string',
-            'payment_terms' => 'nullable|string|max:255',
-            'incoterms' => 'nullable|string|max:50',
-            'shipping_agent' => 'nullable|string|max:255',
-            'customs_broker' => 'nullable|string|max:255',
-            'consignee_code' => 'nullable|string|max:50',
-            'forwarding_agent' => 'nullable|string|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -80,7 +71,6 @@ class CompanyController extends Controller
         // Validasi input
         $request->validate([
             'company_name' => 'required|string|max:255',
-            'company_code' => 'required|string|max:100',
             'registration_number' => 'nullable|string|max:100',
             'address' => 'required|string|max:500',
             'city' => 'nullable|string|max:100',
@@ -89,18 +79,11 @@ class CompanyController extends Controller
             'phone_number' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'website' => 'nullable|string|max:255',
-            'contact_person' => 'nullable|string|max:255',
-            'industry' => 'nullable|string|max:100',
             'tax_id' => 'nullable|string|max:100',
             'founded_date' => 'nullable|date',
             'export_license_number' => 'nullable|string|max:100',
             'import_license_number' => 'nullable|string|max:100',
             'bank_account_details' => 'nullable|string|max:500',
-            'payment_terms' => 'nullable|string|max:255',
-            'incoterms' => 'nullable|string|max:50',
-            'shipping_agent' => 'nullable|string|max:100',
-            'customs_broker' => 'nullable|string|max:100',
-            'consignee_code' => 'nullable|string|max:100',
             'forwarding_agent' => 'nullable|string|max:100',
             'logo' => 'nullable|image|max:2048', // max 2MB image file
         ]);
@@ -123,7 +106,6 @@ class CompanyController extends Controller
         // Update data perusahaan dengan data baru dari request
         $company->update([
             'company_name' => $request->company_name,
-            'company_code' => $request->company_code,
             'registration_number' => $request->registration_number,
             'address' => $request->address,
             'city' => $request->city,
@@ -132,19 +114,11 @@ class CompanyController extends Controller
             'phone_number' => $request->phone_number,
             'email' => $request->email,
             'website' => $request->website,
-            'contact_person' => $request->contact_person,
-            'industry' => $request->industry,
             'tax_id' => $request->tax_id,
             'founded_date' => $request->founded_date,
             'export_license_number' => $request->export_license_number,
             'import_license_number' => $request->import_license_number,
             'bank_account_details' => $request->bank_account_details,
-            'payment_terms' => $request->payment_terms,
-            'incoterms' => $request->incoterms,
-            'shipping_agent' => $request->shipping_agent,
-            'customs_broker' => $request->customs_broker,
-            'consignee_code' => $request->consignee_code,
-            'forwarding_agent' => $request->forwarding_agent,
         ]);
 
         // Redirect ke halaman yang diinginkan setelah berhasil update
