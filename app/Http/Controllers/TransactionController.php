@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\DetailProduct;
 use App\Models\DetailTransaction;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -212,10 +213,16 @@ class TransactionController extends Controller
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first(); 
-        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
-        $phone = ImageHelper::getBase64Image('storage/phone.png');
-        $email = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
         
         $totalCarton = 0;
         $totalInner = 0;
@@ -229,7 +236,7 @@ class TransactionController extends Controller
             $priceAmount += $detail->price_amount;
         }
         
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('packing_list_' . $hashId . '.pdf');
@@ -241,10 +248,16 @@ class TransactionController extends Controller
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
-        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
-        $phone = ImageHelper::getBase64Image('storage/phone.png');
-        $email = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -258,7 +271,7 @@ class TransactionController extends Controller
             $priceAmount += $detail->price_amount;
         }
         
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('packing_list_' . $hashId . '.pdf');
@@ -271,10 +284,16 @@ class TransactionController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();     
         $totalInWords = NumberToWords::convert($transaction->total); 
-        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
-        $phone = ImageHelper::getBase64Image('storage/phone.png');
-        $email = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -288,7 +307,7 @@ class TransactionController extends Controller
             $priceAmount += $detail->price_amount;
         }
         
-        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('invoice_' . $hashId . '.pdf');
@@ -301,10 +320,16 @@ class TransactionController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();      
         $totalInWords = NumberToWords::convert($transaction->total);
-        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
-        $phone = ImageHelper::getBase64Image('storage/phone.png');
-        $email = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -318,7 +343,7 @@ class TransactionController extends Controller
             $priceAmount += $detail->price_amount;
         }
         
-        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('invoice_' . $hashId . '.pdf');

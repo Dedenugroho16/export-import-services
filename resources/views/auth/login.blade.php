@@ -96,11 +96,11 @@
     <div class="card">
         <!-- Company Logo -->
         <div class="text-center">
-            @if (isset($company) && Storage::exists($company->logo))
-                <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" class="img-fluid">
-            @else
-                <img src="" alt="Logo Perusahaan">
-            @endif
+            @if (isset($company) && !empty($company->logo))
+            <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
+        @else
+            <img src="" alt="Logo Perusahaan" style="width: 60px;">
+        @endif
         </div>
         <!-- Login Form -->
         <h2>Masuk ke akun anda</h2>

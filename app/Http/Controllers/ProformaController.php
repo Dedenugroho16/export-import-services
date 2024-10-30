@@ -16,6 +16,7 @@ use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\DetailTransaction;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProformaController extends Controller
@@ -384,10 +385,16 @@ class ProformaController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
-        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
-        $phone = ImageHelper::getBase64Image('storage/phone.png');
-        $email = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -401,12 +408,16 @@ class ProformaController extends Controller
             $priceAmount += $detail->price_amount;
         }
 
-
-        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
+        $pdf = PDF::loadView('proforma.pdf', compact(
+            'proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 
+            'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 
+            'phoneIcon', 'emailIcon', 'phoneNumber', 'email'
+        ));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('proforma_' . $hashId . '.pdf');
     }
+
 
     public function proformaDownloadPdf($hashId)
     {
@@ -415,10 +426,16 @@ class ProformaController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
-        $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
-        $phone = ImageHelper::getBase64Image('storage/phone.png');
-        $email = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -432,7 +449,11 @@ class ProformaController extends Controller
             $priceAmount += $detail->price_amount;
         }
 
-        $pdf = PDF::loadView('proforma.pdf', compact('proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
+        $pdf = PDF::loadView('proforma.pdf', compact(
+            'proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 
+            'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 
+            'phoneIcon', 'emailIcon', 'phoneNumber', 'email'
+        ));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('proforma_' . $hashId . '.pdf');
