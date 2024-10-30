@@ -65,9 +65,6 @@ Route::get('detail-products/create/{hash}', [DetailProductController::class, 'cr
 // Country Routes using resource
 Route::resource('countries', CountryController::class);
 
-// Branch Routes
-Route::resource('branches', BranchController::class);
-
 // Company Routes using resource
 Route::resource('company', CompanyController::class);
 
