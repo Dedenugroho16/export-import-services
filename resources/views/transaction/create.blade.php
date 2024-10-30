@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Lengpaki Invoice')
+@section('title', 'Konfirmasi Kelengkapan Invoice')
 
 @section('content')
     <div class="page-body">
@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div class="card mb-5">
                         <div class="card-header text-white shadow-sm p-3" style="background-color: #0054a6;">
-                            <h3 class="card-title">Form Edit Proforma Invoice</h3>
+                            <h3 class="card-title">Form Konfirmasi Kelengkapan Invoice</h3>
                         </div>
                         <div class="card-body">
                             <!-- Display Success Message -->
