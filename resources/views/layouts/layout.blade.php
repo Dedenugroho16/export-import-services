@@ -270,8 +270,11 @@
                             <a class="dropdown-item" href="{{ route('proforma.index') }}">
                                 <span class="nav-link-title">Proforma Invoice</span>
                             </a>
+                            <a class="dropdown-item" href="{{ url('/incomplete-invoice') }}">
+                                <span class="nav-link-title">Incomplete Invoices</span>
+                            </a>
                             <a class="dropdown-item" href="{{ url('/transaction') }}">
-                                <span class="nav-link-title">Invoice</span>
+                                <span class="nav-link-title">Completed Invoices</span>
                             </a>
                         </div>
                     </li>

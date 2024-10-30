@@ -74,6 +74,8 @@ Route::resource('company', CompanyController::class);
 // Transaction Routes using resource
 // Route::resource('transaction', TransactionController::class);
 Route::get('/get-invoice', [TransactionController::class, 'getInvoice'])->name('getInvoice');
+Route::get('/get-incomplete-invoice', [TransactionController::class, 'getIncompleteInvoice'])->name('getIncompleteInvoice');
+Route::get('incomplete-invoice', [TransactionController::class, 'incomplete'])->name('incomplete-invoice');
 Route::get('transaction', [TransactionController::class, 'index'])->name('transaction.index');
 Route::get('transaction/create/{id}', [TransactionController::class, 'create'])->name('transaction.create');
 Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->name('transaction.show');
