@@ -38,8 +38,9 @@
                                         <th class="text-center">No</th>
                                         <th class="text-center">Code</th>
                                         <th class="text-center">Number</th>
-                                        <th class="text-center">Client ID</th>
-                                        <th class="text-center">Consignee ID</th>
+                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Client</th>
+                                        <th class="text-center">Consignee</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -123,6 +124,11 @@
                     {
                         data: 'number',
                         name: 'number',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'date',
+                        name: 'date',
                         className: 'text-center'
                     },
                     {

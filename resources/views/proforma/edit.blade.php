@@ -266,7 +266,8 @@
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
-                                                                    <button id="infoButton" class="btn btn-warning btn-sm ms-2"
+                                                                    <button id="infoButton"
+                                                                        class="btn btn-warning btn-sm ms-2"
                                                                         title="Informasi">
                                                                         <i class="fas fa-info-circle"></i>
                                                                         <!-- Using Font Awesome icon -->
@@ -971,6 +972,9 @@
                                 $('#loadedData').append(newRow);
                             });
 
+                            // Disable the select element
+                            $('#product').prop('disabled', true);
+
                             // Event listener untuk tombol hapus
                             $('#loadedData').on('click', '.old-remove-btn', function() {
                                 var deleteUrl = $(this).data('url');
@@ -980,6 +984,8 @@
                             addDynamicEventListeners();
                             updateAmounts();
                         } else {
+                            // Disable the select element
+                            $('#product').prop('disabled', false);
                             $('#loadedData').append(`
                     <tr id="nullDetailTransaction">
                         <td colspan="8" class="text-center">Seluruh detail transaksi yang tersimpan terhapus!</td>

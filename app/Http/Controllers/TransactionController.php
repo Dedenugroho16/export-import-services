@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\IdHashHelper;
-use App\Helpers\ImageHelper;
-use App\Helpers\NumberToWords;
+use App\Models\Client;
 use App\Models\Company;
+use App\Models\Country;
+use App\Models\Product;
+use App\Models\Commodity;
 use App\Models\Consignee;
 use App\Models\Transaction;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
+use App\Helpers\IdHashHelper;
 use App\Models\DetailProduct;
-use App\Models\DetailTransaction;
+use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\DetailTransaction;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -48,7 +52,8 @@ class TransactionController extends Controller
     {
         $approvedInvoices = Transaction::with(['client', 'consignee'])
             ->where('approved', 1) // Mengambil transaksi yang disetujui
-            ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'stuffing_date']); // Tambahkan stuffing_date ke dalam select
+            ->whereNull('stuffing_date') // Hanya data yang stuffing_date bernilai null
+            ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'stuffing_date']);
 
         return DataTables::of($approvedInvoices)
             ->addColumn('client', function ($row) {
@@ -60,16 +65,18 @@ class TransactionController extends Controller
             ->addColumn('aksi', function ($row) {
                 // Link untuk melihat detail
                 $hashId = IdHashHelper::encode($row->id);
-                $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
+                $lihatDetail = '<a href="' . route('transaction.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a> ';
 
                 // Cek jika stuffing_date bernilai null, tampilkan tombol "Buat Invoice"
-                $buatInvoice = '';
+                $lengkapi = '';
                 if (is_null($row->stuffing_date)) {
                     $hashId = IdHashHelper::encode($row->id);
-                    $buatInvoice = '<a href="' . route('transaction.create', ['id' => $hashId]) . '" class="btn btn-sm btn-success">Lengkapi</a>';
+                    $lengkapi = '<a href="' . route('transaction.create', ['id' => $hashId]) . '" class="btn btn-sm btn-success">Lengkapi</a>';
                 }
 
-                return $lihatDetail . ' ' . $buatInvoice; // Menggabungkan kedua link
+                $packingList = '<a href="' . route('packingList.show', $hashId) . '" class="btn btn-sm btn-warning">Packing List</a>';
+
+                return $lihatDetail . ' ' . $packingList . ' ' . $lengkapi; // Menggabungkan kedua link
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
             ->make(true);
@@ -89,16 +96,86 @@ class TransactionController extends Controller
 
     public function create($hash)
     {
+        // Dekode hash menjadi ID
         $id = IdHashHelper::decode($hash);
-        // Logika untuk membuat invoice berdasarkan id proforma yang dipilih
-        $transaction = Transaction::findOrFail($id);
 
-        // Ambil semua detail transaksi yang berhubungan dengan proforma tersebut
-        $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+        $transaction = Transaction::with(['detailTransactions'])->findOrFail($id);
 
-        // Kembalikan view yang sesuai dan oper data proforma
-        return view('transaction.create', compact('transaction', 'detailTransactions'));
+        // Ambil data lain yang diperlukan untuk form
+        $consignees = Consignee::all();
+        $clients = Client::all();
+        $products = Product::all();
+        $commodities = Commodity::all();
+        $country = Country::all();
+
+        // Ambil ID produk dari detail transaksi yang sudah ada
+        $selectedProductIds = $transaction->detailTransactions->pluck('id_detail_product')->toArray();
+
+        // mencari product dan commodity yang terpilih
+        $productSelectedID = $transaction->id_product;
+        $commoditySelectedID = $transaction->id_commodity;
+
+        // mencari client yang sudah terpilih
+        $clientSelectedID = $transaction->id_client;
+        $clientSelected = Client::findOrFail($clientSelectedID);
+        $clientSelectedAddress = $clientSelected->address;
+
+        // mencari consignee yang sudah terpilih
+        $consigneeSelectedID = $transaction->id_consignee;
+        $consigneeSelected = Consignee::findOrFail($consigneeSelectedID);
+        $consigneeSelectedAddress = $consigneeSelected->address;
+
+        // mencari Negara yang sudah terpilih
+        $transactionCode = $transaction->code; // contoh: RESTO ID2410
+        // Ekstrak dua huruf kapital sebelum angka
+        if (preg_match('/([A-Z]{2})(?=\d+)/', $transactionCode, $matches)) {
+            $countryCode = $matches[1]; // 'ID'
+
+            // Cari negara berdasarkan kode yang diekstrak
+            $countryOld = Country::where('code', $countryCode)->firstOrFail();
+            $countrySelected = $countryOld->id;
+        }
+
+        // number
+        $transactionNumber = $transaction->number; // 0002/09.CR ID/10/INV/X/24
+        // Memisahkan string berdasarkan titik ('.') untuk memisahkan bagian pertama
+        $parts = explode('.', $transactionNumber);
+        // Ambil bagian pertama sebelum titik
+        $formattedNumber = $parts[0]; // Hasil: 0002/09
+
+        // Kirim semua data yang dibutuhkan ke view
+        return view('transaction.create', compact(
+            'transaction',  // Data transaksi yang perlu diedit
+            'consignees',
+            'clients',
+            'products',
+            'productSelectedID',
+            'commodities',
+            'commoditySelectedID',
+            'country',
+            'countrySelected',
+            'formattedNumber',
+            'clientSelectedID',
+            'clientSelectedAddress',
+            'consigneeSelectedID',
+            'consigneeSelectedAddress',
+            'selectedProductIds',
+            'hash',
+        ));
     }
+
+    // public function create($hash)
+    // {
+    //     $id = IdHashHelper::decode($hash);
+    //     // Logika untuk membuat invoice berdasarkan id proforma yang dipilih
+    //     $transaction = Transaction::findOrFail($id);
+
+    //     // Ambil semua detail transaksi yang berhubungan dengan proforma tersebut
+    //     $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
+
+    //     // Kembalikan view yang sesuai dan oper data proforma
+    //     return view('transaction.create', compact('transaction', 'detailTransactions'));
+    // }
 
     // method get Consignee
     public function getConsignees($client_id)
@@ -248,24 +325,24 @@ class TransactionController extends Controller
         $decodedId = IdHashHelper::decode($hashId);
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
-        $company = Company::first(); 
+        $company = Company::first();
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         $phone = ImageHelper::getBase64Image('storage/phone.png');
         $email = ImageHelper::getBase64Image('storage/mail.png');
-        
+
         $totalCarton = 0;
         $totalInner = 0;
         $totalNetWeight = 0;
         $priceAmount = 0;
-        
+
         foreach ($detailTransactions as $detail) {
             $totalCarton += $detail->carton;
             $totalInner += $detail->inner_qty_carton;
             $totalNetWeight += $detail->net_weight;
             $priceAmount += $detail->price_amount;
         }
-        
+
         $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
@@ -287,14 +364,14 @@ class TransactionController extends Controller
         $totalInner = 0;
         $totalNetWeight = 0;
         $priceAmount = 0;
-        
+
         foreach ($detailTransactions as $detail) {
             $totalCarton += $detail->carton;
             $totalInner += $detail->inner_qty_carton;
             $totalNetWeight += $detail->net_weight;
             $priceAmount += $detail->price_amount;
         }
-        
+
         $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
@@ -306,8 +383,8 @@ class TransactionController extends Controller
         $decodedId = IdHashHelper::decode($hashId);
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
-        $company = Company::first();     
-        $totalInWords = NumberToWords::convert($transaction->total); 
+        $company = Company::first();
+        $totalInWords = NumberToWords::convert($transaction->total);
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         $phone = ImageHelper::getBase64Image('storage/phone.png');
@@ -317,14 +394,14 @@ class TransactionController extends Controller
         $totalInner = 0;
         $totalNetWeight = 0;
         $priceAmount = 0;
-        
+
         foreach ($detailTransactions as $detail) {
             $totalCarton += $detail->carton;
             $totalInner += $detail->inner_qty_carton;
             $totalNetWeight += $detail->net_weight;
             $priceAmount += $detail->price_amount;
         }
-        
+
         $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
@@ -336,7 +413,7 @@ class TransactionController extends Controller
         $decodedId = IdHashHelper::decode($hashId);
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
-        $company = Company::first();      
+        $company = Company::first();
         $totalInWords = NumberToWords::convert($transaction->total);
         $logo = ImageHelper::getBase64Image('storage/' . $company->logo);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
@@ -347,14 +424,14 @@ class TransactionController extends Controller
         $totalInner = 0;
         $totalNetWeight = 0;
         $priceAmount = 0;
-        
+
         foreach ($detailTransactions as $detail) {
             $totalCarton += $detail->carton;
             $totalInner += $detail->inner_qty_carton;
             $totalNetWeight += $detail->net_weight;
             $priceAmount += $detail->price_amount;
         }
-        
+
         $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phone', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
