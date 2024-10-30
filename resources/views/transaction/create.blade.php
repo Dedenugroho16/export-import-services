@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Edit Proforma Invoice')
+@section('title', 'Lengpaki Invoice')
 
 @section('content')
     <div class="page-body">
@@ -29,17 +29,13 @@
                                 </div>
                             @endif
 
-                            <form id="formProformaInvoice" method="POST"
+                            <form id="formIncompleteInvoice" method="POST"
                                 action="{{ route('proforma.update', $transaction->id) }}">
                                 @csrf
                                 <input type="date" name="date" id="date" value="{{ $transaction->date }}" hidden>
                                 <input type="text" name="code" id="code" value="{{ $transaction->code }}" hidden>
                                 <input type="text" name="number" id="number" value="{{ $transaction->number }}"
                                     hidden>
-                                <input type="date" name="stuffing_date" id="stuffing_date" hidden>
-                                <input type="text" name="bl_number" id="bl_number" hidden>
-                                <input type="text" name="container_number" id="container_number" hidden>
-                                <input type="text" name="seal_number" id="seal_number" hidden>
 
                                 <div class="row">
                                     <div class="col-md-12">
@@ -266,6 +262,7 @@
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
+                                                                    <input type="hidden" id="old-product" name="id_product" value="{{ $productSelectedID }}">
                                                                     <button id="infoButton"
                                                                         class="btn btn-warning btn-sm ms-2"
                                                                         title="Informasi">
@@ -316,26 +313,6 @@
                                                         </div>
                                                         <div class="row mt-2">
                                                             <div class="col-4">
-                                                                <p><strong>Payment Term</strong></p>
-                                                            </div>
-                                                            <div class="col-2 text-center">
-                                                                <span>:</span>
-                                                            </div>
-                                                            <div class="col-5">
-                                                                <input type="text" name="payment_term"
-                                                                    id="payment_term" class="form-control"
-                                                                    placeholder="Masukkan Payment term"
-                                                                    value="{{ $transaction->payment_term }}" required>
-                                                                <span class="error-message" id="payment_term_error"
-                                                                    style="color: red; display: none;"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Kolom Sebelah Kanan -->
-                                                    <div class="col-6">
-                                                        <div class="row mt-2">
-                                                            <div class="col-4">
                                                                 <p><strong>Net Weight</strong></p>
                                                             </div>
                                                             <div class="col-2 text-center">
@@ -368,6 +345,79 @@
                                                                     name="gross_weight">
                                                                 <span class="error-message" id="gross_weight_error"
                                                                     style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Payment Term</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="payment_term"
+                                                                    id="payment_term" class="form-control"
+                                                                    placeholder="Masukkan Payment term"
+                                                                    value="{{ $transaction->payment_term }}" required>
+                                                                <span class="error-message" id="payment_term_error"
+                                                                    style="color: red; display: none;"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Kolom Sebelah Kanan -->
+                                                    <div class="col-6">
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Stuffing Date</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="date" name="stuffing_date"
+                                                                    id="stuffing_date" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>BL Number</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="bl_number" id="bl_number"
+                                                                    class="form-control" placeholder="Masukkan BL Number"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Container Number</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="container_number"
+                                                                    id="container_number" class="form-control"
+                                                                    placeholder="Masukkan Container Number" required>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mt-2">
+                                                            <div class="col-4">
+                                                                <p><strong>Seal Number</strong></p>
+                                                            </div>
+                                                            <div class="col-2 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input type="text" name="seal_number" id="seal_number"
+                                                                    class="form-control"
+                                                                    placeholder="Masukkan Seal Number" required>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -517,8 +567,6 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end">
-                                <p id="error-message" style="color: red;">Harap menginput negara terlebih
-                                    dahulu</p>
                                 <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Perbarui</button>
                             </div>
@@ -974,6 +1022,7 @@
 
                             // Disable the select element
                             $('#product').prop('disabled', true);
+                            $('#old-product').prop('disabled', false);
 
                             // Event listener untuk tombol hapus
                             $('#loadedData').on('click', '.old-remove-btn', function() {
@@ -986,6 +1035,7 @@
                         } else {
                             // Disable the select element
                             $('#product').prop('disabled', false);
+                            $('#old-product').prop('disabled', true);
                             $('#loadedData').append(`
                     <tr id="nullDetailTransaction">
                         <td colspan="8" class="text-center">Seluruh detail transaksi yang tersimpan terhapus!</td>
@@ -1419,9 +1469,9 @@
             $('#submitButton').click(function(event) {
                 event.preventDefault(); // Mencegah form dari pengiriman otomatis
 
-                var formProformaInvoice = $('#formProformaInvoice');
+                var formIncompleteInvoice = $('#formIncompleteInvoice');
                 var formDetailTransaction = $('#formDetailTransaction');
-                var newFormDetailTransaction = $('#newFormDetailTransaction'); // Form baru
+                var newFormDetailTransaction = $('#newFormDetailTransaction');
 
                 // Nonaktifkan tombol submit untuk mencegah pengiriman berulang
                 $('#submitButton').prop('disabled', true);
@@ -1475,7 +1525,6 @@
                     }).length > 0;
                 }
 
-                var hasInvoiceData = hasInputData(formProformaInvoice);
                 var hasDetailTransactionData = hasInputData(formDetailTransaction);
                 var hasNewDetailTransactionData = hasInputData(newFormDetailTransaction);
 
@@ -1494,9 +1543,9 @@
                 }
 
                 $.ajax({
-                    url: formProformaInvoice.attr('action'),
-                    method: formProformaInvoice.attr('method'),
-                    data: formProformaInvoice.serialize(),
+                    url: formIncompleteInvoice.attr('action'),
+                    method: formIncompleteInvoice.attr('method'),
+                    data: formIncompleteInvoice.serialize(),
                     success: function(response) {
                         Swal.fire({
                             icon: 'success',
@@ -1606,35 +1655,46 @@
                         });
                     },
                     error: function(xhr) {
-                        if (xhr.status === 422) {
-                            // Tangani error validasi dari server
-                            var errors = xhr.responseJSON.errors;
-
-                            // Loop melalui setiap error dan tampilkan di elemen input terkait
-                            $.each(errors, function(key, value) {
-                                var errorElement = $('#' + key + '_error');
-                                var inputElement = $('#' + key);
-
-                                // Tampilkan pesan error
-                                errorElement.text(value[0]).show();
-                                inputElement.addClass(
-                                    'is-invalid'
-                                ); // Tambah kelas is-invalid untuk border merah
-                            });
-                        } else {
-                            // Tangani error umum
-                            Swal.fire({
-                                title: 'Terjadi Kesalahan!',
-                                text: 'Gagal menyimpan transaksi: ' + xhr
-                                    .responseJSON
-                                    .message,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                        $('#submitButton').prop('disabled',
-                            false); // Aktifkan tombol kembali
+                        console.log("Error:", xhr.responseJSON); // Cek error response JSON
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: xhr.responseJSON?.message ||
+                                'Terjadi kesalahan pada server',
+                            confirmButtonText: 'OK'
+                        });
+                        $('#submitButton').prop('disabled', false); // Aktifkan kembali tombol
                     }
+                    // error: function(xhr) {
+                    //     if (xhr.status === 422) {
+                    //         // Tangani error validasi dari server
+                    //         var errors = xhr.responseJSON.errors;
+
+                    //         // Loop melalui setiap error dan tampilkan di elemen input terkait
+                    //         $.each(errors, function(key, value) {
+                    //             var errorElement = $('#' + key + '_error');
+                    //             var inputElement = $('#' + key);
+
+                    //             // Tampilkan pesan error
+                    //             errorElement.text(value[0]).show();
+                    //             inputElement.addClass(
+                    //                 'is-invalid'
+                    //             ); // Tambah kelas is-invalid untuk border merah
+                    //         });
+                    //     } else {
+                    //         // Tangani error umum
+                    //         Swal.fire({
+                    //             title: 'Terjadi Kesalahan!',
+                    //             text: 'Gagal menyimpan transaksi: ' + xhr
+                    //                 .responseJSON
+                    //                 .message,
+                    //             icon: 'error',
+                    //             confirmButtonText: 'OK'
+                    //         });
+                    //     }
+                    //     $('#submitButton').prop('disabled',
+                    //         false); // Aktifkan tombol kembali
+                    // }
                 });
             });
         });
