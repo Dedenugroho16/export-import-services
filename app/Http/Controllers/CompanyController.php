@@ -84,7 +84,6 @@ class CompanyController extends Controller
             'export_license_number' => 'nullable|string|max:100',
             'import_license_number' => 'nullable|string|max:100',
             'bank_account_details' => 'nullable|string|max:500',
-            'forwarding_agent' => 'nullable|string|max:100',
             'logo' => 'nullable|image|max:2048', // max 2MB image file
         ]);
 

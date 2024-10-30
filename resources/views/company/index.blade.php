@@ -262,7 +262,6 @@
             .then(data => {
                 document.getElementById('company_id').value = data.id;
                 document.getElementById('company_name').value = data.company_name;
-                document.getElementById('company_code').value = data.company_code;
                 document.getElementById('registration_number').value = data.registration_number;
                 document.getElementById('address').value = data.address;
                 document.getElementById('city').value = data.city;
@@ -271,19 +270,11 @@
                 document.getElementById('phone_number').value = data.phone_number;
                 document.getElementById('email').value = data.email;
                 document.getElementById('website').value = data.website;
-                document.getElementById('contact_person').value = data.contact_person;
-                document.getElementById('industry').value = data.industry;
                 document.getElementById('tax_id').value = data.tax_id;
                 document.getElementById('founded_date').value = data.founded_date;
                 document.getElementById('export_license_number').value = data.export_license_number;
                 document.getElementById('import_license_number').value = data.import_license_number;
                 document.getElementById('bank_account_details').value = data.bank_account_details;
-                document.getElementById('payment_terms').value = data.payment_terms;
-                document.getElementById('incoterms').value = data.incoterms;
-                document.getElementById('shipping_agent').value = data.shipping_agent;
-                document.getElementById('customs_broker').value = data.customs_broker;
-                document.getElementById('consignee_code').value = data.consignee_code;
-                document.getElementById('forwarding_agent').value = data.forwarding_agent;
                 // Populate other fields as necessary
 
                 // Set form action to update route
