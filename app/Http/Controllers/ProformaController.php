@@ -111,10 +111,9 @@ class ProformaController extends Controller
                 $buatInvoice = '';
                 if (is_null($row->stuffing_date)) {
                     $hashId = IdHashHelper::encode($row->id);
-                    $buatInvoice = '<a href="' . route('transaction.create', ['id' => $hashId]) . '" class="btn btn-sm btn-success">Buat Invoice</a>';
                 }
 
-                return $lihatDetail . ' ' . $buatInvoice; // Menggabungkan kedua link
+                return $lihatDetail;
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
             ->make(true);
