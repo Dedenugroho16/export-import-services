@@ -264,10 +264,10 @@
                                 <span class="nav-link-title">Proforma Invoices</span>
                             </a>
                             <a class="dropdown-item" href="{{ url('/incomplete-invoice') }}">
-                                <span class="nav-link-title">Incomplete Invoices</span>
+                                <span class="nav-link-title">Unconfirmed Invoices</span>
                             </a>
                             <a class="dropdown-item" href="{{ url('/transaction') }}">
-                                <span class="nav-link-title">Completed Invoices</span>
+                                <span class="nav-link-title">Rekap Invoice</span>
                             </a>
                         </div>
                     </li>

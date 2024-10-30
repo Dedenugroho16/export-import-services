@@ -30,6 +30,7 @@
             @else
                 <div class="card">
                     <div class="card-body">
+                        <h3>Daftar Rekap Invoice</h3>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap" id="invoiceTable">
                                 <thead>
