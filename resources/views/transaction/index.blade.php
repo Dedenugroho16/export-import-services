@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Daftar Invoice')
+@section('title', 'Rekap Invoice')
 
 @section('content')
     <div class="page-body">
