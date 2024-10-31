@@ -41,7 +41,7 @@
                                     <div class="col-md-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h3 class="card-title">PROFORMA INVOICE</h3>
+                                                <h3 class="card-title">INVOICE - {{ $transaction->number }}</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="row">
@@ -494,14 +494,14 @@
                                                 </thead>
 
                                                 <!-- Tbody untuk data yang berasal dari fungsi load -->
-                                                <tbody id="loadedData" style="font-size: 12px" class="bg-success">
+                                                <tbody id="loadedData" style="font-size: 12px">
                                                     <tr id="nullDetailTransaction">
                                                         <td colspan="8" class="text-center">Tidak ada barang</td>
                                                     </tr>
                                                 </tbody>
 
                                                 <!-- Tbody untuk data yang berasal dari tombol pilih -->
-                                                <tbody id="selectedData" style="font-size: 12px" class="bg-info">
+                                                <tbody id="selectedData" style="font-size: 12px">
                                                 </tbody>
 
                                                 <tfoot>
@@ -1136,7 +1136,7 @@
 
                 // Tambahkan hidden input untuk id transaksi
                 $('#formDetailTransaction').append(`
-        <input type="" name="id_transaction" class="bg-danger" id="id_transaction" value="{{ $transaction->id }}">
+        <input type="hidden" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
     `);
 
                 // Selektor untuk setiap baris di tbody #loadedData
@@ -1156,14 +1156,14 @@
 
                     // Create hidden inputs and append to the form
                     $('#formDetailTransaction').append(`
-            <input type="" name="transactions[${index}][id]" value="${idDetailTransaction}"> <!-- Tambahkan ID Detail Transaction -->
-            <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-            <input type="" name="transactions[${index}][qty]" value="${qty}">
-            <input type="" name="transactions[${index}][carton]" value="${carton}">
-            <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
+            <input type="hidden" name="transactions[${index}][id]" value="${idDetailTransaction}"> <!-- Tambahkan ID Detail Transaction -->
+            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
+            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
+            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
+            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
+            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
         `);
 
                     // Mark this row as processed
@@ -1263,7 +1263,7 @@
 
                 // Tambahkan hidden input untuk id transaksi (hanya jika ada data valid)
                 $('#newFormDetailTransaction').append(`
-        <input type="" class="bg-warning" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
+        <input type="hidden" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
     `);
 
                 // Loop untuk setiap baris valid dan tambahkan input hidden untuk data transaksi baru
@@ -1278,13 +1278,13 @@
 
                     // Append hidden inputs untuk setiap transaksi baru
                     $('#newFormDetailTransaction').append(`
-            <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-            <input type="" name="transactions[${index}][qty]" value="${qty}">
-            <input type="" name="transactions[${index}][carton]" value="${carton}">
-            <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
+            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
+            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
+            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
+            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
+            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
         `);
                 });
             }
