@@ -569,7 +569,7 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end">
-                                <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <button class="btn btn-outline-primary" onclick="window.history.back()">Kembali</button>
                                 <button type="button" id="submitButton" class="btn btn-primary">Perbarui</button>
                             </div>
                         </div>
