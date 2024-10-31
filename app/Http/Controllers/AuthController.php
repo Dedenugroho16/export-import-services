@@ -10,25 +10,38 @@ class AuthController extends Controller
 {
     // Login User
     public function login(Request $request)
-    {
-        // Validasi input
-        $fields = $request->validate([
-            'email' => ['required', 'max:255', 'email'],
-            'password' => ['required']
+{
+    // Validate input
+    $fields = $request->validate([
+        'email' => ['required', 'max:255', 'email'],
+        'password' => ['required']
+    ]);
+
+    // Check if the user exists
+    $user = User::where('email', $fields['email'])->first();
+
+    // Check if the user exists and is active
+    if (!$user) {
+        // User does not exist
+        return back()->withErrors([
+            'failed' => 'Akun yang Anda masukkan tidak ditemukan.'
         ]);
-
-        // Cek apakah pengguna ada dan aktif
-        $user = User::where('email', $fields['email'])->first();
-
-        // Pastikan pengguna ada dan aktif
-        if ($user && $user->is_active && Auth::attempt($fields, $request->remember)) {
-            return redirect()->intended('home');
-        } else {
-            return back()->withErrors([
-                'failed' => 'Akun yang Anda masukkan tidak sesuai atau akun Anda tidak aktif.'
-            ]);            
-        }
+    } elseif (!$user->is_active) {
+        // User is inactive
+        return back()->withErrors([
+            'failed' => 'Akun Anda tidak aktif.'
+        ]);
+    } elseif (Auth::attempt($fields, $request->remember)) {
+        // Successful login
+        return redirect()->intended('home');
+    } else {
+        // Invalid credentials
+        return back()->withErrors([
+            'failed' => 'Akun yang Anda masukkan tidak sesuai.'
+        ]);
     }
+}
+
 
     // Logout User
     public function logout(Request $request)
