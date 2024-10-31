@@ -571,7 +571,7 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end">
-                                <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('incomplete-invoice') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Konfirmasi</button>
                             </div>
                         </div>
