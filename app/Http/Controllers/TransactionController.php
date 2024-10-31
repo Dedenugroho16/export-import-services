@@ -40,10 +40,24 @@ class TransactionController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-                // Tombol aksi untuk melihat detail
-                $detailInvoice = '<a href="' . route('transaction.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a> ';
-                $packingList = '<a href="' . route('packingList.show', $hashId) . '" class="btn btn-sm btn-success">Packing List</a>';
-                return $detailInvoice . $packingList;
+    
+                // Membuat dropdown aksi
+                $dropdown = '
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aksi
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="' . route('transaction.show', $hashId) . '">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                            Lihat Detail</a></li>
+                            <li><a class="dropdown-item" href="' . route('packingList.show', $hashId) . '">
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
+                            Packing List</a></li>
+                        </ul>
+                    </div>';
+    
+                return $dropdown; // Mengembalikan dropdown
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
             ->make(true);
@@ -64,24 +78,36 @@ class TransactionController extends Controller
                 return $row->consignee->name;  // Mengambil nama consignee dari relasi
             })
             ->addColumn('aksi', function ($row) {
-                // Link untuk melihat detail
+                // Menggunakan hash ID untuk tautan
                 $hashId = IdHashHelper::encode($row->id);
-                $lihatDetail = '<a href="' . route('transaction.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a> ';
-
-                // Cek jika stuffing_date bernilai null, tampilkan tombol "Buat Invoice"
-                $lengkapi = '';
+            
+                // Membuat dropdown aksi
+                $dropdown = '
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aksi
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
                 if (is_null($row->stuffing_date)) {
-                    $hashId = IdHashHelper::encode($row->id);
-                    $lengkapi = '<a href="' . route('transaction.create', ['id' => $hashId]) . '" class="btn btn-sm btn-success">Lengkapi</a>';
+                    $dropdown .= '<li><a class="dropdown-item" href="' . route('transaction.create', ['id' => $hashId]) . '">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-dashed-check me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.56 3.69a9 9 0 0 0 -2.92 1.95" /><path d="M3.69 8.56a9 9 0 0 0 -.69 3.44" /><path d="M3.69 15.44a9 9 0 0 0 1.95 2.92" /><path d="M8.56 20.31a9 9 0 0 0 3.44 .69" /><path d="M15.44 20.31a9 9 0 0 0 2.92 -1.95" /><path d="M20.31 15.44a9 9 0 0 0 .69 -3.44" /><path d="M20.31 8.56a9 9 0 0 0 -1.95 -2.92" /><path d="M15.44 3.69a9 9 0 0 0 -3.44 -.69" /><path d="M9 12l2 2l4 -4" /></svg>
+                    Lengkapi</a></li>';
                 }
-
-                $packingList = '<a href="' . route('packingList.show', $hashId) . '" class="btn btn-sm btn-warning">Packing List</a>';
-
-                return $lihatDetail . ' ' . $packingList . ' ' . $lengkapi; // Menggabungkan kedua link
+                $dropdown .= '
+                    <li><a class="dropdown-item" href="' . route('transaction.show', $hashId) . '">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                    Lihat Detail</a></li>
+                    <li><a class="dropdown-item" href="' . route('packingList.show', $hashId) . '">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
+                    Packing List</a></li>
+                    </ul>
+                </div>';
+            
+                return $dropdown;
             })
-            ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
+            ->rawColumns(['aksi'])
             ->make(true);
-    }
+        }            
 
     public function incomplete()
     {
