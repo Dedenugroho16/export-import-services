@@ -28,7 +28,6 @@
             align-items: center;
             height: 100vh;
             background: linear-gradient(135deg, #007bff 0%, #ffffff 100%);
-            /* Updated gradient */
         }
 
         .card {
@@ -97,29 +96,21 @@
         <!-- Company Logo -->
         <div class="text-center">
             @if (isset($company) && !empty($company->logo))
-            <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
-        @else
-            <img src="" alt="Logo Perusahaan" style="width: 60px;">
-        @endif
+                <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
+            @else
+                <img src="" alt="Logo Perusahaan" style="width: 60px;">
+            @endif
         </div>
         <!-- Login Form -->
         <h2>Masuk ke akun anda</h2>
         <form action="{{ route('login') }}" method="post" autocomplete="off">
             @csrf
-            {{-- Username --}}
-            <div class="mb-3">
-                <input type="text" name="username" value="{{ old('username') }}"
-                    class="form-control @error('username') is-invalid @enderror" placeholder="Username">
-                @error('username')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
 
-            {{-- Email --}}
+            {{-- Login (Username or Email) --}}
             <div class="mb-3">
-                <input type="text" name="email" value="{{ old('email') }}"
-                    class="form-control @error('email') is-invalid @enderror" placeholder="Email">
-                @error('email')
+                <input type="text" name="login" value="{{ old('login') }}"
+                    class="form-control @error('login') is-invalid @enderror" placeholder="Username atau Email">
+                @error('login')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
@@ -143,7 +134,7 @@
             {{-- Remember Me --}}
             <div class="mb-2 text-start">
                 <label class="form-check">
-                    <input type="checkbox" class="form-check-input" />
+                    <input type="checkbox" class="form-check-input" name="remember" />
                     <span class="form-check-label">Ingat saya di perangkat ini</span>
                 </label>
             </div>
