@@ -26,7 +26,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar
+            'signature' => 'nullable|image|mimes:png|max:2048', // Validasi untuk tanda tangan
         ]);
 
         // Update data pengguna
@@ -38,16 +38,16 @@ class ProfileController extends Controller
             $user->password = Hash::make($request->password); // Hash password baru
         }
 
-        // Cek jika ada file gambar yang diupload
-        if ($request->hasFile('profile_picture')) {
-            // Hapus foto lama jika ada
-            if ($user->profile_picture_url) {
-                Storage::delete('public/' . $user->profile_picture_url); // Menghapus gambar lama dari storage
+        // Cek jika ada file gambar tanda tangan yang diupload
+        if ($request->hasFile('signature')) {
+            // Hapus tanda tangan lama jika ada
+            if ($user->signature_url) {
+                Storage::delete('public/' . $user->signature_url); // Menghapus gambar lama dari storage
             }
 
-            // Simpan foto baru
-            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
-            $user->profile_picture_url = $path; // Simpan path foto ke database
+            // Simpan tanda tangan baru
+            $path = $request->file('signature')->store('signatures', 'public');
+            $user->signature_url = $path; // Simpan path tanda tangan ke database
         }
 
         $user->save(); // Simpan perubahan

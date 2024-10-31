@@ -9,7 +9,7 @@
                 <div class="card-header bg-gradient-primary text-white py-4 d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Welcome, {{ $user->name }}!</h4>
                     <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                        <i class="bi bi-pencil-square"></i> Edit Profile
+                        <i class="bi bi-pencil-square"></i> Lengkapi Profile
                     </button>
                 </div>
 
@@ -41,6 +41,9 @@
                                 <li class="list-group-item"><strong>Email:</strong> {{ $user->email }}</li>
                                 <li class="list-group-item"><strong>Role:</strong> {{ $user->role }}</li>
                                 <li class="list-group-item"><strong>Member Since:</strong> {{ $user->created_at->format('d M Y') }}</li>
+                                <li class="list-group-item"><strong>Signature:</strong>
+                                    <img src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/150x50' }}" alt="Signature" class="signature-image">
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -91,6 +94,15 @@
                             <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation">
                         </div>
                     </div>
+                    <div class="form-group mb-3">
+                        <label for="edit_signature" class="form-label">Upload Signature (PNG only)</label>
+                        <input type="file" class="form-control" id="edit_signature" name="signature" accept="image/png" onchange="previewSignature(event)">
+                        <small class="form-text text-muted">Leave blank if you don't want to change the signature.</small>
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <img id="currentSignature" src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/150x50' }}" alt="Signature Image" class="img-fluid img-thumbnail signature-preview">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -118,6 +130,7 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 </script>
+
 <style>
     .modern-card {
         border-radius: 20px;
