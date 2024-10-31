@@ -133,17 +133,18 @@
                         <!-- Users Table -->
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap" id="usersTable">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Password</th>
-                                        <th>Role</th>
-                                        <th>Created At</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                    <th>Role</th>
+                                    <th>Created At</th>
+                                    <th>Status</th> <!-- Kolom baru untuk status -->
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
                                 <tbody>
                                     <!-- Data diisi oleh DataTables -->
                                 </tbody>
@@ -171,6 +172,13 @@
                 { data: 'password', name: 'password' },
                 { data: 'role', name: 'role' },
                 { data: 'created_at', name: 'created_at' },
+                {
+                    data: 'is_active', // Mengambil status aktif/nonaktif
+                    name: 'is_active',
+                    render: function(data) {
+                        return data ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-danger">Nonaktif</span>';
+                    }
+                },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             language: {
@@ -301,5 +309,6 @@
         });
     });
 </script>
+
 
 @endsection

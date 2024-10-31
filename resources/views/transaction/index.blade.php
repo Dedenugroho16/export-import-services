@@ -86,12 +86,10 @@
                     {
                         data: 'client',
                         name: 'client',
-                        className: 'text-center'
                     },
                     {
                         data: 'consignee',
                         name: 'consignee',
-                        className: 'text-center'
                     },
                     {
                         data: 'aksi',
@@ -104,7 +102,20 @@
                 order: [
                     [2, 'dsc']
                 ], // Mengurutkan berdasarkan kolom pertama (No)
-                pageLength: 10
+                pageLength: 10,
+                drawCallback: function() {
+                    // Terapkan style khusus untuk kolom client dan consignee
+                    $('#invoiceTable td:nth-child(5), #invoiceTable th:nth-child(5)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                    $('#invoiceTable td:nth-child(6), #invoiceTable th:nth-child(6)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                }
             });
         });
     </script>

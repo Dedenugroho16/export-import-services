@@ -79,13 +79,13 @@
                                 <table class="table table-striped table-hover" id="waitingProformaTable">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Code</th>
-                                            <th>Number</th>
-                                            <th>Date</th>
-                                            <th>Client</th>
-                                            <th>Consignee</th>
-                                            <th>Aksi</th>
+                                            <th class="text-center">No</th>
+                                            <th class="text-center">Code</th>
+                                            <th class="text-center">Number</th>
+                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Client</th>
+                                            <th class="text-center">Consignee</th>
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -134,12 +134,10 @@
                     {
                         data: 'client',
                         name: 'client',
-                        className: 'text-center'
                     },
                     {
                         data: 'consignee',
                         name: 'consignee',
-                        className: 'text-center'
                     },
                     {
                         data: 'aksi',
@@ -150,14 +148,27 @@
                     }
                 ],
                 order: [
-                    [2, 'asc']
+                    [2, 'dsc']
                 ],
                 columnDefs: [{
                     targets: 0,
                     render: function(data, type, row, meta) {
                         return meta.row + 1;
                     }
-                }]
+                }],
+                drawCallback: function() {
+                    // Terapkan style khusus untuk kolom client dan consignee
+                    $('#approvedTable td:nth-child(5), #approvedTable th:nth-child(5)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                    $('#approvedTable td:nth-child(6), #approvedTable th:nth-child(6)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                }
             });
 
             var table = $('#waitingProformaTable').DataTable({
@@ -212,7 +223,7 @@
                     render: function(data, type, row, meta) {
                         return meta.row + 1;
                     }
-                }]
+                }],
             });
 
             $('#waitingProformaTable').on('click', '.approve-btn', function() {

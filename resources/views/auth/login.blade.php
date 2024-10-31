@@ -106,6 +106,15 @@
         <h2>Masuk ke akun anda</h2>
         <form action="{{ route('login') }}" method="post" autocomplete="off">
             @csrf
+            {{-- Username --}}
+            <div class="mb-3">
+                <input type="text" name="username" value="{{ old('username') }}"
+                    class="form-control @error('username') is-invalid @enderror" placeholder="Username">
+                @error('username')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
             {{-- Email --}}
             <div class="mb-3">
                 <input type="text" name="email" value="{{ old('email') }}"
