@@ -41,7 +41,7 @@
                                     <div class="col-md-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h3 class="card-title">PROFORMA INVOICE</h3>
+                                                <h3 class="card-title">INVOICE - {{ $transaction->number }}</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="row">
@@ -379,6 +379,8 @@
                                                             <div class="col-5">
                                                                 <input type="date" name="stuffing_date"
                                                                     id="stuffing_date" class="form-control" required>
+                                                                <span class="error-message" id="stuffing_date_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -494,14 +496,14 @@
                                                 </thead>
 
                                                 <!-- Tbody untuk data yang berasal dari fungsi load -->
-                                                <tbody id="loadedData" style="font-size: 12px" class="bg-success">
+                                                <tbody id="loadedData" style="font-size: 12px">
                                                     <tr id="nullDetailTransaction">
                                                         <td colspan="8" class="text-center">Tidak ada barang</td>
                                                     </tr>
                                                 </tbody>
 
                                                 <!-- Tbody untuk data yang berasal dari tombol pilih -->
-                                                <tbody id="selectedData" style="font-size: 12px" class="bg-info">
+                                                <tbody id="selectedData" style="font-size: 12px">
                                                 </tbody>
 
                                                 <tfoot>
@@ -569,8 +571,8 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end">
-                                <button class="btn btn-outline-primary" onclick="window.history.back()">Kembali</button>
-                                <button type="button" id="submitButton" class="btn btn-primary">Perbarui</button>
+                                <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <button type="button" id="submitButton" class="btn btn-primary">Konfirmasi</button>
                             </div>
                         </div>
                     </div>
@@ -1136,7 +1138,7 @@
 
                 // Tambahkan hidden input untuk id transaksi
                 $('#formDetailTransaction').append(`
-        <input type="" name="id_transaction" class="bg-danger" id="id_transaction" value="{{ $transaction->id }}">
+        <input type="hidden" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
     `);
 
                 // Selektor untuk setiap baris di tbody #loadedData
@@ -1156,14 +1158,14 @@
 
                     // Create hidden inputs and append to the form
                     $('#formDetailTransaction').append(`
-            <input type="" name="transactions[${index}][id]" value="${idDetailTransaction}"> <!-- Tambahkan ID Detail Transaction -->
-            <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-            <input type="" name="transactions[${index}][qty]" value="${qty}">
-            <input type="" name="transactions[${index}][carton]" value="${carton}">
-            <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
+            <input type="hidden" name="transactions[${index}][id]" value="${idDetailTransaction}"> <!-- Tambahkan ID Detail Transaction -->
+            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
+            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
+            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
+            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
+            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
         `);
 
                     // Mark this row as processed
@@ -1263,7 +1265,7 @@
 
                 // Tambahkan hidden input untuk id transaksi (hanya jika ada data valid)
                 $('#newFormDetailTransaction').append(`
-        <input type="" class="bg-warning" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
+        <input type="hidden" name="id_transaction" id="id_transaction" value="{{ $transaction->id }}">
     `);
 
                 // Loop untuk setiap baris valid dan tambahkan input hidden untuk data transaksi baru
@@ -1278,13 +1280,13 @@
 
                     // Append hidden inputs untuk setiap transaksi baru
                     $('#newFormDetailTransaction').append(`
-            <input type="" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
-            <input type="" name="transactions[${index}][qty]" value="${qty}">
-            <input type="" name="transactions[${index}][carton]" value="${carton}">
-            <input type="" name="transactions[${index}][inner_qty_carton]" value="${inner}">
-            <input type="" name="transactions[${index}][unit_price]" value="${unitPrice}">
-            <input type="" name="transactions[${index}][net_weight]" value="${netWeight}">
-            <input type="" name="transactions[${index}][price_amount]" value="${priceAmount}">
+            <input type="hidden" name="transactions[${index}][id_detail_product]" value="${idDetailProduct}">
+            <input type="hidden" name="transactions[${index}][qty]" value="${qty}">
+            <input type="hidden" name="transactions[${index}][carton]" value="${carton}">
+            <input type="hidden" name="transactions[${index}][inner_qty_carton]" value="${inner}">
+            <input type="hidden" name="transactions[${index}][unit_price]" value="${unitPrice}">
+            <input type="hidden" name="transactions[${index}][net_weight]" value="${netWeight}">
+            <input type="hidden" name="transactions[${index}][price_amount]" value="${priceAmount}">
         `);
                 });
             }
@@ -1516,6 +1518,12 @@
                     $('#commodity').addClass('is-invalid'); // Tambahkan border merah
                 }
 
+                var stuffing_date = $('#stuffing_date').val();
+                if (!stuffing_date) {
+                    $('#stuffing_date_error').text('Stuffing date harus dipilih').show();
+                    $('#stuffing_date').addClass('is-invalid'); // Tambahkan border merah
+                }
+
                 // Panggil fungsi untuk memperbarui form detail transaksi baru dari data di tabel
                 newUpdateFormDetailTransaction(); // <-- Panggil di sini sebelum submit form
                 updateFormDetailTransaction(); // <-- Panggil di sini sebelum submit form
@@ -1578,7 +1586,10 @@
                                                     newDetailTransactionSuccess
                                                         = true;
                                                     // Setelah detail transaksi baru berhasil disimpan, reload halaman
-                                                    window.location.href = "{{ route('transaction.index') }}";
+                                                    window
+                                                        .location
+                                                        .href =
+                                                        "{{ route('transaction.index') }}";
                                                 },
                                                 error: function(
                                                     xhr) {
@@ -1598,7 +1609,8 @@
                                             });
                                         } else {
                                             // Jika tidak ada detail transaksi baru, reload halaman
-                                            window.location.href = "{{ route('transaction.index') }}";
+                                            window.location.href =
+                                                "{{ route('transaction.index') }}";
                                         }
                                     },
                                     error: function(xhr) {
@@ -1629,7 +1641,8 @@
                                     success: function(response) {
                                         newDetailTransactionSuccess =
                                             true;
-                                            window.location.href = "{{ route('transaction.index') }}";
+                                        window.location.href =
+                                            "{{ route('transaction.index') }}";
                                     },
                                     error: function(xhr) {
                                         Swal.fire({
@@ -1649,7 +1662,8 @@
                                 });
                             } else {
                                 // Jika tidak ada detail transaksi dan tidak ada transaksi baru
-                                window.location.href = "{{ route('transaction.index') }}"; // Reload halaman setelah semua berhasil
+                                window.location.href =
+                                    "{{ route('transaction.index') }}"; // Reload halaman setelah semua berhasil
                             }
                         });
                     },

@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Incomplete Invoices')
+@section('title', 'Uncorfimed Invoices')
 
 @section('content')
     <div class="page-body">
@@ -26,11 +26,11 @@
 
             <!-- Daftar Proforma Invoice -->
             @if ($transactions->isEmpty())
-                <p>Tidak ada proforma invoice yang tersedia.</p>
+                <p>Tidak ada invoice yang tersedia.</p>
             @else
                 <div class="card">
                     <div class="card-body">
-                        <h3>Daftar Invoice Belum Lengkap</h3>
+                        <h3>Daftar Invoice Belum Dikonfirmasi</h3>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap" id="approvedTable">
                                 <thead>
