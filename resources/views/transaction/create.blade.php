@@ -379,6 +379,8 @@
                                                             <div class="col-5">
                                                                 <input type="date" name="stuffing_date"
                                                                     id="stuffing_date" class="form-control" required>
+                                                                <span class="error-message" id="stuffing_date_error"
+                                                                    style="color: red; display: none;"></span>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -1516,6 +1518,12 @@
                     $('#commodity').addClass('is-invalid'); // Tambahkan border merah
                 }
 
+                var stuffing_date = $('#stuffing_date').val();
+                if (!stuffing_date) {
+                    $('#stuffing_date_error').text('Stuffing date harus dipilih').show();
+                    $('#stuffing_date').addClass('is-invalid'); // Tambahkan border merah
+                }
+
                 // Panggil fungsi untuk memperbarui form detail transaksi baru dari data di tabel
                 newUpdateFormDetailTransaction(); // <-- Panggil di sini sebelum submit form
                 updateFormDetailTransaction(); // <-- Panggil di sini sebelum submit form
@@ -1578,7 +1586,10 @@
                                                     newDetailTransactionSuccess
                                                         = true;
                                                     // Setelah detail transaksi baru berhasil disimpan, reload halaman
-                                                    window.location.href = "{{ route('transaction.index') }}";
+                                                    window
+                                                        .location
+                                                        .href =
+                                                        "{{ route('transaction.index') }}";
                                                 },
                                                 error: function(
                                                     xhr) {
@@ -1598,7 +1609,8 @@
                                             });
                                         } else {
                                             // Jika tidak ada detail transaksi baru, reload halaman
-                                            window.location.href = "{{ route('transaction.index') }}";
+                                            window.location.href =
+                                                "{{ route('transaction.index') }}";
                                         }
                                     },
                                     error: function(xhr) {
@@ -1629,7 +1641,8 @@
                                     success: function(response) {
                                         newDetailTransactionSuccess =
                                             true;
-                                            window.location.href = "{{ route('transaction.index') }}";
+                                        window.location.href =
+                                            "{{ route('transaction.index') }}";
                                     },
                                     error: function(xhr) {
                                         Swal.fire({
@@ -1649,7 +1662,8 @@
                                 });
                             } else {
                                 // Jika tidak ada detail transaksi dan tidak ada transaksi baru
-                                window.location.href = "{{ route('transaction.index') }}"; // Reload halaman setelah semua berhasil
+                                window.location.href =
+                                    "{{ route('transaction.index') }}"; // Reload halaman setelah semua berhasil
                             }
                         });
                     },
