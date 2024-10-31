@@ -65,18 +65,18 @@ Route::get('detail-products/create/{hash}', [DetailProductController::class, 'cr
 // Country Routes using resource
 Route::resource('countries', CountryController::class);
 
-// Branch Routes
-Route::resource('branches', BranchController::class);
-
 // Company Routes using resource
 Route::resource('company', CompanyController::class);
 
 // Transaction Routes using resource
 // Route::resource('transaction', TransactionController::class);
 Route::get('/get-invoice', [TransactionController::class, 'getInvoice'])->name('getInvoice');
+Route::get('/get-incomplete-invoice', [TransactionController::class, 'getIncompleteInvoice'])->name('getIncompleteInvoice');
+Route::get('incomplete-invoice', [TransactionController::class, 'incomplete'])->name('incomplete-invoice');
 Route::get('transaction', [TransactionController::class, 'index'])->name('transaction.index');
 Route::get('transaction/create/{id}', [TransactionController::class, 'create'])->name('transaction.create');
 Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->name('transaction.show');
+Route::post('/invoice/completing/{id}', [TransactionController::class, 'completingInvoice'])->name('invoice.compliting');
 // Route untuk update transaksi
 Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 
@@ -145,3 +145,4 @@ Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaD
 
 // Route getConsigneeByid
 Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getConsigneesByClient'])->name('consignees.byClient');
+Route::get('/transactions/rekap', [TransactionController::class, 'rekapSales'])->name('transactions.rekap');

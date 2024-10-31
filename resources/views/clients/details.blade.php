@@ -24,11 +24,11 @@
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <th>Name</th>
+                                <th>Nama</th>
                                 <td>{{ $client->name }}</td>
                             </tr>
                             <tr>
-                                <th>Address</th>
+                                <th>Alamat</th>
                                 <td>{{ $client->address }}</td>
                             </tr>
                             <tr>
@@ -36,7 +36,7 @@
                                 <td>{{ $client->PO_BOX }}</td>
                             </tr>
                             <tr>
-                                <th>Tel</th>
+                                <th>Telepon</th>
                                 <td>{{ $client->tel }}</td>
                             </tr>
                             <tr>
@@ -73,11 +73,10 @@
                             <table id="consigneeById" class="table card-table table-bordered table-hover table-vcenter text-nowrap">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th class="text-center">#</th>
+                                        <th class="text-center">No</th>
                                         <th class="text-center">Nama</th>
                                         <th class="text-center">Alamat</th>
                                         <th class="text-center">Telepon</th>
-                                        <th class="text-center">ID Client</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -101,11 +100,18 @@
                 type: 'GET'
             },
             columns: [
-                { data: 'id', name: 'id', class: 'text-center' },
+                { 
+                    data: null, 
+                    class: 'text-center',
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut
+                    },
+                    orderable: false,
+                    searchable: false
+                },
                 { data: 'name', name: 'name' },
-                { data: 'address', name: 'address', class: 'text-center' },
+                { data: 'address', name: 'address'},
                 { data: 'tel', name: 'tel', class: 'text-center' },
-                { data: 'id_client', name: 'id_client', class: 'text-center' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
             ],
             language: {
@@ -121,7 +127,20 @@
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50],
-            pageLength: 10
+            pageLength: 10,
+            drawCallback: function() {
+                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
+                $('#consigneeById td:nth-child(2), #consigneeById th:nth-child(2)').css({
+                    'max-width': '200px',
+                    'white-space': 'normal',
+                    'word-wrap': 'break-word'
+                });
+                $('#consigneeById td:nth-child(3), #consigneeById th:nth-child(3)').css({
+                    'max-width': '250px',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis'
+                });
+            }
         });
     });
 </script>

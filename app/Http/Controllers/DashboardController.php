@@ -7,7 +7,6 @@ use App\Models\Product;
 use App\Models\Commodity;
 use App\Models\Country;
 use App\Models\User;
-use App\Models\Branch;
 use App\Models\Transaction;
 use App\Models\Company;
 
@@ -20,7 +19,6 @@ class DashboardController extends Controller
         $commoditiesCount = Commodity::count();
         $countriesCount = Country::count();
         $usersCount = User::count();
-        $branchesCount = Branch::count();
         $transactionsCount = Transaction::count();
         $companyCount = Company::count(); 
 
@@ -29,8 +27,7 @@ class DashboardController extends Controller
             'productsCount', 
             'commoditiesCount', 
             'countriesCount', 
-            'usersCount', 
-            'branchesCount', 
+            'usersCount',
             'transactionsCount',
             'companyCount'
         ));
