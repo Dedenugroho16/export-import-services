@@ -1456,6 +1456,11 @@
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
                 drawCallback: function() {
+                    $('#clientsModalTable td:nth-child(2), #clientsModalTable th:nth-child(2)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
                     $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
                         'max-width': '280px',
                         'overflow': 'hidden',
@@ -1519,8 +1524,7 @@
                     },
                     {
                         data: 'address',
-                        name: 'address',
-                        class: 'text-center'
+                        name: 'address'
                     },
                     {
                         data: 'tel',
@@ -1553,6 +1557,19 @@
                 },
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
+                drawCallback: function() {
+                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
+                $('#consigneeModalTable td:nth-child(2), #consigneeModalTable th:nth-child(2)').css({
+                    'max-width': '200px',
+                    'white-space': 'normal',
+                    'word-wrap': 'break-word'
+                });
+                $('#consigneeModalTable td:nth-child(3), #consigneeModalTable th:nth-child(3)').css({
+                    'max-width': '250px',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis'
+                });
+            }
             });
 
             // Fungsi untuk memuat data consignee berdasarkan ID client
