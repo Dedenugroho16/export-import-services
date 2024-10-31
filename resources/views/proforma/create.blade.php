@@ -58,14 +58,8 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <select class="form-control country" id="country">
-                                                                    @foreach ($country as $negara)
-                                                                        <option value="{{ $negara->id }}"
-                                                                            data-code="{{ $negara->code }}">
-                                                                            {{ $negara->name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
+                                                                <select class="form-control country" id="country"
+                                                                    name="id_country" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -243,13 +237,7 @@
                                                                 <select class="form-control product" id="product"
                                                                     name="id_product" required>
                                                                     <option value="">Pilih Product</option>
-                                                                    @foreach ($products as $product)
-                                                                        <option value="{{ $product->id }}"
-                                                                            data-code="{{ $product->code }}"
-                                                                            data-abbreviation="{{ $product->abbreviation }}">
-                                                                            {{ $product->name }}
-                                                                        </option>
-                                                                    @endforeach
+                                                                    <!-- Placeholder option -->
                                                                 </select>
                                                                 <span class="error-message" id="product_error"
                                                                     style="color: red; display: none;"></span>
@@ -607,20 +595,36 @@
             $('#product').select2({
                 placeholder: "Pilih Product",
                 ajax: {
-                    url: '/ajax-products',
+                    url: '/ajax-products', // URL endpoint for fetching products
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
                         return {
-                            q: params.term // kata kunci pencarian dari Select2
+                            q: params.term // Search term
                         };
                     },
                     processResults: function(data) {
                         return {
-                            results: data // hasil akan langsung dipetakan ke select2
+                            results: data.map(function(product) {
+                                return {
+                                    id: product.id,
+                                    text: product.text,
+                                    code: product.code,
+                                    abbreviation: product.abbreviation
+                                };
+                            })
                         };
                     },
                     cache: true
+                },
+                templateResult: function(product) {
+                    // Display product name with abbreviation in the search results
+                    if (product.loading) return product.text;
+                    return $('<span>' + product.text + ' (' + product.abbreviation + ')</span>');
+                },
+                templateSelection: function(product) {
+                    // Display name and code in the selected option
+                    return $('<span>' + product.text + ' (' + product.code + ')</span>');
                 }
             });
 
@@ -644,23 +648,57 @@
                 }
             });
 
+            // Initialize Select2 for countries
             $('#country').select2({
-                placeholder: "Pilih Negara",
                 ajax: {
-                    url: '/ajax-countries',
+                    url: '/ajax-countries', // URL endpoint for fetching countries
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
                         return {
-                            q: params.term
+                            q: params.term // Search term for dynamic search
                         };
                     },
                     processResults: function(data) {
+                        // Format data for Select2
                         return {
-                            results: data
+                            results: data.map(function(country) {
+                                return {
+                                    id: country.id, // Country ID
+                                    text: country.text + ' (' + country.code +
+                                    ')', // Country name and code
+                                    code: country.code // Country code
+                                };
+                            })
                         };
                     },
                     cache: true
+                },
+                placeholder: "Select a country",
+                templateResult: function(country) {
+                    if (country.loading) return country.text;
+                    return $('<span>' + country.text + '</span>'); // Format in dropdown
+                },
+                templateSelection: function(country) {
+                    return $('<span>' + country.text + '</span>'); // Format when selected
+                }
+            });
+
+            // Set default to Indonesia with code "ID" on page load
+            $.ajax({
+                url: '/ajax-countries',
+                dataType: 'json',
+                success: function(data) {
+                    const indonesia = data.find(country => country.code === "ID");
+                    if (indonesia) {
+                        // Use Select2’s `data` method to set Indonesia as the default selection with all data fields intact
+                        $('#country').select2('data', [{
+                            id: indonesia.id,
+                            text: indonesia.text + ' (' + indonesia.code + ')',
+                            code: indonesia.code
+                        }]);
+                        $('#country').trigger('change'); // Trigger change event for consistency
+                    }
                 }
             });
         });
@@ -704,10 +742,6 @@
 
         // modal datatables
         $(document).ready(function() {
-            // Set default country to the one with data-code 'ID' (Indonesia)
-            var defaultCountry = $('#country option[data-code="ID"]').val();
-            $('#country').val(defaultCountry);
-
             // Update button and error message visibility based on the default value
             if ($('#country').val() === "") {
                 $('#submitButton').prop('disabled', true);
@@ -933,68 +967,74 @@
 
             // Fungsi untuk memperbarui kode negara atau dua digit bulan
             function updateProductCode() {
-                var countryCode = $('#country option:selected').data('code'); // Mengambil kode negara
-                var productCode = $('#product option:selected').data('code'); // Mengambil kode produk
-                var twoDigitYearMonth = getTwoDigitYearMonth(); // Mendapatkan dua digit tahun + dua digit bulan
+                // Get the selected product code from Select2
+                var productData = $('#product').select2('data')[0]; // Get the selected data
+                var productCode = productData ? productData.code : null; // Access the product code
 
-                // Jika ada produk yang dipilih dan ada kode negara
+                // Get the selected country code from Select2
+                var countryData = $('#country').select2('data')[0]; // Get the selected data
+                var countryCode = countryData ? countryData.code : null; // Access the country code
+
+                // Get two-digit year and month
+                var twoDigitYearMonth = getTwoDigitYearMonth(); // Function to get the year + month
+
+                // If both product and country codes exist
                 if (productCode && countryCode) {
                     var codeText = productCode + ' ' + countryCode + twoDigitYearMonth;
                     $('#product-code').text(codeText);
-                    $('#code').val(codeText); // Mengisi input dengan nilai yang sama
+                    $('#code').val(codeText); // Set input value
                 }
-                // Jika produk dipilih, tapi negara belum dipilih
+                // If a product is selected but no country is selected
                 else if (productCode) {
                     $('#product-code').text(productCode + ' ' + 'pilih negara!' + twoDigitYearMonth);
                 }
-                // Jika negara dipilih, tapi produk belum dipilih
+                // If a country is selected but no product is selected
                 else if (countryCode) {
                     $('#product-code').text(countryCode + twoDigitYearMonth);
                 }
-                // Jika tidak ada produk atau negara yang dipilih
+                // If neither product nor country is selected
                 else {
                     $('#product-code').text('-');
                 }
             }
 
             function updateNumber() {
-                var productAbbreviation = $('#product option:selected').data(
-                    'abbreviation'); // Mengambil abbreviation produk
-                var countryCode = $('#country option:selected').data('code'); // Mengambil kode negara
+                // Get the selected product abbreviation from Select2
+                var productData = $('#product').select2('data')[0]; // Get the selected data
+                var productAbbreviation = productData ? productData.abbreviation : null; // Access the abbreviation
 
-                // Mendapatkan tanggal saat ini
+                // Get the selected country code from Select2
+                var countryData = $('#country').select2('data')[0]; // Get the selected data
+                var countryCode = countryData ? countryData.code : null; // Access the code
+
+                // Get the current date
                 var currentDate = new Date();
 
-                // Mendapatkan dua digit bulan (misalnya 09 untuk September)
+                // Get two-digit month (e.g., 09 for September)
                 var twoDigitMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
 
-                // Mendapatkan angka Romawi bulan
+                // Get Roman numeral month
                 var romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-                var romanMonth = romanMonths[currentDate.getMonth()]; // Bulan dalam format Romawi
+                var romanMonth = romanMonths[currentDate.getMonth()]; // Month in Roman numeral format
 
-                // Mendapatkan dua digit tahun
+                // Get two-digit year
                 var twoDigitYear = currentDate.getFullYear().toString().slice(-2);
 
+                // Check if both productAbbreviation and countryCode exist
                 if (productAbbreviation && countryCode) {
-                    // Format yang diminta: 'countryCode/09/INV/II/24'
                     var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
                         twoDigitYear;
-                    var finalNumber = '{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
-                        formattedNumber;
+                    var finalNumber = '{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' + formattedNumber;
                     $('#numberDisplay').text(finalNumber);
-                    $('#number').val(finalNumber); // Mengisi input dengan nilai yang sama
+                    $('#number').val(finalNumber); // Set input value
                 } else if (productAbbreviation) {
-                    // Format yang diminta: 'countryCode/09/INV/II/24'
-                    var formattedNumber = '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
-                        twoDigitYear;
+                    var formattedNumber = '/' + twoDigitMonth + '/INV/' + romanMonth + '/' + twoDigitYear;
                     $('#numberDisplay').text('{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
                         formattedNumber);
                 } else if (countryCode) {
-                    // Format yang diminta: 'countryCode/09/INV/II/24'
                     var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
                         twoDigitYear;
-                    $('#numberDisplay').text('{{ $formattedNumber }}' + ' ' +
-                        formattedNumber);
+                    $('#numberDisplay').text('{{ $formattedNumber }}' + ' ' + formattedNumber);
                 } else {
                     $('#numberDisplay').text('{{ $formattedNumber }}');
                 }
@@ -1615,17 +1655,17 @@
                 drawCallback: function() {
                     // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
                     $('#consigneeModalTable td:nth-child(2), #consigneeModalTable th:nth-child(2)')
-                .css({
-                        'max-width': '200px',
-                        'white-space': 'normal',
-                        'word-wrap': 'break-word'
-                    });
+                        .css({
+                            'max-width': '200px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
                     $('#consigneeModalTable td:nth-child(3), #consigneeModalTable th:nth-child(3)')
-                .css({
-                        'max-width': '250px',
-                        'overflow': 'hidden',
-                        'text-overflow': 'ellipsis'
-                    });
+                        .css({
+                            'max-width': '250px',
+                            'overflow': 'hidden',
+                            'text-overflow': 'ellipsis'
+                        });
                 }
             });
 

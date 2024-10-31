@@ -185,19 +185,18 @@ class ProductsController extends Controller
     }
 
     public function getProducts(Request $request)
-    {
-        $search = $request->input('q'); // 'q' adalah parameter pencarian dari Select2
-        $products = Product::where('name', 'like', '%' . $search . '%')->get();
+{
+    $search = $request->input('q'); // 'q' is the search parameter from Select2
+    $products = Product::where('name', 'like', '%' . $search . '%')->get();
 
-        $results = $products->map(function ($product) {
-            return [
-                'id' => $product->id,
-                'text' => $product->name,
-                'code' => $product->code,
-                'abbreviation' => $product->abbreviation
-            ];
-        });
+    $results = $products->map(function ($product) {
+        return [
+            'id' => $product->id,
+            'text' => $product->name,    // 'text' for Select2
+            'code' => $product->code     // Ensure 'code' matches the Select2 setup
+        ];
+    });
 
-        return response()->json($results);
-    }
+    return response()->json($results);
+}
 }

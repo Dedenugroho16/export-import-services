@@ -144,7 +144,6 @@ class ProformaController extends Controller
         $clients = Client::all();
         $products = Product::all();
         $commodities = Commodity::all();
-        $country = Country::all();
 
         // Mengambil number terakhir dari tabel transaction
         $lastTransaction = Transaction::orderBy('number', 'desc')->first();
@@ -164,7 +163,7 @@ class ProformaController extends Controller
         // Menggabungkan $newNumber dengan dua digit tanggal
         $formattedNumber = $newNumber . '/' . $twoDigitDate;
 
-        return view('proforma.create', compact('consignees', 'clients', 'products', 'commodities', 'country', 'formattedNumber'));
+        return view('proforma.create', compact('consignees', 'clients', 'products', 'commodities', 'formattedNumber'));
     }
 
     public function store(Request $request)
