@@ -735,9 +735,65 @@
         });
 
         $(document).ready(function() {
-            $('#product').select2();
-            $('#commodity').select2();
-            $('#country').select2();
+            $('#product').select2({
+                placeholder: "Pilih Product",
+                ajax: {
+                    url: '/ajax-products',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term // kata kunci pencarian dari Select2
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data // hasil akan langsung dipetakan ke select2
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $('#commodity').select2({
+                placeholder: "Pilih Commodity",
+                ajax: {
+                    url: '/ajax-commodities',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $('#country').select2({
+                placeholder: "Pilih Negara",
+                ajax: {
+                    url: '/ajax-countries',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
         });
 
         // modal datatables

@@ -17,4 +17,20 @@ class CountryController extends Controller
 
         return view('countries.index');
     }
+
+    public function getCountries(Request $request)
+{
+    $search = $request->input('q'); // 'q' adalah parameter pencarian dari Select2
+    $countries = Country::where('name', 'like', '%' . $search . '%')->get();
+    
+    $results = $countries->map(function($country) {
+        return [
+            'id' => $country->id,
+            'text' => $country->name,
+            'code' => $country->code,
+        ];
+    });
+    
+    return response()->json($results);
+}
 }

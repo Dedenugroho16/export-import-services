@@ -604,10 +604,65 @@
         });
 
         $(document).ready(function() {
-            // Menginisialisasi Select2
-            $('#product').select2();
-            $('#commodity').select2();
-            $('#country').select2();
+            $('#product').select2({
+                placeholder: "Pilih Product",
+                ajax: {
+                    url: '/ajax-products',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term // kata kunci pencarian dari Select2
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data // hasil akan langsung dipetakan ke select2
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $('#commodity').select2({
+                placeholder: "Pilih Commodity",
+                ajax: {
+                    url: '/ajax-commodities',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $('#country').select2({
+                placeholder: "Pilih Negara",
+                ajax: {
+                    url: '/ajax-countries',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
         });
 
         $(document).ready(function() {
@@ -1400,8 +1455,8 @@
                 processing: false,
                 serverSide: true,
                 ajax: "{{ route('clients.index') }}",
-                columns: [{ 
-                        data: null, 
+                columns: [{
+                        data: null,
                         class: 'text-center',
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
@@ -1509,8 +1564,8 @@
                         return json.data;
                     }
                 }, // diisi saat loadConsignees dipanggil
-                columns: [{ 
-                        data: null, 
+                columns: [{
+                        data: null,
                         class: 'text-center',
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
@@ -1532,15 +1587,15 @@
                         class: 'text-center'
                     },
                     {
-                    data: null,
-                    render: function(data, type, row) {
-                        return `<div class="text-center">
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<div class="text-center">
                                     <button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>
                                 </div>`;
-                    },
-                    orderable: false,
-                    searchable: false
-                }
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
                 ],
                 language: {
                     lengthMenu: "Tampilkan _MENU_ entri",
@@ -1558,18 +1613,20 @@
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
                 drawCallback: function() {
-                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
-                $('#consigneeModalTable td:nth-child(2), #consigneeModalTable th:nth-child(2)').css({
-                    'max-width': '200px',
-                    'white-space': 'normal',
-                    'word-wrap': 'break-word'
-                });
-                $('#consigneeModalTable td:nth-child(3), #consigneeModalTable th:nth-child(3)').css({
-                    'max-width': '250px',
-                    'overflow': 'hidden',
-                    'text-overflow': 'ellipsis'
-                });
-            }
+                    // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
+                    $('#consigneeModalTable td:nth-child(2), #consigneeModalTable th:nth-child(2)')
+                .css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                    $('#consigneeModalTable td:nth-child(3), #consigneeModalTable th:nth-child(3)')
+                .css({
+                        'max-width': '250px',
+                        'overflow': 'hidden',
+                        'text-overflow': 'ellipsis'
+                    });
+                }
             });
 
             // Fungsi untuk memuat data consignee berdasarkan ID client
