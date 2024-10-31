@@ -72,7 +72,7 @@ class TransactionController extends Controller
                 $lengkapi = '';
                 if (is_null($row->stuffing_date)) {
                     $hashId = IdHashHelper::encode($row->id);
-                    $lengkapi = '<a href="' . route('transaction.create', ['id' => $hashId]) . '" class="btn btn-sm btn-success">Lengkapi</a>';
+                    $lengkapi = '<a href="' . route('transaction.create', ['id' => $hashId]) . '" class="btn btn-sm btn-success">Konfirmasi</a>';
                 }
 
                 $packingList = '<a href="' . route('packingList.show', $hashId) . '" class="btn btn-sm btn-warning">Packing List</a>';
