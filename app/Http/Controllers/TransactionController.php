@@ -175,7 +175,7 @@ class TransactionController extends Controller
         $formattedNumber = $parts[0]; // Hasil: 0002/09
 
         // Kirim semua data yang dibutuhkan ke view
-        return view('proforma.edit', compact(
+        return view('transaction.create', compact(
             'transaction',  // Transaction data to edit
             'consignees',
             'clients',
