@@ -407,7 +407,8 @@
                                             <td><p style="font-weight: bold">Approved By</p></td>
                                         </tr>
                                         <tr>
-                                            <td><img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;"></td>
+                                            <td><img src="{{ asset('storage/' . $transaction->approverUser->signature_url) }}" alt="Signature" 
+                                                width="100px" style="margin-bottom: 10px;"></td>
                                         </tr>
                                         <tr>
                                             <td style="border-bottom: 1px solid black;">{{ $transaction->approverUser->name }}</td>

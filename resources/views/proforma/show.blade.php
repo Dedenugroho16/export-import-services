@@ -380,8 +380,8 @@
                                         </tr>
                                         @if ($approved == 1)
                                             <tr>
-                                                <td><img src="{{ asset('storage/ttd.png') }}" alt="Signature"
-                                                        width="80" style="margin-bottom: 10px;"></td>
+                                                <td><img src="{{ asset('storage/' . $proformaInvoice->approverUser->signature_url) }}" alt="Signature"
+                                                        width="100px" style="margin-bottom: 10px;"></td>
                                             </tr>
                                             <tr>
                                                 <td style="border-bottom: 1px solid black;">
