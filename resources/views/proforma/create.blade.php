@@ -627,7 +627,7 @@
                         return $('<span>Pilih produk</span>');
                     }
                     // Display name and code in the selected option
-                    return $('<span>' + product.text + ' (' + product.code + ')</span>');
+                    return $('<span>' + product.text + ' (' + product.abbreviation + ')</span>');
                 }
             });
 
