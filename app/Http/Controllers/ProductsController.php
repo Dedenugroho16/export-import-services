@@ -193,7 +193,8 @@ class ProductsController extends Controller
         return [
             'id' => $product->id,
             'text' => $product->name,    // 'text' for Select2
-            'code' => $product->code     // Ensure 'code' matches the Select2 setup
+            'code' => $product->code,     // Ensure 'code' matches the Select2 setup
+            'abbreviation' => $product->abbreviation,
         ];
     });
 

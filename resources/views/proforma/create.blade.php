@@ -623,6 +623,9 @@
                     return $('<span>' + product.text + ' (' + product.abbreviation + ')</span>');
                 },
                 templateSelection: function(product) {
+                    if (!product.id) {
+                        return $('<span>Pilih produk</span>');
+                    }
                     // Display name and code in the selected option
                     return $('<span>' + product.text + ' (' + product.code + ')</span>');
                 }
@@ -651,23 +654,21 @@
             // Initialize Select2 for countries
             $('#country').select2({
                 ajax: {
-                    url: '/ajax-countries', // URL endpoint for fetching countries
+                    url: '/ajax-countries',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
                         return {
-                            q: params.term // Search term for dynamic search
+                            q: params.term
                         };
                     },
                     processResults: function(data) {
-                        // Format data for Select2
                         return {
                             results: data.map(function(country) {
                                 return {
-                                    id: country.id, // Country ID
-                                    text: country.text + ' (' + country.code +
-                                    ')', // Country name and code
-                                    code: country.code // Country code
+                                    id: country.id,
+                                    text: country.text + ' (' + country.code + ')',
+                                    code: country.code // Tambahkan kode negara langsung di data
                                 };
                             })
                         };
@@ -677,27 +678,25 @@
                 placeholder: "Select a country",
                 templateResult: function(country) {
                     if (country.loading) return country.text;
-                    return $('<span>' + country.text + '</span>'); // Format in dropdown
+                    return $('<span>' + country.text + '</span>');
                 },
                 templateSelection: function(country) {
-                    return $('<span>' + country.text + '</span>'); // Format when selected
+                    return $('<span>' + country.text + '</span>');
                 }
             });
 
-            // Set default to Indonesia with code "ID" on page load
+            // Set default Indonesia dan tambahkan data-code di data yang dipilih
             $.ajax({
                 url: '/ajax-countries',
                 dataType: 'json',
                 success: function(data) {
                     const indonesia = data.find(country => country.code === "ID");
                     if (indonesia) {
-                        // Use Select2’s `data` method to set Indonesia as the default selection with all data fields intact
-                        $('#country').select2('data', [{
-                            id: indonesia.id,
-                            text: indonesia.text + ' (' + indonesia.code + ')',
-                            code: indonesia.code
-                        }]);
-                        $('#country').trigger('change'); // Trigger change event for consistency
+                        const option = new Option(indonesia.text + ' (' + indonesia.code + ')',
+                            indonesia.id, true, true);
+                        $(option).attr('data-code', indonesia
+                            .code); // Set data-code khusus untuk Indonesia
+                        $('#country').append(option).trigger('change');
                     }
                 }
             });
@@ -967,13 +966,21 @@
 
             // Fungsi untuk memperbarui kode negara atau dua digit bulan
             function updateProductCode() {
+                let countryCode;
+
+                // Cek jika negara yang dipilih adalah Indonesia
+                const selectedOption = $('#country option:selected');
+                if (selectedOption && selectedOption.data('code') === "ID") {
+                    const selectedOption = $('#country option:selected');
+                    countryCode = selectedOption.data('code'); // Ambil data-code untuk Indonesia
+                } else {
+                    const countryData = $('#country').select2('data')[0];
+                    countryCode = countryData ? countryData.code : null; // Ambil kode negara dari data Select2
+                }
+
                 // Get the selected product code from Select2
                 var productData = $('#product').select2('data')[0]; // Get the selected data
                 var productCode = productData ? productData.code : null; // Access the product code
-
-                // Get the selected country code from Select2
-                var countryData = $('#country').select2('data')[0]; // Get the selected data
-                var countryCode = countryData ? countryData.code : null; // Access the country code
 
                 // Get two-digit year and month
                 var twoDigitYearMonth = getTwoDigitYearMonth(); // Function to get the year + month
@@ -999,40 +1006,50 @@
             }
 
             function updateNumber() {
-                // Get the selected product abbreviation from Select2
-                var productData = $('#product').select2('data')[0]; // Get the selected data
-                var productAbbreviation = productData ? productData.abbreviation : null; // Access the abbreviation
+                // Ambil data kode negara tergantung apakah negara yang dipilih adalah Indonesia atau bukan
+                let countryCode;
 
-                // Get the selected country code from Select2
-                var countryData = $('#country').select2('data')[0]; // Get the selected data
-                var countryCode = countryData ? countryData.code : null; // Access the code
+                // Cek jika negara yang dipilih adalah Indonesia
+                const selectedOption = $('#country option:selected');
+                if (selectedOption && selectedOption.data('code') === "ID") {
+                    const selectedOption = $('#country option:selected');
+                    countryCode = selectedOption.data('code'); // Ambil data-code untuk Indonesia
+                } else {
+                    const countryData = $('#country').select2('data')[0];
+                    countryCode = countryData ? countryData.code : null; // Ambil kode negara dari data Select2
+                }
 
-                // Get the current date
-                var currentDate = new Date();
+                // Ambil singkatan produk dari Select2
+                const productData = $('#product').select2('data')[0];
+                const productAbbreviation = productData ? productData.abbreviation : null;
 
-                // Get two-digit month (e.g., 09 for September)
-                var twoDigitMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                // Dapatkan tanggal saat ini
+                const currentDate = new Date();
 
-                // Get Roman numeral month
-                var romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-                var romanMonth = romanMonths[currentDate.getMonth()]; // Month in Roman numeral format
+                // Dapatkan bulan dalam format dua digit (contoh: 09 untuk September)
+                const twoDigitMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
 
-                // Get two-digit year
-                var twoDigitYear = currentDate.getFullYear().toString().slice(-2);
+                // Dapatkan bulan dalam format angka Romawi
+                const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                const romanMonth = romanMonths[currentDate.getMonth()];
 
-                // Check if both productAbbreviation and countryCode exist
+                // Dapatkan tahun dalam format dua digit
+                const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
+
+                // Cek apakah productAbbreviation dan countryCode ada
                 if (productAbbreviation && countryCode) {
-                    var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
+                    const formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
                         twoDigitYear;
-                    var finalNumber = '{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' + formattedNumber;
+                    const finalNumber = '{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
+                        formattedNumber;
                     $('#numberDisplay').text(finalNumber);
-                    $('#number').val(finalNumber); // Set input value
+                    $('#number').val(finalNumber); // Setel nilai input
                 } else if (productAbbreviation) {
-                    var formattedNumber = '/' + twoDigitMonth + '/INV/' + romanMonth + '/' + twoDigitYear;
+                    const formattedNumber = '/' + twoDigitMonth + '/INV/' + romanMonth + '/' + twoDigitYear;
                     $('#numberDisplay').text('{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
                         formattedNumber);
                 } else if (countryCode) {
-                    var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
+                    const formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
                         twoDigitYear;
                     $('#numberDisplay').text('{{ $formattedNumber }}' + ' ' + formattedNumber);
                 } else {
