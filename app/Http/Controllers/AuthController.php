@@ -8,54 +8,40 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    // Login User
     public function login(Request $request)
-{
-    // Validate input
-    $fields = $request->validate([
-        'email' => ['required', 'max:255', 'email'],
-        'password' => ['required']
-    ]);
-
-    // Check if the user exists
-    $user = User::where('email', $fields['email'])->first();
-
-    // Check if the user exists and is active
-    if (!$user) {
-        // User does not exist
-        return back()->withErrors([
-            'failed' => 'Akun yang Anda masukkan tidak ditemukan.'
+    {
+        $request->validate([
+            'login' => 'required|string',
+            'password' => 'required|string',
         ]);
-    } elseif (!$user->is_active) {
-        // User is inactive
+
+        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+        $credentials = [
+            $loginType => $request->login,
+            'password' => $request->password,
+        ];
+
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+            if (Auth::user()->is_active) {
+                return redirect()->intended('dashboard');
+            } else {
+                Auth::logout();
+                return back()->withErrors([
+                    'failed' => 'Akun Anda telah dinonaktifkan. Silakan hubungi administrator untuk informasi lebih lanjut.',
+                ]);
+            }
+        }
+
         return back()->withErrors([
-            'failed' => 'Akun Anda tidak aktif.'
-        ]);
-    } elseif (Auth::attempt($fields, $request->remember)) {
-        // Successful login
-        return redirect()->intended('home');
-    } else {
-        // Invalid credentials
-        return back()->withErrors([
-            'failed' => 'Akun yang Anda masukkan tidak sesuai.'
+            'failed' => 'Login tidak berhasil. Silakan periksa kembali username/email dan password Anda.',
         ]);
     }
-}
 
-
-    // Logout User
     public function logout(Request $request)
     {
-        // Logout pengguna
         Auth::logout();
-
-        // Invalidate session pengguna
         $request->session()->invalidate();
-
-        // Regenerate CSRF token
         $request->session()->regenerateToken();
-
-        // Redirect ke halaman utama
         return redirect('/');
     }
 }
