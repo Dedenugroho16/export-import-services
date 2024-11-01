@@ -251,7 +251,7 @@
                                                             <div class="col-5">
                                                                 <div class="d-flex align-items-center">
                                                                     <select style="width: 100%;" id="product"
-                                                                        name="product">
+                                                                        name="id_product">
                                                                         <option value="{{ $productSelected->id }}"
                                                                             data-code="{{ $productSelected->code }}"
                                                                             data-abbreviation="{{ $productSelected->abbreviation }}">
@@ -263,7 +263,7 @@
                                                                         value="{{ $productSelectedID }}">
                                                                     <button id="infoButton"
                                                                         class="btn btn-warning btn-sm ms-2"
-                                                                        title="Informasi">
+                                                                        title="Informasi" style="display: none;">
                                                                         <i class="fas fa-info-circle"></i>
                                                                         <!-- Using Font Awesome icon -->
                                                                     </button>
@@ -1097,6 +1097,7 @@
                             // Disable the select element
                             $('#product').prop('disabled', true);
                             $('#old-product').prop('disabled', false);
+                            $('#infoButton').show();
 
                             // Event listener untuk tombol hapus
                             $('#loadedData').on('click', '.old-remove-btn', function() {
@@ -1110,6 +1111,7 @@
                             // Disable the select element
                             $('#product').prop('disabled', false);
                             $('#old-product').prop('disabled', true);
+                            $('#infoButton').hide();
                             $('#loadedData').append(`
                     <tr id="nullDetailTransaction">
                         <td colspan="8" class="text-center">Seluruh detail transaksi yang tersimpan terhapus!</td>
