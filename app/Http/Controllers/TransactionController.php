@@ -16,6 +16,7 @@ use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
 use App\Models\DetailTransaction;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -412,6 +413,9 @@ class TransactionController extends Controller
             'total' => 'required|numeric|min:0',
             'approved' => 'nullable|boolean',
         ]);
+        
+        // Tambahkan id pengguna yang melakukan konfirmasi
+        $validatedData['confirmed_by'] = Auth::id();
 
         // Cari transaksi berdasarkan ID
         $transaction = Transaction::findOrFail($id);
