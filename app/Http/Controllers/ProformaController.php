@@ -16,6 +16,7 @@ use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\DetailTransaction;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -197,11 +198,13 @@ class ProformaController extends Controller
             'approved' => 'nullable|boolean',
         ]);
 
-        // Simpan transaksi
+        $validatedData['created_by'] = Auth::id();
+        
         $transaction = Transaction::create($validatedData);
 
         // Kembalikan response JSON dengan ID transaksi yang baru
-        return response()->json(['id' => $transaction->id], 201);
+         return response()->json(['id' => $transaction->id], 201);
+
     }
 
     public function show($hash)

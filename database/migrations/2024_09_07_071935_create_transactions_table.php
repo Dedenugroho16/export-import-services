@@ -37,6 +37,8 @@ class CreateTransactionsTable extends Migration
             $table->boolean('approved')->default(false);
             $table->unsignedBigInteger('approver')->nullable();
             $table->timestamp('approved_at')->nullable();
+            $table->unsignedBigInteger('confirmed_by')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
 
             $table->foreign('id_consignee')->references('id')->on('consignees')->onDelete('cascade');
