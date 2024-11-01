@@ -40,7 +40,7 @@ class TransactionController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-    
+
                 // Membuat dropdown aksi
                 $dropdown = '
                     <div class="dropdown">
@@ -56,7 +56,7 @@ class TransactionController extends Controller
                             Packing List</a></li>
                         </ul>
                     </div>';
-    
+
                 return $dropdown; // Mengembalikan dropdown
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
@@ -80,7 +80,7 @@ class TransactionController extends Controller
             ->addColumn('aksi', function ($row) {
                 // Menggunakan hash ID untuk tautan
                 $hashId = IdHashHelper::encode($row->id);
-            
+
                 // Membuat dropdown aksi
                 $dropdown = '
                     <div class="dropdown">
@@ -102,12 +102,12 @@ class TransactionController extends Controller
                     Packing List</a></li>
                     </ul>
                 </div>';
-            
+
                 return $dropdown;
             })
             ->rawColumns(['aksi'])
             ->make(true);
-        }            
+    }
 
     public function incomplete()
     {
@@ -127,13 +127,14 @@ class TransactionController extends Controller
         $id = IdHashHelper::decode($hash);
 
         $transaction = Transaction::with(['detailTransactions'])->findOrFail($id);
+        $productSelected = Product::findOrFail($transaction->id_product);
 
         // Ambil data lain yang diperlukan untuk form
         $consignees = Consignee::all();
         $clients = Client::all();
         $products = Product::all();
         $commodities = Commodity::all();
-        $country = Country::all();
+        $countries = Country::all();
 
         // Ambil ID produk dari detail transaksi yang sudah ada
         $selectedProductIds = $transaction->detailTransactions->pluck('id_detail_product')->toArray();
@@ -152,15 +153,18 @@ class TransactionController extends Controller
         $consigneeSelected = Consignee::findOrFail($consigneeSelectedID);
         $consigneeSelectedAddress = $consigneeSelected->address;
 
-        // mencari Negara yang sudah terpilih
-        $transactionCode = $transaction->code; // contoh: RESTO ID2410
-        // Ekstrak dua huruf kapital sebelum angka
+        $countrySelected = null;
+        $transactionCode = $transaction->code; // Example: RESTO ID2410
+
+        // Extract two uppercase letters before the numbers in the transaction code
+        // Fetch the selected country object based on the code
         if (preg_match('/([A-Z]{2})(?=\d+)/', $transactionCode, $matches)) {
             $countryCode = $matches[1]; // 'ID'
 
-            // Cari negara berdasarkan kode yang diekstrak
+            // Find the country based on the code
             $countryOld = Country::where('code', $countryCode)->firstOrFail();
-            $countrySelected = $countryOld->id;
+            // Pass the whole country object instead of just the ID
+            $countrySelected = $countryOld; // This is now an object, not just an ID
         }
 
         // number
@@ -171,23 +175,24 @@ class TransactionController extends Controller
         $formattedNumber = $parts[0]; // Hasil: 0002/09
 
         // Kirim semua data yang dibutuhkan ke view
-        return view('transaction.create', compact(
-            'transaction',  // Data transaksi yang perlu diedit
+        return view('proforma.edit', compact(
+            'transaction',  // Transaction data to edit
             'consignees',
             'clients',
             'products',
+            'productSelected',
             'productSelectedID',
             'commodities',
             'commoditySelectedID',
-            'country',
+            'countries',  // Ensure it's plural for consistency
             'countrySelected',
             'formattedNumber',
-            'clientSelectedID',
+            'clientSelected', // Changed to send the whole object
             'clientSelectedAddress',
-            'consigneeSelectedID',
+            'consigneeSelected', // Changed to send the whole object
             'consigneeSelectedAddress',
             'selectedProductIds',
-            'hash',
+            'hash'
         ));
     }
 
@@ -352,7 +357,7 @@ class TransactionController extends Controller
         $decodedId = IdHashHelper::decode($hashId);
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
-        $company = Company::first(); 
+        $company = Company::first();
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
@@ -363,7 +368,7 @@ class TransactionController extends Controller
 
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
-        
+
         $totalCarton = 0;
         $totalInner = 0;
         $totalNetWeight = 0;
@@ -375,7 +380,7 @@ class TransactionController extends Controller
             $totalNetWeight += $detail->net_weight;
             $priceAmount += $detail->price_amount;
         }
-        
+
         $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
@@ -451,7 +456,7 @@ class TransactionController extends Controller
             $totalNetWeight += $detail->net_weight;
             $priceAmount += $detail->price_amount;
         }
-        
+
         $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
@@ -463,8 +468,8 @@ class TransactionController extends Controller
         $decodedId = IdHashHelper::decode($hashId);
         $transaction = Transaction::where('id', $decodedId)->firstOrFail();
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
-        $company = Company::first();     
-        $totalInWords = NumberToWords::convert($transaction->total); 
+        $company = Company::first();
+        $totalInWords = NumberToWords::convert($transaction->total);
         $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
@@ -487,7 +492,7 @@ class TransactionController extends Controller
             $totalNetWeight += $detail->net_weight;
             $priceAmount += $detail->price_amount;
         }
-        
+
         $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
@@ -523,7 +528,7 @@ class TransactionController extends Controller
             $totalNetWeight += $detail->net_weight;
             $priceAmount += $detail->price_amount;
         }
-        
+
         $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email'));
         $pdf->setPaper('A4', 'portrait');
 
