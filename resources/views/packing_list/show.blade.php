@@ -5,10 +5,12 @@
     <div class="page-body">
         <div class="container-xl">
             <div class="mb-4 mt-4 d-flex justify-content-between">
-                <a href="{{ route('transaction.index') }}" class="btn btn-primary">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+                <button class="btn btn-primary" onclick="window.history.back()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" />
+                    </svg>
                     Kembali
-                </a>
+                </button>
                 <div class="btn-group">
                     <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-printer">
@@ -389,7 +391,8 @@
                                             <td><p style="font-weight: bold">Approved By</p></td>
                                         </tr>
                                         <tr>
-                                            <td><img src="{{ asset('storage/ttd.png') }}" alt="Signature" width="80" style="margin-bottom: 10px;"></td>
+                                            <td><img src="{{ asset('storage/' . $transaction->approverUser->signature_url) }}" alt="Signature" 
+                                                width="100px" style="margin-bottom: 10px;"></td>
                                         </tr>
                                         <tr>
                                             <td style="border-bottom: 1px solid black;">{{ $transaction->approverUser->name }}</td>

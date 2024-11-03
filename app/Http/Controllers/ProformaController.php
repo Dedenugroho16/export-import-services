@@ -16,6 +16,7 @@ use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\DetailTransaction;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -44,7 +45,7 @@ class ProformaController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-                
+
                 // Membuat dropdown untuk tombol aksi dengan tombol "Setujui" di bagian atas
                 $actionBtn = '
                     <div class="dropdown">
@@ -52,16 +53,16 @@ class ProformaController extends Controller
                             Aksi
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">';
-                            
-                            if (in_array(auth()->user()->role, ['director', 'admin'])) {
-                                $actionBtn .= '
+
+                if (in_array(auth()->user()->role, ['director', 'admin'])) {
+                    $actionBtn .= '
                                     <button class="dropdown-item approve-btn text-success" data-id="' . $row->id . '">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-checkbox me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 11l3 3l8 -8" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
                                         Setujui
                                     </button>';
-                            }
+                }
 
-                            $actionBtn .= '
+                $actionBtn .= '
                             <a href="' . route('proforma.show', $hashId) . '" class="dropdown-item">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
                                 Lihat Detail
@@ -144,7 +145,6 @@ class ProformaController extends Controller
         $clients = Client::all();
         $products = Product::all();
         $commodities = Commodity::all();
-        $country = Country::all();
 
         // Mengambil number terakhir dari tabel transaction
         $lastTransaction = Transaction::orderBy('number', 'desc')->first();
@@ -164,7 +164,7 @@ class ProformaController extends Controller
         // Menggabungkan $newNumber dengan dua digit tanggal
         $formattedNumber = $newNumber . '/' . $twoDigitDate;
 
-        return view('proforma.create', compact('consignees', 'clients', 'products', 'commodities', 'country', 'formattedNumber'));
+        return view('proforma.create', compact('consignees', 'clients', 'products', 'commodities', 'formattedNumber'));
     }
 
     public function store(Request $request)
@@ -197,11 +197,13 @@ class ProformaController extends Controller
             'approved' => 'nullable|boolean',
         ]);
 
-        // Simpan transaksi
+        $validatedData['created_by'] = Auth::id();
+        
         $transaction = Transaction::create($validatedData);
 
         // Kembalikan response JSON dengan ID transaksi yang baru
-        return response()->json(['id' => $transaction->id], 201);
+         return response()->json(['id' => $transaction->id], 201);
+
     }
 
     public function show($hash)
@@ -285,74 +287,78 @@ class ProformaController extends Controller
 
     public function edit(string $hash)
     {
-        // Dekode hash menjadi ID
+        // Decode hash to ID
         $id = IdHashHelper::decode($hash);
 
+        // Retrieve the transaction along with its detail transactions
         $transaction = Transaction::with(['detailTransactions'])->findOrFail($id);
+        $productSelected = Product::findOrFail($transaction->id_product);
 
-        // Ambil data lain yang diperlukan untuk form
+        // Retrieve necessary data for the form
         $consignees = Consignee::all();
         $clients = Client::all();
         $products = Product::all();
         $commodities = Commodity::all();
-        $country = Country::all();
+        $countries = Country::all(); // Note: Changed to 'countries' for clarity
 
-        // Ambil ID produk dari detail transaksi yang sudah ada
-        $selectedProductIds = $transaction->detailTransactions->pluck('id_detail_product')->toArray();
-
-        // mencari product dan commodity yang terpilih
+        // Extract the selected product and commodity IDs
         $productSelectedID = $transaction->id_product;
         $commoditySelectedID = $transaction->id_commodity;
 
-        // mencari client yang sudah terpilih
-        $clientSelectedID = $transaction->id_client;
-        $clientSelected = Client::findOrFail($clientSelectedID);
+        // Retrieve the selected client and their address
+        $clientSelected = Client::findOrFail($transaction->id_client);
         $clientSelectedAddress = $clientSelected->address;
 
-        // mencari consignee yang sudah terpilih
-        $consigneeSelectedID = $transaction->id_consignee;
-        $consigneeSelected = Consignee::findOrFail($consigneeSelectedID);
+        // Retrieve the selected consignee and their address
+        $consigneeSelected = Consignee::findOrFail($transaction->id_consignee);
         $consigneeSelectedAddress = $consigneeSelected->address;
 
-        // mencari Negara yang sudah terpilih
-        $transactionCode = $transaction->code; // contoh: RESTO ID2410
-        // Ekstrak dua huruf kapital sebelum angka
+        // Determine the selected country based on the transaction code
+        $countrySelected = null;
+        $transactionCode = $transaction->code; // Example: RESTO ID2410
+
+        // Extract two uppercase letters before the numbers in the transaction code
+        // Fetch the selected country object based on the code
         if (preg_match('/([A-Z]{2})(?=\d+)/', $transactionCode, $matches)) {
             $countryCode = $matches[1]; // 'ID'
 
-            // Cari negara berdasarkan kode yang diekstrak
+            // Find the country based on the code
             $countryOld = Country::where('code', $countryCode)->firstOrFail();
-            $countrySelected = $countryOld->id;
+            // Pass the whole country object instead of just the ID
+            $countrySelected = $countryOld; // This is now an object, not just an ID
         }
 
-        // number
-        $transactionNumber = $transaction->number; // 0002/09.CR ID/10/INV/X/24
-        // Memisahkan string berdasarkan titik ('.') untuk memisahkan bagian pertama
+        // Extract the transaction number
+        $transactionNumber = $transaction->number; // e.g., 0002/09.CR ID/10/INV/X/24
         $parts = explode('.', $transactionNumber);
-        // Ambil bagian pertama sebelum titik
-        $formattedNumber = $parts[0]; // Hasil: 0002/09
 
-        // Kirim semua data yang dibutuhkan ke view
+        // Get the formatted number (the part before the first dot)
+        $formattedNumber = $parts[0]; // Result: 0002/09
+
+        // Collect selected product IDs from detail transactions
+        $selectedProductIds = $transaction->detailTransactions->pluck('id_detail_product')->toArray();
+
+        // Send all necessary data to the view
         return view('proforma.edit', compact(
-            'transaction',  // Data transaksi yang perlu diedit
+            'transaction',  // Transaction data to edit
             'consignees',
             'clients',
             'products',
+            'productSelected',
             'productSelectedID',
             'commodities',
             'commoditySelectedID',
-            'country',
+            'countries',  // Ensure it's plural for consistency
             'countrySelected',
             'formattedNumber',
-            'clientSelectedID',
+            'clientSelected', // Changed to send the whole object
             'clientSelectedAddress',
-            'consigneeSelectedID',
+            'consigneeSelected', // Changed to send the whole object
             'consigneeSelectedAddress',
             'selectedProductIds',
-            'hash',
+            'hash'
         ));
     }
-
 
     public function update(Request $request, string $id)
     {
@@ -426,9 +432,20 @@ class ProformaController extends Controller
         }
 
         $pdf = PDF::loadView('proforma.pdf', compact(
-            'proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 
-            'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 
-            'phoneIcon', 'emailIcon', 'phoneNumber', 'email'
+            'proformaInvoice',
+            'detailTransactions',
+            'company',
+            'logo',
+            'totalInWords',
+            'ttd',
+            'totalCarton',
+            'totalInner',
+            'totalNetWeight',
+            'priceAmount',
+            'phoneIcon',
+            'emailIcon',
+            'phoneNumber',
+            'email'
         ));
         $pdf->setPaper('A4', 'portrait');
 
@@ -467,9 +484,20 @@ class ProformaController extends Controller
         }
 
         $pdf = PDF::loadView('proforma.pdf', compact(
-            'proformaInvoice', 'detailTransactions', 'company', 'logo', 'totalInWords', 
-            'ttd', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 
-            'phoneIcon', 'emailIcon', 'phoneNumber', 'email'
+            'proformaInvoice',
+            'detailTransactions',
+            'company',
+            'logo',
+            'totalInWords',
+            'ttd',
+            'totalCarton',
+            'totalInner',
+            'totalNetWeight',
+            'priceAmount',
+            'phoneIcon',
+            'emailIcon',
+            'phoneNumber',
+            'email'
         ));
         $pdf->setPaper('A4', 'portrait');
 

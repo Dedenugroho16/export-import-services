@@ -34,7 +34,10 @@ class Transaction extends Model
         'payment_condition',
         'freight_cost',
         'total',
-        'approved'
+        'approved',
+        'approver',
+        'created_by',
+        'confirmed_by',
     ];
     
     public function consignee()

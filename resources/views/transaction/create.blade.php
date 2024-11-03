@@ -54,15 +54,12 @@
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
-                                                                <select class="form-control country" id="country">
-                                                                    <option value="">Pilih Negara</option>
-                                                                    @foreach ($country as $negara)
-                                                                        <option value="{{ $negara->id }}"
-                                                                            data-code="{{ $negara->code }}"
-                                                                            {{ $negara->id == $countrySelected ? 'selected' : '' }}>
-                                                                            {{ $negara->name }}
-                                                                        </option>
-                                                                    @endforeach
+                                                                <select style="width: 100%;" id="country" name="country">
+                                                                    <option value="{{ $countrySelected->id }}"
+                                                                        data-code="{{ $countrySelected->code }}">
+                                                                        {{ $countrySelected->name }}
+                                                                        ({{ $countrySelected->code }})
+                                                                    </option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -250,17 +247,14 @@
                                                             </div>
                                                             <div class="col-5">
                                                                 <div class="d-flex align-items-center">
-                                                                    <select class="form-control product" id="product"
-                                                                        name="id_product" required>
-                                                                        <option value="">Pilih Product</option>
-                                                                        @foreach ($products as $product)
-                                                                            <option value="{{ $product->id }}"
-                                                                                data-code="{{ $product->code }}"
-                                                                                data-abbreviation="{{ $product->abbreviation }}"
-                                                                                {{ $product->id == $productSelectedID ? 'selected' : '' }}>
-                                                                                {{ $product->name }}
-                                                                            </option>
-                                                                        @endforeach
+                                                                    <select style="width: 100%;" id="product"
+                                                                        name="id_product">
+                                                                        <option value="{{ $productSelected->id }}"
+                                                                            data-code="{{ $productSelected->code }}"
+                                                                            data-abbreviation="{{ $productSelected->abbreviation }}">
+                                                                            {{ $productSelected->name }}
+                                                                            ({{ $productSelected->abbreviation }})
+                                                                        </option>
                                                                     </select>
                                                                     <input type="hidden" id="old-product"
                                                                         name="id_product"
@@ -571,7 +565,7 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end">
-                                <a href="{{ route('proforma.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('incomplete-invoice') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Konfirmasi</button>
                             </div>
                         </div>
@@ -735,9 +729,121 @@
         });
 
         $(document).ready(function() {
-            $('#product').select2();
-            $('#commodity').select2();
-            $('#country').select2();
+            $('#country').select2({
+                ajax: {
+                    url: '/ajax-countries',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term // Search term for countries
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(country) {
+                                return {
+                                    id: country.id,
+                                    text: country.text + ' (' + country.code + ')',
+                                    code: country.code
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: "Select a country",
+            });
+
+            // Initialize Select2 for products
+            $('#product').select2({
+                placeholder: "Pilih Product",
+                ajax: {
+                    url: '/ajax-products',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term // Search term for products
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(product) {
+                                return {
+                                    id: product.id,
+                                    text: product.text,
+                                    code: product.code,
+                                    abbreviation: product.abbreviation
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                templateResult: function(product) {
+                    // Display product name with abbreviation in the search results
+                    if (product.loading) return product.text;
+                    return $('<span>' + product.text + ' (' + product.abbreviation + ')</span>');
+                },
+                templateSelection: function(product) {
+                    if (!product.id) {
+                        return $('<span>Pilih produk</span>');
+                    }
+                    if (!product.abbreviation) {
+                        return $('<span>' + product.text + '</span>');
+                    }
+                    // Display name and code in the selected option
+                    return $('<span>' + product.text + ' (' + product.abbreviation + ')</span>');
+                }
+            });
+
+            // Function to set the selected country in Select2
+            function setSelectedCountry() {
+                if ({{ isset($countrySelected) ? 'true' : 'false' }}) {
+                    $('#country').select2('data', [{
+                        id: '{{ $countrySelected->id }}',
+                        text: '{{ $countrySelected->name }} ({{ $countrySelected->code }})',
+                        code: '{{ $countrySelected->code }}'
+                    }]);
+                }
+            }
+
+            // Function to set the selected product in Select2
+            function setSelectedProduct() {
+                if ({{ isset($productSelected) ? 'true' : 'false' }}) {
+                    $('#product').select2('data', [{
+                        id: '{{ $productSelected->id }}',
+                        text: '{{ $productSelected->name }} ({{ $productSelected->code }})',
+                        code: '{{ $productSelected->code }}',
+                        abbreviation: '{{ $productSelected->abbreviation }}' // If you have this property
+                    }]);
+                }
+            }
+
+            // Call the functions to set the selected values
+            setSelectedCountry();
+            setSelectedProduct();
+
+            $('#commodity').select2({
+                placeholder: "Pilih Commodity",
+                ajax: {
+                    url: '/ajax-commodities',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
         });
 
         // modal datatables
@@ -878,71 +984,86 @@
 
             // Fungsi untuk memperbarui kode negara atau dua digit bulan
             function updateProductCode() {
-                var countryCode = $('#country option:selected').data('code'); // Mengambil kode negara
-                var productCode = $('#product option:selected').data('code'); // Mengambil kode produk
-                var twoDigitYearMonth = getTwoDigitYearMonth(); // Mendapatkan dua digit tahun + dua digit bulan
+                let countryCode;
+                const selectedOption = $('#country option:selected');
+                if (selectedOption && selectedOption.data('code') === "{{ $countrySelected->code }}") {
+                    const selectedOption = $('#country option:selected');
+                    countryCode = selectedOption.data('code'); // Ambil data-code untuk Indonesia
+                } else {
+                    const countryData = $('#country').select2('data')[0];
+                    countryCode = countryData ? countryData.code : null; // Ambil kode negara dari data Select2
+                }
 
-                // Jika ada produk yang dipilih dan ada kode negara
+                let productCode;
+                const selectedProductOption = $('#product option:selected');
+                if (selectedProductOption && selectedProductOption.data('code') ===
+                    "{{ $productSelected->code }}") {
+                    productCode = selectedProductOption.data('code');
+                } else {
+                    const productData = $('#product').select2('data')[0];
+                    productCode = productData ? productData.code : null;
+                }
+
+                const twoDigitYearMonth = getTwoDigitYearMonth();
+
+                let codeText = '-';
                 if (productCode && countryCode) {
-                    var codeText = productCode + ' ' + countryCode + twoDigitYearMonth;
-                    $('#product-code').text(codeText);
-                    $('#code').val(codeText); // Mengisi input dengan nilai yang sama
+                    codeText = `${productCode} ${countryCode}${twoDigitYearMonth}`;
+                } else if (productCode) {
+                    codeText = `${productCode} pilih negara! ${twoDigitYearMonth}`;
+                } else if (countryCode) {
+                    codeText = `${countryCode}${twoDigitYearMonth}`;
                 }
-                // Jika produk dipilih, tapi negara belum dipilih
-                else if (productCode) {
-                    $('#product-code').text(productCode + ' ' + 'pilih negara!' + twoDigitYearMonth);
-                }
-                // Jika negara dipilih, tapi produk belum dipilih
-                else if (countryCode) {
-                    $('#product-code').text(countryCode + twoDigitYearMonth);
-                }
-                // Jika tidak ada produk atau negara yang dipilih
-                else {
-                    $('#product-code').text('-');
-                }
+
+                $('#product-code').text(codeText);
+                $('#code').val(codeText); // Set the input value with the final product code
             }
 
             function updateNumber() {
-                var productAbbreviation = $('#product option:selected').data(
-                    'abbreviation'); // Mengambil abbreviation produk
-                var countryCode = $('#country option:selected').data('code'); // Mengambil kode negara
+                let countryCode;
+                const selectedCountryOption = $('#country').find(':selected');
 
-                // Mendapatkan tanggal saat ini
-                var currentDate = new Date();
-
-                // Mendapatkan dua digit bulan (misalnya 09 untuk September)
-                var twoDigitMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-
-                // Mendapatkan angka Romawi bulan
-                var romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-                var romanMonth = romanMonths[currentDate.getMonth()]; // Bulan dalam format Romawi
-
-                // Mendapatkan dua digit tahun
-                var twoDigitYear = currentDate.getFullYear().toString().slice(-2);
-
-                if (productAbbreviation && countryCode) {
-                    // Format yang diminta: 'countryCode/09/INV/II/24'
-                    var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
-                        twoDigitYear;
-                    var finalNumber = '{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
-                        formattedNumber;
-                    $('#numberDisplay').text(finalNumber);
-                    $('#number').val(finalNumber); // Mengisi input dengan nilai yang sama
-                } else if (productAbbreviation) {
-                    // Format yang diminta: 'countryCode/09/INV/II/24'
-                    var formattedNumber = '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
-                        twoDigitYear;
-                    $('#numberDisplay').text('{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
-                        formattedNumber);
-                } else if (countryCode) {
-                    // Format yang diminta: 'countryCode/09/INV/II/24'
-                    var formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
-                        twoDigitYear;
-                    $('#numberDisplay').text('{{ $formattedNumber }}' + ' ' +
-                        formattedNumber);
+                // Ambil data kode negara
+                if (selectedCountryOption && selectedCountryOption.data('code') ===
+                    "{{ $countrySelected->code }}") {
+                    countryCode = selectedCountryOption.data('code');
                 } else {
-                    $('#numberDisplay').text('{{ $formattedNumber }}');
+                    const countryData = $('#country').select2('data');
+                    countryCode = countryData.length ? countryData[0].code : null;
                 }
+
+                let productAbbreviation;
+                const selectedProductOption = $('#product').find(':selected');
+
+                // Ambil data kode produk
+                if (selectedProductOption && selectedProductOption.data('code') ===
+                    "{{ $productSelected->code }}") {
+                    productAbbreviation = selectedProductOption.data('code');
+                } else {
+                    const productData = $('#product').select2('data');
+                    productAbbreviation = productData.length ? productData[0].abbreviation : null;
+                }
+
+                const currentDate = new Date();
+                const twoDigitMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                const romanMonth = romanMonths[currentDate.getMonth()];
+                const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
+
+                // Format nomor sesuai template
+                const formattedNumber =
+                    `${countryCode ? countryCode + '/' : ''}${twoDigitMonth}/INV/${romanMonth}/${twoDigitYear}`;
+
+                let finalNumber;
+                if (productAbbreviation) {
+                    finalNumber = `{{ $formattedNumber }}.${productAbbreviation} ${formattedNumber}`;
+                } else {
+                    finalNumber = `{{ $formattedNumber }} ${formattedNumber}`;
+                }
+
+                // Tampilkan dan simpan nomor yang dihasilkan
+                $('#numberDisplay').text(finalNumber);
+                $('#number').val(finalNumber);
             }
 
             // Pantau perubahan pada dropdown product dan country untuk memperbarui kode
@@ -1027,6 +1148,7 @@
                             // Disable the select element
                             $('#product').prop('disabled', true);
                             $('#old-product').prop('disabled', false);
+                            $('#infoButton').show();
 
                             // Event listener untuk tombol hapus
                             $('#loadedData').on('click', '.old-remove-btn', function() {
@@ -1040,6 +1162,7 @@
                             // Disable the select element
                             $('#product').prop('disabled', false);
                             $('#old-product').prop('disabled', true);
+                            $('#infoButton').hide();
                             $('#loadedData').append(`
                     <tr id="nullDetailTransaction">
                         <td colspan="8" class="text-center">Seluruh detail transaksi yang tersimpan terhapus!</td>

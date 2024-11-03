@@ -69,6 +69,10 @@ Route::resource('countries', CountryController::class);
 Route::resource('company', CompanyController::class);
 
 // Transaction Routes using resource
+// web.php
+Route::get('/ajax-products', [ProductsController::class, 'getProducts']);
+Route::get('/ajax-commodities', [CommoditiesController::class, 'getCommodities']);
+Route::get('/ajax-countries', [CountryController::class, 'getCountries']);
 // Route::resource('transaction', TransactionController::class);
 Route::get('/get-invoice', [TransactionController::class, 'getInvoice'])->name('getInvoice');
 Route::get('/get-incomplete-invoice', [TransactionController::class, 'getIncompleteInvoice'])->name('getIncompleteInvoice');

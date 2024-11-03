@@ -104,4 +104,19 @@ class CommoditiesController extends Controller
 
         return redirect()->route('commodities.index')->with('success', 'Data berhasil dihapus.');
     }
+
+    public function getCommodities(Request $request)
+    {
+        $search = $request->input('q'); // 'q' adalah parameter pencarian dari Select2
+        $commodities = Commodity::where('name', 'like', '%' . $search . '%')->get();
+
+        $results = $commodities->map(function ($commodity) {
+            return [
+                'id' => $commodity->id,
+                'text' => $commodity->name,
+            ];
+        });
+
+        return response()->json($results);
+    }
 }
