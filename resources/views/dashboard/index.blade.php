@@ -89,14 +89,13 @@
                     <a href="{{ route('proforma.create') }}" class="btn btn-pink btn-sm" style="background-color: #e83e8c; border-color: #e83e8c;">Lihat Transaksi</a>
                 </div>
             </div>
-
             <!-- Kartu untuk Rekap Penjualan -->
             <div class="card border-light shadow-sm">
                 <div class="card-body text-center">
                     <h6 class="card-title">
                         <i class="fas fa-chart-line" style="color: #6610f2;"></i> Sales Recap
                     </h6>
-                    <p class="card-text">Total Penjualan: <span class="font-weight-bold">#</span></p>
+                    <p class="card-text">Total Penjualan: <span class="font-weight-bold">{{ $totalSales }}</span></p>
                     <p class="card-text text-muted">Lihat rekap penjualan Anda di sini.</p>
                     <a href="{{ route('transactions.rekap') }}" class="btn btn-purple btn-sm" style="background-color: #6610f2; border-color: #6610f2;">Lihat Rekap</a>
                 </div>
