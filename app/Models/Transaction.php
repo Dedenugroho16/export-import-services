@@ -76,4 +76,24 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class, 'approver', 'id');
     }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function confirmedBy()
+    {
+        return $this->belongsTo(User::class, 'confirmed_by');
+    }
+
+    public function editedBy()
+    {
+        return $this->belongsTo(User::class, 'edited_by');
+    }
+
+    public function getUserRelations()
+    {
+        return $this->load(['createdBy', 'confirmedBy', 'editedBy']);
+    }
 }

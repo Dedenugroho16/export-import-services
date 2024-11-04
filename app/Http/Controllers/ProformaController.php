@@ -209,7 +209,7 @@ class ProformaController extends Controller
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);
-        $proformaInvoice = Transaction::findOrFail($id);
+        $proformaInvoice = Transaction::findOrFail($id)->getUserRelations();
         $company = Company::first();
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
         $totalInWords = NumberToWords::convert($proformaInvoice->total);

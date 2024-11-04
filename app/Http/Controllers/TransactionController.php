@@ -259,7 +259,7 @@ class TransactionController extends Controller
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);
-        $transaction = Transaction::findOrFail($id);
+        $transaction = Transaction::findOrFail($id)->getUserRelations();
         $company = Company::first();
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
         $totalInWords = NumberToWords::convert($transaction->total);
