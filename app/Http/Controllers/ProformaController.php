@@ -411,16 +411,16 @@ class ProformaController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
-        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $signatureUrl = $proformaInvoice->approverUser->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
             ? ImageHelper::getBase64Image('storage/' . $company->logo)
             : ImageHelper::getBase64Image('storage/logo.png');
-
-        $phoneNumber = $company ? $company->phone_number : '';
-        $email = $company ? $company->email : '';
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -440,7 +440,6 @@ class ProformaController extends Controller
             'company',
             'logo',
             'totalInWords',
-            'ttd',
             'totalCarton',
             'totalInner',
             'totalNetWeight',
@@ -448,7 +447,8 @@ class ProformaController extends Controller
             'phoneIcon',
             'emailIcon',
             'phoneNumber',
-            'email'
+            'email',
+            'signature'
         ));
         $pdf->setPaper('A4', 'portrait');
 
@@ -463,16 +463,17 @@ class ProformaController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
-        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $signatureUrl = $proformaInvoice->approverUser->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
             ? ImageHelper::getBase64Image('storage/' . $company->logo)
             : ImageHelper::getBase64Image('storage/logo.png');
 
-        $phoneNumber = $company ? $company->phone_number : '';
-        $email = $company ? $company->email : '';
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -492,7 +493,6 @@ class ProformaController extends Controller
             'company',
             'logo',
             'totalInWords',
-            'ttd',
             'totalCarton',
             'totalInner',
             'totalNetWeight',
@@ -500,7 +500,8 @@ class ProformaController extends Controller
             'phoneIcon',
             'emailIcon',
             'phoneNumber',
-            'email'
+            'email',
+            'signature'
         ));
         $pdf->setPaper('A4', 'portrait');
 

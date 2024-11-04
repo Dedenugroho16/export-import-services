@@ -237,7 +237,7 @@
                 <td><p style="font-weight: bold">Approved By</p></td>
             </tr>
             <tr>
-                <td><img src="{{ $ttd }}" alt="Tanda Tangan" style="width: 60px;"></td>
+                <td><img src="{{ $signature }}" alt="Tanda Tangan" style="width: 80px;"></td>
             </tr>
             <tr>
                 <td style="border-bottom: 1px solid black;">{{ $transaction->approverUser->name }}</td>
