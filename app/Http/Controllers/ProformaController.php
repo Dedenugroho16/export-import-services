@@ -394,6 +394,9 @@ class ProformaController extends Controller
         // Cari transaksi berdasarkan ID
         $transaction = Transaction::findOrFail($id);
 
+        // Tambahkan ID user yang sedang login ke data yang divalidasi
+        $validatedData['edited_by'] = Auth::id();
+
         // Update data transaksi dengan data yang sudah divalidasi
         $transaction->update($validatedData);
 

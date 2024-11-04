@@ -38,6 +38,7 @@ class Transaction extends Model
         'approver',
         'created_by',
         'confirmed_by',
+        'edited_by',
     ];
     
     public function consignee()
