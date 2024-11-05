@@ -547,24 +547,60 @@ class TransactionController extends Controller
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-
-        // Ubah endDate agar mencakup seluruh hari
-        if ($endDate) {
-            $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
+    
+        // Check if dates are provided
+        if ($startDate && $endDate) {
+            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])->with('detailTransactions')->get();
+            $filterApplied = true;
+        } else {
+            $transactions = collect(); // No transactions if no filter is applied
+            $filterApplied = false;
         }
-
-        // Log untuk debugging
-        \Log::info("Start Date: $startDate");
-        \Log::info("End Date: $endDate");
-
-        $transactions = Transaction::with('detailTransactions.detailProduct')
-            ->where('approved', 1)
-            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
-                return $query->whereBetween('created_at', [$startDate, $endDate]);
-            })
-            ->get();
-
-        return view('transaction.rekap', compact('transactions'));
+    
+        return view('transaction.rekap', compact('transactions', 'filterApplied'));
     }
 
+    public function rekapPdf(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Check if dates are provided
+        if ($startDate && $endDate) {
+            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])->with('detailTransactions')->get();
+            $filterApplied = true;
+        } else {
+            $transactions = collect(); // No transactions if no filter is applied
+            $filterApplied = false;
+        }
+
+        // Generate PDF with view data
+        $pdf = PDF::loadView('transaction.rekapPdf', compact('transactions', 'startDate', 'endDate', 'filterApplied'));
+        $pdf->setPaper('A4', 'landscape');
+        
+        // Return PDF as a response
+        return $pdf->stream('rekap_sales_' . date('Ymd') . '.pdf');
+    }
+
+    public function downloadRekapPdf(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Check if dates are provided
+        if ($startDate && $endDate) {
+            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])->with('detailTransactions')->get();
+            $filterApplied = true;
+        } else {
+            $transactions = collect(); // No transactions if no filter is applied
+            $filterApplied = false;
+        }
+
+        // Generate PDF with view data
+        $pdf = PDF::loadView('transaction.rekapPdf', compact('transactions', 'startDate', 'endDate', 'filterApplied'));
+        $pdf->setPaper('A4', 'landscape');
+        
+        // Return PDF as a response
+        return $pdf->download('rekap_sales_' . date('Ymd') . '.pdf');
+    }
 }
