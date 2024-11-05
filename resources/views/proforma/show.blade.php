@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Detail Proforma Invoice')
+@section('title', 'Proforma Invoice')
 
 @section('content')
     <div class="page-body">
@@ -283,7 +283,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $proformaInvoice->net_weight }}</p>
+                                                <p>{{ formatCurrency($proformaInvoice->net_weight) }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -294,7 +294,7 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $proformaInvoice->gross_weight }}</p>
+                                                <p>{{ formatCurrency($proformaInvoice->gross_weight) }}</p>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -305,8 +305,8 @@
                                                 <span>:</span>
                                             </div>
                                             <div class="col-5">
-                                                <p>{{ $proformaInvoice->product_ncm }}</p>
-                                            </div>
+                                                <p>{{ formatNCM($proformaInvoice->product_ncm) }}</p>
+                                            </div>                                            
                                         </div>
                                     </div>
                                 </div>
@@ -329,16 +329,16 @@
                                             @foreach ($detailTransactions as $detailTransaction)
                                                 <tr>
                                                     <td><strong>{{ $detailTransaction->detailProduct->name }}
-                                                            {{ $detailTransaction->detailProduct->pcs }} PCS/
-                                                            {{ $detailTransaction->qty }} KG</strong><br>
+                                                            {{ formatCurrency($detailTransaction->detailProduct->pcs) }} PCS/
+                                                            {{ formatCurrency($detailTransaction->qty) }} KG</strong><br>
                                                         {{ $detailTransaction->detailProduct->dimension }}
                                                         {{ $detailTransaction->detailProduct->color }}
                                                         {{ $detailTransaction->detailProduct->type }}</td>
-                                                    <td class="carton">{{ $detailTransaction->carton }}</td>
-                                                    <td class="inner">{{ $detailTransaction->inner_qty_carton }}</td>
-                                                    <td>{{ $detailTransaction->unit_price }}</td>
-                                                    <td class="net-weight">{{ $detailTransaction->net_weight }}</td>
-                                                    <td class="price-amount">{{ $detailTransaction->price_amount }}</td>
+                                                    <td class="carton">{{ formatCurrency($detailTransaction->carton) }}</td>
+                                                    <td class="inner">{{ formatCurrency($detailTransaction->inner_qty_carton) }}</td>
+                                                    <td>{{ formatHarga($detailTransaction->unit_price) }}</td>
+                                                    <td class="net-weight">{{ formatCurrency($detailTransaction->net_weight) }}</td>
+                                                    <td class="price-amount">{{ formatCurrency($detailTransaction->price_amount) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -353,12 +353,11 @@
                                             </tr>
                                             <tr>
                                                 <td class="text-end" colspan="5">FREIGHT COST</td>
-                                                <td class="text-center">{{ $proformaInvoice->freight_cost }}</td>
+                                                <td class="text-center">{{ formatCurrency($proformaInvoice->freight_cost) }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="text-end" colspan="5">TOTAL</td>
-                                                <td class="text-center bg-danger text-white">{{ $proformaInvoice->total }}
-                                                </td>
+                                                <td class="text-center bg-danger text-white">{{ formatCurrency($proformaInvoice->total) }}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -422,34 +421,35 @@
         </div>
     </div>
 
-        <script>
-            $(document).ready(function() {
-                function updateAmounts() {
-                    var totalCarton = 0;
-                    var totalInner = 0;
-                    var totalNetWeight = 0;
-                    var PriceAmount = 0;
-
-                    // Iterasi setiap baris untuk mendapatkan nilai total
-                    $('#tableDetailTransaction tbody tr').each(function() {
-                        var carton = parseFloat($(this).find('.carton').text()) || 0;
-                        var inner = parseFloat($(this).find('.inner').text()) || 0;
-                        var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
-                        var price = parseFloat($(this).find('.price-amount').text()) || 0;
-
-                        totalCarton += carton;
-                        totalInner += inner;
-                        totalNetWeight += netWeight;
-                        PriceAmount += price;
-                    });
-
-                    // Update nilai total di footer
-                    $('#totalCarton').text(totalCarton);
-                    $('#totalInner').text(totalInner);
-                    $('#totalNetWeight').text(totalNetWeight);
-                    $('#PriceAmount').text(PriceAmount);
-                }
-                updateAmounts();
-            });
-        </script>
-    @endsection
+    <script>
+        $(document).ready(function() {
+            function updateAmounts() {
+                var totalCarton = 0;
+                var totalInner = 0;
+                var totalNetWeight = 0;
+                var PriceAmount = 0;
+    
+                // Iterasi setiap baris untuk mendapatkan nilai total
+                $('#tableDetailTransaction tbody tr').each(function() {
+                    // Menghapus tanda koma sebelum parseFloat
+                    var carton = parseFloat($(this).find('.carton').text().replace(/,/g, '')) || 0;
+                    var inner = parseFloat($(this).find('.inner').text().replace(/,/g, '')) || 0;
+                    var netWeight = parseFloat($(this).find('.net-weight').text().replace(/,/g, '')) || 0;
+                    var price = parseFloat($(this).find('.price-amount').text().replace(/,/g, '')) || 0;
+    
+                    totalCarton += carton;
+                    totalInner += inner;
+                    totalNetWeight += netWeight;
+                    PriceAmount += price;
+                });
+    
+                // Update nilai total di footer dengan format ribuan
+                $('#totalCarton').text(totalCarton.toLocaleString('en-US'));
+                $('#totalInner').text(totalInner.toLocaleString('en-US'));
+                $('#totalNetWeight').text(totalNetWeight.toLocaleString('en-US'));
+                $('#PriceAmount').text(PriceAmount.toLocaleString('en-US'));
+            }
+            updateAmounts();
+        });
+    </script>        
+@endsection
