@@ -71,13 +71,11 @@
                                         <th class="text-center">Seal Number</th>
                                         <th class="text-center">Net Weight</th>
                                         <th class="text-center">Gross Weight</th>
-                                        <th class="text-center">Kurs</th>
                                         <th class="text-center">Ocean Freight</th>
                                         <th class="text-center">Amount</th>
                                         <th class="text-center">Total</th>
                                     </tr>
                                 </thead>
-                                <tbody>
                                     @if($filterApplied && $transactions->isEmpty())
                                         <tr>
                                             <td colspan="13" class="text-center">Tidak ada transaksi untuk periode yang dipilih.</td>
@@ -87,29 +85,37 @@
                                             <td colspan="13" class="text-center">Silakan lakukan filter berdasarkan stuffing date.</td>
                                         </tr>
                                     @else
+                                    <tbody>
                                         @foreach($transactions as $key => $transaction)
-                                            @foreach($transaction->detailTransactions as $detail)
-                                                <tr>
-                                                    <td>{{ $key + 1 }}</td>
-                                                    <td>{{ $transaction->stuffing_date }}</td>
-                                                    <td>{{ $transaction->code }}</td>
-                                                    <td>{{ $transaction->number }}</td>
-                                                    <td>{{ $transaction->bl_number }}</td>
-                                                    <td>{{ $transaction->container_number }}</td>
-                                                    <td>{{ $transaction->seal_number }}</td>
-                                                    <td>{{ $transaction->net_weight }}</td>
-                                                    <td>{{ $transaction->gross_weight }}</td>
-                                                    <td>14,00</td>
-                                                    <td>{{ $transaction->freight_cost }}</td>
-                                                    <td>{{ $detail->price_amount }}</td>
-                                                    <td>{{ $transaction->total }}</td>
-                                                </tr>
-                                            @endforeach
+                                            <tr>
+                                                <td class="text-center">{{ $key + 1 }}</td>
+                                                <td class="text-center">{{ $transaction->stuffing_date }}</td>
+                                                <td class="text-center">{{ $transaction->code }}</td>
+                                                <td class="text-center">{{ $transaction->number }}</td>
+                                                <td class="text-center">{{ $transaction->bl_number }}</td>
+                                                <td class="text-center">{{ $transaction->container_number }}</td>
+                                                <td class="text-center">{{ $transaction->seal_number }}</td>
+                                                <td class="text-center">{{ $transaction->net_weight }}</td>
+                                                <td class="text-center">{{ $transaction->gross_weight }}</td>
+                                                <td class="text-center">{{ $transaction->freight_cost }}</td>
+                                                <td class="text-center">{{ $transaction->total_price_amount }}</td> 
+                                                <td class="text-center">{{ $transaction->total }}</td>
+                                            </tr>
                                         @endforeach
-                                    @endif
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th class="text-center" colspan="7">Total</th>
+                                        <th class="text-center">{{ $totalNetweight}}</th>
+                                        <th class="text-center">{{ $totalGrossweight}}</th>
+                                        <th class="text-center">{{ $totalFreightcost}}</th>
+                                        <th class="text-center">{{ $totalAmount}}</th>
+                                        <th class="text-center">{{ $total}}</th>
+                                    </tr>
+                                </tfoot>
+                                @endif
                             </table>
-                        </div>
+                        </div>                        
                         <!-- Table ends here -->
                     </div>
                 </div>

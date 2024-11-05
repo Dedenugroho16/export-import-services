@@ -548,37 +548,72 @@ class TransactionController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
     
-        // Check if dates are provided
         if ($startDate && $endDate) {
-            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])->with('detailTransactions')->get();
+            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])
+                ->with('detailTransactions')
+                ->get();
             $filterApplied = true;
+    
+            foreach ($transactions as $transaction) {
+                $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
+            }
+
+            $totalNetweight = $transactions->sum('net_weight');
+            $totalGrossweight = $transactions->sum('gross_weight');
+            $totalFreightcost = $transactions->sum('freight_cost');
+            $totalAmount = $transactions->sum('total_price_amount');
+            $total = $transactions->sum('total');
+
         } else {
-            $transactions = collect(); // No transactions if no filter is applied
+            $transactions = collect();
             $filterApplied = false;
+            $totalAmount = 0;
+            $totalNetweight = 0;
+            $totalGrossweight = 0;
+            $totalFreightcost = 0;
+            $totalAmount = 0;
+            $total = 0;
         }
     
-        return view('transaction.rekap', compact('transactions', 'filterApplied'));
-    }
+        return view('transaction.rekap', compact('transactions', 'filterApplied', 'totalAmount', 'totalNetweight', 'totalGrossweight', 'totalFreightcost', 'total'));
+    }    
+
 
     public function rekapPdf(Request $request)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        // Check if dates are provided
         if ($startDate && $endDate) {
-            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])->with('detailTransactions')->get();
+            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])
+                ->with('detailTransactions')
+                ->get();
             $filterApplied = true;
+
+            foreach ($transactions as $transaction) {
+                $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
+            }
+
+            $totalNetweight = $transactions->sum('net_weight');
+            $totalGrossweight = $transactions->sum('gross_weight');
+            $totalFreightcost = $transactions->sum('freight_cost');
+            $totalAmount = $transactions->sum('total_price_amount');
+            $total = $transactions->sum('total');
+
         } else {
-            $transactions = collect(); // No transactions if no filter is applied
+            $transactions = collect();
             $filterApplied = false;
+            $totalAmount = 0;
+            $totalNetweight = 0;
+            $totalGrossweight = 0;
+            $totalFreightcost = 0;
+            $totalAmount = 0;
+            $total = 0;
         }
 
-        // Generate PDF with view data
-        $pdf = PDF::loadView('transaction.rekapPdf', compact('transactions', 'startDate', 'endDate', 'filterApplied'));
+        $pdf = PDF::loadView('transaction.rekapPdf', compact('transactions', 'startDate', 'endDate', 'filterApplied', 'totalAmount', 'totalNetweight', 'totalGrossweight', 'totalFreightcost', 'total'));
         $pdf->setPaper('A4', 'landscape');
         
-        // Return PDF as a response
         return $pdf->stream('rekap_sales_' . date('Ymd') . '.pdf');
     }
 
@@ -587,20 +622,36 @@ class TransactionController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        // Check if dates are provided
         if ($startDate && $endDate) {
-            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])->with('detailTransactions')->get();
+            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])
+                ->with('detailTransactions')
+                ->get();
             $filterApplied = true;
+
+            foreach ($transactions as $transaction) {
+                $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
+            }
+            
+            $totalNetweight = $transactions->sum('net_weight');
+            $totalGrossweight = $transactions->sum('gross_weight');
+            $totalFreightcost = $transactions->sum('freight_cost');
+            $totalAmount = $transactions->sum('total_price_amount');
+            $total = $transactions->sum('total');
+
         } else {
-            $transactions = collect(); // No transactions if no filter is applied
+            $transactions = collect();
             $filterApplied = false;
+            $totalAmount = 0;
+            $totalNetweight = 0;
+            $totalGrossweight = 0;
+            $totalFreightcost = 0;
+            $totalAmount = 0;
+            $total = 0;
         }
 
-        // Generate PDF with view data
-        $pdf = PDF::loadView('transaction.rekapPdf', compact('transactions', 'startDate', 'endDate', 'filterApplied'));
+        $pdf = PDF::loadView('transaction.rekapPdf', compact('transactions', 'startDate', 'endDate', 'filterApplied', 'totalAmount', 'totalNetweight', 'totalGrossweight', 'totalFreightcost', 'total'));
         $pdf->setPaper('A4', 'landscape');
-        
-        // Return PDF as a response
+
         return $pdf->download('rekap_sales_' . date('Ymd') . '.pdf');
     }
 }
