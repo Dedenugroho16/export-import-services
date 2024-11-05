@@ -29,7 +29,9 @@
         },
         "files": [
             "app/Helpers/IdHashHelper.php",
-             "app/Helpers/ImageHelper.php"
+             "app/Helpers/ImageHelper.php",
+             "app/Helpers/NumberToWords.php",
+             "app/Helpers/helpers.php"
         ]
     },
     "autoload-dev": {
