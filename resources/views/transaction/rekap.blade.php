@@ -95,22 +95,22 @@
                                                 <td class="text-center">{{ $transaction->bl_number }}</td>
                                                 <td class="text-center">{{ $transaction->container_number }}</td>
                                                 <td class="text-center">{{ $transaction->seal_number }}</td>
-                                                <td class="text-center">{{ $transaction->net_weight }}</td>
-                                                <td class="text-center">{{ $transaction->gross_weight }}</td>
-                                                <td class="text-center">{{ $transaction->freight_cost }}</td>
-                                                <td class="text-center">{{ $transaction->total_price_amount }}</td> 
-                                                <td class="text-center">{{ $transaction->total }}</td>
+                                                <td class="text-center">{{ formatCurrency($transaction->net_weight) }}</td>
+                                                <td class="text-center">{{ formatCurrency($transaction->gross_weight) }}</td>
+                                                <td class="text-center">{{ formatCurrency($transaction->freight_cost) }}</td>
+                                                <td class="text-center">{{ formatCurrency($transaction->total_price_amount) }}</td>
+                                                <td class="text-center">{{ formatCurrency($transaction->total) }}</td>
                                             </tr>
                                         @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <th class="text-center" colspan="7">Total</th>
-                                        <th class="text-center">{{ $totalNetweight}}</th>
-                                        <th class="text-center">{{ $totalGrossweight}}</th>
-                                        <th class="text-center">{{ $totalFreightcost}}</th>
-                                        <th class="text-center">{{ $totalAmount}}</th>
-                                        <th class="text-center">{{ $total}}</th>
+                                        <th class="text-center">{{ $totalNetweight }}</th>
+                                        <th class="text-center">{{ $totalGrossweight }}</th>
+                                        <th class="text-center">{{ $totalFreightcost }}</th>
+                                        <th class="text-center">{{ $totalAmount }}</th>
+                                        <th class="text-center">{{ $total }}</th>
                                     </tr>
                                 </tfoot>
                                 @endif

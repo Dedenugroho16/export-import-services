@@ -558,11 +558,11 @@ class TransactionController extends Controller
                 $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
             }
 
-            $totalNetweight = $transactions->sum('net_weight');
-            $totalGrossweight = $transactions->sum('gross_weight');
-            $totalFreightcost = $transactions->sum('freight_cost');
-            $totalAmount = $transactions->sum('total_price_amount');
-            $total = $transactions->sum('total');
+            $totalNetweight = formatCurrency($transactions->sum('net_weight'));
+            $totalGrossweight = formatCurrency($transactions->sum('gross_weight'));
+            $totalFreightcost = formatCurrency($transactions->sum('freight_cost'));
+            $totalAmount = formatCurrency($transactions->sum('total_price_amount'));
+            $total = formatCurrency($transactions->sum('total'));
 
         } else {
             $transactions = collect();
@@ -594,11 +594,11 @@ class TransactionController extends Controller
                 $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
             }
 
-            $totalNetweight = $transactions->sum('net_weight');
-            $totalGrossweight = $transactions->sum('gross_weight');
-            $totalFreightcost = $transactions->sum('freight_cost');
-            $totalAmount = $transactions->sum('total_price_amount');
-            $total = $transactions->sum('total');
+            $totalNetweight = formatCurrency($transactions->sum('net_weight'));
+            $totalGrossweight = formatCurrency($transactions->sum('gross_weight'));
+            $totalFreightcost = formatCurrency($transactions->sum('freight_cost'));
+            $totalAmount = formatCurrency($transactions->sum('total_price_amount'));
+            $total = formatCurrency($transactions->sum('total'));
 
         } else {
             $transactions = collect();
@@ -632,11 +632,11 @@ class TransactionController extends Controller
                 $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
             }
             
-            $totalNetweight = $transactions->sum('net_weight');
-            $totalGrossweight = $transactions->sum('gross_weight');
-            $totalFreightcost = $transactions->sum('freight_cost');
-            $totalAmount = $transactions->sum('total_price_amount');
-            $total = $transactions->sum('total');
+            $totalNetweight = formatCurrency($transactions->sum('net_weight'));
+            $totalGrossweight = formatCurrency($transactions->sum('gross_weight'));
+            $totalFreightcost = formatCurrency($transactions->sum('freight_cost'));
+            $totalAmount = formatCurrency($transactions->sum('total_price_amount'));
+            $total = formatCurrency($transactions->sum('total'));
 
         } else {
             $transactions = collect();

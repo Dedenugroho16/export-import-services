@@ -58,11 +58,11 @@
                             <td>{{ $transaction->bl_number }}</td>
                             <td>{{ $transaction->container_number }}</td>
                             <td>{{ $transaction->seal_number }}</td>
-                            <td>{{ $transaction->net_weight }}</td>
-                            <td>{{ $transaction->gross_weight }}</td>
-                            <td>{{ $transaction->freight_cost }}</td>
-                            <td>{{ $transaction->total_price_amount }}</td>
-                            <td>{{ $transaction->total }}</td>
+                            <td class="text-center">{{ formatCurrency($transaction->net_weight) }}</td>
+                            <td class="text-center">{{ formatCurrency($transaction->gross_weight) }}</td>
+                            <td class="text-center">{{ formatCurrency($transaction->freight_cost) }}</td>
+                            <td class="text-center">{{ formatCurrency($transaction->total_price_amount) }}</td>
+                            <td class="text-center">{{ formatCurrency($transaction->total) }}</td>
                         </tr>
                     @endforeach
                 @endif
