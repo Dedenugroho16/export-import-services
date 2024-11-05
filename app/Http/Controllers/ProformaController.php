@@ -209,7 +209,7 @@ class ProformaController extends Controller
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);
-        $proformaInvoice = Transaction::findOrFail($id);
+        $proformaInvoice = Transaction::findOrFail($id)->getUserRelations();
         $company = Company::first();
         $detailTransactions = DetailTransaction::where('id_transaction', $id)->get();
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
@@ -394,6 +394,9 @@ class ProformaController extends Controller
         // Cari transaksi berdasarkan ID
         $transaction = Transaction::findOrFail($id);
 
+        // Tambahkan ID user yang sedang login ke data yang divalidasi
+        $validatedData['edited_by'] = Auth::id();
+
         // Update data transaksi dengan data yang sudah divalidasi
         $transaction->update($validatedData);
 
@@ -408,16 +411,16 @@ class ProformaController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
-        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $signatureUrl = $proformaInvoice->approverUser->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
             ? ImageHelper::getBase64Image('storage/' . $company->logo)
             : ImageHelper::getBase64Image('storage/logo.png');
-
-        $phoneNumber = $company ? $company->phone_number : '';
-        $email = $company ? $company->email : '';
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -437,7 +440,6 @@ class ProformaController extends Controller
             'company',
             'logo',
             'totalInWords',
-            'ttd',
             'totalCarton',
             'totalInner',
             'totalNetWeight',
@@ -445,7 +447,8 @@ class ProformaController extends Controller
             'phoneIcon',
             'emailIcon',
             'phoneNumber',
-            'email'
+            'email',
+            'signature'
         ));
         $pdf->setPaper('A4', 'portrait');
 
@@ -460,16 +463,17 @@ class ProformaController extends Controller
         $detailTransactions = DetailTransaction::where('id_transaction', $decodedId)->get();
         $company = Company::first();
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
-        $ttd = ImageHelper::getBase64Image('storage/ttd.png');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $signatureUrl = $proformaInvoice->approverUser->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
             ? ImageHelper::getBase64Image('storage/' . $company->logo)
             : ImageHelper::getBase64Image('storage/logo.png');
 
-        $phoneNumber = $company ? $company->phone_number : '';
-        $email = $company ? $company->email : '';
 
         $totalCarton = 0;
         $totalInner = 0;
@@ -489,7 +493,6 @@ class ProformaController extends Controller
             'company',
             'logo',
             'totalInWords',
-            'ttd',
             'totalCarton',
             'totalInner',
             'totalNetWeight',
@@ -497,7 +500,8 @@ class ProformaController extends Controller
             'phoneIcon',
             'emailIcon',
             'phoneNumber',
-            'email'
+            'email',
+            'signature'
         ));
         $pdf->setPaper('A4', 'portrait');
 

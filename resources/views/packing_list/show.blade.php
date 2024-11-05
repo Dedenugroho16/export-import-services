@@ -408,6 +408,34 @@
                     </div>
                 </div>
             </div>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">Informasi Transaksi</h5>
+                    <button type="button" class="btn-close" aria-label="Close" onclick="this.closest('.card').remove();"></button>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Created By</th>
+                                <td>{{ $transaction->createdBy ? $transaction->createdBy->name : 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Confirmed By</th>
+                                <td>{{ $transaction->confirmedBy ? $transaction->confirmedBy->name : '-' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Last Edited By</th>
+                                <td>{{ $transaction->editedBy ? $transaction->editedBy->name : '-' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Created At</th>
+                                <td>{{ $transaction->created_at->format('d-m-Y H:i:s') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
