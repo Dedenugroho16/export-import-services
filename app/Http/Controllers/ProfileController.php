@@ -24,6 +24,7 @@ class ProfileController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
             'signature' => 'nullable|image|mimes:png|max:2048',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validasi untuk gambar profil
         ]);
 
         $user->name = $request->name;
@@ -40,6 +41,16 @@ class ProfileController extends Controller
 
             $path = $request->file('signature')->store('signatures', 'public');
             $user->signature_url = $path;
+        }
+
+        // Menyimpan gambar profil
+        if ($request->hasFile('profile_picture')) {
+            if ($user->profile_picture_url) {
+                Storage::delete('public/' . $user->profile_picture_url);
+            }
+
+            $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $user->profile_picture_url = $profilePicturePath;
         }
 
         $user->save();

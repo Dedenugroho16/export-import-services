@@ -2,9 +2,9 @@
 @section('title', 'Profile')
 
 @section('content')
-<div class="container mt-5">
+<div class="container mt-3"> <!-- Changed mt-5 to mt-3 -->
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="card shadow border-0 rounded-lg modern-card">
                 <div class="card-header bg-gradient-primary text-white py-4 d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Welcome, {{ $user->name }}!</h4>
@@ -36,15 +36,19 @@
                         </div>
                         <div class="col-md-8">
                             <h5 class="fw-bold">User Information</h5>
-                            <ul class="list-group list-group-flush modern-list">
-                                <li class="list-group-item"><strong>Name:</strong> {{ $user->name }}</li>
-                                <li class="list-group-item"><strong>Email:</strong> {{ $user->email }}</li>
-                                <li class="list-group-item"><strong>Role:</strong> {{ $user->role }}</li>
-                                <li class="list-group-item"><strong>Member Since:</strong> {{ $user->created_at->format('d M Y') }}</li>
-                                <li class="list-group-item"><strong>Signature:</strong>
-                                    <img src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/150x50' }}" alt="Signature" class="signature-image">
-                                </li>
-                            </ul>
+                            <div class="shadow-sm p-3 mb-4 bg-white rounded">
+                                <ul class="list-group list-group-flush modern-list">
+                                    <li class="list-group-item"><strong>Name:</strong> {{ $user->name }}</li>
+                                    <li class="list-group-item"><strong>Email:</strong> {{ $user->email }}</li>
+                                    <li class="list-group-item"><strong>Role:</strong> {{ $user->role }}</li>
+                                    <li class="list-group-item"><strong>Member Since:</strong> {{ $user->created_at->format('d M Y') }}</li>
+                                    <li class="list-group-item">
+                                        <strong>Signature:</strong>
+                                        <img src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}" 
+                                             alt="Signature" class="signature-image">
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -101,7 +105,7 @@
                     </div>
                     
                     <div class="text-center mb-3">
-                        <img id="currentSignature" src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/150x50' }}" alt="Signature Image" class="img-fluid img-thumbnail signature-preview">
+                        <img id="currentSignature" src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}" alt="Signature Image" class="img-fluid img-thumbnail" style="width: 200px; height: 100px; object-fit: cover;">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -112,12 +116,14 @@
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('editProfileModal');
         modal.addEventListener('hidden.bs.modal', function () {
             document.getElementById('editProfileForm').reset();
             document.getElementById('currentProfilePicture').src = "{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}";
+            document.getElementById('currentSignature').src = "{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}";
         });
     });
 
@@ -125,6 +131,15 @@
         const reader = new FileReader();
         reader.onload = function(){
             const output = document.getElementById('currentProfilePicture');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+    
+    function previewSignature(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('currentSignature');
             output.src = reader.result;
         };
         reader.readAsDataURL(event.target.files[0]);
@@ -152,67 +167,17 @@
     .profile-image {
         width: 100%;
         height: 100%;
-        object-fit: cover; 
-        border-radius: 50%; 
-        border: 4px solid #007bff; 
+        object-fit: cover;
+    }
+
+    .signature-image {
+        width: 200px;  
+        height: 100px; 
+        object-fit: cover;  
     }
 
     .modern-list .list-group-item {
-        background-color: #f8f9fa;
         border: none;
-        font-size: 1.05rem;
-        padding: 15px 20px;
-        margin-bottom: 10px;
-        border-radius: 10px;
-    }
-
-    .card-header {
-        background: linear-gradient(90deg, #1A5276, #21618C);
-        color: white;
-        border-radius: 20px 20px 0 0;
-    }
-
-    .list-group-item strong {
-        color: #495057;
-    }
-
-    .btn-outline-primary, .btn-outline-secondary {
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .btn-outline-primary:hover, .btn-outline-secondary:hover {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .modal-content {
-        border-radius: 20px;
-    }
-
-    .lead {
-        font-size: 1.1rem;
-    }
-
-    .alert {
-        border-radius: 10px;
-    }
-
-    .modal-lg {
-        max-height: auto;
-    }
-
-    .form-row {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .form-row .form-group {
-        flex: 0 0 48%;
-    }
-
-    #currentProfilePicture {
-        width: 80px;
-        height: 80px;
     }
 </style>
 @endsection
