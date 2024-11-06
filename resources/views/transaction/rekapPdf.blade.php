@@ -51,7 +51,7 @@
                 @else
                     @foreach($transactions as $key => $transaction)
                         <tr>
-                            <td>{{ $key + 1 }}</td>
+                            <td style="text-align: center">{{ $key + 1 }}</td>
                             <td>{{ $transaction->stuffing_date }}</td>
                             <td>{{ $transaction->code }}</td>
                             <td>{{ $transaction->number }}</td>

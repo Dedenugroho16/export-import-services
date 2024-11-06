@@ -118,6 +118,12 @@
         .table-wrapper, .table-responsive {
             overflow: visible;
         }
+
+        #rekapTable, 
+        #rekapTable .table-wrapper, 
+        #rekapTable .table-responsive {
+            overflow: auto;
+        }
     </style>
 
     {{-- JQuery --}}

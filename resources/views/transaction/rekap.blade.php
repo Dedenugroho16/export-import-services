@@ -58,7 +58,7 @@
                         </div>
                         
                         <!-- Table Starts Here -->
-                        <div class="table-responsive">
+                        <div id="rekapTable" class="table-responsive">
                             <table class="table table-vcenter table-nowrap">
                                 <thead>
                                     <tr>
