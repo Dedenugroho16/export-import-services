@@ -1682,7 +1682,7 @@
                     success: function(response) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Proforma invoice berhasil diperbarui',
+                            title: 'Proforma invoice berhasil dikonfirmasi',
                             confirmButtonText: 'OK'
                         }).then(() => {
                             // Submit formDetailTransaction jika ada input di dalamnya
