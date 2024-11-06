@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Invoice</title>
 </head>
 <style>
     body{
@@ -51,7 +51,7 @@
     .custom-table tfoot td {
         font-weight: bold;
     }
-    .custom-bg-red {
+    .custom-bg-blue {
         background-color: blue;
         color: white;
         text-align: center;
@@ -139,7 +139,7 @@
             <td style="font-weight: bold">Port of discharge</td>
             <td style="font-weight: bold">Place of delivery</td>
         </tr>
-        <tr>
+        <tr style="font-size: 14px">
             <td>{{ $transaction->port_of_loading }}</td>
             <td>{{ $transaction->place_of_receipt }}</td>
             <td>{{ $transaction->port_of_discharge}}</td>
@@ -149,11 +149,11 @@
 
     <table class="section-empat">
         <tr>
-            <th style="width: 25%">Name of Product</th>
-            <td style="width: 2%;">:</td>
-            <td style="width: 40%">{{ $transaction->product->name }}</td>
+            <th>Name of Product</th>
+            <td>:</td>
+            <td>{{ $transaction->product->name }}</td>
             <th>Stuffing Date</th>
-            <td style="width: 2%;">:</td>
+            <td>:</td>
             <td>{{ $transaction->stuffing_date }}</td>
         </tr>
         <tr>
@@ -175,7 +175,7 @@
         <tr>
             <th>Net Weight</th>
             <td>:</td>
-            <td>{{ $transaction->net_weight }}</td>
+            <td>{{ formatCurrency($transaction->net_weight) }}</td>
             <th>Seal Number</th>
             <td>:</td>
             <td>{{ $transaction->seal_number }}</td>
@@ -183,10 +183,10 @@
         <tr>
             <th>Gross Weight</th>
             <td>:</td>
-            <td>{{ $transaction->gross_weight }}</td>
+            <td>{{ formatCurrency($transaction->gross_weight) }}</td>
             <th>Product NCM</th>
             <td>:</td>
-            <td>{{ $transaction->product_ncm }}</td>
+            <td>{{ formatNCM($transaction->product_ncm) }}</td>
         </tr>
         <tr>
             <th>Payment Term</th>
@@ -211,38 +211,40 @@
         </thead>
         <tbody id="detail-rows">
             @foreach ($detailTransactions as $detailTransaction)
-            <tr>
-                <td class="custom-description">
-                    <strong>{{ $detailTransaction->detailProduct->name }}
-                    {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong>
-                    {{ $detailTransaction->detailProduct->dimension }} 
-                    {{ $detailTransaction->detailProduct->color }} 
-                    {{ $detailTransaction->detailProduct->type }}
-                </td>
-                <td>{{ $detailTransaction->carton }}</td>
-                <td>{{ $detailTransaction->inner_qty_carton }}</td>
-                <td>{{ $detailTransaction->unit_price }}</td>
-                <td>{{ $detailTransaction->net_weight }}</td>
-                <td>{{ $detailTransaction->price_amount }}</td>
-            </tr>
+                <tr>
+                    <td class="custom-description">
+                        <strong>{{ $detailTransaction->detailProduct->name }}
+                        {{ formatCurrency($detailTransaction->detailProduct->pcs) }} PCS / 
+                        {{ formatCurrency($detailTransaction->qty) }} KG</strong>
+                        {{ $detailTransaction->detailProduct->dimension }} 
+                        {{ $detailTransaction->detailProduct->color }} 
+                        {{ $detailTransaction->detailProduct->type }}
+                    </td>
+                    <td class="carton">{{ formatCurrency($detailTransaction->carton) }}</td>
+                    <td class="inner">{{ formatCurrency($detailTransaction->inner_qty_carton) }}</td>
+                    <td>{{ formatHarga($detailTransaction->unit_price) }}</td>
+                    <td class="net-weight">{{ formatCurrency($detailTransaction->net_weight) }}</td>
+                    <td class="price-amount">{{ formatCurrency($detailTransaction->price_amount) }}</td>
+                </tr>
+                </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr id="totalRow">
                 <td style="text-align: center">Amount</td>
-                <td class="custom-bg-red" id="totalCarton">{{ $totalCarton }}</td>
-                <td class="custom-bg-red" id="totalInner">{{ $totalInner }}</td>
-                <td class="custom-bg-red"></td>
-                <td class="custom-bg-red" id="totalNetWeight">{{ $totalNetWeight }}</td>
-                <td class="custom-bg-red" id="PriceAmount">{{ $priceAmount }}</td>
+                <td class="custom-bg-blue" id="totalCarton">{{ formatCurrency($totalCarton) }}</td>
+                <td class="custom-bg-blue" id="totalInner">{{ formatCurrency($totalInner) }}</td>
+                <td class="custom-bg-blue"></td>
+                <td class="custom-bg-blue" id="totalNetWeight">{{ formatCurrency($totalNetWeight) }}</td>
+                <td class="custom-bg-blue" id="PriceAmount">{{ formatCurrency($priceAmount) }}</td>
             </tr>
             <tr>
                 <td style="text-align: right" colspan="5">FREIGHT COST</td>
-                <td class="custom-bg-red">{{ $transaction->freight_cost }}</td>
+                <td class="custom-bg-blue">{{ formatCurrency($transaction->freight_cost) }}</td>
             </tr>
             <tr>
                 <td style="text-align: right" colspan="5">TOTAL</td>
-                <td class="custom-bg-red">{{ $transaction->total }}</td>
+                <td class="custom-bg-blue">{{ formatCurrency($transaction->total) }}</td>
             </tr>
         </tfoot>
     </table>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Proforma Invoice</title>
 </head>
 <style>
     body{
@@ -139,7 +139,7 @@
             <td style="font-weight: bold">Port of discharge</td>
             <td style="font-weight: bold">Place of delivery</td>
         </tr>
-        <tr>
+        <tr style="font-size: 14px">
             <td>{{ $proformaInvoice->port_of_loading }}</td>
             <td>{{ $proformaInvoice->place_of_receipt }}</td>
             <td>{{ $proformaInvoice->port_of_discharge}}</td>
@@ -154,7 +154,7 @@
             <td style="width: 40%">{{ $proformaInvoice->product->name }}</td>
             <th>Net Weight</th>
             <td style="width: 2%;">:</td>
-            <td>{{ $proformaInvoice->net_weight }}</td>
+            <td>{{ formatCurrency($proformaInvoice->net_weight) }}</td>
         </tr>
         <tr>
             <th>Name of Commodity</th>
@@ -162,7 +162,7 @@
             <td>{{ $proformaInvoice->commodity->name }}</td>
             <th>Gross Weight</th>
             <td>:</td>
-            <td>{{ $proformaInvoice->gross_weight }}</td>
+            <td>{{ formatCurrency($proformaInvoice->gross_weight) }}</td>
         </tr>
         <tr>
             <th>Container</th>
@@ -170,7 +170,7 @@
             <td>{{ $proformaInvoice->container }}</td>
             <th>Product NCM</th>
             <td>:</td>
-            <td>{{ $proformaInvoice->product_ncm }}</td>
+            <td>{{ formatNCM($proformaInvoice->product_ncm) }}</td>
         </tr>
         <tr>
             <th>Payment Term</th>
@@ -198,37 +198,38 @@
             <tr>
                 <td class="custom-description">
                     <strong>{{ $detailTransaction->detailProduct->name }}
-                    {{ $detailTransaction->detailProduct->pcs }} PCS / {{ $detailTransaction->qty }} KG</strong>
+                    {{ formatCurrency($detailTransaction->detailProduct->pcs) }} PCS / 
+                    {{ formatCurrency($detailTransaction->qty) }} KG</strong>
                     {{ $detailTransaction->detailProduct->dimension }} 
                     {{ $detailTransaction->detailProduct->color }} 
                     {{ $detailTransaction->detailProduct->type }}
                 </td>
-                <td>{{ $detailTransaction->carton }}</td>
-                <td>{{ $detailTransaction->inner_qty_carton }}</td>
-                <td>{{ $detailTransaction->unit_price }}</td>
-                <td>{{ $detailTransaction->net_weight }}</td>
-                <td>{{ $detailTransaction->price_amount }}</td>
+                <td class="carton">{{ formatCurrency($detailTransaction->carton) }}</td>
+                <td class="inner">{{ formatCurrency($detailTransaction->inner_qty_carton) }}</td>
+                <td>{{ formatHarga($detailTransaction->unit_price) }}</td>
+                <td class="net-weight">{{ formatCurrency($detailTransaction->net_weight) }}</td>
+                <td class="price-amount">{{ formatCurrency($detailTransaction->price_amount) }}</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr id="totalRow">
                 <td style="text-align: center">Amount</td>
-                <td class="custom-bg-red" id="totalCarton">{{ $totalCarton }}</td>
-                <td class="custom-bg-red" id="totalInner">{{ $totalInner }}</td>
+                <td class="custom-bg-red" id="totalCarton">{{ formatCurrency($totalCarton) }}</td>
+                <td class="custom-bg-red" id="totalInner">{{ formatCurrency($totalInner) }}</td>
                 <td class="custom-bg-red"></td>
-                <td class="custom-bg-red" id="totalNetWeight">{{ $totalNetWeight }}</td>
-                <td class="custom-bg-red" id="PriceAmount">{{ $priceAmount }}</td>
+                <td class="custom-bg-red" id="totalNetWeight">{{ formatCurrency($totalNetWeight) }}</td>
+                <td class="custom-bg-red" id="PriceAmount">{{ formatCurrency($priceAmount) }}</td>
             </tr>
             <tr>
                 <td style="text-align: right" colspan="5">FREIGHT COST</td>
-                <td class="custom-bg-red">{{ $proformaInvoice->freight_cost }}</td>
+                <td class="custom-bg-red">{{ formatCurrency($proformaInvoice->freight_cost) }}</td>
             </tr>
             <tr>
                 <td style="text-align: right" colspan="5">TOTAL</td>
-                <td class="custom-bg-red">{{ $proformaInvoice->total }}</td>
+                <td class="custom-bg-red">{{ formatCurrency($proformaInvoice->total) }}</td>
             </tr>
-        </tfoot>
+        </tfoot>        
     </table>
 
     <table style="width: 100%; margin-top: 1mm">

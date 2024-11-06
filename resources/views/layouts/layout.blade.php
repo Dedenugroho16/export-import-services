@@ -114,6 +114,10 @@
             border-color: #ff9800;
             box-shadow: 0 0 5px rgba(255, 152, 0, 0.8);
         }
+
+        .table-wrapper, .table-responsive {
+            overflow: visible;
+        }
     </style>
 
     {{-- JQuery --}}

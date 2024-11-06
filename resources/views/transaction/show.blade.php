@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Detail Invoice')
+@section('title', 'Invoice')
 
 @section('content')
     <div class="page-body">
@@ -78,7 +78,7 @@
                                         </div>
                                     </div>
                                     <!-- Kolom Kanan: Detail Informasi -->
-                                    <div class="row mb-5 mt-3">
+                                    <div class="row mb-5 mt-3 col-4">
                                         <div>
                                             <table class="table-sm">
                                                 <tr>
@@ -210,140 +210,83 @@
                             </div>
 
                             {{-- bagian 4 --}}
-                            <div class="group-info mt-6">
-                                <div class="row">
-                                    <!-- Kolom Sebelah Kiri -->
-                                    <div class="col-6">
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Name of Product</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->product->name }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Name of Commodity</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->commodity->name }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Container</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->container }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Net Weight</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->net_weight }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Gross Weight</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->gross_weight }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Payment Term</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->payment_term }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Kolom Sebelah Kanan -->
-                                    <div class="col-6">
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Stuffing Date</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->stuffing_date }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>BL Number</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->bl_number }}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Container Number</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->container_number }}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Seal Number</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->seal_number }}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Product NCM</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $transaction->product_ncm }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="table-responsive mt-6 d-flex justify-content-center">
+                                <table class="table table-borderless w-100">
+                                    <tbody>
+                                        <tr>
+                                            <!-- Kolom Sebelah Kiri -->
+                                            <td class="align-top" style="width: 60%;">
+                                                <table class="table table-borderless">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="width: 40%;"><strong>Name of Product</strong></td>
+                                                            <td style="width: 5%;">:</td>
+                                                            <td>{{ $transaction->product->name }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Name of Commodity</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ $transaction->commodity->name }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Container</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ $transaction->container }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Net Weight</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ formatCurrency($transaction->net_weight) }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Gross Weight</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ formatCurrency($transaction->gross_weight) }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Payment Term</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ $transaction->payment_term }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                            
+                                            <!-- Kolom Sebelah Kanan -->
+                                            <td class="align-top" style="width: 40%;">
+                                                <table class="table table-borderless">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="width: 40%;"><strong>Stuffing Date</strong></td>
+                                                            <td style="width: 5%;">:</td>
+                                                            <td>{{ $transaction->stuffing_date }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>BL Number</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ $transaction->bl_number }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Container Number</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ $transaction->container_number }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Seal Number</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ $transaction->seal_number }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Product NCM</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ formatNCM($transaction->product_ncm) }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
                             {{-- tabel detail transaction --}}
@@ -363,13 +306,16 @@
                                             @foreach ($detailTransactions as $detailTransaction)
                                                 <tr>
                                                     <td><strong>{{ $detailTransaction->detailProduct->name }}
-                                                        {{ $detailTransaction->detailProduct->pcs }} PCS/ {{ $detailTransaction->qty }} KG</strong><br>
-                                                        {{ $detailTransaction->detailProduct->dimension }} {{ $detailTransaction->detailProduct->color }} {{ $detailTransaction->detailProduct->type }}</td>
-                                                    <td class="carton">{{ $detailTransaction->carton }}</td>
-                                                    <td class="inner">{{ $detailTransaction->inner_qty_carton }}</td>
-                                                    <td>{{ $detailTransaction->unit_price }}</td>
-                                                    <td class="net-weight">{{ $detailTransaction->net_weight }}</td>
-                                                    <td class="price-amount">{{ $detailTransaction->price_amount }}</td>
+                                                        {{ formatCurrency($detailTransaction->detailProduct->pcs) }} PCS/
+                                                        {{ formatCurrency($detailTransaction->qty) }} KG</strong><br>
+                                                        {{ $detailTransaction->detailProduct->dimension }}
+                                                        {{ $detailTransaction->detailProduct->color }}
+                                                        {{ $detailTransaction->detailProduct->type }}</td>
+                                                    <td class="carton">{{ formatCurrency($detailTransaction->carton) }}</td>
+                                                    <td class="inner">{{ formatCurrency($detailTransaction->inner_qty_carton) }}</td>
+                                                    <td>{{ formatHarga($detailTransaction->unit_price) }}</td>
+                                                    <td class="net-weight">{{ formatCurrency($detailTransaction->net_weight) }}</td>
+                                                    <td class="price-amount">{{ formatCurrency($detailTransaction->price_amount) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -384,11 +330,11 @@
                                             </tr>
                                             <tr>
                                                 <td class="text-end" colspan="5">FREIGHT COST</td>
-                                                <td class="text-center">{{ $transaction->freight_cost }}</td>
+                                                <td class="text-center">{{ formatCurrency($transaction->freight_cost) }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="text-end" colspan="5">TOTAL</td>
-                                                <td class="text-center bg-primary text-white">{{ $transaction->total }}</td>
+                                                <td class="text-center bg-primary text-white">{{ formatCurrency($transaction->total) }}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -427,7 +373,6 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title">Informasi Transaksi</h5>
-                    <button type="button" class="btn-close" aria-label="Close" onclick="this.closest('.card').remove();"></button>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
@@ -462,25 +407,26 @@
                 var totalInner = 0;
                 var totalNetWeight = 0;
                 var PriceAmount = 0;
-
+    
                 // Iterasi setiap baris untuk mendapatkan nilai total
                 $('#tableDetailTransaction tbody tr').each(function() {
-                    var carton = parseFloat($(this).find('.carton').text()) || 0;
-                    var inner = parseFloat($(this).find('.inner').text()) || 0;
-                    var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
-                    var price = parseFloat($(this).find('.price-amount').text()) || 0;
-
+                    // Menghapus tanda koma sebelum parseFloat
+                    var carton = parseFloat($(this).find('.carton').text().replace(/,/g, '')) || 0;
+                    var inner = parseFloat($(this).find('.inner').text().replace(/,/g, '')) || 0;
+                    var netWeight = parseFloat($(this).find('.net-weight').text().replace(/,/g, '')) || 0;
+                    var price = parseFloat($(this).find('.price-amount').text().replace(/,/g, '')) || 0;
+    
                     totalCarton += carton;
                     totalInner += inner;
                     totalNetWeight += netWeight;
                     PriceAmount += price;
                 });
-
-                // Update nilai total di footer
-                $('#totalCarton').text(totalCarton);
-                $('#totalInner').text(totalInner);
-                $('#totalNetWeight').text(totalNetWeight);
-                $('#PriceAmount').text(PriceAmount);
+    
+                // Update nilai total di footer dengan format ribuan
+                $('#totalCarton').text(totalCarton.toLocaleString('en-US'));
+                $('#totalInner').text(totalInner.toLocaleString('en-US'));
+                $('#totalNetWeight').text(totalNetWeight.toLocaleString('en-US'));
+                $('#PriceAmount').text(PriceAmount.toLocaleString('en-US'));
             }
             updateAmounts();
         });
