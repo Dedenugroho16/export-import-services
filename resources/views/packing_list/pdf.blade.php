@@ -138,7 +138,7 @@
             <td style="font-weight: bold">Port of discharge</td>
             <td style="font-weight: bold">Place of delivery</td>
         </tr>
-        <tr>
+        <tr style="font-size: 14px">
             <td>{{ $transaction->port_of_loading }}</td>
             <td>{{ $transaction->place_of_receipt }}</td>
             <td>{{ $transaction->port_of_discharge}}</td>
@@ -148,11 +148,11 @@
 
     <table class="section-empat">
         <tr>
-            <th style="width: 25%">Name of Product</th>
-            <td style="width: 2%;">:</td>
-            <td style="width: 40%">{{ $transaction->product->name }}</td>
+            <th>Name of Product</th>
+            <td>:</td>
+            <td>{{ $transaction->product->name }}</td>
             <th>Stuffing Date</th>
-            <td style="width: 2%;">:</td>
+            <td>:</td>
             <td>{{ $transaction->stuffing_date }}</td>
         </tr>
         <tr>

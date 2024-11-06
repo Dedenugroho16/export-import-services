@@ -139,7 +139,7 @@
             <td style="font-weight: bold">Port of discharge</td>
             <td style="font-weight: bold">Place of delivery</td>
         </tr>
-        <tr>
+        <tr style="font-size: 14px">
             <td>{{ $proformaInvoice->port_of_loading }}</td>
             <td>{{ $proformaInvoice->place_of_receipt }}</td>
             <td>{{ $proformaInvoice->port_of_discharge}}</td>

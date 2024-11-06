@@ -223,93 +223,63 @@
                             </div>
 
                             {{-- bagian 4 --}}
-                            <div class="group-info mt-6">
-                                <div class="row">
-                                    <!-- Kolom Sebelah Kiri -->
-                                    <div class="col-6">
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Name of Product</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $proformaInvoice->product->name }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Name of Commodity</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $proformaInvoice->commodity->name }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Container</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $proformaInvoice->container }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Payment Term</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ $proformaInvoice->payment_term }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Kolom Sebelah Kanan -->
-                                    <div class="col-6">
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Net Weight</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ formatCurrency($proformaInvoice->net_weight) }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Gross Weight</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ formatCurrency($proformaInvoice->gross_weight) }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-4">
-                                                <p><strong>Product NCM</strong></p>
-                                            </div>
-                                            <div class="col-2 text-center">
-                                                <span>:</span>
-                                            </div>
-                                            <div class="col-5">
-                                                <p>{{ formatNCM($proformaInvoice->product_ncm) }}</p>
-                                            </div>                                            
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="table-responsive mt-6 d-flex justify-content-center">
+                                <table class="table table-borderless w-100">
+                                    <tbody>
+                                        <tr>
+                                            <!-- Kolom Sebelah Kiri -->
+                                            <td class="align-top" style="width: 60%;">
+                                                <table class="table table-borderless">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="width: 40%;"><strong>Name of Product</strong></td>
+                                                            <td style="width: 5%;">:</td>
+                                                            <td>{{ $proformaInvoice->product->name }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Name of Commodity</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ $proformaInvoice->commodity->name }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Container</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ $proformaInvoice->container }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Payment Term</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ $proformaInvoice->payment_term }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                            
+                                            <!-- Kolom Sebelah Kanan -->
+                                            <td class="align-top" style="width: 40%;">
+                                                <table class="table table-borderless">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="width: 40%;"><strong>Net Weight</strong></td>
+                                                            <td style="width: 5%;">:</td>
+                                                            <td>{{ formatCurrency($proformaInvoice->net_weight) }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Gross Weight</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ formatCurrency($proformaInvoice->gross_weight) }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Product NCM</strong></td>
+                                                            <td>:</td>
+                                                            <td>{{ formatNCM($proformaInvoice->product_ncm) }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
                             {{-- tabel detail transaction --}}
@@ -401,7 +371,6 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title">Informasi Transaksi</h5>
-                    <button type="button" class="btn-close" aria-label="Close" onclick="this.closest('.card').remove();"></button>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
