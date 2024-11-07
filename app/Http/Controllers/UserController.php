@@ -15,6 +15,9 @@ class UserController extends Controller
     if ($request->ajax()) {
         $users = User::where('id', '!=', auth()->id())->get(); // Ambil semua pengguna kecuali pengguna yang sedang login
         return DataTables::of($users)
+            ->addColumn('username', function (User $user) {
+                    return $user->username; // Menampilkan username
+                })
             ->addColumn('password', function (User $user) {
                 return '******'; // Menyembunyikan password
             })
@@ -60,6 +63,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'username' => 'required|string|max:255|unique:users', // Validasi username
             'password' => 'required|string|confirmed',
             'role' => 'required|string|max:255',
         ]);
@@ -67,6 +71,7 @@ class UserController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'username' => $request->username, // Menyimpan username
             'password' => Hash::make($request->password),
             'role' => $request->role,
             'is_active' => true, // Set akun baru aktif secara default
@@ -88,6 +93,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'username' => 'required|string|max:255|unique:users,username,' . $id, // Validasi username
             'password' => 'nullable|string|confirmed',
             'role' => 'required|string|max:255',
         ]);
@@ -95,6 +101,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->username = $request->username; // Menyimpan perubahan username
         $user->role = $request->role;
 
         // Hanya update password jika diisi

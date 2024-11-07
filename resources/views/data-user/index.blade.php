@@ -99,6 +99,10 @@
                                                 <input type="text" class="form-control" id="edit_name" name="name" required>
                                             </div>
                                             <div class="mb-3">
+                                                <label for="edit_username" class="form-label">Username</label>
+                                                <input type="text" class="form-control" id="edit_username" name="username" required>
+                                            </div>
+                                            <div class="mb-3">
                                                 <label for="edit_email" class="form-label">Email</label>
                                                 <input type="email" class="form-control" id="edit_email" name="email" required>
                                             </div>
@@ -137,6 +141,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Name</th>
+                                    <th>USername</th>
                                     <th>Email</th>
                                     <th>Password</th>
                                     <th>Role</th>
@@ -168,6 +173,7 @@
             columns: [
                 { data: null, name: 'id', render: function(data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; } }, // Menampilkan nomor urut
                 { data: 'name', name: 'name' },
+                { data: 'username', name: 'username' },
                 { data: 'email', name: 'email' },
                 { data: 'password', name: 'password' },
                 { data: 'role', name: 'role' },
