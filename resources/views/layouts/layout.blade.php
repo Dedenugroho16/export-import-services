@@ -149,7 +149,7 @@
             </a>
         </h1>
         <div class="collapse navbar-collapse" id="sidebar-menu">
-            <ul class="navbar-nav pt-lg-3">
+            <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('home') }}">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">

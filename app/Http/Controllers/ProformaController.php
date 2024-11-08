@@ -84,29 +84,28 @@ class ProformaController extends Controller
     {
         // Cek apakah pengguna yang sedang login adalah director atau admin
         if (!in_array(auth()->user()->role, ['director', 'admin'])) {
-            // Jika bukan director atau admin, berikan respons error
             return response()->json(['error' => 'Anda tidak memiliki akses untuk menyetujui Proforma.'], 403);
         }
 
-        // Cari transaksi berdasarkan ID
+        // Periksa apakah signature_url pengguna sudah terisi
+        if (empty(auth()->user()->signature_url)) {
+            return response()->json(['error' => 'Anda harus melengkapi tanda tangan untuk menyetujui Proforma.'], 400);
+        }
+
         $transaction = Transaction::findOrFail($id);
 
-        // Periksa apakah transaksi sudah disetujui sebelumnya
         if ($transaction->approved == 1) {
             return response()->json(['error' => 'Proforma invoice sudah disetujui sebelumnya.'], 400);
         }
 
         // Update field approved menjadi 1, simpan ID approver dan waktu persetujuan
         $transaction->approved = 1;
-        $transaction->approver = auth()->user()->id; // Simpan ID user yang menyetujui
-        $transaction->approved_at = now(); // Simpan waktu persetujuan
+        $transaction->approver = auth()->user()->id;
+        $transaction->approved_at = now();
         $transaction->save();
 
-        // Kembalikan respons sukses
         return response()->json(['success' => 'Proforma invoice disetujui.']);
     }
-
-
 
     // Mengambil Proforma yang telah disetujui
     public function getApprovedData()

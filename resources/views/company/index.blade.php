@@ -148,6 +148,21 @@
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
+                    <!-- Success Message for Deleting, Editing, or Adding Data -->
+                    @if (session('success'))
+                    <div class="alert alert-important alert-success alert-dismissible" role="alert">
+                        <div class="d-flex">
+                            <div>
+                                <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                            </div>
+                            <div>
+                                {{ session('success') }}
+                            </div>
+                        </div>
+                        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                    </div>
+                    @endif
                     <div class="card-header shadow-sm p-3 d-flex justify-content-between align-items-center">
                         <h3 class="card-title">Informasi Perusahaan</h3>
                         <div>
@@ -311,7 +326,12 @@
                 output.src = reader.result; // Set image source ke gambar yang diunggah
             };
             reader.readAsDataURL(event.target.files[0]); // Baca file gambar
-        }
+        };
 
+        $(document).ready(function() {
+        setTimeout(function() {
+            $('.alert-dismissible').fadeOut();
+        }, 3000);
+    });
 </script>
 @endsection
