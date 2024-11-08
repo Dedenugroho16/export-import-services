@@ -89,6 +89,10 @@
                                                 <input type="text" class="form-control" id="edit_name" name="name" required>
                                             </div>
                                             <div class="mb-3">
+                                                <label for="edit_username" class="form-label">Username</label>
+                                                <input type="text" class="form-control" id="edit_username" name="username" required>
+                                            </div>
+                                            <div class="mb-3">
                                                 <label for="edit_email" class="form-label">Email</label>
                                                 <input type="email" class="form-control" id="edit_email" name="email" required>
                                             </div>
@@ -125,14 +129,15 @@
                             <table class="table card-table table-vcenter text-nowrap" id="usersTable">
                             <thead>
                                 <tr>
-                                    <th class="text-center">No</th>
-                                    <th class="text-center">Nama</th>
-                                    <th class="text-center">Email</th>
-                                    <th class="text-center">Password</th>
-                                    <th class="text-center">Role</th>
-                                    <th class="text-center">Created At</th>
-                                    <th class="text-center">Status</th> <!-- Kolom baru untuk status -->
-                                    <th class="text-center">Aksi</th>
+                                    <th>No</th>
+                                    <th>Name</th>
+                                    <th>USername</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                    <th>Role</th>
+                                    <th>Created At</th>
+                                    <th>Status</th> <!-- Kolom baru untuk status -->
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                                 <tbody>
@@ -158,6 +163,7 @@
             columns: [
                 { data: null, name: 'id', render: function(data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; } }, // Menampilkan nomor urut
                 { data: 'name', name: 'name' },
+                { data: 'username', name: 'username' },
                 { data: 'email', name: 'email' },
                 { data: 'password', name: 'password' },
                 { data: 'role', name: 'role', class: 'text-center' },

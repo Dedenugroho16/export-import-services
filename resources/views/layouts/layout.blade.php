@@ -145,7 +145,7 @@
         </button>
         <h1 class="navbar-brand navbar-brand-autodark">
             <a href=".">
-                <img src="{{ asset('static/logo.svg') }}" width="110" height="32" alt="Tabler" class="navbar-brand-image">
+            <img src="{{ asset('storage/logo2.png') }}" alt="Logo" class="navbar-brand-image" style="width: 150px; height: auto;">
             </a>
         </h1>
         <div class="collapse navbar-collapse" id="sidebar-menu">
