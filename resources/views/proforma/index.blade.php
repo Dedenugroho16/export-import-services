@@ -48,10 +48,10 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">No</th>
-                                        <th class="text-center">Code</th>
+                                        <th class="text-center">Kode</th>
                                         <th class="text-center">Number</th>
-                                        <th class="text-center">Client ID</th>
-                                        <th class="text-center">Consignee ID</th>
+                                        <th class="text-center">Client</th>
+                                        <th class="text-center">Consignee</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -91,9 +91,9 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">No</th>
-                                            <th class="text-center">Code</th>
+                                            <th class="text-center">Kode</th>
                                             <th class="text-center">Number</th>
-                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Tanggal</th>
                                             <th class="text-center">Client</th>
                                             <th class="text-center">Consignee</th>
                                             <th class="text-center">Aksi</th>
@@ -193,11 +193,30 @@
             });
 
             $('#waitingProformaTable').on('click', '.approve-btn', function() {
-                var transactionId = $(this).data('id');
+            var transactionId = $(this).data('id');
+            var userSignatureUrl = '{{ auth()->user()->signature_url }}'; // Ambil URL tanda tangan pengguna
+
+            if (!userSignatureUrl) {
+                // Jika signature_url kosong, tampilkan alert dan tombol untuk menuju halaman profil
+                Swal.fire({
+                    title: 'Lengkapi Profil Anda',
+                    text: "Anda harus melengkapi tanda tangan untuk menyetujui Proforma invoice.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ke Profil',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '{{ route("profile.show") }}';
+                    }
+                });
+            } else {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Anda tidak dapat membatalkan setelah ini!",
-                    icon: 'warning',
+                    icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -230,7 +249,9 @@
                         });
                     }
                 });
-            });
+            }
+        });
+
         });
     </script>
 @endsection

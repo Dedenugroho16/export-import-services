@@ -30,15 +30,15 @@
             @else
                 <div class="card">
                     <div class="card-body">
-                        <h3>Daftar Invoice Belum Dikonfirmasi</h3>
+                        <h3>Daftar Invoice Yang Belum Dikonfirmasi</h3>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap" id="approvedTable">
                                 <thead>
                                     <tr>
                                         <th class="text-center">No</th>
-                                        <th class="text-center">Code</th>
+                                        <th class="text-center">Kode</th>
                                         <th class="text-center">Number</th>
-                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Tanggal</th>
                                         <th class="text-center">Client</th>
                                         <th class="text-center">Consignee</th>
                                         <th class="text-center">Aksi</th>
@@ -80,9 +80,9 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">No</th>
-                                            <th class="text-center">Code</th>
+                                            <th class="text-center">Kode</th>
                                             <th class="text-center">Number</th>
-                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Tanggal</th>
                                             <th class="text-center">Client</th>
                                             <th class="text-center">Consignee</th>
                                             <th class="text-center">Aksi</th>
