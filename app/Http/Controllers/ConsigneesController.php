@@ -85,7 +85,7 @@ class ConsigneesController extends Controller
         $clientName = Client::findOrFail($request->id_client)->name;
 
         // Redirect back to clients.index with a success message
-        return redirect($request->input('previous_url', route('products.index')))->with('Data berhasil ditambahkan.');
+        return redirect($request->input('previous_url', route('clients.index')))->with( 'success' ,'Data berhasil ditambahkan.');
     }
 
     public function edit($hash)
@@ -109,8 +109,8 @@ class ConsigneesController extends Controller
         $consignee = Consignee::findOrFail($id);
         $consignee->update($request->all());
 
-        return redirect($request->input('previous_url', route('products.index')))
-        ->with('details_success', 'Data berhasil diupdate.');
+        return redirect($request->input('previous_url', route('clients.index')))
+        ->with('success', 'Data berhasil diperbarui.');
     }
 
     public function show($hash)
@@ -126,6 +126,6 @@ class ConsigneesController extends Controller
         $consignee = Consignee::findOrFail($id);
         $consignee->delete();
 
-        return redirect()->back()->with('details_success', 'Data berhasil dihapus.');
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }

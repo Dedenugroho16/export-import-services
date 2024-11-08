@@ -58,7 +58,7 @@ class CompanyController extends Controller
         // Simpan data perusahaan
         Company::create($validatedData);
 
-        return redirect()->route('company.index')->with('success', 'Company created successfully!');
+        return redirect()->route('company.index')->with('success', 'Data berhasil ditambahkan');
     }
 
     public function edit($id) {

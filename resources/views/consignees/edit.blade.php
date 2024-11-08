@@ -22,8 +22,8 @@
                         <!-- Edit Form -->
                         <form action="{{ route('consignees.update', \App\Helpers\IdHashHelper::encode($consignee->id)) }}" method="POST">
                             @csrf
-                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
                             @method('PUT')
+                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama Consignee</label>
                                 <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $consignee->name) }}" required>
@@ -48,7 +48,7 @@
                             </div>
                             <div class="text-end">
                                 <a href="javascript:window.history.back();" class="btn btn-outline-primary">Kembali</a>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" class="btn btn-primary">Perbarui</button>
                             </div>
                         </form>
                     </div>

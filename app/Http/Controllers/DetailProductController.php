@@ -84,7 +84,7 @@ class DetailProductController extends Controller
         $product = Product::findOrFail($request->id_product);
         $productName = $product->name;
 
-        return redirect($request->input('previous_url', route('products.index')))->with('details_success', 'Data berhasil ditambahkan.');
+        return redirect($request->input('previous_url', route('products.index')))->with('success', 'Data berhasil ditambahkan.');
     }
 
     // Display the specified detail product
@@ -129,7 +129,7 @@ class DetailProductController extends Controller
         $detailProduct->update($request->all());
 
         return redirect($request->input('previous_url', route('products.index')))
-        ->with('details_success', 'Data berhasil diupdate.');
+        ->with('success', 'Data berhasil diperbarui.');
     }
 
 
@@ -139,6 +139,6 @@ class DetailProductController extends Controller
         $detailProduct = DetailProduct::findOrFail($id);
         $detailProduct->delete();
 
-        return redirect()->back()->with('details_success', 'Data berhasil dihapus.');
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }

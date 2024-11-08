@@ -22,10 +22,7 @@
                         <form action="{{ route('detail-products.update', $hash) }}" method="POST">
                             @csrf
                             @method('PUT')
-
-                             <!-- Input hidden untuk menyimpan URL halaman sebelumnya -->
                             <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
-                            
                             <div class="mb-3">
                                 <label for="id_product" class="form-label">Produk</label>
                                 <select name="id_product" id="id_product" class="form-control" required>
@@ -69,7 +66,7 @@
 
                             <div class="text-end">
                                 <a href="javascript:window.history.back();" class="btn btn-outline-primary">Kembali</a>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" class="btn btn-primary">Perbarui</button>
                             </div>
                         </form>
                     </div>

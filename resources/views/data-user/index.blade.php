@@ -7,6 +7,7 @@
     <div class="container-xl">
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <a href="#" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
                 Tambah User
             </a>
         </div>
@@ -15,27 +16,16 @@
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-body">
-
-                        <!-- Toast notifications -->
-                        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
-                            <div id="addToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                                <div class="d-flex">
-                                    <div class="toast-body">
-                                        User berhasil ditambahkan!
-                                    </div>
-                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                         <!-- Alert notifications -->
+                         <div id="alert-success" class="alert alert-important alert-success alert-dismissible fade" role="alert" style="display: none;">
+                            <div class="d-flex">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
                                 </div>
+                                <div id="alert-message"></div>
                             </div>
-                            <div id="editToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                                <div class="d-flex">
-                                    <div class="toast-body">
-                                        User berhasil diubah!
-                                    </div>
-                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                                </div>
-                            </div>
-                        </div>
-
+                            <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                        </div>                        
                         <!-- Add User Modal -->
                         <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -48,7 +38,7 @@
                                         @csrf
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label for="name" class="form-label">Name</label>
+                                                <label for="name" class="form-label">Nama</label>
                                                 <input type="text" class="form-control" id="name" name="name" required>
                                             </div>
                                             <div class="mb-3">
@@ -74,7 +64,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                             <button type="submit" class="btn btn-primary">Tambah User</button>
                                         </div>
                                     </form>
@@ -122,8 +112,8 @@
                                             <input type="hidden" id="edit_user_id" name="user_id">
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                            <button type="submit" class="btn btn-primary">Update User</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                            <button type="submit" class="btn btn-primary">Perbarui</button>
                                         </div>
                                     </form>
                                 </div>
@@ -135,14 +125,14 @@
                             <table class="table card-table table-vcenter text-nowrap" id="usersTable">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Password</th>
-                                    <th>Role</th>
-                                    <th>Created At</th>
-                                    <th>Status</th> <!-- Kolom baru untuk status -->
-                                    <th>Aksi</th>
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">Nama</th>
+                                    <th class="text-center">Email</th>
+                                    <th class="text-center">Password</th>
+                                    <th class="text-center">Role</th>
+                                    <th class="text-center">Created At</th>
+                                    <th class="text-center">Status</th> <!-- Kolom baru untuk status -->
+                                    <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                                 <tbody>
@@ -170,20 +160,20 @@
                 { data: 'name', name: 'name' },
                 { data: 'email', name: 'email' },
                 { data: 'password', name: 'password' },
-                { data: 'role', name: 'role' },
-                { data: 'created_at', name: 'created_at' },
+                { data: 'role', name: 'role', class: 'text-center' },
+                { data: 'created_at', name: 'created_at', class: 'text-center' },
                 {
                     data: 'is_active', // Mengambil status aktif/nonaktif
                     name: 'is_active',
                     render: function(data) {
                         return data ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-danger">Nonaktif</span>';
-                    }
+                    }, class: 'text-center'
                 },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             language: {
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                lengthMenu: "Tampilkan _MENU_ Data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
                 paginate: {
                     first: "Pertama",
                     last: "Terakhir",
@@ -191,7 +181,7 @@
                     previous: "Sebelumnya"
                 },
                 search: "Cari :",
-                infoEmpty: "Tidak ada entri",
+                infoEmpty: "Tidak ada data",
                 zeroRecords: "Tidak ada catatan yang cocok",
             },
         });
@@ -211,8 +201,7 @@
                 success: function(response) {
                     $('#addUserModal').modal('hide');
                     table.ajax.reload();
-                    var addToast = new bootstrap.Toast(document.getElementById('addToast'));
-                    addToast.show();
+                    showAlert('Data berhasil ditambahkan.');
                 },
                 error: function(xhr) {
                     let errorMessage = 'Terjadi kesalahan: ' + (xhr.responseJSON?.message || xhr.responseText);
@@ -232,8 +221,7 @@
                 success: function(response) {
                     $('#editUserModal').modal('hide');
                     table.ajax.reload();
-                    var editToast = new bootstrap.Toast(document.getElementById('editToast'));
-                    editToast.show();
+                    showAlert('Data berhasil diperbarui.');
                 },
                 error: function(xhr) {
                     let errorMessage = 'Terjadi kesalahan: ' + (xhr.responseJSON?.message || xhr.responseText);
@@ -308,7 +296,16 @@
             });
         });
     });
-</script>
 
+    function showAlert(message) {
+    console.log("Alert is being called with message:", message);
+    $('#alert-message').text(message);
+    $('#alert-success').fadeIn().addClass('show');
+
+    setTimeout(function() {
+        $('#alert-success').fadeOut().removeClass('show');
+    }, 3000);
+}
+</script>
 
 @endsection

@@ -11,15 +11,13 @@
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-body">
-                        <!-- Pesan Sukses (Tambah, Edit, Hapus Consignee) -->
+                        <!-- Success Message for Deleting, Editing, or Adding Data -->
                         @if (session('success'))
                         <div class="alert alert-important alert-success alert-dismissible" role="alert">
                             <div class="d-flex">
                                 <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                        <path d="M5 12l5 5l10 -10" />
-                                    </svg>
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
                                 </div>
                                 <div>
                                     {{ session('success') }}
@@ -30,7 +28,7 @@
                         @endif
                         <!-- Tabel Consignee -->
                         <div class="table-responsive">
-                            <table id="consigneeTable" class="table card-table table-vcenter text-nowrap">
+                            <table id="consigneeTable" class="table card-table table-hover table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
@@ -78,8 +76,8 @@
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
             ],
             language: {
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                lengthMenu: "Tampilkan _MENU_ Data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
                 paginate: {
                     first: "Pertama",
                     last: "Terakhir",
@@ -134,6 +132,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+$(document).ready(function() {
+        setTimeout(function() {
+            $('.alert-dismissible').fadeOut();
+        }, 3000);
+    });
+</script>
 </script>
 
 @endsection

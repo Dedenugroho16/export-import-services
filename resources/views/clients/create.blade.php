@@ -9,7 +9,7 @@
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-header text-white shadow-sm p-3" style="background-color: #0054a6;">
-                        <h3 class="card-title">Tambah Data Clien</h3>
+                        <h3 class="card-title">Tambah Data Client</h3>
                     </div>
                     <div class="card-body">
                         <!-- Display Success Message -->

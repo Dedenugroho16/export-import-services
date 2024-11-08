@@ -16,7 +16,7 @@
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-body">
-                        <!-- Success Message for Deleting, Editing, or Adding Client -->
+                        <!-- Success Message for Deleting, Editing, or Adding Data -->
                         @if (session('success'))
                         <div class="alert alert-important alert-success alert-dismissible" role="alert">
                             <div class="d-flex">
@@ -33,7 +33,7 @@
                         @endif
                         <!-- Table Starts Here -->
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap" id="clientTable">
+                            <table class="table card-table table-hover table-vcenter text-nowrap" id="clientTable">
                                 <thead>
                                     <tr>
                                         <th class="text-center">No</th>
@@ -82,8 +82,8 @@
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
             ],
             language: {
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                lengthMenu: "Tampilkan _MENU_ Data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
                 paginate: {
                     first: "Pertama",
                     last: "Terakhir",
@@ -136,6 +136,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+$(document).ready(function() {
+        setTimeout(function() {
+            $('.alert-dismissible').fadeOut();
+        }, 3000);
+    });
 </script>
 
 @endsection
