@@ -156,3 +156,4 @@ Route::get('/rekap-sales/download-pdf', [TransactionController::class, 'download
 
 // bill of payments
 Route::get('/bill-of-payments', [BillOfPaymentController::class, 'index'])->name('bill-of-payments.index');
+Route::get('/bill-of-payment/create', [BillOfPaymentController::class, 'create'])->name('bill-of-payment.create');
