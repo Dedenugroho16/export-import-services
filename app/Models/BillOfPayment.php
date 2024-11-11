@@ -23,8 +23,8 @@ class BillOfPayment extends Model
         return $this->belongsTo(Client::class, 'id_client');
     }
 
-    public function transaction()
+    public function transactions()
     {
-        return $this->belongsTo(Transaction::class, 'id_transaction');
+        return $this->hasMany(Transaction::class, 'id_bill');
     }
 }
