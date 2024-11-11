@@ -90,6 +90,7 @@
                                             <thead>
                                                 <tr>
                                                     <th class="text-center">No</th>
+                                                    <th class="text-center">ID PI</th>
                                                     <th class="text-center">PI. NUMBER</th>
                                                     <th class="text-center">CODE</th>
                                                     <th class="text-center">DESCRIPTION</th>
@@ -176,7 +177,7 @@
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
                                 <a href="{{ route('bill-of-payments.index') }}" class="btn btn-outline-primary">Kembali</a>
-                                <button type="button" id="submitButton" class="btn btn-primary">Tambah</button>
+                                <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
                             </div>
                         </div>
                     </div>
@@ -184,42 +185,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            function updateNumber() {
-                const currentDate = new Date();
-
-                const twoDigitMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-
-                const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-                const romanMonth = romanMonths[currentDate.getMonth()];
-
-                // Dapatkan tahun dalam format dua digit
-                const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
-
-                // Cek apakah productAbbreviation dan countryCode ada
-                if (productAbbreviation && countryCode) {
-                    const formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
-                        twoDigitYear;
-                    const finalNumber = '{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
-                        formattedNumber;
-                    $('#numberDisplay').text(finalNumber);
-                    $('#number').val(finalNumber); // Setel nilai input
-                } else if (productAbbreviation) {
-                    const formattedNumber = '/' + twoDigitMonth + '/INV/' + romanMonth + '/' + twoDigitYear;
-                    $('#numberDisplay').text('{{ $formattedNumber }}' + '.' + productAbbreviation + ' ' +
-                        formattedNumber);
-                } else if (countryCode) {
-                    const formattedNumber = countryCode + '/' + twoDigitMonth + '/INV/' + romanMonth + '/' +
-                        twoDigitYear;
-                    $('#numberDisplay').text('{{ $formattedNumber }}' + ' ' + formattedNumber);
-                } else {
-                    $('#numberDisplay').text('{{ $formattedNumber }}');
-                }
-            }
-
-            updateNumber();
-        });
-    </script>
 @endsection
