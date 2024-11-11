@@ -15,6 +15,7 @@ class BillOfPayment extends Model
         'id_client',
         'total',
         'approved',
+        'status',
         'approver',
         'created_by',
     ];
