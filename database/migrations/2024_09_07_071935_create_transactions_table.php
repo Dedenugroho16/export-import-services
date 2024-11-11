@@ -40,14 +40,12 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('confirmed_by')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('edited_by')->nullable();
-            $table->unsignedBigInteger(column: 'id_bill')->nullable();
             $table->timestamps();
 
             $table->foreign('id_consignee')->references('id')->on('consignees')->onDelete('cascade');
             $table->foreign('id_client')->references('id')->on('clients')->onDelete('cascade');
             $table->foreign('id_product')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('id_commodity')->references('id')->on('commodities')->onDelete('cascade');
-            $table->foreign('id_bill')->references('id')->on('bill_of_payments')->onDelete('cascade');
         });
     }
 
