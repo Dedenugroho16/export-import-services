@@ -120,11 +120,11 @@
             overflow: visible;
         }
 
-        #rekapTable,
-        #rekapTable .table-wrapper,
-        #rekapTable .table-responsive {
-            overflow: auto;
-        }
+        #rekap-table {
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
     </style>
 
     {{-- JQuery --}}
