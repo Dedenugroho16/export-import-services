@@ -13,6 +13,7 @@ class BillOfPayment extends Model
         'month',
         'no_inv',
         'id_client',
+        'total',
         'approved',
         'approver',
         'created_by',

@@ -39,7 +39,8 @@ class Transaction extends Model
         'created_by',
         'confirmed_by',
         'edited_by',
-        'id_bill'
+        'id_bill',
+        'paid',
     ];
 
     public function consignee()
