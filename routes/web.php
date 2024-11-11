@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductsController;
@@ -12,8 +13,8 @@ use App\Http\Controllers\ProformaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
-use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\BillOfPaymentController;
 use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\DetailTransactionController;
@@ -152,3 +153,6 @@ Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getC
 Route::get('/transactions/rekap', [TransactionController::class, 'rekapSales'])->name('transactions.rekap');
 Route::get('/rekap-sales/export-pdf', [TransactionController::class, 'rekapPdf'])->name('rekap.sales.exportPdf');
 Route::get('/rekap-sales/download-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('rekap.sales.downloadPdf');
+
+// bill of payments
+Route::get('/bill-of-payments', [BillOfPaymentController::class, 'index'])->name('bill-of-payments.index');
