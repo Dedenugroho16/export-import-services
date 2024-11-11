@@ -13,7 +13,7 @@ class BillOfPaymentController extends Controller
         return view('bill-of-payments.index', compact('transactions'));
     }
 
-    public function create()
+    public function create(string $hash)
     {
         // Mengambil number terakhir dari tabel transaction
         $lastTransaction = Transaction::orderBy('number', 'desc')->first();
