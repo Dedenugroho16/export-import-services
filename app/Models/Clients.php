@@ -32,6 +32,6 @@ class Clients extends Model
     
     public function billOfPayments()
     {
-        return $this->hasMany(Transaction::class, 'id_client');
+        return $this->hasMany(BillOfPayment::class, 'id_client');
     }
 }
