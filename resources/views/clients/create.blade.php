@@ -26,8 +26,8 @@
                                 <input type="text" id="name" name="name" class="form-control" required>
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Nama Perusahaan</label>
-                                <input type="text" id="name" name="name" class="form-control" required>
+                                <label for="company_name" class="form-label">Nama Perusahaan</label>
+                                <input type="text" id="company_name" name="company_name" class="form-control" required>
                             </div>
                             <div class="mb-3">
                                 <label for="address" class="form-label">Alamat</label>
