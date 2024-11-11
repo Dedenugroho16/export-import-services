@@ -28,7 +28,7 @@
                         </div>                        
                         <!-- Add User Modal -->
                         <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="addUserModalLabel">Tambah User</h5>
@@ -37,34 +37,40 @@
                                     <form id="addUserForm" method="POST">
                                         @csrf
                                         <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label for="name" class="form-label">Nama</label>
-                                                <input type="text" class="form-control" id="name" name="name" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="name" class="form-label">Username</label>
-                                                <input type="text" class="form-control" id="username" name="username" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="email" class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="email" name="email" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="password" class="form-label">Password</label>
-                                                <input type="password" class="form-control" id="password" name="password" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-                                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="role" class="form-label">Role</label>
-                                                <select class="form-select" id="role" name="role" required>
-                                                    <option value="" disabled selected>Pilih Role</option>
-                                                    <option value="admin">Admin</option>
-                                                    <option value="operator">Operator</option>
-                                                    <option value="director">Director</option>
-                                                </select>
+                                            <div class="row g-3">
+                                                <div class="col-md-6 px-3">
+                                                    <div class="mb-3">
+                                                        <label for="name" class="form-label">Nama</label>
+                                                        <input type="text" class="form-control" id="name" name="name" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="password" class="form-label">Password</label>
+                                                        <input type="password" class="form-control" id="password" name="password" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="email" class="form-label">Email</label>
+                                                        <input type="email" class="form-control" id="email" name="email" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 px-3"> 
+                                                    <div class="mb-3">
+                                                        <label for="username" class="form-label">Username</label>
+                                                        <input type="text" class="form-control" id="username" name="username" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                                                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="role" class="form-label">Role</label>
+                                                        <select class="form-select" id="role" name="role" required>
+                                                            <option value="" disabled selected>Pilih Role</option>
+                                                            <option value="admin">Admin</option>
+                                                            <option value="operator">Operator</option>
+                                                            <option value="director">Director</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -75,58 +81,65 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <!-- Edit User Modal -->
                         <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <form id="editUserForm" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label for="edit_name" class="form-label">Name</label>
-                                                <input type="text" class="form-control" id="edit_name" name="name" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="edit_username" class="form-label">Username</label>
-                                                <input type="text" class="form-control" id="edit_username" name="username" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="edit_email" class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="edit_email" name="email" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="edit_password" class="form-label">Password</label>
-                                                <input type="password" class="form-control" id="edit_password" name="password">
-                                                <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password.</small>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="edit_password_confirmation" class="form-label">Konfirmasi Password</label>
-                                                <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="edit_role" class="form-label">Role</label>
-                                                <select class="form-select" id="edit_role" name="role" required>
-                                                    <option value="admin">Admin</option>
-                                                    <option value="operator">Operator</option>
-                                                    <option value="director">Director</option>
-                                                </select>
-                                            </div>
-                                            <input type="hidden" id="edit_user_id" name="user_id">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                            <button type="submit" class="btn btn-primary">Perbarui</button>
-                                        </div>
-                                    </form>
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
+                                <form id="editUserForm" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="modal-body">
+                                        <div class="row g-4">
+                                            <div class="col-md-6 px-4"> 
+                                                <div class="mb-3">
+                                                    <label for="edit_name" class="form-label">Name</label>
+                                                    <input type="text" class="form-control" id="edit_name" name="name" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="edit_password" class="form-label">Password</label>
+                                                    <input type="password" class="form-control" id="edit_password" name="password">
+                                                    <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password.</small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="edit_email" class="form-label">Email</label>
+                                                    <input type="email" class="form-control" id="edit_email" name="email" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 px-4">
+                                                <div class="mb-3">
+                                                    <label for="edit_username" class="form-label">Username</label>
+                                                    <input type="text" class="form-control" id="edit_username" name="username" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="edit_password_confirmation" class="form-label">Konfirmasi Password</label>
+                                                    <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation">
+                                                    <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password.</small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="edit_role" class="form-label">Role</label>
+                                                    <select class="form-select" id="edit_role" name="role" required>
+                                                        <option value="admin">Admin</option>
+                                                        <option value="operator">Operator</option>
+                                                        <option value="director">Director</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="edit_user_id" name="user_id">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Perbarui</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
+                    </div>
 
                         <!-- Users Table -->
                         <div class="table-responsive">

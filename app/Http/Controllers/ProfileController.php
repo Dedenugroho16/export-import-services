@@ -22,7 +22,7 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6|confirmed',
+            'password' => 'nullable|string|min:3|confirmed',
             'signature' => 'nullable|image|mimes:png|max:2048',
             'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validasi untuk gambar profil
         ]);
