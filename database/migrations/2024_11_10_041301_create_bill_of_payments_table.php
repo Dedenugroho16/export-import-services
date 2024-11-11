@@ -16,14 +16,12 @@ return new class extends Migration
             $table->date(column: 'month');
             $table->string(column: 'no_inv');
             $table->unsignedBigInteger('id_client');
-            $table->unsignedBigInteger('id_transaction');
             $table->boolean('approved')->default(false);
             $table->unsignedBigInteger('approver')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
 
             $table->foreign('id_client')->references('id')->on('clients')->onDelete('cascade');
-            $table->foreign('id_transaction')->references('id')->on('transactions')->onDelete('cascade');
         });
     }
 
