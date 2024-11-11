@@ -44,6 +44,10 @@
                                         <td>{{ $client->name }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Nama Perusahaan</th>
+                                        <td style="word-wrap: break-word; max-width: 300px;">{{ $client->company_name }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>Alamat</th>
                                         <td style="word-wrap: break-word; max-width: 300px;">{{ $client->address }}</td>
                                     </tr>
