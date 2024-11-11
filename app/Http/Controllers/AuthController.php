@@ -23,7 +23,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             if (Auth::user()->is_active) {
-                return redirect()->intended('dashboard');
+                return redirect()->intended('/');
             } else {
                 Auth::logout();
                 return back()->withErrors([

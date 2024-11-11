@@ -1099,6 +1099,7 @@
                                 Swal.fire('Berhasil!', 'Data telah dihapus.', 'success');
                                 loadDetailTransaction(idTransaction);
                                 updateFormDetailTransaction();
+                                updateSelectedProductIds(idTransaction);
                             },
                             error: function(xhr, status, error) {
                                 Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.',

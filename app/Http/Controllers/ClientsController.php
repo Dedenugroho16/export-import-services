@@ -63,6 +63,7 @@ class ClientsController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'company_name' => 'required|string|max:255',
             'address' => 'required|string',
             'PO_BOX' => 'nullable|string',
             'tel' => 'required|string|max:20',
