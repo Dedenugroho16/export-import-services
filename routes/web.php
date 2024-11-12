@@ -150,9 +150,11 @@ Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaD
 
 // Route getConsigneeByid
 Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getConsigneesByClient'])->name('consignees.byClient');
+
+// Route Rekap Sales
 Route::get('/transactions/rekap', [TransactionController::class, 'rekapSales'])->name('transactions.rekap');
-Route::get('/rekap-sales/export-pdf', [TransactionController::class, 'rekapPdf'])->name('rekap.sales.exportPdf');
-Route::get('/rekap-sales/download-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('rekap.sales.downloadPdf');
+Route::get('/transactions/rekap-pdf', [TransactionController::class, 'rekapPdf'])->name('transactions.rekapPdf');
+Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('transactions.downloadRekapPdf');
 
 // bill of payments
 Route::get('/bill-of-payments', [BillOfPaymentController::class, 'index'])->name('bill-of-payments.index');

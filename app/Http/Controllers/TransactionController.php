@@ -600,51 +600,39 @@ class TransactionController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        if ($startDate && $endDate) {
-            // Pastikan format tanggalnya benar
-            $startDate = Carbon::parse($startDate)->toDateString();
-            $endDate = Carbon::parse($endDate)->toDateString();
-
-            // Query untuk mengambil data transaksi dalam rentang tanggal
-            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])
-                ->with('detailTransactions')
-                ->get();
-
-            // Jika transaksi ditemukan, hitung total per transaksi
-            foreach ($transactions as $transaction) {
-                $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
-            }
-
-            // Hitung total keseluruhan untuk kolom tertentu
-            $totalNetweight = formatCurrency($transactions->sum('net_weight'));
-            $totalGrossweight = formatCurrency($transactions->sum('gross_weight'));
-            $totalFreightcost = formatCurrency($transactions->sum('freight_cost'));
-            $totalAmount = formatCurrency($transactions->sum('total_price_amount'));
-            $total = formatCurrency($transactions->sum('total'));
-
-            $filterApplied = true;
-        } else {
-            // Jika tidak ada filter tanggal
-            $transactions = collect();
-            $filterApplied = false;
-            $totalAmount = 0;
-            $totalNetweight = 0;
-            $totalGrossweight = 0;
-            $totalFreightcost = 0;
-            $totalAmount = 0;
-            $total = 0;
+        // Validasi tanggal
+        if (!$startDate || !$endDate) {
+            return redirect()->route('transactions.rekap')->withErrors('Please provide a valid date range.');
         }
 
-        // Generate PDF
+        // Parsing tanggal
+        $startDate = Carbon::parse($startDate)->toDateString();
+        $endDate = Carbon::parse($endDate)->toDateString();
+
+        // Query data transaksi berdasarkan rentang tanggal
+        $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])
+            ->with('detailTransactions')
+            ->get();
+
+        foreach ($transactions as $transaction) {
+            $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
+        }
+
+        $totalNetWeight = formatCurrency($transactions->sum('net_weight'));
+        $totalGrossWeight = formatCurrency($transactions->sum('gross_weight'));
+        $totalFreightCost = formatCurrency($transactions->sum('freight_cost'));
+        $totalAmount = formatCurrency($transactions->sum('total_price_amount'));
+        $total = formatCurrency($transactions->sum('total'));
+
+        $filterApplied = true;
+
         $pdf = PDF::loadView('transaction.rekapPdf', compact(
             'transactions', 'startDate', 'endDate', 'filterApplied',
-            'totalAmount', 'totalNetweight', 'totalGrossweight', 'totalFreightcost', 'total'
+            'totalAmount', 'totalNetWeight', 'totalGrossWeight', 'totalFreightCost', 'total'
         ));
-        
-        // Set paper size dan orientasi
+
         $pdf->setPaper('A4', 'landscape');
-        
-        // Stream PDF ke browser
+
         return $pdf->stream('rekap_sales_' . date('Ymd') . '.pdf');
     }
 
@@ -653,51 +641,39 @@ class TransactionController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        if ($startDate && $endDate) {
-            // Pastikan format tanggalnya benar
-            $startDate = Carbon::parse($startDate)->toDateString();
-            $endDate = Carbon::parse($endDate)->toDateString();
-
-            // Query untuk mengambil data transaksi dalam rentang tanggal
-            $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])
-                ->with('detailTransactions')
-                ->get();
-
-            // Jika transaksi ditemukan, hitung total per transaksi
-            foreach ($transactions as $transaction) {
-                $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
-            }
-
-            // Hitung total keseluruhan untuk kolom tertentu
-            $totalNetweight = formatCurrency($transactions->sum('net_weight'));
-            $totalGrossweight = formatCurrency($transactions->sum('gross_weight'));
-            $totalFreightcost = formatCurrency($transactions->sum('freight_cost'));
-            $totalAmount = formatCurrency($transactions->sum('total_price_amount'));
-            $total = formatCurrency($transactions->sum('total'));
-
-            $filterApplied = true;
-        } else {
-            // Jika tidak ada filter tanggal
-            $transactions = collect();
-            $filterApplied = false;
-            $totalAmount = 0;
-            $totalNetweight = 0;
-            $totalGrossweight = 0;
-            $totalFreightcost = 0;
-            $totalAmount = 0;
-            $total = 0;
+        // Validasi tanggal
+        if (!$startDate || !$endDate) {
+            return redirect()->route('transactions.rekap')->withErrors('Please provide a valid date range.');
         }
 
-        // Generate PDF
+        // Parsing tanggal
+        $startDate = Carbon::parse($startDate)->toDateString();
+        $endDate = Carbon::parse($endDate)->toDateString();
+
+        // Query data transaksi berdasarkan rentang tanggal
+        $transactions = Transaction::whereBetween('stuffing_date', [$startDate, $endDate])
+            ->with('detailTransactions')
+            ->get();
+
+        foreach ($transactions as $transaction) {
+            $transaction->total_price_amount = $transaction->detailTransactions->sum('price_amount');
+        }
+
+        $totalNetWeight = formatCurrency($transactions->sum('net_weight'));
+        $totalGrossWeight = formatCurrency($transactions->sum('gross_weight'));
+        $totalFreightCost = formatCurrency($transactions->sum('freight_cost'));
+        $totalAmount = formatCurrency($transactions->sum('total_price_amount'));
+        $total = formatCurrency($transactions->sum('total'));
+
+        $filterApplied = true;
+
         $pdf = PDF::loadView('transaction.rekapPdf', compact(
             'transactions', 'startDate', 'endDate', 'filterApplied',
-            'totalAmount', 'totalNetweight', 'totalGrossweight', 'totalFreightcost', 'total'
+            'totalAmount', 'totalNetWeight', 'totalGrossWeight', 'totalFreightCost', 'total'
         ));
-        
-        // Set paper size dan orientasi
+
         $pdf->setPaper('A4', 'landscape');
-        
-        // Stream PDF ke browser
+
         return $pdf->download('rekap_sales_' . date('Ymd') . '.pdf');
     }
 }
