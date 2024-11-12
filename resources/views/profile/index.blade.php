@@ -2,41 +2,43 @@
 @section('title', 'Profile')
 
 @section('content')
-<div class="container mt-3"> <!-- Changed mt-5 to mt-3 -->
+<div class="container mt-3">
     <div class="row justify-content-center">
         <div class="col-lg-12">
             <div class="card shadow border-0 rounded-lg modern-card">
-            <div class="card-header text-white py-4 d-flex justify-content-between align-items-center" style="background-color: #182433;">
-    <h4 class="mb-0">Welcome, {{ $user->name }}!</h4>
-    <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-        <i class="bi bi-pencil-square"></i> Lengkapi Profile
-    </button>
-</div>
+                <div class="card-header text-white py-4 d-flex justify-content-between align-items-center" style="background-color: #182433;">
+                    <h4 class="mb-0">Welcome, {{ $user->name }}!</h4>
+                    <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="bi bi-pencil-square"></i> Lengkapi Profile
+                    </button>
+                </div>
 
                 <div class="card-body">
-                @if(session('status'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('status') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
+                    @if(session('status'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('status') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
 
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <ul>
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
+                    @if($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul>
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
 
                     <p class="lead text-muted mb-4">Welcome back! Here's a quick overview of your profile and account details. You can manage your settings and explore additional features below.</p>
 
-                        <div class="row align-items-center mb-4">
+                    <div class="row align-items-center mb-4">
                         <div class="col-md-4 text-center mb-3 mb-md-0 profile-card">
-                            <img src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" alt="Profile Picture" class="img-fluid img-thumbnail rounded-circle profile-image">
+                            <img src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" 
+                                 alt="Profile Picture" 
+                                 class="img-fluid img-thumbnail rounded-circle profile-image">
                         </div>
                         <div class="col-md-8">
                             <h5 class="fw-bold mb-3">User Information</h5>
@@ -57,9 +59,9 @@
                                     <li class="list-group-item py-2" style="border: none; padding-left: 20px; padding-right: 20px;">
                                         <strong style="color: #5a5a5a;">Signature:</strong>
                                         <img src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}" 
-                                            alt="Signature" 
-                                            class="signature-image" 
-                                            style="max-width: 180px; height: auto; border-radius: 8px;">
+                                             alt="Signature" 
+                                             class="signature-image" 
+                                             style="max-width: 180px; height: auto; border-radius: 8px;">
                                     </li>
                                 </ul>
                             </div>
