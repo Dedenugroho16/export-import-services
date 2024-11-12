@@ -70,11 +70,11 @@
             <tfoot>
                 <tr>
                     <th colspan="7">Total</th>
-                    <th>{{ $totalNetweight }}</th>
-                    <th>{{ $totalGrossweight }}</th>
-                    <th>{{ $totalFreightcost }}</th>
+                    <th>{{ $totalNetWeight }}</th>
+                    <th>{{ $totalGrossWeight }}</th>
+                    <th>{{ $totalFreightCost }}</th>
                     <th>{{ $totalAmount }}</th>
-                    <th>{{ $total}}</th>
+                    <th>{{ $total }}</th>
                 </tr>
             </tfoot>
         </table>

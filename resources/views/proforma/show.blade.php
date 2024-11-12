@@ -380,6 +380,10 @@
                                 <td>{{ $proformaInvoice->createdBy ? $proformaInvoice->createdBy->name : 'N/A' }}</td>
                             </tr>
                             <tr>
+                                <th>Last Edited By</th>
+                                <td>{{ $proformaInvoice->editedBy ? $proformaInvoice->editedBy->name : '-' }}</td>
+                            </tr>
+                            <tr>
                                 <th>Created At</th>
                                 <td>{{ $proformaInvoice->created_at->format('d-m-Y H:i:s') }}</td>
                             </tr>
