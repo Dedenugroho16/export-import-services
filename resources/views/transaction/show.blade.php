@@ -279,7 +279,7 @@
                                                         <tr>
                                                             <td><strong>Product NCM</strong></td>
                                                             <td>:</td>
-                                                            <td>{{ formatNCM($transaction->product_ncm) }}</td>
+                                                            <td>{{ $transaction->product_ncm }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

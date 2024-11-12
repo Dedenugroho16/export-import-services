@@ -272,7 +272,7 @@
                                                         <tr>
                                                             <td><strong>Product NCM</strong></td>
                                                             <td>:</td>
-                                                            <td>{{ formatNCM($proformaInvoice->product_ncm) }}</td>
+                                                            <td>{{ $proformaInvoice->product_ncm }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
