@@ -98,17 +98,6 @@
                                 </div>
                             </div>
 
-                            <form action="" id="formBOP">
-                                <input type="" id="month" name="month">
-                                <input type="" id="no_inv" name="no_inv">
-                                <input type="" id="selectedClientId" name="id_client">
-                                <input type="" id="total" name="total">
-                                <select name="status">
-                                    <option value="1">Lunas</option>
-                                    <option value="0">Belum Lunas</option>
-                                </select>                                
-                            </form>
-
                             <form action="" id="formTransaction">
                                 @csrf
                                 <div class="row mt-4">
@@ -205,6 +194,20 @@
                                         </div>
                                     </div>
                                 </div> --}}
+                            </form>
+
+                            <form action="" id="formBOP" class="mt-2">
+                                <input type="" id="month" name="month">
+                                <input type="" id="no_inv" name="no_inv">
+                                <input type="" id="selectedClientId" name="id_client">
+                                <input type="" id="total" name="total">
+
+                                <select name="status">
+                                    <option value="">Status pembayaran</option>
+                                    <option value="0">Belum Lunas</option>
+                                    <option value="1">Lunas</option>
+                                </select>
+
                             </form>
 
                             <!-- Tombol Submit -->
@@ -520,7 +523,7 @@
                 month: 'long'
             };
             var monthYear = currentDate.toLocaleDateString('id-ID', options)
-        .toUpperCase(); // Menggunakan 'id-ID' untuk format bahasa Indonesia dan toUpperCase untuk huruf kapital
+                .toUpperCase(); // Menggunakan 'id-ID' untuk format bahasa Indonesia dan toUpperCase untuk huruf kapital
 
             // Menetapkan nilai input #month
             $('#month').val(monthYear);
