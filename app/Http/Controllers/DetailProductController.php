@@ -64,7 +64,7 @@ class DetailProductController extends Controller
             abort(404);
         }
         return view('detail-products.create', [
-            'product' => $product // Kirim produk ke view
+            'product' => $product
         ]);
     }
     
@@ -90,10 +90,15 @@ class DetailProductController extends Controller
     // Display the specified detail product
     public function show($hash)
     {
+        // Decode hash untuk mendapatkan ID detail produk
         $id = IdHashHelper::decode($hash);
+
         $detailProduct = DetailProduct::with('product')->findOrFail($id);
 
-        return view('detail-products.show', compact('detailProduct'));
+        // Hash ID produk untuk digunakan pada tombol "Back"
+        $hashedProductId = IdHashHelper::encode($detailProduct->id_product);
+        
+        return view('detail-products.show', compact('detailProduct', 'hashedProductId'));
     }
 
     // Show the form for editing the specified detail product
@@ -101,12 +106,12 @@ class DetailProductController extends Controller
     {
         $id = IdHashHelper::decode($hash);
         $detailProduct = DetailProduct::findOrFail($id);
-        $products = Product::all(); // Get all products
+        $products = Product::all();
 
         return view('detail-products.edit', [
             'detailProduct' => $detailProduct,
             'products' => $products,
-            'hash' => $hash // Pass the hash to the view for the form action
+            'hash' => $hash
         ]);
     }
 

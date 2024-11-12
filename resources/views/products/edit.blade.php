@@ -49,7 +49,7 @@
                             </div>
 
                             <div class="text-end">
-                                <a href="{{ route('products.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <a href="javascript:void(0);" class="btn btn-outline-primary" onclick="window.history.back();">Kembali</a>
                                 <button type="submit" class="btn btn-primary">Perbarui</button>
                             </div>
                         </form>
