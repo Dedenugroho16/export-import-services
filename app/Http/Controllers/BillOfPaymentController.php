@@ -47,6 +47,7 @@ class BillOfPaymentController extends Controller
 
         $invoices = Transaction::where('approved', 1)
             ->whereNotNull('stuffing_date')
+            ->whereNull('id_bill')
             ->where('id_client', $request->id_client);
 
         return datatables()->of($invoices)

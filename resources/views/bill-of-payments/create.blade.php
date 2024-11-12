@@ -41,7 +41,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p>{{ date('F Y') }}</p>
+                                                    <p>{{ strtoupper(date('F Y')) }}</p>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -507,9 +507,21 @@
                     twoDigitYear;
                 const finalNumber = '{{ $formattedNumber }}' + formattedNumber;
                 $('#no-inv-display').text(finalNumber);
+                $('#no_inv').val(finalNumber);
             }
 
             updateNumber();
+            // Mendapatkan bulan dan tahun saat ini
+            var currentDate = new Date();
+            var options = {
+                year: 'numeric',
+                month: 'long'
+            };
+            var monthYear = currentDate.toLocaleDateString('id-ID', options)
+        .toUpperCase(); // Menggunakan 'id-ID' untuk format bahasa Indonesia dan toUpperCase untuk huruf kapital
+
+            // Menetapkan nilai input #month
+            $('#month').val(monthYear);
         });
     </script>
 @endsection
