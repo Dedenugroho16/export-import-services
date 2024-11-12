@@ -144,10 +144,10 @@
                     aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <h1 class="navbar-brand navbar-brand-autodark">
+                <h1 class="navbar-brand ">
                     <a href=".">
                         <img src="{{ asset('storage/logo2.png') }}" alt="Logo" class="navbar-brand-image"
-                            style="width: 150px; height: auto;">
+                            style="width: 190px; height: auto;">
                     </a>
                 </h1>
                 <div class="collapse navbar-collapse" id="sidebar-menu">
