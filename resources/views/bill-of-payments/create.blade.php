@@ -124,6 +124,21 @@
                                             </thead>
                                             <tbody>
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td class="text-end" colspan="5">
+                                                        <label for="total" class="mr-2">AMOUNT OF BILL:</label>
+                                                    </td>
+                                                    <td class="text-center" style="width: 120px;">
+                                                        <div
+                                                            class="form-group d-flex align-items-center justify-content-center">
+                                                            <input type="text" step="0.01"
+                                                                class="form-control total-display" readonly>
+                                                        </div>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -212,7 +227,8 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payments.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('bill-of-payments.index') }}"
+                                    class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
                             </div>
                         </div>
@@ -430,6 +446,32 @@
                 pageLength: 10
             });
 
+
+            function totalBill() {
+                var totalPaid = 0;
+                var totalBill = 0;
+
+                // Iterasi setiap baris untuk mendapatkan nilai total
+                $('#billOfPaymentTable tbody tr').each(function() {
+                    var paid = parseFloat($(this).find('.paid-input').val().replace(/,/g, '')) || 0;
+                    var bill = parseFloat($(this).find('.pi-bill').text().replace(/,/g, '')) || 0;
+
+                    totalPaid += paid;
+                    totalBill += bill;
+                });
+
+                // Hitung grandTotal
+                var grandTotal = totalBill - totalPaid;
+
+                var formattedGrandTotal = grandTotal.toLocaleString('en-US', {
+                    minimumFractionDigits: 2
+                });
+
+                // Update nilai total di elemen input total-display
+                $('.total-display').val(formattedGrandTotal);
+                $('#total').val(grandTotal);
+            }
+
             // Event listener untuk tombol "Pilih"
             var selectedPI = []; // Array untuk menyimpan ID yang sudah dipilih
 
@@ -453,6 +495,7 @@
                 selectedPI.push(data.id);
 
                 // Tambahkan baris baru ke tabel #billOfPaymentTable
+                var formattedAmount = parseFloat(data.amount).toLocaleString('en-US', { minimumFractionDigits: 2 });
                 var newRow = `
         <tr>
             <td class="text-center" style="display: none;">
@@ -466,11 +509,12 @@
             <td class="text-center">
                 <input type="text" name="description" id="description" class="form-control description-input" placeholder="Enter description">
             </td>
-            <td class="text-center">${data.amount}</td>
+            <td class="text-center">${formattedAmount}</td>
             <td class="text-center">
-                <input type="number" name="paid" id="paid" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
+                <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
+                <input type="number" name="paid" id="paid" class="form-control" placeholder="Enter paid" style="width: 120px;">
             </td>
-            <td class="text-center">${data.amount}</td>
+            <td class="text-center pi-bill">${formattedAmount}</td>
             <td class="text-center">
                 <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
             </td>
@@ -482,6 +526,21 @@
 
                 // Menutup modal setelah produk dipilih
                 $('#PIModal').modal('hide');
+
+
+                $('#billOfPaymentTable tbody').on('input', '.paid-input', function() {
+                    var paidInput = parseFloat($(this).val().replace(/,/g, '')) || 0;
+
+                    // Format nilai paidInput ke format ribuan dengan dua desimal
+                    var formattedPaidInput = paidInput.toLocaleString('en-US');
+
+                    // Update nilai yang diformat ke input .paid-input
+                    $(this).val(formattedPaidInput);
+                    $('#paid').val(paidInput);
+
+                    // Jalankan fungsi totalBill untuk memperbarui total
+                    totalBill();
+                });
             });
 
             // Event listener untuk tombol "Hapus"
