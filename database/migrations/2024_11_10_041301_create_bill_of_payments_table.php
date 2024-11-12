@@ -17,9 +17,7 @@ return new class extends Migration
             $table->string(column: 'no_inv');
             $table->unsignedBigInteger('id_client');
             $table->decimal('total', 10, 2);
-            $table->boolean('approved')->default(false);
             $table->boolean('status')->default(false);
-            $table->unsignedBigInteger('approver')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
 

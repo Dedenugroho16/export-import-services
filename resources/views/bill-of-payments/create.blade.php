@@ -102,9 +102,14 @@
                                 <input type="" id="month" name="month">
                                 <input type="" id="no_inv" name="no_inv">
                                 <input type="" id="selectedClientId" name="id_client">
+                                <input type="" id="total" name="total">
+                                <select name="status">
+                                    <option value="1">Lunas</option>
+                                    <option value="0">Belum Lunas</option>
+                                </select>                                
                             </form>
 
-                            <form id="formPI">
+                            <form action="" id="formTransaction">
                                 @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">
@@ -119,8 +124,6 @@
                                         <table class="table table-striped table-hover" id="billOfPaymentTable">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center">ID BOP</th>
-                                                    <th class="text-center">No</th>
                                                     <th class="text-center">PI. NUMBER</th>
                                                     <th class="text-center">CODE</th>
                                                     <th class="text-center">DESCRIPTION</th>
@@ -446,24 +449,23 @@
                 // Jika ID belum ada, tambahkan ke array selectedPI
                 selectedPI.push(data.id);
 
-                // Hitung nomor dinamis berdasarkan jumlah baris di #billOfPaymentTable
-                var rowCount = $('#billOfPaymentTable tbody tr').length + 1;
-
                 // Tambahkan baris baru ke tabel #billOfPaymentTable
                 var newRow = `
         <tr>
-            <td class="text-center">
-                <input type="text" class="form-control id-proforma" value="${data.id}" readonly>
+            <td class="text-center" style="display: none;">
+                <input type="text" class="form-control id-proforma" value="${data.id}">
             </td>
-            <td class="text-center">${rowCount}</td>
+            <td class="text-center" style="display: none;">
+                <input type="text" class="form-control" name="id_bill" id="id_bill">
+            </td>
             <td class="text-center">${data.number}</td>
             <td class="text-center">${data.code}</td>
             <td class="text-center">
-                <input type="text" class="form-control description-input" placeholder="Enter description">
+                <input type="text" name="description" id="description" class="form-control description-input" placeholder="Enter description">
             </td>
             <td class="text-center">${data.amount}</td>
             <td class="text-center">
-                <input type="number" class="form-control paid-input" placeholder="Enter paid amount">
+                <input type="number" name="paid" id="paid" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
             </td>
             <td class="text-center">${data.amount}</td>
             <td class="text-center">
