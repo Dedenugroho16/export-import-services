@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BillOfPayment;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\BillOfPayment;
+use Yajra\DataTables\Facades\DataTables;
+use App\Helpers\IdHashHelper;
 
 class BillOfPaymentController extends Controller
 {
@@ -35,5 +37,27 @@ class BillOfPaymentController extends Controller
         $formattedNumber = $newNumber . '/' . $twoDigitMonth;
 
         return view('bill-of-payments.create', compact('formattedNumber'));
+    }
+
+    public function getProformaInvoices(Request $request)
+    {
+        if (!$request->has('id_client') || empty($request->id_client)) {
+            return datatables()->of(collect([]))->make(true); // Kembalikan data kosong jika `id_client` tidak ada
+        }
+
+        $invoices = Transaction::where('approved', 1)
+            ->whereNotNull('stuffing_date')
+            ->where('id_client', $request->id_client);
+
+        return datatables()->of($invoices)
+            ->addIndexColumn()
+            ->addColumn('amount', function ($row) {
+                return $row->total;
+            })
+            ->addColumn('aksi', function ($row) {
+                return '<button class="btn btn-primary btn-sm pilih-btn">Pilih</button>';
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
     }
 }

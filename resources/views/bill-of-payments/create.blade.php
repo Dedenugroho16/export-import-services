@@ -29,80 +29,83 @@
                                 </div>
                             @endif
 
-                            <form>
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <p>Month</p>
-                                                    </div>
-                                                    <div class="col-1 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-7">
-                                                        <p>{{ date('F Y') }}</p>
-                                                    </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <p>Month</p>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <p>No. Inv</p>
-                                                    </div>
-                                                    <div class="col-1 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-7">
-                                                        <p id="no-inv-display">-</p>
-                                                    </div>
+                                                <div class="col-1 text-center">
+                                                    <span>:</span>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <p>Buyer Name</p>
-                                                    </div>
-                                                    <div class="col-1 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-7">
-                                                        <div class="form-group">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                    id="selectedClientName" placeholder="Pilih Client"
-                                                                    readonly>
-                                                                <input type="hidden" id="selectedClientId"
-                                                                    name="id_client">
-                                                                <div class="btn-group">
-                                                                    <button type="button" class="btn btn-primary btn-md"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#clientsModal">
-                                                                        <i data-feather="search"></i> Cari
-                                                                    </button>
-                                                                </div>
+                                                <div class="col-7">
+                                                    <p>{{ date('F Y') }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <p>No. Inv</p>
+                                                </div>
+                                                <div class="col-1 text-center">
+                                                    <span>:</span>
+                                                </div>
+                                                <div class="col-7">
+                                                    <p id="no-inv-display">-</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <p>Buyer Name</p>
+                                                </div>
+                                                <div class="col-1 text-center">
+                                                    <span>:</span>
+                                                </div>
+                                                <div class="col-7">
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control"
+                                                                id="selectedClientName" placeholder="Pilih Client" readonly>
+                                                            <br>
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btn btn-primary btn-md"
+                                                                    data-bs-toggle="modal" data-bs-target="#clientsModal">
+                                                                    <i data-feather="search"></i> Cari
+                                                                </button>
                                                             </div>
-                                                            <span class="error-message" id="selectedClientId_error"
-                                                                style="color: red; display: none;"></span>
                                                         </div>
+                                                        <span class="error-message" id="selectedClientId_error"
+                                                            style="color: red; display: none;"></span>
                                                     </div>
                                                 </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-4">
-                                                        <p>Company Name</p>
-                                                    </div>
-                                                    <div class="col-1 text-center">
-                                                        <span>:</span>
-                                                    </div>
-                                                    <div class="col-7">
-                                                        <input type="text" class="form-control"
-                                                            id="selectedClientCompanyName" placeholder="Nama Perusahaan"
-                                                            readonly>
-                                                    </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-4">
+                                                    <p>Company Name</p>
+                                                </div>
+                                                <div class="col-1 text-center">
+                                                    <span>:</span>
+                                                </div>
+                                                <div class="col-7">
+                                                    <input type="text" class="form-control"
+                                                        id="selectedClientCompanyName" placeholder="Nama Perusahaan"
+                                                        readonly>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
+                            <form action="" id="formBOP">
+                                <input type="" id="month" name="month">
+                                <input type="" id="no_inv" name="no_inv">
+                                <input type="" id="selectedClientId" name="id_client">
+                            </form>
+
+                            <form id="formPI">
+                                @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">
                                         <div class="btn-group mb-1">
@@ -111,17 +114,20 @@
                                                 <i data-feather="search"></i> Cari proforma invoices
                                             </button>
                                         </div>
-                                        <table class="table card-table table-vcenter text-nowrap">
+                                    </div>
+                                    <div class="col-md-12 mt-3">
+                                        <table class="table table-striped table-hover" id="billOfPaymentTable">
                                             <thead>
                                                 <tr>
+                                                    <th class="text-center">ID BOP</th>
                                                     <th class="text-center">No</th>
-                                                    <th class="text-center">ID PI</th>
                                                     <th class="text-center">PI. NUMBER</th>
                                                     <th class="text-center">CODE</th>
                                                     <th class="text-center">DESCRIPTION</th>
                                                     <th class="text-center">AMOUNT</th>
                                                     <th class="text-center">PAID</th>
                                                     <th class="text-center">BILL</th>
+                                                    <th class="text-center">AKSI</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -130,7 +136,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mt-6">
+                                {{-- <div class="row mt-6">
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class="col-6">
@@ -195,13 +201,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </form>
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payments.index') }}"
-                                    class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('bill-of-payments.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
                             </div>
                         </div>
@@ -258,13 +263,10 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">No</th>
-                                            <th class="text-center">ID PI</th>
                                             <th class="text-center">PI. NUMBER</th>
                                             <th class="text-center">CODE</th>
-                                            <th class="text-center">DESCRIPTION</th>
                                             <th class="text-center">AMOUNT</th>
-                                            <th class="text-center">PAID</th>
-                                            <th class="text-center">BILL</th>
+                                            <th class="text-center">AKSI</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -359,6 +361,136 @@
                 $('#selectedClientName').val(clientName);
                 $('#selectedClientCompanyName').val(companyName);
                 $('#clientsModal').modal('hide');
+
+                $('#PITable').DataTable().ajax.reload();
+            });
+
+            // Inisialisasi DataTable untuk #PITable
+            $('#PITable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('getProformaInvoices') }}", // Route untuk mengambil data
+                    type: 'GET',
+                    data: function(d) {
+                        var clientId = $('#selectedClientId').val();
+                        d.id_client = clientId ? clientId : null;
+                    }
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'number',
+                        name: 'number',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'code',
+                        name: 'code',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'amount',
+                        name: 'amount',
+                        className: 'text-center'
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            // Simpan ID transaksi di data-id tanpa menampilkan kolom ID di tabel
+                            return `<button class="btn btn-primary btn-sm pilih-btn" 
+                        data-id="${row.id}" 
+                        data-number="${row.number}" 
+                        data-code="${row.code}" 
+                        data-amount="${row.amount}">
+                        Pilih
+                        </button>`;
+                        }
+                    }
+                ],
+                responsive: true,
+                autoWidth: false,
+                order: [
+                    [2, 'desc']
+                ],
+                pageLength: 10
+            });
+
+            // Event listener untuk tombol "Pilih"
+            var selectedPI = []; // Array untuk menyimpan ID yang sudah dipilih
+
+            $('#PITable tbody').on('click', '.pilih-btn', function() {
+                // Ambil data dari tombol yang diklik
+                var data = $(this).data();
+
+                // Periksa apakah ID sudah ada di selectedPI
+                if (selectedPI.includes(data.id)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Gagal Menambahkan!',
+                        text: 'Proforma invoice ini sudah dipilih. Silakan pilih proforma invoice lain.',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#PIModal').modal('hide'); // Menutup modal jika produk sudah dipilih
+                    return;
+                }
+
+                // Jika ID belum ada, tambahkan ke array selectedPI
+                selectedPI.push(data.id);
+
+                // Hitung nomor dinamis berdasarkan jumlah baris di #billOfPaymentTable
+                var rowCount = $('#billOfPaymentTable tbody tr').length + 1;
+
+                // Tambahkan baris baru ke tabel #billOfPaymentTable
+                var newRow = `
+        <tr>
+            <td class="text-center">
+                <input type="text" class="form-control id-proforma" value="${data.id}" readonly>
+            </td>
+            <td class="text-center">${rowCount}</td>
+            <td class="text-center">${data.number}</td>
+            <td class="text-center">${data.code}</td>
+            <td class="text-center">
+                <input type="text" class="form-control description-input" placeholder="Enter description">
+            </td>
+            <td class="text-center">${data.amount}</td>
+            <td class="text-center">
+                <input type="number" class="form-control paid-input" placeholder="Enter paid amount">
+            </td>
+            <td class="text-center">${data.amount}</td>
+            <td class="text-center">
+                <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
+            </td>
+        </tr>
+    `;
+
+                // Append row ke #billOfPaymentTable
+                $('#billOfPaymentTable tbody').append(newRow);
+
+                // Menutup modal setelah produk dipilih
+                $('#PIModal').modal('hide');
+            });
+
+            // Event listener untuk tombol "Hapus"
+            $('#billOfPaymentTable').on('click', '.delete-btn', function() {
+                var row = $(this).closest('tr');
+                var idToRemove = row.find('.id-proforma').val();
+
+                // Hapus produk dari array newSelectedProductIds jika dihapus
+                var index = selectedPI.indexOf(parseInt(idToRemove));
+                if (index !== -1) {
+                    selectedPI.splice(index, 1);
+                }
+
+                row.remove(); // Hapus baris dari tabel
             });
 
             function updateNumber() {
