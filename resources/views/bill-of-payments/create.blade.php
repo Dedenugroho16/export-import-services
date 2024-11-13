@@ -66,7 +66,7 @@
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <input type="text" class="form-control"
-                                                                id="selectedClientName" placeholder="Pilih Client" readonly>
+                                                                id="selectedClientName" placeholder="Pilih Buyer" readonly>
                                                             <br>
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-primary btn-md"
@@ -108,6 +108,10 @@
                                                 <i data-feather="search"></i> Cari proforma invoices
                                             </button>
                                         </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="error-message" id="pi_error"
+                                            style="color: red; display: none;"></span>
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <table class="table table-striped table-hover" id="billOfPaymentTable">
@@ -222,7 +226,8 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payments.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('bill-of-payments.index') }}"
+                                    class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
                             </div>
                         </div>
@@ -378,6 +383,10 @@
                 $('#selectedClientCompanyName').val(companyName);
                 $('#clientsModal').modal('hide');
 
+                $('#selectedClientId_error').text('').hide(); // Sembunyikan pesan error
+                $('#selectedClientName').removeClass('is-invalid'); // Hapus border merah pada input
+                $('.input-group').removeClass('has-error'); // Hapus border merah pada grup input
+
                 $('#PITable').DataTable().ajax.reload();
             });
 
@@ -452,7 +461,7 @@
                     emptyTable: function() {
                         var clientSelected = $('#selectedClientId').val();
                         return clientSelected ?
-                            "Transaksi buyer yang Anda pilih belum dikonfirmasi" :
+                            "Buyer yang Anda pilih tidak memiliki tagihan" :
                             "Tolong pilih buyer terlebih dahulu";
                     },
                     aria: {
@@ -532,7 +541,7 @@
                                         <input type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
                                     </td>
                                     <td class="text-center" style="display: none;">
-                                        <input type="hidden" name="transactions[${data.id}][id_bill]">
+                                        <input type="hidden" id="id_bill" name="transactions[${data.id}][id_bill]">
                                     </td>
                                     <td class="text-center">${data.number}</td>
                                     <td class="text-center">${data.code}</td>
@@ -555,6 +564,7 @@
 
                 // Append row ke #billOfPaymentTable
                 $('#billOfPaymentTable tbody').append(newRow);
+                $('#pi_error').text('Data Proforma Invoice harus diisi!').hide();
 
                 // Menutup modal setelah produk dipilih
                 $('#PIModal').modal('hide');
@@ -641,12 +651,48 @@
         });
 
         $(document).ready(function() {
+            function validateTransactionForm() {
+                var isValid = true;
+
+                // Cek apakah ada input selain yang memiliki id="id_transaction"
+                var totalInputs = $('#billOfPaymentTable tbody input').length; // Total input dalam form
+                var otherInputs = $('#billOfPaymentTable tbody input').not('#id_bill')
+                    .length;
+
+                if (otherInputs === 0) {
+                    isValid = false; // Jika tidak ada input selain id_transaction, form tidak valid
+                    $('#pi_error').text('Data Proforma Invoice harus diisi!').show();
+                }
+
+                return isValid; // Kembalikan status validasi
+            }
+
             $('#submitButton').on('click', function() {
                 var formBOP = $('#formBOP');
                 var formDataBOP = formBOP.serialize(); // Serialize form data
 
                 // Disable the submit button to prevent multiple submissions
                 $(this).prop('disabled', true);
+
+                var selectedClientId = $('#selectedClientId').val();
+                if (!selectedClientId) {
+                    $('#selectedClientId_error').text('Data Buyer harus diisi').show();
+                    $('#selectedClientName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var isValidDetailTransaction = validateTransactionForm();
+
+                if (!isValidDetailTransaction) {
+                    $('#submitButton').prop('disabled', false);
+                    Swal.fire({
+                        title: 'Terjadi Kesalahan!',
+                        text: 'Mohon lengkapi data Bill of Payment!',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return; // Hentikan proses jika form detail transaksi tidak valid
+                }
 
                 // Submit formBOP via AJAX
                 $.ajax({
@@ -677,16 +723,16 @@
                                 .serialize(); // Serialize form data
                             $.ajax({
                                 url: formTransaction.attr(
-                                'action'), // The action URL from formTransaction
+                                    'action'), // The action URL from formTransaction
                                 method: 'POST',
                                 data: formDataTransaction,
                                 success: function(response) {
                                     if (response.success) {
                                         Swal.fire({
                                             icon: 'success',
-                                            title: 'Data berhasil disimpan!',
+                                            title: 'Berhasil!',
                                             text: response
-                                            .message, // Menampilkan pesan dari server
+                                                .message, // Menampilkan pesan dari server
                                         }).then(function() {
                                             window.location.href =
                                                 '{{ route('bill-of-payments.index') }}'; // Redirect ke halaman yang diinginkan
@@ -704,17 +750,18 @@
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Terjadi Kesalahan!',
-                                        text: 'Gagal mengirimkan form transaksi.',
+                                        text: 'Gagal mengirimkan Proforma Invoice.',
                                     });
                                 }
                             });
 
                         } else {
+                            $(this).prop('disabled', false);
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Gagal Menyimpan BOP!',
+                                title: 'Gagal membuat Bill of Payment!',
                                 text: response.message ||
-                                    'Terjadi kesalahan saat menyimpan BOP.',
+                                    'Terjadi kesalahan saat membuat Bill of Payment.',
                             });
                         }
                     },
@@ -722,8 +769,12 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Terjadi Kesalahan!',
-                            text: 'Gagal mengirimkan form BOP.',
+                            text: 'Gagal membuat Bill Of Payment',
                         });
+                    },
+                    complete: function() {
+                        // Aktifkan kembali tombol setelah selesai (sukses/gagal)
+                        $('#submitButton').prop('disabled', false);
                     }
                 });
             });

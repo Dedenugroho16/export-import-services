@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->decimal('paid', 10, 2)->default(0)->after('id_bill'); // Menambahkan kolom paid dengan 2 angka desimal
+            $table->decimal('paid', 10, 2)->default(0)->nullable()->after('id_bill');
         });
     }
 
