@@ -158,3 +158,9 @@ Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'd
 
 // bill of payments
 Route::get('/bill-of-payments', [BillOfPaymentController::class, 'index'])->name('bill-of-payments.index');
+Route::get('/bill-of-payment/create', [BillOfPaymentController::class, 'create'])->name('bill-of-payment.create');
+Route::get('/get-proforma-invoices', [BillOfPaymentController::class, 'getProformaInvoices'])->name('getProformaInvoices');
+// ! form
+Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');
+// Route untuk menangani form submission
+Route::post('/proforma-bop/update', [BillOfPaymentController::class, 'PIUpdate'])->name('proforma-bop.update');

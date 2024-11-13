@@ -29,4 +29,9 @@ class Clients extends Model
     {
         return $this->hasMany(Transaction::class, 'id_client');
     }
+    
+    public function billOfPayments()
+    {
+        return $this->hasMany(BillOfPayment::class, 'id_client');
+    }
 }

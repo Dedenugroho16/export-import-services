@@ -39,8 +39,11 @@ class Transaction extends Model
         'created_by',
         'confirmed_by',
         'edited_by',
+        'id_bill',
+        'paid',
+        'description'
     ];
-    
+
     public function consignee()
     {
         return $this->belongsTo(Consignee::class, 'id_consignee');
@@ -96,4 +99,10 @@ class Transaction extends Model
     {
         return $this->load(['createdBy', 'confirmedBy', 'editedBy']);
     }
+
+    public function billOfPayment()
+    {
+        return $this->belongsTo(BillOfPayment::class, 'id_bill');
+    }
+
 }

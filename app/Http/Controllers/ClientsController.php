@@ -11,14 +11,14 @@ use Yajra\DataTables\Facades\DataTables;
 class ClientsController extends Controller
 {
     public function index(Request $request)
-{
-    if ($request->ajax()) {
-        $client = Clients::query();
-        return DataTables::of($client)
-            ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                $hashId = IdHashHelper::encode($row->id);
-                $actionBtn = '
+    {
+        if ($request->ajax()) {
+            $client = Clients::query();
+            return DataTables::of($client)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $hashId = IdHashHelper::encode($row->id);
+                    $actionBtn = '
                     <div class="dropdown">
                         <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">
                             Aksi
@@ -43,14 +43,14 @@ class ClientsController extends Controller
                         </div>
                     </div>';
 
-                return $actionBtn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-    }
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
 
-    return view('clients.index');
-}
+        return view('clients.index');
+    }
 
 
 
@@ -105,7 +105,7 @@ class ClientsController extends Controller
         $client->update($request->all());
 
         return redirect($request->input('previous_url', route('clients.index')))
-        ->with('success', 'Data berhasil diperbarui.');
+            ->with('success', 'Data berhasil diperbarui.');
     }
 
     public function destroy($hash)
