@@ -220,8 +220,7 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payments.index') }}"
-                                    class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('bill-of-payments.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
                             </div>
                         </div>
@@ -431,6 +430,40 @@
                         }
                     }
                 ],
+                language: {
+                    decimal: ".",
+                    thousands: ",",
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    zeroRecords: "Tidak ada data yang ditemukan",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 entri",
+                    infoFiltered: "(disaring dari _MAX_ total entri)",
+                    search: "Cari:",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    loadingRecords: "Sedang memuat...",
+                    processing: "Sedang memproses...",
+                    emptyTable: function() {
+                        var clientSelected = $('#selectedClientId').val();
+                        return clientSelected ?
+                            "Transaksi buyer yang Anda pilih belum dikonfirmasi" :
+                            "Tolong pilih buyer terlebih dahulu";
+                    },
+                    aria: {
+                        sortAscending: ": aktifkan untuk mengurutkan kolom secara ascending",
+                        sortDescending: ": aktifkan untuk mengurutkan kolom secara descending"
+                    },
+                    select: {
+                        rows: {
+                            _: "%d baris terpilih",
+                            1: "1 baris terpilih"
+                        }
+                    }
+                },
                 responsive: true,
                 autoWidth: false,
                 order: [
@@ -488,7 +521,9 @@
                 selectedPI.push(data.id);
 
                 // Tambahkan baris baru ke tabel #billOfPaymentTable
-                var formattedAmount = parseFloat(data.amount).toLocaleString('en-US', { minimumFractionDigits: 2 });
+                var formattedAmount = parseFloat(data.amount).toLocaleString('en-US', {
+                    minimumFractionDigits: 2
+                });
                 var newRow = `
         <tr>
             <td class="text-center" style="display: none;">
@@ -505,7 +540,7 @@
             <td class="text-center">${formattedAmount}</td>
             <td class="text-center">
                 <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
-                <input type="number" name="paid" id="paid" class="form-control" placeholder="Enter paid" style="width: 120px;">
+                <input type="number" name="paid" class="form-control paid" placeholder="Enter paid" style="width: 120px;">
             </td>
             <td class="text-center pi-bill">${formattedAmount}</td>
             <td class="text-center">
@@ -520,20 +555,37 @@
                 // Menutup modal setelah produk dipilih
                 $('#PIModal').modal('hide');
 
-
                 $('#billOfPaymentTable tbody').on('input', '.paid-input', function() {
-                    var paidInput = parseFloat($(this).val().replace(/,/g, '')) || 0;
+                    // Temukan baris tempat input ini berada
+                    var row = $(this).closest('tr');
+
+                    // Ambil nilai dari input .paid-input dan hilangkan koma jika ada
+                    var paidInput = parseFloat(row.find('.paid-input').val().replace(/,/g, '')) || 0;
 
                     // Format nilai paidInput ke format ribuan dengan dua desimal
                     var formattedPaidInput = paidInput.toLocaleString('en-US');
 
-                    // Update nilai yang diformat ke input .paid-input
-                    $(this).val(formattedPaidInput);
-                    $('#paid').val(paidInput);
+                    // Update nilai yang diformat hanya di input .paid-input pada baris ini
+                    row.find('.paid-input').val(formattedPaidInput);
+                    row.find('.paid').val(paidInput);
 
-                    // Jalankan fungsi totalBill untuk memperbarui total
+                    // Jalankan fungsi totalBill untuk memperbarui total keseluruhan
                     totalBill();
                 });
+
+                // $('#billOfPaymentTable tbody').on('input', '.paid-input', function() {
+                //     var paidInput = parseFloat($(this).val().replace(/,/g, '')) || 0;
+
+                //     // Format nilai paidInput ke format ribuan dengan dua desimal
+                //     var formattedPaidInput = paidInput.toLocaleString('en-US');
+
+                //     // Update nilai yang diformat ke input .paid-input
+                //     $(this).val(formattedPaidInput);
+                //     $('.paid').val(paidInput);
+
+                //     // Jalankan fungsi totalBill untuk memperbarui total
+                //     totalBill();
+                // });
                 totalBill();
             });
 
