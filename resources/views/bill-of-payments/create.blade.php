@@ -98,7 +98,7 @@
                                 </div>
                             </div>
 
-                            <form action="" id="formTransaction">
+                            <form id="formTransaction" action="{{ route('proforma-bop.update') }}">
                                 @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">
@@ -211,7 +211,9 @@
                                 </div> --}}
                             </form>
 
-                            <form action="" id="formBOP" class="mt-2">
+                            <form id="formBOP" class="mt-2" method="POST"
+                                action="{{ route('bill-of-payment.store') }}">
+                                @csrf
                                 <input type="" id="month" name="month">
                                 <input type="" id="no_inv" name="no_inv">
                                 <input type="" id="selectedClientId" name="id_client">
@@ -525,29 +527,31 @@
                     minimumFractionDigits: 2
                 });
                 var newRow = `
-        <tr>
-            <td class="text-center" style="display: none;">
-                <input type="text" class="form-control id-proforma" value="${data.id}">
-            </td>
-            <td class="text-center" style="display: none;">
-                <input type="text" class="form-control" name="id_bill" id="id_bill">
-            </td>
-            <td class="text-center">${data.number}</td>
-            <td class="text-center">${data.code}</td>
-            <td class="text-center">
-                <input type="text" name="description" id="description" class="form-control description-input" placeholder="Enter description">
-            </td>
-            <td class="text-center">${formattedAmount}</td>
-            <td class="text-center">
-                <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
-                <input type="number" name="paid" class="form-control paid" placeholder="Enter paid" style="width: 120px;">
-            </td>
-            <td class="text-center pi-bill">${formattedAmount}</td>
-            <td class="text-center">
-                <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
-            </td>
-        </tr>
-    `;
+                                <tr>
+                                    <td class="text-center" style="display: none;">
+                                        <input type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
+                                    </td>
+                                    <td class="text-center" style="display: none;">
+                                        <input type="hidden" name="transactions[${data.id}][id_bill]">
+                                    </td>
+                                    <td class="text-center">${data.number}</td>
+                                    <td class="text-center">${data.code}</td>
+                                    <td class="text-center">
+                                        <input type="text" name="transactions[${data.id}][description]" class="form-control description-input" placeholder="Enter description">
+                                    </td>
+                                    <td class="text-center">${formattedAmount}</td>
+                                    <td class="text-center">
+                                        <!-- Display-only input for formatting -->
+                                        <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
+                                        <!-- Hidden input for actual value submission -->
+                                        <input type="number" name="transactions[${data.id}][paid]" class="form-control paid">
+                                    </td>
+                                    <td class="text-center pi-bill">${formattedAmount}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
+                                    </td>
+                                </tr>
+                            `;
 
                 // Append row ke #billOfPaymentTable
                 $('#billOfPaymentTable tbody').append(newRow);
@@ -560,7 +564,8 @@
                     var row = $(this).closest('tr');
 
                     // Ambil nilai dari input .paid-input dan hilangkan koma jika ada
-                    var paidInput = parseFloat(row.find('.paid-input').val().replace(/,/g, '')) || 0;
+                    var paidInput = parseFloat(row.find('.paid-input').val().replace(/,/g, '')) ||
+                        0;
 
                     // Format nilai paidInput ke format ribuan dengan dua desimal
                     var formattedPaidInput = paidInput.toLocaleString('en-US');
@@ -633,6 +638,95 @@
 
             // Menetapkan nilai input #month
             $('#month').val(monthYear);
+        });
+
+        $(document).ready(function() {
+            $('#submitButton').on('click', function() {
+                var formBOP = $('#formBOP');
+                var formDataBOP = formBOP.serialize(); // Serialize form data
+
+                // Disable the submit button to prevent multiple submissions
+                $(this).prop('disabled', true);
+
+                // Submit formBOP via AJAX
+                $.ajax({
+                    url: formBOP.attr('action'), // The action URL from the formBOP
+                    method: 'POST',
+                    data: formDataBOP,
+                    success: function(response) {
+                        if (response.success) {
+                            // Capture the returned id_bill from the response
+                            var idBill = response.id_bill;
+
+                            // Now process formTransaction by appending the rows with the id_bill
+                            var formTransaction = $('#formTransaction');
+                            $('#billOfPaymentTable tbody tr').each(function() {
+                                // For each row in the table, set the id_bill for the hidden input
+                                $(this).find('input[name^="transactions"]').each(
+                                    function() {
+                                        if ($(this).attr('name').includes(
+                                                'id_bill')) {
+                                            $(this).val(
+                                                idBill); // Set the value of id_bill
+                                        }
+                                    });
+                            });
+
+                            // Submit formTransaction via AJAX after setting id_bill
+                            var formDataTransaction = formTransaction
+                                .serialize(); // Serialize form data
+                            $.ajax({
+                                url: formTransaction.attr(
+                                'action'), // The action URL from formTransaction
+                                method: 'POST',
+                                data: formDataTransaction,
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Data berhasil disimpan!',
+                                            text: response
+                                            .message, // Menampilkan pesan dari server
+                                        }).then(function() {
+                                            window.location.href =
+                                                '{{ route('bill-of-payments.index') }}'; // Redirect ke halaman yang diinginkan
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Gagal Menyimpan Transaksi!',
+                                            text: response.message ||
+                                                'Terjadi kesalahan saat menyimpan transaksi.',
+                                        });
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Terjadi Kesalahan!',
+                                        text: 'Gagal mengirimkan form transaksi.',
+                                    });
+                                }
+                            });
+
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal Menyimpan BOP!',
+                                text: response.message ||
+                                    'Terjadi kesalahan saat menyimpan BOP.',
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan!',
+                            text: 'Gagal mengirimkan form BOP.',
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection

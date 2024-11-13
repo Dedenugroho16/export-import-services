@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bill_of_payments', function (Blueprint $table) {
             $table->id();
-            $table->date(column: 'month');
+            $table->string(column: 'month');
             $table->string(column: 'no_inv');
             $table->unsignedBigInteger('id_client');
             $table->decimal('total', 10, 2);

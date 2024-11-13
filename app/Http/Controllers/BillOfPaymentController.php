@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
-use App\Models\BillOfPayment;
-use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\IdHashHelper;
+use App\Models\BillOfPayment;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class BillOfPaymentController extends Controller
 {
@@ -60,5 +61,52 @@ class BillOfPaymentController extends Controller
             })
             ->rawColumns(['aksi'])
             ->make(true);
+    }
+
+    // In your BillOfPaymentController
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'month' => 'required',
+            'no_inv' => 'required',
+            'id_client' => 'required',
+            'total' => 'required',
+        ]);
+
+        $data['created_by'] = Auth::id();
+
+        // Save the BillOfPayment
+        $billOfPayment = BillOfPayment::create($data);
+
+        // Return the id of the created BillOfPayment
+        return response()->json([
+            'success' => true,
+            'id_bill' => $billOfPayment->id
+        ]);
+    }
+
+    public function PIUpdate(Request $request)
+    {
+        // Ambil data transactions dari request
+        $transactions = $request->input('transactions');
+
+        foreach ($transactions as $data) {
+            // Ambil id dari setiap data
+            $transaction = Transaction::find($data['id']);
+
+            if ($transaction) {
+                // Update data transaksi
+                $transaction->description = $data['description'];
+                $transaction->paid = $data['paid'];
+                $transaction->id_bill = $data['id_bill'];
+                // Tambahkan field lain sesuai kebutuhan
+                $transaction->save();
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data transaksi berhasil diperbarui'
+        ]);
     }
 }
