@@ -47,6 +47,11 @@ class CompanyController extends Controller
             'import_license_number' => 'nullable|string|max:50',
             'bank_account_details' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'bank_account_name' => 'required|string|max:255',
+            'bank_account_number' => 'required|string|max:255',
+            'bank_name' => 'required|string|max:255',
+            'bank_address' => 'required|string|max:255',
+            'swift_code' => 'required|string|max:11',
         ]);
 
         // Upload logo jika ada
@@ -58,7 +63,7 @@ class CompanyController extends Controller
         // Simpan data perusahaan
         Company::create($validatedData);
 
-        return redirect()->route('company.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('company.index')->with('success', 'Data berhasil disimpan');
     }
 
     public function edit($id) {
@@ -84,7 +89,12 @@ class CompanyController extends Controller
             'export_license_number' => 'nullable|string|max:100',
             'import_license_number' => 'nullable|string|max:100',
             'bank_account_details' => 'nullable|string|max:500',
-            'logo' => 'nullable|image|max:2048', // max 2MB image file
+            'logo' => 'nullable|image|max:2048',
+            'bank_account_name' => 'required|string|max:255',
+            'bank_account_number' => 'required|string|max:255',
+            'bank_name' => 'required|string|max:255',
+            'bank_address' => 'required|string|max:255',
+            'swift_code' => 'required|string|max:11',
         ]);
 
         // Cari perusahaan berdasarkan ID

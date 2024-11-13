@@ -185,7 +185,7 @@
             <td>{{ formatCurrency($transaction->gross_weight) }}</td>
             <th>Product NCM</th>
             <td>:</td>
-            <td>{{ formatNCM($transaction->product_ncm) }}</td>
+            <td>{{ $transaction->product_ncm }}</td>
         </tr>
         <tr>
             <th>Payment Term</th>

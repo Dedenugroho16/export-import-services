@@ -23,13 +23,16 @@ class CreateCompaniesTable extends Migration
             $table->string('postal_code');
             $table->string('phone_number')->nullable();
             $table->string('email')->nullable();
-            $table->string('website')->nullable();
             $table->string('tax_id')->nullable();
             $table->date('founded_date')->nullable();
             $table->string('export_license_number')->nullable();
             $table->string('import_license_number')->nullable();
-            $table->text('bank_account_details')->nullable();
             $table->string('logo')->nullable();
+            $table->string('bank_account_name')->nullable();
+            $table->string('bank_account_number')->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('bank_address')->nullable();
+            $table->string('swift_code', 11)->nullable();
             $table->timestamps();
         });
     }

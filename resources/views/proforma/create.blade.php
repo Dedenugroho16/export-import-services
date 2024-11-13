@@ -388,7 +388,7 @@
                                         </p>
                                         <p id="error-message-carton" style="color: red; display:none">Nilai maksimum
                                             Carton adalah
-                                            empat digit</p>
+                                            enam digit</p>
                                         <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
                                                 id="tableDetailTransaction">
@@ -1094,8 +1094,8 @@
                 ${data.dimension} ${data.color} - ${data.type}
             </td>
             <td class="text-center">
-                <input type="text" id="carton_input_display" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
-                <input type="hidden" id="carton_input" name="carton_input">
+                <input type="text" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" max="9999" />
+                <input type="hidden" class="carton_input" name="carton_input">
             </td>
             <td class="text-center inner-result">
                 0
@@ -1116,15 +1116,18 @@
                 // Menghapus baris "Tidak ada barang" jika ada
                 $('#nullDetailTransaction').remove();
 
-                $(document).ready(function() {
-                    const cartonInputDisplay = document.getElementById('carton_input_display');
-                    const cartonInput = document.getElementById('carton_input');
+                $(document).on('input', '.carton-input', function(e) {
+                    // Ambil nilai yang dimasukkan pengguna dan hilangkan karakter yang tidak diinginkan
+                    let value = e.target.value.replace(/[^.\d]/g, '');
+                    
+                    // Temukan input hidden terkait di dalam elemen yang sama
+                    let hiddenInput = $(this).closest('td').find('.carton_input');
 
-                    cartonInputDisplay.addEventListener('input', function(e) {
-                        let value = e.target.value.replace(/[^.\d]/g, '');
-                        cartonInput.value = value.replace(/,/g, '');
-                        e.target.value = formatCarton(value);
-                    });
+                    // Set nilai pada input hidden tanpa koma
+                    hiddenInput.val(value.replace(/,/g, ''));
+
+                    // Format nilai yang terlihat dengan pemisah ribuan
+                    e.target.value = formatCarton(value);
 
                     // Fungsi untuk memformat angka dengan pemisah ribuan dan titik desimal
                     function formatCarton(angka) {
@@ -1148,7 +1151,7 @@
 
                     // Batas maksimum untuk qty dan carton
                     var maxQty = 999; // Maksimum 3 digit
-                    var maxCarton = 9999; // Maksimum 4 digit
+                    var maxCarton = 999999; // Maksimum 6 digit
 
                     // Flag to track if input exceeds limits
                     var exceedsLimit = false;

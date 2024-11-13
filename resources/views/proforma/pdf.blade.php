@@ -170,7 +170,7 @@
             <td>{{ $proformaInvoice->container }}</td>
             <th>Product NCM</th>
             <td>:</td>
-            <td>{{ formatNCM($proformaInvoice->product_ncm) }}</td>
+            <td>{{ $proformaInvoice->product_ncm }}</td>
         </tr>
         <tr>
             <th>Payment Term</th>
