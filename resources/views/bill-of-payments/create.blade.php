@@ -216,13 +216,6 @@
                                 <input type="" id="no_inv" name="no_inv">
                                 <input type="" id="selectedClientId" name="id_client">
                                 <input type="" id="total" name="total">
-
-                                <select name="status">
-                                    <option value="">Status pembayaran</option>
-                                    <option value="0">Belum Lunas</option>
-                                    <option value="1">Lunas</option>
-                                </select>
-
                             </form>
 
                             <!-- Tombol Submit -->
@@ -541,6 +534,7 @@
                     // Jalankan fungsi totalBill untuk memperbarui total
                     totalBill();
                 });
+                totalBill();
             });
 
             // Event listener untuk tombol "Hapus"
@@ -555,6 +549,7 @@
                 }
 
                 row.remove(); // Hapus baris dari tabel
+                totalBill();
             });
 
             function updateNumber() {
