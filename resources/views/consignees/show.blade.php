@@ -58,7 +58,9 @@
                             </table>
 
                             <div class="mt-5 d-flex justify-content-end">
-                                <a href="javascript:window.history.back();" class="btn btn-primary">Kembali</a>
+                                <a href="{{ route('clients.details', $hashedClientId) }}" class="btn btn-primary">
+                                    Kembali
+                                </a>                                
                             </div>
                         </div>
                     </div>

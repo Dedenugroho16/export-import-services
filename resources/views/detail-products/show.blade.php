@@ -75,7 +75,7 @@
                             </table>
                             
                             <div class="mt-4 d-flex justify-content-end">
-                                <a href="javascript:window.history.back();" class="btn btn-primary">Kembali</a>
+                                <a href="{{ route('products.details', $hashedProductId) }}" class="btn btn-primary">Kembali</a>
                             </div>
                         </div>
                     </div>
