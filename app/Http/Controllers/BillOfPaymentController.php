@@ -106,7 +106,7 @@ class BillOfPaymentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data transaksi berhasil diperbarui'
+            'message' => 'Bil of Payment berhasil dibuat'
         ]);
     }
 }
