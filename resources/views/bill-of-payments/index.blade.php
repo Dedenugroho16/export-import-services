@@ -50,6 +50,7 @@
                                 <table class="table card-table table-vcenter text-nowrap" id="bill-of-payments">
                                     <thead>
                                         <tr>
+                                            <th class="text-center">No</th>
                                             <th class="text-center">Month</th>
                                             <th class="text-center">No. INV.</th>
                                             <th class="text-center">Buyer Name</th>
@@ -66,4 +67,31 @@
             </div>
         </div>
     </div>
+
+<script>
+    $(document).ready(function() {
+        $('#bill-of-payments').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('bill-of-payment.data') }}",
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
+                { data: 'month', name: 'month', className: 'text-center' },
+                { data: 'no_inv', name: 'no_inv', className: 'text-center' },
+                { data: 'client_name', name: 'client_name' },
+                { data: 'company_name', name: 'company_name' },
+                { data: 'number', name: 'number', className: 'text-center' },
+                { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
+            ],
+            order: [[2, 'dsc']],
+            drawCallback: function() {
+                $('#bill-of-payments td:nth-child(4), #bill-of-payments td:nth-child(5), #bill-of-payments td:nth-child(6)').css({
+                    'max-width': '200px',
+                    'white-space': 'normal',
+                    'word-wrap': 'break-word'
+                });
+            }
+        });
+    });
+</script>
 @endsection

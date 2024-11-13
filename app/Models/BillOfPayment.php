@@ -25,6 +25,11 @@ class BillOfPayment extends Model
 
     public function transactions()
     {
-        return $this->hasMany(Transaction::class, 'id_bill');
+        return $this->hasMany(Transaction::class, 'id_bill', 'id');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }
