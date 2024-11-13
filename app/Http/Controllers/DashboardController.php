@@ -23,6 +23,7 @@ class DashboardController extends Controller
         $companyCount = Company::count();
         $transactions = Transaction::all();
         $totalSales = $transactions->sum('total_price');
+        $billsCount = Transaction::count();
 
         return view('dashboard.index', compact(
             'clientsCount', 
@@ -32,7 +33,8 @@ class DashboardController extends Controller
             'usersCount',
             'transactionsCount',
             'companyCount',
-            'totalSales'
+            'totalSales',
+            'billsCount'
         ));
     }
 }

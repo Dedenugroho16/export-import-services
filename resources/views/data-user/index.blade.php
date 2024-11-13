@@ -68,6 +68,7 @@
                                                             <option value="admin">Admin</option>
                                                             <option value="operator">Operator</option>
                                                             <option value="director">Director</option>
+                                                            <option value="finance">Finance</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -126,6 +127,7 @@
                                                         <option value="admin">Admin</option>
                                                         <option value="operator">Operator</option>
                                                         <option value="director">Director</option>
+                                                        <option value="finance">Finance</option>
                                                     </select>
                                                 </div>
                                             </div>

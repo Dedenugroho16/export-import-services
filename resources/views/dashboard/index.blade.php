@@ -171,16 +171,31 @@
                     </div>
                 </div>
         @elseif(auth()->user()->role === 'director')
-                <div class="card border-light shadow-sm full-width">
-                    <div class="card-body text-center">
-                        <h6 class="card-title">
-                            <i class="fas fa-receipt text-warning"></i> Transactions
-                        </h6>
-                        <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $transactionsCount }}</span></p>
-                        <p class="card-text text-muted">Kelola transaksi Anda di sini.</p>
-                        <a href="{{ route('proforma.index') }}" class="btn btn-warning btn-sm">Lihat Transaksi</a>
-                    </div>
+        <div class="card border-light shadow-sm full-width-card">
+            <div class="card-body text-center">
+                <h6 class="card-title">
+                    <i class="fas fa-receipt text-warning"></i> Transactions
+                </h6>
+                <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $transactionsCount }}</span></p>
+                <p class="card-text text-muted">Kelola transaksi Anda di sini.</p>
+                <a href="{{ route('proforma.index') }}" class="btn btn-warning btn-sm">Lihat Transaksi</a>
+            </div>
+        </div>
+
+        @elseif(auth()->user()->role === 'finance')
+        <div class="col-md-6 mb-4">
+            <div class="card border-light shadow-sm" style="width: 838%; margin: 0 auto;">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-file-invoice-dollar" style="color: #28a745;"></i> Bill of Payment
+                    </h6>
+                    <p class="card-text">Jumlah: <span class="font-weight-bold">{{ $billsCount }}</span></p>
+                    <p class="card-text text-muted">Kelola data pembayaran Anda di sini.</p>
+                    <a href="{{ route('bill-of-payments.index') }}" class="btn btn-success btn-sm" style="background-color: #28a745; border-color: #28a745;">Lihat Bill of Payment</a>
                 </div>
+            </div>
+        </div>
+
         @endif
     </div>
 </div>
