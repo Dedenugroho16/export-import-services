@@ -22,13 +22,16 @@ class Company extends Model
         'postal_code',
         'phone_number',
         'email',
-        'website',
         'tax_id',
         'founded_date',
         'export_license_number',
         'import_license_number',
-        'bank_account_details',
         'logo',
+        'bank_account_name',
+        'bank_account_number',
+        'bank_name',
+        'bank_address',
+        'swift_code',
     ];
 }
 

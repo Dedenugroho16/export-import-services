@@ -17,106 +17,125 @@
                             <input type="hidden" id="company_id" name="company_id">
         
                             <!-- Card Informasi Umum -->
-                            <div class="card mb-3"> 
-                                <div class="card-body">
-                                    <h3>Informasi Umum</h3>
-                                </div>
+                            <div class="card mb-3">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="company_name" class="form-label">Nama Perusahaan</label>
                                                 <input type="text" id="company_name" name="company_name" class="form-control" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="postal_code" class="form-label">Nomor registrasi</label>
-                                                <input type="text" id="registration_number" name="registration_number" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="tax_id" class="form-label">NPWP</label>
-                                                <input type="text" id="tax_id" name="tax_id" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="postal_code" class="form-label">Kode Pos</label>
                                                 <input type="text" id="postal_code" name="postal_code" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="tax_id" class="form-label">NPWP</label>
+                                                <input type="text" id="tax_id" name="tax_id" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="city" class="form-label">Kota</label>
                                                 <input type="text" id="city" name="city" class="form-control" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="registration_number" class="form-label">Nomor registrasi</label>
+                                                <input type="text" id="registration_number" name="registration_number" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="country" class="form-label">Negara</label>
                                                 <input type="text" id="country" name="country" class="form-control" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="address" class="form-label">Alamat Lengkap</label>
-                                                <textarea id="address" name="address" class="form-control" rows="3" required></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="bank_account_details" class="form-label">Rekening Bank</label>
-                                                <textarea id="bank_account_details" name="bank_account_details" class="form-control" rows="3"></textarea>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label for="address" class="form-label">Alamat Lengkap</label>
+                                            <textarea id="address" name="address" class="form-control" rows="3" required></textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>  
         
-                            <!-- Card Kontak -->
+                            <!-- Card Kedua -->
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <h3>Informasi lainnya</h3>
-                                </div>
-                                <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="phone_number" class="form-label">Nomor Telepon</label>
                                                 <input type="text" id="phone_number" name="phone_number" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="bank_account_name" class="form-label">Pemilik Akun Bank</label>
+                                                <input type="text" id="bank_account_name" name="bank_account_name" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="email" class="form-label">Email</label>
                                                 <input type="email" id="email" name="email" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="website" class="form-label">Website</label>
-                                                <input type="text" id="website" name="website" class="form-control">
+                                                <label for="bank_account_number" class="form-label">Nomor Rekening Bank</label>
+                                                <input type="text" id="bank_account_number" name="bank_account_number" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="founded_date" class="form-label">Tanggal Didirikan</label>
-                                                <input type="date" id="founded_date" name="founded_date" class="form-control">
+                                                <label for="import_license_number" class="form-label">Nomor Lisensi Impor</label>
+                                                <input type="text" id="import_license_number" name="import_license_number" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="bank_name" class="form-label">Nama Bank</label>
+                                                <input type="text" id="bank_name" name="bank_name" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="export_license_number" class="form-label">Nomor Lisensi Ekspor</label>
                                                 <input type="text" id="export_license_number" name="export_license_number" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        
+                                        <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="import_license_number" class="form-label">Nomor Lisensi Impor</label>
-                                                <input type="text" id="import_license_number" name="import_license_number" class="form-control">
+                                                <label for="bank_address" class="form-label">Alamat Bank</label>
+                                                <input type="text" id="bank_address" name="bank_address" class="form-control">
                                             </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="founded_date" class="form-label">Tanggal Didirikan</label>
+                                                <input type="date" id="founded_date" name="founded_date" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="swift_code" class="form-label">Swift Code</label>
+                                                <input type="text" id="swift_code" name="swift_code" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="company_logo" class="form-label">Logo Perusahaan</label>
+                                            <input type="file" id="logo" name="logo" class="form-control" accept="image/*" onchange="previewLogo(event)">
+                                        </div>
+                                        <div class="mb-3">
+                                            <img id="logo_preview" src="{{ asset('storage/' . ($company->logo ?? 'default-logo.png')) }}" 
+                                                alt="Logo Perusahaan" width="50px">
                                         </div>
                                     </div>
                                 </div>
@@ -124,14 +143,7 @@
                             <!-- Card Logo -->
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <div class="mb-3">
-                                        <label for="company_logo" class="form-label">Logo Perusahaan</label>
-                                        <input type="file" id="logo" name="logo" class="form-control" accept="image/*" onchange="previewLogo(event)">
-                                    </div>
-                                    <div class="mb-3">
-                                        <img id="logo_preview" src="{{ asset('storage/' . ($company->logo ?? 'default-logo.png')) }}" 
-                                            alt="Logo Perusahaan" width="50px">
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -226,14 +238,6 @@
                                                 <td>{{ $company->email }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Website</th>
-                                                <td>{{ $company->website }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Detail Rekening Bank</th>
-                                                <td>{{ $company->bank_account_details }}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Tanggal Didirikan</th>
                                                 <td>{{ $company->founded_date }}</td>
                                             </tr>
@@ -242,8 +246,24 @@
                                                 <td>{{ $company->export_license_number }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Nomor Lisensi Impor</th>
-                                                <td>{{ $company->import_license_number }}</td>
+                                                <th>Pemilik Akun Bank</th>
+                                                <td>{{ $company->bank_account_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nomor Rekening Bank</th>
+                                                <td>{{ $company->bank_account_number }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nama Bank</th>
+                                                <td>{{ $company->bank_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Alamat Bank</th>
+                                                <td>{{ $company->bank_address }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Swift Code</th>
+                                                <td>{{ $company->swift_code }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Logo</th>
@@ -284,12 +304,15 @@
                 document.getElementById('postal_code').value = data.postal_code;
                 document.getElementById('phone_number').value = data.phone_number;
                 document.getElementById('email').value = data.email;
-                document.getElementById('website').value = data.website;
                 document.getElementById('tax_id').value = data.tax_id;
                 document.getElementById('founded_date').value = data.founded_date;
                 document.getElementById('export_license_number').value = data.export_license_number;
                 document.getElementById('import_license_number').value = data.import_license_number;
-                document.getElementById('bank_account_details').value = data.bank_account_details;
+                document.getElementById('bank_account_name').value = data.bank_account_name;
+                document.getElementById('bank_account_number').value = data.bank_account_number;
+                document.getElementById('bank_name').value = data.bank_name;
+                document.getElementById('bank_address').value = data.bank_address;
+                document.getElementById('swift_code').value = data.swift_code;
                 // Populate other fields as necessary
 
                 // Set form action to update route
