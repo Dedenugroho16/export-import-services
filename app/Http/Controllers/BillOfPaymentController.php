@@ -170,4 +170,66 @@ class BillOfPaymentController extends Controller
 
         return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
     }
+
+    public function edit($hash)
+    {
+        $id = IdHashHelper::decode($hash);
+
+        $billOfPayment = BillOfPayment::with(['transactions'], ['client'])->findOrFail($id);
+
+        return view('bill-of-payments.edit', compact('billOfPayment'));
+    }
+
+    public function getTransactions($idBill)
+    {
+        try {
+            // Ambil transaksi berdasarkan id_transaction dengan join ke detail_products
+            $transactions = Transaction::where('transactions.id_bill', $idBill)
+                ->select(
+                    'transactions.*',
+                    'transactions.id',
+                    'transactions.number',
+                    'transactions.code',
+                    'transactions.description',
+                    'transactions.total',
+                    'transactions.paid',
+                    'transactions.total as bill' // Asumsikan bill sama dengan total
+                )
+                ->get();
+
+            // Return JSON response
+            return response()->json($transactions);
+        } catch (\Exception $e) {
+            // Jika ada error, log error dan kembalikan response error 500
+            \Log::error("Error fetching transactions: " . $e->getMessage());
+            return response()->json(['error' => 'Terjadi kesalahan pada server'], 500);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validasi input data
+        $data = $request->validate([
+            'month' => 'required',
+            'no_inv' => 'required',
+            'id_client' => 'required',
+            'total' => 'required',
+        ]);
+
+        // Dapatkan BillOfPayment berdasarkan ID
+        $billOfPayment = BillOfPayment::findOrFail($id);
+
+        // Perbarui data yang divalidasi
+        $data['updated_by'] = Auth::id(); // Tambahkan updated_by sebagai ID pengguna yang mengedit
+
+        // Lakukan update pada data BillOfPayment
+        $billOfPayment->update($data);
+
+        // Kembalikan respons JSON sebagai feedback sukses dengan ID BillOfPayment yang diperbarui
+        return response()->json([
+            'success' => true,
+            'id_bill' => $billOfPayment->id
+        ]);
+    }
+
 }

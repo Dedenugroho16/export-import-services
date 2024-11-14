@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('total', 10, 2);
             $table->boolean('status')->default(false);
             $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
 
             $table->foreign('id_client')->references('id')->on('clients')->onDelete('cascade');
