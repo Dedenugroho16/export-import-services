@@ -32,9 +32,6 @@ class BillOfPaymentController extends Controller
             ->addColumn('company_name', function ($row) {
                 return $row->client ? $row->client->company_name : '-';
             })
-            ->addColumn('number', function ($row) {
-                return $row->transactions->isNotEmpty() ? $row->transactions->first()->number : '-';
-            })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
                 return '
