@@ -102,7 +102,7 @@ class Transaction extends Model
 
     public function billOfPayment()
     {
-        return $this->belongsTo(BillOfPayment::class, 'id_bill');
+        return $this->belongsTo(BillOfPayment::class, 'id_bill', 'id');
     }
 
 }

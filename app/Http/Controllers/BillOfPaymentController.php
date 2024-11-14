@@ -43,6 +43,10 @@ class BillOfPaymentController extends Controller
                             Aksi
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
+                            <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                                Payment Details
+                            </a>
                             <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
                                 Tampilkan
@@ -170,4 +174,22 @@ class BillOfPaymentController extends Controller
 
         return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
     }
+
+    public function paymentDetails($hash)
+    {
+        $id = IdHashHelper::decode($hash);
+        $company = Company::first();
+        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($id);
+        $totalPaid = 0;
+
+        foreach ($billOfPayment->transactions as $transaction) {
+            $amount = $transaction->detailTransactions->sum('price_amount');
+            $transaction->amount = $amount;
+            $totalPaid += $transaction->paid;
+        }
+
+        $totalInWords = NumberToWords::convert($totalPaid);
+
+        return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords'));
+    } 
 }
