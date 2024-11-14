@@ -16,6 +16,7 @@ class BillOfPayment extends Model
         'total',
         'status',
         'created_by',
+        'updated_by',
     ];
 
     public function client()
