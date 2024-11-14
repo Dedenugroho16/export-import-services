@@ -56,6 +56,7 @@
                                             <th class="text-center">Buyer Name</th>
                                             <th class="text-center">Company Name</th>
                                             <th class="text-center">PI. Number</th>
+                                            <th class="text-center">Status</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
@@ -81,6 +82,7 @@
                 { data: 'client_name', name: 'client_name' },
                 { data: 'company_name', name: 'company_name' },
                 { data: 'number', name: 'number', className: 'text-center' },
+                { data: 'status', name: 'status', className: 'text-center' },
                 { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
             ],
             order: [[2, 'dsc']],

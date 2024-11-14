@@ -22,7 +22,7 @@ class BillOfPaymentController extends Controller
     public function getBillOfPayment()
     {
         $billOfPayments = BillOfPayment::with(['client', 'transactions'])
-            ->select(['id', 'month', 'no_inv', 'id_client']);
+            ->select(['id', 'month', 'no_inv', 'id_client', 'status']);
 
         return DataTables::of($billOfPayments)
             ->addIndexColumn() // Tambahkan baris ini
