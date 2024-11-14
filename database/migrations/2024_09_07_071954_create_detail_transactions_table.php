@@ -16,7 +16,7 @@ class CreateDetailTransactionsTable extends Migration
             $table->integer('carton');
             $table->integer('inner_qty_carton');
             $table->decimal('unit_price', 10, 2);
-            $table->decimal('net_weight', 10, 2);
+            $table->integer('net_weight');
             $table->decimal('price_amount', 10, 2);
             $table->timestamps();
 

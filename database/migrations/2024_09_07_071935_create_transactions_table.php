@@ -23,7 +23,7 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('id_product');
             $table->unsignedBigInteger('id_commodity');
             $table->string('container');
-            $table->decimal('net_weight', 8, 2);
+            $table->integer('net_weight');
             $table->decimal('gross_weight', 8, 2);
             $table->string('payment_term');
             $table->date('stuffing_date')->nullable();
