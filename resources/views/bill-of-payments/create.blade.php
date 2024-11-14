@@ -218,10 +218,10 @@
                             <form id="formBOP" class="mt-2" method="POST"
                                 action="{{ route('bill-of-payment.store') }}">
                                 @csrf
-                                <input type="" id="month" name="month">
-                                <input type="" id="no_inv" name="no_inv">
-                                <input type="" id="selectedClientId" name="id_client">
-                                <input type="" id="total" name="total">
+                                <input type="hidden" id="month" name="month">
+                                <input type="hidden" id="no_inv" name="no_inv">
+                                <input type="hidden" id="selectedClientId" name="id_client">
+                                <input type="hidden" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
@@ -553,7 +553,7 @@
                                         <!-- Display-only input for formatting -->
                                         <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
                                         <!-- Hidden input for actual value submission -->
-                                        <input type="number" name="transactions[${data.id}][paid]" class="form-control paid">
+                                        <input type="hidden" name="transactions[${data.id}][paid]" class="form-control paid">
                                     </td>
                                     <td class="text-center pi-bill">${formattedAmount}</td>
                                     <td class="text-center">

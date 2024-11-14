@@ -135,17 +135,17 @@
                                 action="{{ route('bill-of-payment.update', $billOfPayment->id) }}">
                                 @csrf
                                 @method('PATCH') <!-- Menentukan metode update -->
-                                <input type="" id="month" name="month" value="{{ $billOfPayment->month }}">
-                                <input type="" id="no_inv" name="no_inv" value="{{ $billOfPayment->no_inv }}">
-                                <input type="" id="selectedClientId" name="id_client"
+                                <input type="hidden" id="month" name="month" value="{{ $billOfPayment->month }}">
+                                <input type="hidden" id="no_inv" name="no_inv" value="{{ $billOfPayment->no_inv }}">
+                                <input type="hidden" id="selectedClientId" name="id_client"
                                     value="{{ $billOfPayment->client->id }}">
-                                <input type="" id="total" name="total">
+                                <input type="hidden" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
                                 <a href="{{ route('bill-of-payments.index') }}" class="btn btn-outline-primary">Kembali</a>
-                                <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
+                                <button type="button" id="submitButton" class="btn btn-primary">Perbarui</button>
                             </div>
                         </div>
                     </div>
@@ -235,7 +235,7 @@
                 });
             }
 
-            function loadDetailTransaction(idBillOfPayment) {
+            function loadTransaction(idBillOfPayment) {
                 $.ajax({
                     url: `/get-transactions/${idBillOfPayment}`,
                     method: 'GET',
@@ -269,7 +269,7 @@
                             <td class="text-center amount">${formattedTotal}</td>
                             <td class="text-center">
                                 <input type="text" class="form-control paid-input" style="width: 120px;" value="${formattedPaid}"> <!-- Langsung menggunakan formattedPaid -->
-                                <input type="number" name="transactions[${data.id}][paid]" class="form-control paid" value="${paid}">
+                                <input type="hidden" name="transactions[${data.id}][paid]" class="form-control paid" value="${paid}">
                             </td>
                             <td class="text-center pi-bill">${formattedTotal}</td>
                         </tr>
@@ -299,7 +299,7 @@
             // Pastikan idBillOfPayment tersedia untuk memuat data dari database
             var idBillOfPayment = "{{ $billOfPayment->id }}";
             if (idBillOfPayment) {
-                loadDetailTransaction(idBillOfPayment);
+                loadTransaction(idBillOfPayment);
             }
         });
 
@@ -384,8 +384,7 @@
                                         Swal.fire({
                                             icon: 'success',
                                             title: 'Berhasil!',
-                                            text: response
-                                                .message, // Menampilkan pesan dari server
+                                            text: 'Bill of Payment telah diperbarui!', // Menampilkan pesan dari server
                                         }).then(function() {
                                             window.location.href =
                                                 '{{ route('bill-of-payments.index') }}'; // Redirect ke halaman yang diinginkan
