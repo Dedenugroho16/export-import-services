@@ -189,7 +189,6 @@ class BillOfPaymentController extends Controller
 
         return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords'));
     } 
-}
 
     public function edit($hash)
     {
@@ -251,5 +250,4 @@ class BillOfPaymentController extends Controller
             'id_bill' => $billOfPayment->id
         ]);
     }
-
 }
