@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
+use App\Helpers\NumberToWords;
 use App\Models\BillOfPayment;
+use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -15,6 +17,45 @@ class BillOfPaymentController extends Controller
     {
         $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
         return view('bill-of-payments.index', compact('transactions'));
+    }
+
+    public function getBillOfPayment()
+    {
+        $billOfPayments = BillOfPayment::with(['client', 'transactions'])
+            ->select(['id', 'month', 'no_inv', 'id_client']);
+
+        return DataTables::of($billOfPayments)
+            ->addIndexColumn() // Tambahkan baris ini
+            ->addColumn('client_name', function ($row) {
+                return $row->client ? $row->client->name : '-';
+            })
+            ->addColumn('company_name', function ($row) {
+                return $row->client ? $row->client->company_name : '-';
+            })
+            ->addColumn('number', function ($row) {
+                return $row->transactions->isNotEmpty() ? $row->transactions->first()->number : '-';
+            })
+            ->addColumn('aksi', function ($row) {
+                $hashId = IdHashHelper::encode($row->id);
+                return '
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
+                            Aksi
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                                Tampilkan
+                            </a>
+                            <a href="' . route('bill-of-payment.edit', $hashId) . '" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                                Edit
+                            </a>
+                        </div>
+                    </div>';
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
     }
 
     public function create()
@@ -108,5 +149,25 @@ class BillOfPaymentController extends Controller
             'success' => true,
             'message' => 'Bil of Payment berhasil dibuat'
         ]);
+    }
+
+    public function show($hash)
+    {
+        $id = IdHashHelper::decode($hash);
+        $company = Company::first();
+        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($id);
+        $billOfPayment->transactions->load('detailTransactions');
+
+        $totalBill = 0;
+        foreach ($billOfPayment->transactions as $transaction) {
+            $amount = $transaction->detailTransactions->sum('price_amount');
+            $transaction->amount = $amount;
+            $transaction->totalBill = $amount - $transaction->paid;
+        }
+
+        $totalInWords = NumberToWords::convert($transaction->totalBill);
+        $hashedId = IdHashHelper::encode($id);
+
+        return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
     }
 }
