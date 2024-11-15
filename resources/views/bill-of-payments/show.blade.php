@@ -112,7 +112,7 @@
                                                     <td class="text-center">{{ $transaction->number }}</td>
                                                     <td class="text-center">{{ $transaction->code }}</td>
                                                     <td>{{ $transaction->description }}</td>
-                                                    <td class="text-end amount">{{ number_format($transaction->amount) }}</td>
+                                                    <td class="text-end amount">{{ number_format($transaction->total) }}</td>
                                                     <td class="text-end paid">{{ number_format($transaction->paid) }}</td>
                                                     <td class="text-end bill">{{ number_format($transaction->bill) }}</td>
                                                 </tr>
