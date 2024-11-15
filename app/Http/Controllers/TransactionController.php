@@ -547,6 +547,11 @@ class TransactionController extends Controller
         return $pdf->download('invoice_' . $hashId . '.pdf');
     }
 
+    public function AccountStatement() 
+    {
+        return view('transaction.AccountStatement');
+    }
+
     public function rekapSales(Request $request) 
     {
         if ($request->ajax()) {
