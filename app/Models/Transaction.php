@@ -44,6 +44,10 @@ class Transaction extends Model
         'description'
     ];
 
+    protected $casts = [
+        'date' => 'datetime',
+    ];    
+
     public function consignee()
     {
         return $this->belongsTo(Consignee::class, 'id_consignee');
