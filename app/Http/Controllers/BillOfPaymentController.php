@@ -22,7 +22,7 @@ class BillOfPaymentController extends Controller
     public function getBillOfPayment()
     {
         $billOfPayments = BillOfPayment::with(['client', 'transactions'])
-            ->select(['id', 'month', 'no_inv', 'id_client']);
+            ->select(['id', 'month', 'no_inv', 'id_client', 'status']);
 
         return DataTables::of($billOfPayments)
             ->addIndexColumn() // Tambahkan baris ini
@@ -32,9 +32,6 @@ class BillOfPaymentController extends Controller
             ->addColumn('company_name', function ($row) {
                 return $row->client ? $row->client->company_name : '-';
             })
-            ->addColumn('number', function ($row) {
-                return $row->transactions->isNotEmpty() ? $row->transactions->first()->number : '-';
-            })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
                 return '
@@ -43,6 +40,10 @@ class BillOfPaymentController extends Controller
                             Aksi
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
+                            <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                                Payment Details
+                            </a>
                             <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
                                 Tampilkan
@@ -78,7 +79,21 @@ class BillOfPaymentController extends Controller
         // Menggabungkan $newNumber dengan dua digit tanggal
         $formattedNumber = $newNumber . '/' . $twoDigitMonth;
 
-        return view('bill-of-payments.create', compact('formattedNumber'));
+        // payment number
+        $lastPaymentNumber = BillOfPayment::orderBy('payment_number', 'desc')->first();
+        // Jika belum ada data di kolom number, mulai dari 0001
+        if ($lastPaymentNumber === null || empty($lastPaymentNumber->payment_number)) {
+            $newPaymentNumber = '0001';
+        } else {
+            // Mengambil number terakhir dan menambah 1, pastikan tetap 4 digit
+            $paymentNumber = intval($lastPaymentNumber->payment_number);
+            $newPaymentNumber = str_pad($paymentNumber + 1, 4, '0', STR_PAD_LEFT);
+        }
+
+        $year = date('Y');
+        $formattedPaymentNumber = $newPaymentNumber . '.' . $year . '/PSN/PM.OF';
+
+        return view('bill-of-payments.create', compact('formattedNumber', 'formattedPaymentNumber'));
     }
 
     public function getProformaInvoices(Request $request)
@@ -110,6 +125,7 @@ class BillOfPaymentController extends Controller
         $data = $request->validate([
             'month' => 'required',
             'no_inv' => 'required',
+            'payment_number' => 'required',
             'id_client' => 'required',
             'total' => 'required',
         ]);
@@ -162,14 +178,33 @@ class BillOfPaymentController extends Controller
         foreach ($billOfPayment->transactions as $transaction) {
             $amount = $transaction->detailTransactions->sum('price_amount');
             $transaction->amount = $amount;
-            $transaction->totalBill = $amount - $transaction->paid;
+            $transaction->bill = $amount - $transaction->paid;
+            $totalBill += $transaction->bill;
         }
 
-        $totalInWords = NumberToWords::convert($transaction->totalBill);
+        $totalInWords = NumberToWords::convert($totalBill);
         $hashedId = IdHashHelper::encode($id);
 
         return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
     }
+
+    public function paymentDetails($hash)
+    {
+        $id = IdHashHelper::decode($hash);
+        $company = Company::first();
+        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($id);
+        $totalPaid = 0;
+
+        foreach ($billOfPayment->transactions as $transaction) {
+            $amount = $transaction->detailTransactions->sum('price_amount');
+            $transaction->amount = $amount;
+            $totalPaid += $transaction->paid;
+        }
+
+        $totalInWords = NumberToWords::convert($totalPaid);
+
+        return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords'));
+    } 
 
     public function edit($hash)
     {
@@ -231,5 +266,4 @@ class BillOfPaymentController extends Controller
             'id_bill' => $billOfPayment->id
         ]);
     }
-
 }

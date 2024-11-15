@@ -218,10 +218,11 @@
                             <form id="formBOP" class="mt-2" method="POST"
                                 action="{{ route('bill-of-payment.store') }}">
                                 @csrf
-                                <input type="hidden" id="month" name="month">
-                                <input type="hidden" id="no_inv" name="no_inv">
-                                <input type="hidden" id="selectedClientId" name="id_client">
-                                <input type="hidden" id="total" name="total">
+                                <input type="" id="month" name="month">
+                                <input type="" id="no_inv" name="no_inv">
+                                <input type="" id="payment_number" name="payment_number">
+                                <input type="" id="selectedClientId" name="id_client">
+                                <input type="" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
@@ -483,7 +484,6 @@
                 pageLength: 10
             });
 
-
             function totalBill() {
                 var totalPaid = 0;
                 var totalBill = 0;
@@ -491,7 +491,7 @@
                 // Iterasi setiap baris untuk mendapatkan nilai total
                 $('#billOfPaymentTable tbody tr').each(function() {
                     var paid = parseFloat($(this).find('.paid-input').val().replace(/,/g, '')) || 0;
-                    var bill = parseFloat($(this).find('.pi-bill').text().replace(/,/g, '')) || 0;
+                    var bill = parseFloat($(this).find('.amount').text().replace(/,/g, '')) || 0;
 
                     totalPaid += paid;
                     totalBill += bill;
@@ -532,13 +532,11 @@
                 selectedPI.push(data.id);
 
                 // Tambahkan baris baru ke tabel #billOfPaymentTable
-                var formattedAmount = parseFloat(data.amount).toLocaleString('en-US', {
-                    minimumFractionDigits: 2
-                });
+                var formattedAmount = parseFloat(data.amount).toLocaleString('en-US');
                 var newRow = `
                                 <tr>
                                     <td class="text-center" style="display: none;">
-                                        <input type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
+                                        <input class="id-proforma" type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
                                     </td>
                                     <td class="text-center" style="display: none;">
                                         <input type="hidden" id="id_bill" name="transactions[${data.id}][id_bill]">
@@ -548,7 +546,7 @@
                                     <td class="text-center">
                                         <input type="text" name="transactions[${data.id}][description]" class="form-control description-input" placeholder="Enter description">
                                     </td>
-                                    <td class="text-center">${formattedAmount}</td>
+                                    <td class="text-center amount">${formattedAmount}</td>
                                     <td class="text-center">
                                         <!-- Display-only input for formatting -->
                                         <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
@@ -576,11 +574,16 @@
                     // Ambil nilai dari input .paid-input dan hilangkan koma jika ada
                     var paidInput = parseFloat(row.find('.paid-input').val().replace(/,/g, '')) ||
                         0;
+                    var piBill = parseFloat(row.find('.amount').text().replace(/,/g, ''));
+
+                    var amountPiBill = piBill - paidInput;
 
                     // Format nilai paidInput ke format ribuan dengan dua desimal
                     var formattedPaidInput = paidInput.toLocaleString('en-US');
+                    var formattedPiBill = amountPiBill.toLocaleString('en-US');
 
                     // Update nilai yang diformat hanya di input .paid-input pada baris ini
+                    row.find('.pi-bill').text(formattedPiBill);
                     row.find('.paid-input').val(formattedPaidInput);
                     row.find('.paid').val(paidInput);
 
@@ -588,36 +591,38 @@
                     totalBill();
                 });
 
-                // $('#billOfPaymentTable tbody').on('input', '.paid-input', function() {
-                //     var paidInput = parseFloat($(this).val().replace(/,/g, '')) || 0;
+                // Event listener untuk tombol "Hapus"
+                $('#billOfPaymentTable').on('click', '.delete-btn', function() {
+                    var row = $(this).closest('tr');
+                    var idToRemove = row.find('.id-proforma').val();
 
-                //     // Format nilai paidInput ke format ribuan dengan dua desimal
-                //     var formattedPaidInput = paidInput.toLocaleString('en-US');
+                    // Hapus produk dari array newSelectedProductIds jika dihapus
+                    var index = selectedPI.indexOf(parseInt(idToRemove));
+                    if (index !== -1) {
+                        selectedPI.splice(index, 1);
+                    }
 
-                //     // Update nilai yang diformat ke input .paid-input
-                //     $(this).val(formattedPaidInput);
-                //     $('.paid').val(paidInput);
-
-                //     // Jalankan fungsi totalBill untuk memperbarui total
-                //     totalBill();
-                // });
+                    row.remove(); // Hapus baris dari tabel
+                    totalBill();
+                });
                 totalBill();
             });
 
-            // Event listener untuk tombol "Hapus"
-            $('#billOfPaymentTable').on('click', '.delete-btn', function() {
-                var row = $(this).closest('tr');
-                var idToRemove = row.find('.id-proforma').val();
+            function updatePaymentNumber() {
+                const currentDate = new Date();
 
-                // Hapus produk dari array newSelectedProductIds jika dihapus
-                var index = selectedPI.indexOf(parseInt(idToRemove));
-                if (index !== -1) {
-                    selectedPI.splice(index, 1);
-                }
+                // Dapatkan bulan dalam format angka Romawi
+                const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                const romanMonth = romanMonths[currentDate.getMonth()];
 
-                row.remove(); // Hapus baris dari tabel
-                totalBill();
-            });
+                // Dapatkan tahun dalam format dua digit
+                const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
+
+                const formattedNumber = '/' + romanMonth + '/' +
+                    twoDigitYear;
+                const finalNumber = '{{ $formattedPaymentNumber }}' + formattedNumber;
+                $('#payment_number').val(finalNumber);
+            }
 
             function updateNumber() {
                 const currentDate = new Date();
@@ -637,6 +642,8 @@
             }
 
             updateNumber();
+            updatePaymentNumber();
+
             // Mendapatkan bulan dan tahun saat ini
             var currentDate = new Date();
             var options = {

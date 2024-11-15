@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string(column: 'month');
             $table->string(column: 'no_inv');
+            $table->string(column: 'payment_number');
             $table->unsignedBigInteger('id_client');
             $table->decimal('total', 10, 2);
             $table->boolean('status')->default(false);
