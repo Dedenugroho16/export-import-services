@@ -78,7 +78,7 @@
                                     <tr>
                                         <td>PAYMENT NUMBER</td>
                                         <td>:</td>
-                                        <td style="font-weight: bold"></td>
+                                        <td style="font-weight: bold">{{ $billOfPayment->payment_number}}</td>
                                     </tr>
                                     <tr>
                                         <td>BUYER NAME</td>
@@ -111,8 +111,8 @@
                                                     <td class="text-center">{{ $index + 1 }}</td>
                                                     <td class="text-center">{{ $transaction->number }}</td>
                                                     <td class="text-center">{{ $transaction->code }}</td>
-                                                    <td class="text-center">{{ $transaction->date->format('F d, Y') }}</td>
-                                                    <td class="text-end amount">{{ number_format($transaction->amount) }}</td>
+                                                    <td class="text-center">{{ $transaction->formatted_date }}</td>
+                                                    <td class="text-end amount">{{ number_format($transaction->total) }}</td>
                                                     <td class="text-end paid">{{ number_format($transaction->paid) }}</td>
                                                     <td>{{ ($transaction->description) }}</td>
                                                 </tr>

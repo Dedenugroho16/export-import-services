@@ -173,12 +173,10 @@ class BillOfPaymentController extends Controller
         $company = Company::first();
         $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($id);
         $billOfPayment->transactions->load('detailTransactions');
-
         $totalBill = 0;
+
         foreach ($billOfPayment->transactions as $transaction) {
-            $amount = $transaction->detailTransactions->sum('price_amount');
-            $transaction->amount = $amount;
-            $transaction->bill = $amount - $transaction->paid;
+            $transaction->bill = $transaction->total - $transaction->paid;
             $totalBill += $transaction->bill;
         }
 
@@ -196,8 +194,7 @@ class BillOfPaymentController extends Controller
         $totalPaid = 0;
 
         foreach ($billOfPayment->transactions as $transaction) {
-            $amount = $transaction->detailTransactions->sum('price_amount');
-            $transaction->amount = $amount;
+            $transaction->formatted_date = \Carbon\Carbon::parse($transaction->date)->format('F d, Y');
             $totalPaid += $transaction->paid;
         }
 

@@ -42,10 +42,6 @@ class Transaction extends Model
         'id_bill',
         'paid',
         'description'
-    ];
-
-    protected $casts = [
-        'date' => 'datetime',
     ];    
 
     public function consignee()
