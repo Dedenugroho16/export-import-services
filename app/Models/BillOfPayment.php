@@ -12,6 +12,7 @@ class BillOfPayment extends Model
     protected $fillable = [
         'month',
         'no_inv',
+        'payment_number',
         'id_client',
         'total',
         'status',

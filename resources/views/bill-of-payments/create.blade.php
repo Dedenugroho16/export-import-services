@@ -218,10 +218,11 @@
                             <form id="formBOP" class="mt-2" method="POST"
                                 action="{{ route('bill-of-payment.store') }}">
                                 @csrf
-                                <input type="hidden" id="month" name="month">
-                                <input type="hidden" id="no_inv" name="no_inv">
-                                <input type="hidden" id="selectedClientId" name="id_client">
-                                <input type="hidden" id="total" name="total">
+                                <input type="" id="month" name="month">
+                                <input type="" id="no_inv" name="no_inv">
+                                <input type="" id="payment_number" name="payment_number">
+                                <input type="" id="selectedClientId" name="id_client">
+                                <input type="" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
@@ -483,7 +484,6 @@
                 pageLength: 10
             });
 
-
             function totalBill() {
                 var totalPaid = 0;
                 var totalBill = 0;
@@ -587,20 +587,6 @@
                     // Jalankan fungsi totalBill untuk memperbarui total keseluruhan
                     totalBill();
                 });
-
-                // $('#billOfPaymentTable tbody').on('input', '.paid-input', function() {
-                //     var paidInput = parseFloat($(this).val().replace(/,/g, '')) || 0;
-
-                //     // Format nilai paidInput ke format ribuan dengan dua desimal
-                //     var formattedPaidInput = paidInput.toLocaleString('en-US');
-
-                //     // Update nilai yang diformat ke input .paid-input
-                //     $(this).val(formattedPaidInput);
-                //     $('.paid').val(paidInput);
-
-                //     // Jalankan fungsi totalBill untuk memperbarui total
-                //     totalBill();
-                // });
                 totalBill();
             });
 
@@ -618,6 +604,22 @@
                 row.remove(); // Hapus baris dari tabel
                 totalBill();
             });
+
+            function updatePaymentNumber() {
+                const currentDate = new Date();
+
+                // Dapatkan bulan dalam format angka Romawi
+                const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                const romanMonth = romanMonths[currentDate.getMonth()];
+
+                // Dapatkan tahun dalam format dua digit
+                const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
+
+                const formattedNumber = '/' + romanMonth + '/' +
+                    twoDigitYear;
+                const finalNumber = '{{ $formattedPaymentNumber }}' + formattedNumber;
+                $('#payment_number').val(finalNumber);
+            }
 
             function updateNumber() {
                 const currentDate = new Date();
@@ -637,6 +639,8 @@
             }
 
             updateNumber();
+            updatePaymentNumber();
+
             // Mendapatkan bulan dan tahun saat ini
             var currentDate = new Date();
             var options = {
