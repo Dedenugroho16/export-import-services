@@ -71,7 +71,7 @@
                             <div>
                                 <table class="table-sm mb-6" style="font-size: 15px">
                                     <tr>
-                                        <td style="width: 20%">Mont</td>
+                                        <td style="width: 20%">Month</td>
                                         <td style="width: 5px">:</td>
                                         <td style="font-weight: bold">{{ $billOfPayment->month}}</td>
                                     </tr>
@@ -93,7 +93,7 @@
                                 </table>
                                 <div>
                                     <div>
-                                        <table class="table-bordered table-sm">
+                                        <table class="table-sm table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th class="text-center">NO</th>
@@ -112,9 +112,9 @@
                                                     <td class="text-center">{{ $transaction->number }}</td>
                                                     <td class="text-center">{{ $transaction->code }}</td>
                                                     <td>{{ $transaction->description }}</td>
-                                                    <td class="text-center amount">{{ number_format($transaction->amount) }}</td>
-                                                    <td class="text-center paid">{{ number_format($transaction->paid) }}</td>
-                                                    <td class="text-center bill">{{ number_format($transaction->amount) }}</td>
+                                                    <td class="text-end amount">{{ number_format($transaction->amount) }}</td>
+                                                    <td class="text-end paid">{{ number_format($transaction->paid) }}</td>
+                                                    <td class="text-end bill">{{ number_format($transaction->bill) }}</td>
                                                 </tr>
                                                 @empty
                                                 <tr>
@@ -124,17 +124,16 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr id="totalRow" style="font-weight: bold;">
-                                                    <td class="text-end" colspan="6">TOTAL AMOUNT</td>
-                                                    <td class="text-center bg-black text-white">{{ number_format($transaction->totalBill) }}</td>
+                                                    <td class="text-end" colspan="6">AMOUNT OF BILL</td>
+                                                    <td class="text-end bg-black text-white">{{ number_format($totalBill) }}</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
-                                        
                                         <div class="mt-3">
                                             <div class="text-end">
-                                                <p><strong><em>In Words: {{ $totalInWords }}</em></strong></p>
+                                                <p><strong><em>In Words: {{ $totalInWords }} USD</em></strong></p>
                                             </div>
-                                        </div>                                        
+                                        </div>                             
                                         <div>
                                             <table class="table-sm mt-6" style="font-size: 14px">
                                                 <tr>
@@ -170,7 +169,7 @@
                                         <div class="mt-6">
                                             <table class="text-center" style="width: auto; float:right">
                                                 <tr>
-                                                    <td>{{ $billOfPayment->created_at->format('d F, Y') }}</td>
+                                                    <td>{{ $billOfPayment->created_at->format('F d, Y') }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><p style="font-weight: bold">Approved By</p></td>

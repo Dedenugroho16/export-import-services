@@ -73,7 +73,7 @@
                                     <tr>
                                         <td style="width: 20%">DATE</td>
                                         <td style="width: 5px">:</td>
-                                        <td style="font-weight: bold">{{ $billOfPayment->created_at->format('d F, Y') }}</td>
+                                        <td style="font-weight: bold">{{ $billOfPayment->created_at->format('F d, Y') }}</td>
                                     </tr>
                                     <tr>
                                         <td>PAYMENT NUMBER</td>
@@ -111,7 +111,7 @@
                                                     <td class="text-center">{{ $index + 1 }}</td>
                                                     <td class="text-center">{{ $transaction->number }}</td>
                                                     <td class="text-center">{{ $transaction->code }}</td>
-                                                    <td class="text-center">{{ $transaction->date }}</td>
+                                                    <td class="text-center">{{ $transaction->date->format('F d, Y') }}</td>
                                                     <td class="text-end amount">{{ number_format($transaction->amount) }}</td>
                                                     <td class="text-end paid">{{ number_format($transaction->paid) }}</td>
                                                     <td>{{ ($transaction->description) }}</td>
@@ -123,14 +123,14 @@
                                                 @endforelse
                                             </tbody>
                                             <tfoot>
-                                                <tr id="totalRow">
-                                                    <td class="text-end" colspan="5">AMOUNT OF PAYMENT</td>
-                                                    <td class="text-end bg-black text-white" style="font-weight: bold">{{ number_format($totalPaid) }}</td>
-                                                    <td class="text-center"></td>
+                                                <tr id="totalRow" style="border: none">
+                                                    <td class="text-end" colspan="5" style="border: none">AMOUNT OF PAYMENT</td>
+                                                    <td class="text-end bg-black text-white" style="font-weight: bold; border:none">{{ number_format($totalPaid) }}</td>
+                                                    <td class="text-center" style="border: none"></td>
                                                 </tr>
-                                                <tr>
-                                                    <td class="text-end" colspan="6" style="font-weight: bold; border-right: none"><em>{{ $totalInWords }} USD</em></td>
-                                                    <td style="border-left: none;"></td>
+                                                <tr style="border: none">
+                                                    <td class="text-end" colspan="6" style="font-weight: bold; border:none"><em>{{ $totalInWords }} USD</em></td>
+                                                    <td style="border: none"></td>
                                                 </tr>
                                             </tfoot>
                                         </table>                                       

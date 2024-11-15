@@ -178,10 +178,11 @@ class BillOfPaymentController extends Controller
         foreach ($billOfPayment->transactions as $transaction) {
             $amount = $transaction->detailTransactions->sum('price_amount');
             $transaction->amount = $amount;
-            $transaction->totalBill = $amount - $transaction->paid;
+            $transaction->bill = $amount - $transaction->paid;
+            $totalBill += $transaction->bill;
         }
 
-        $totalInWords = NumberToWords::convert($transaction->totalBill);
+        $totalInWords = NumberToWords::convert($totalBill);
         $hashedId = IdHashHelper::encode($id);
 
         return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
