@@ -491,7 +491,7 @@
                 // Iterasi setiap baris untuk mendapatkan nilai total
                 $('#billOfPaymentTable tbody tr').each(function() {
                     var paid = parseFloat($(this).find('.paid-input').val().replace(/,/g, '')) || 0;
-                    var bill = parseFloat($(this).find('.pi-bill').text().replace(/,/g, '')) || 0;
+                    var bill = parseFloat($(this).find('.amount').text().replace(/,/g, '')) || 0;
 
                     totalPaid += paid;
                     totalBill += bill;
@@ -532,13 +532,11 @@
                 selectedPI.push(data.id);
 
                 // Tambahkan baris baru ke tabel #billOfPaymentTable
-                var formattedAmount = parseFloat(data.amount).toLocaleString('en-US', {
-                    minimumFractionDigits: 2
-                });
+                var formattedAmount = parseFloat(data.amount).toLocaleString('en-US');
                 var newRow = `
                                 <tr>
                                     <td class="text-center" style="display: none;">
-                                        <input type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
+                                        <input class="id-proforma" type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
                                     </td>
                                     <td class="text-center" style="display: none;">
                                         <input type="hidden" id="id_bill" name="transactions[${data.id}][id_bill]">
@@ -548,7 +546,7 @@
                                     <td class="text-center">
                                         <input type="text" name="transactions[${data.id}][description]" class="form-control description-input" placeholder="Enter description">
                                     </td>
-                                    <td class="text-center">${formattedAmount}</td>
+                                    <td class="text-center amount">${formattedAmount}</td>
                                     <td class="text-center">
                                         <!-- Display-only input for formatting -->
                                         <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
@@ -576,32 +574,37 @@
                     // Ambil nilai dari input .paid-input dan hilangkan koma jika ada
                     var paidInput = parseFloat(row.find('.paid-input').val().replace(/,/g, '')) ||
                         0;
+                    var piBill = parseFloat(row.find('.amount').text().replace(/,/g, ''));
+
+                    var amountPiBill = piBill - paidInput;
 
                     // Format nilai paidInput ke format ribuan dengan dua desimal
                     var formattedPaidInput = paidInput.toLocaleString('en-US');
+                    var formattedPiBill = amountPiBill.toLocaleString('en-US');
 
                     // Update nilai yang diformat hanya di input .paid-input pada baris ini
+                    row.find('.pi-bill').text(formattedPiBill);
                     row.find('.paid-input').val(formattedPaidInput);
                     row.find('.paid').val(paidInput);
 
                     // Jalankan fungsi totalBill untuk memperbarui total keseluruhan
                     totalBill();
                 });
-                totalBill();
-            });
 
-            // Event listener untuk tombol "Hapus"
-            $('#billOfPaymentTable').on('click', '.delete-btn', function() {
-                var row = $(this).closest('tr');
-                var idToRemove = row.find('.id-proforma').val();
+                // Event listener untuk tombol "Hapus"
+                $('#billOfPaymentTable').on('click', '.delete-btn', function() {
+                    var row = $(this).closest('tr');
+                    var idToRemove = row.find('.id-proforma').val();
 
-                // Hapus produk dari array newSelectedProductIds jika dihapus
-                var index = selectedPI.indexOf(parseInt(idToRemove));
-                if (index !== -1) {
-                    selectedPI.splice(index, 1);
-                }
+                    // Hapus produk dari array newSelectedProductIds jika dihapus
+                    var index = selectedPI.indexOf(parseInt(idToRemove));
+                    if (index !== -1) {
+                        selectedPI.splice(index, 1);
+                    }
 
-                row.remove(); // Hapus baris dari tabel
+                    row.remove(); // Hapus baris dari tabel
+                    totalBill();
+                });
                 totalBill();
             });
 
