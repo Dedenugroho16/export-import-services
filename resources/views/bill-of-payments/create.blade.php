@@ -388,6 +388,7 @@
                 $('#selectedClientName').removeClass('is-invalid'); // Hapus border merah pada input
                 $('.input-group').removeClass('has-error'); // Hapus border merah pada grup input
 
+                selectedPI = [];
                 $('#billOfPaymentTable tbody').empty();
                 totalBill();
                 $('#PITable').DataTable().ajax.reload();
@@ -775,10 +776,20 @@
                         }
                     },
                     error: function(xhr, status, error) {
+                        let errorMessage = 'Periksa kembali inputan Anda';
+
+                        // Periksa apakah server mengembalikan error dalam format JSON
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        } else if (xhr.responseText) {
+                            // Jika format bukan JSON, gunakan responseText
+                            errorMessage = xhr.responseText;
+                        }
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Terjadi Kesalahan!',
-                            text: 'Gagal membuat Bill Of Payment',
+                            text: errorMessage,
                         });
                     },
                     complete: function() {
