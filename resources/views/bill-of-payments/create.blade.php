@@ -227,7 +227,7 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payments.index') }}"
+                                <a href="{{ route('bill-of-payment.index') }}"
                                     class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
                             </div>
@@ -745,7 +745,7 @@
                                                 .message, // Menampilkan pesan dari server
                                         }).then(function() {
                                             window.location.href =
-                                                '{{ route('bill-of-payments.index') }}'; // Redirect ke halaman yang diinginkan
+                                                '{{ route('bill-of-payment.index') }}'; // Redirect ke halaman yang diinginkan
                                         });
                                     } else {
                                         Swal.fire({
