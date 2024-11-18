@@ -227,7 +227,7 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payments.index') }}"
+                                <a href="{{ route('bill-of-payment.index') }}"
                                     class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
                             </div>
@@ -388,6 +388,9 @@
                 $('#selectedClientName').removeClass('is-invalid'); // Hapus border merah pada input
                 $('.input-group').removeClass('has-error'); // Hapus border merah pada grup input
 
+                selectedPI = [];
+                $('#billOfPaymentTable tbody').empty();
+                totalBill();
                 $('#PITable').DataTable().ajax.reload();
             });
 
@@ -742,7 +745,7 @@
                                                 .message, // Menampilkan pesan dari server
                                         }).then(function() {
                                             window.location.href =
-                                                '{{ route('bill-of-payments.index') }}'; // Redirect ke halaman yang diinginkan
+                                                '{{ route('bill-of-payment.index') }}'; // Redirect ke halaman yang diinginkan
                                         });
                                     } else {
                                         Swal.fire({
@@ -773,10 +776,20 @@
                         }
                     },
                     error: function(xhr, status, error) {
+                        let errorMessage = 'Periksa kembali inputan Anda';
+
+                        // Periksa apakah server mengembalikan error dalam format JSON
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        } else if (xhr.responseText) {
+                            // Jika format bukan JSON, gunakan responseText
+                            errorMessage = xhr.responseText;
+                        }
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Terjadi Kesalahan!',
-                            text: 'Gagal membuat Bill Of Payment',
+                            text: errorMessage,
                         });
                     },
                     complete: function() {

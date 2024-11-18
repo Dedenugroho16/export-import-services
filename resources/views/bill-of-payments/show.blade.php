@@ -31,13 +31,13 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="#"
+                            <a class="dropdown-item" href="{{ route('billofpayments.exportPdf', $hashedId) }}"
                                 target="_blank">
                                 Ekspor PDF
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{ route('billofpayments.downloadPdf', $hashedId) }}">
                                 Download PDF
                             </a>
                         </li>

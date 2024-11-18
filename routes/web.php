@@ -158,7 +158,7 @@ Route::get('/transactions/rekap-pdf', [TransactionController::class, 'rekapPdf']
 Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('transactions.downloadRekapPdf');
 
 // bill of payments
-Route::get('/bill-of-payments', [BillOfPaymentController::class, 'index'])->name('bill-of-payments.index');
+Route::get('/bill-of-payment', [BillOfPaymentController::class, 'index'])->name('bill-of-payment.index');
 Route::get('/bill-of-payment/create', [BillOfPaymentController::class, 'create'])->name('bill-of-payment.create');
 // Route::get('/bill-of-payment/edit/{hash}', [BillOfPaymentController::class, 'edit'])->name('bill-of-payment.create');
 Route::get('/get-proforma-invoices', [BillOfPaymentController::class, 'getProformaInvoices'])->name('getProformaInvoices');
@@ -166,6 +166,10 @@ Route::get('/bill-of-payment/data', [BillOfPaymentController::class, 'getBillOfP
 Route::resource('bill-of-payment', BillOfPaymentController::class);
 Route::get('/get-transactions/{idBill}', [BillOfPaymentController::class, 'getTransactions'])->name('get-transactions');
 Route::get('/bill-of-payments/{hash}/details', [BillOfPaymentController::class, 'paymentDetails'])->name('bill-of-payments.details');
+Route::get('bill-of-payments/{hashId}/export-pdf', [BillOfPaymentController::class, 'bopExportPdf'])->name('billofpayments.exportPdf');
+Route::get('bill-of-payments/{hashId}/download-pdf', [BillOfPaymentController::class, 'bopDownloadPdf'])->name('billofpayments.downloadPdf');
+Route::get('/payment-details/export/{hashId}', [BillOfPaymentController::class, 'paymentDetailstExport'])->name('payment-details.export');
+Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class, 'paymentDetailstDownload'])->name('payment-details.download');
 
 // ! form
 Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');

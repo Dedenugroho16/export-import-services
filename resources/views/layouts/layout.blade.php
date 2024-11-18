@@ -37,6 +37,20 @@
             font-feature-settings: "cv03", "cv04", "cv11";
         }
 
+        /* Border left untuk menu dropdown yang aktif */
+        .dropdown-item.active-item {
+            border-left: 3px solid #0d6efd;
+            /* Warna bg-primary */
+            padding-left: 16px;
+            /* Tambahkan padding agar teks tidak terlalu dekat */
+            /* background-color: #f8f9fa; */
+            /* Warna latar opsional */
+            color: #0d6efd;
+            /* Warna teks opsional */
+            font-weight: 500;
+            /* Teks lebih tebal */
+        }
+
         .nav-link {
             display: flex;
             align-items: center;
@@ -121,10 +135,10 @@
         }
 
         #rekap-table {
-        max-width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
+            max-width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
     </style>
 
     {{-- JQuery --}}
@@ -152,7 +166,7 @@
                 </h1>
                 <div class="collapse navbar-collapse" id="sidebar-menu">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
+                        <li class="nav-item {{ Request::is('/*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('home') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -168,7 +182,7 @@
                             </a>
                         </li>
                         @if (auth()->user()->role === 'admin')
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('clients*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('clients.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -188,7 +202,7 @@
                                     <span class="nav-link-title">Client</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('products*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/products') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -203,7 +217,7 @@
                                     <span class="nav-link-title">Produk</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('commodities*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/commodities') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -217,7 +231,7 @@
                                     <span class="nav-link-title">Komoditas</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('countries*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/countries') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -237,7 +251,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('users*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('users.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -251,7 +265,7 @@
                                     <span class="nav-link-title">Data User</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('company.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -273,10 +287,11 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-                                    role="button" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
+                            <li
+                                class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction*') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction*') ? 'active' : '' }}"
+                                    href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction*') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2"
@@ -291,19 +306,23 @@
                                     </span>
                                     <span class="nav-link-title">Transaksi</span>
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('proforma.index') }}">
+                                <div class="dropdown-menu {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction*') ? 'show' : '' }}"
+                                    aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}"
+                                        href="{{ route('proforma.index') }}">
                                         <span class="nav-link-title">Proforma Invoices</span>
                                     </a>
-                                    <a class="dropdown-item" href="{{ url('/incomplete-invoice') }}">
+                                    <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
+                                        href="{{ url('/incomplete-invoice') }}">
                                         <span class="nav-link-title">Unconfirmed Invoices</span>
                                     </a>
-                                    <a class="dropdown-item" href="{{ url('/transaction') }}">
+                                    <a class="dropdown-item {{ Request::is('transaction*') ? 'active-item' : '' }}"
+                                        href="{{ url('/transaction') }}">
                                         <span class="nav-link-title">Final Invoice</span>
                                     </a>
                                 </div>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('transactions.rekap') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -322,18 +341,40 @@
                                     <span class="nav-link-title">Rekap Sales</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('bill-of-payments.index') }}">
+                            <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-invoice"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 7l1 0" /><path d="M9 13l6 0" /><path d="M13 17l2 0" /></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-invoice">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                            <path
+                                                d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                            <path d="M9 7l1 0" />
+                                            <path d="M9 13l6 0" />
+                                            <path d="M13 17l2 0" />
+                                        </svg>
                                     </span>
                                     <span class="nav-link-title">Bill Of Payment</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-invoice"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 7l1 0" /><path d="M9 13l6 0" /><path d="M13 17l2 0" /></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-invoice">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                            <path
+                                                d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                            <path d="M9 7l1 0" />
+                                            <path d="M9 13l6 0" />
+                                            <path d="M13 17l2 0" />
+                                        </svg>
                                     </span>
                                     <span class="nav-link-title">Account Statement</span>
                                 </a>
@@ -512,7 +553,7 @@
                                 </div>
                             </li>
                         @elseif(auth()->user()->role === 'finance')
-                        <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('bill-of-payments.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
