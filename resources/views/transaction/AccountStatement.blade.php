@@ -42,7 +42,7 @@
             <a class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="close"></a>
         </div>        
         <!-- Rekap Section -->
-        <div class="card mb-5 shadow-lg" style="border-radius: 15px;">
+        <div class="card mb-5 shadow-lg" style="border-radius: 5px;">
             <div class="card-body">
                 <!-- Bagian Header -->
                 <div class="text-center mb-5" style="font-family: 'Times New Roman', Times, serif;">
@@ -53,11 +53,11 @@
                 <!-- Row for Invoices and Payments -->
                 <div class="row position-relative" style="display: flex; justify-content: space-between;">
     <!-- Tabel Invoices -->
-    <div class="col-md-6" style="border-right: 2px solid #000;">
+    <div class="col-md-6">
         <h3 class="text-center mb-4"><strong>INVOICES</strong></h3>
         <div id="rekap-table" class="table-responsive">
-            <table class="table table-vcenter table-nowrap" id="rekapTable" style="border-collapse: collapse;">
-                <thead>
+            <table class="table table-borderless table-vcenter table-nowrap" id="rekapTable" style="border-collapse: collapse;">
+                <thead class="border-end border-dark">
                     <tr>
                         <th class="text-center" style="text-decoration: underline;">DATE</th>
                         <th class="text-center" style="text-decoration: underline;">INVOICE NO</th>
@@ -65,7 +65,7 @@
                         <th class="text-center" style="text-decoration: underline;">BALANCE</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="border-end border-dark">
                     <tr>
                         <td class="text-center">2024-11-01</td>
                         <td class="text-center">INV12345</td>
@@ -90,11 +90,11 @@
     </div>
 
     <!-- Tabel Payments -->
-    <div class="col-md-6" style="border-left: 2px solid #000;">
+    <div class="col-md-6">
         <h3 class="text-center mb-4"><strong>PAYMENTS</strong></h3>
         <div id="payment-table" class="table-responsive">
-            <table class="table table-vcenter table-nowrap" id="paymentTable" style="border-collapse: collapse;">
-                <thead>
+            <table class="table table-borderless table-vcenter table-nowrap" id="paymentTable" style="border-collapse: collapse;">
+                <thead class="border-start border-dark">
                     <tr>
                         <th class="text-center" style="text-decoration: underline;">DATE</th>
                         <th class="text-center" style="text-decoration: underline;">DESCRIPTION</th>
@@ -102,7 +102,7 @@
                         <th class="text-center" style="text-decoration: underline;">BALANCE</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="border-start border-dark">
                     <tr>
                         <td class="text-center">2024-11-02</td>
                         <td class="text-center">Payment for INV12345</td>
