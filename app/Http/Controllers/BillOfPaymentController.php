@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
+use App\Helpers\ImageHelper;
 use App\Helpers\NumberToWords;
 use App\Models\BillOfPayment;
 use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class BillOfPaymentController extends Controller
 {
@@ -262,5 +265,71 @@ class BillOfPaymentController extends Controller
             'success' => true,
             'id_bill' => $billOfPayment->id
         ]);
+    }
+
+    public function bopExportPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $company = Company::first();
+        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($decodedId);
+        $billOfPayment->transactions->load('detailTransactions');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
+        $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+                ? ImageHelper::getBase64Image('storage/' . $company->logo)
+                : ImageHelper::getBase64Image('storage/logo.png');
+
+        $totalBill = 0;
+
+        foreach ($billOfPayment->transactions as $transaction) {
+            $transaction->bill = $transaction->total - $transaction->paid;
+            $totalBill += $transaction->bill;
+        }
+
+        $totalInWords = NumberToWords::convert($totalBill);
+        $hashedId = IdHashHelper::encode($decodedId);
+
+        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream('bill-of-payment_' . $hashId . '.pdf');
+    }
+
+    public function bopDownloadPdf($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $company = Company::first();
+        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($decodedId);
+        $billOfPayment->transactions->load('detailTransactions');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
+        $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+                ? ImageHelper::getBase64Image('storage/' . $company->logo)
+                : ImageHelper::getBase64Image('storage/logo.png');
+
+        $totalBill = 0;
+
+        foreach ($billOfPayment->transactions as $transaction) {
+            $transaction->bill = $transaction->total - $transaction->paid;
+            $totalBill += $transaction->bill;
+        }
+
+        $totalInWords = NumberToWords::convert($totalBill);
+        $hashedId = IdHashHelper::encode($decodedId);
+
+        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('bill-of-payment_' . $hashId . '.pdf');
     }
 }
