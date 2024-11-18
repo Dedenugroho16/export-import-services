@@ -388,6 +388,8 @@
                 $('#selectedClientName').removeClass('is-invalid'); // Hapus border merah pada input
                 $('.input-group').removeClass('has-error'); // Hapus border merah pada grup input
 
+                $('#billOfPaymentTable tbody').empty();
+                totalBill();
                 $('#PITable').DataTable().ajax.reload();
             });
 
