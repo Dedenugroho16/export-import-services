@@ -31,13 +31,13 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="#"
+                            <a class="dropdown-item" href="{{ route('payment-details.export', $hashedId) }}"
                                 target="_blank">
                                 Ekspor PDF
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{ route('payment-details.download', $hashedId) }}">
                                 Download PDF
                             </a>
                         </li>
@@ -73,7 +73,7 @@
                                     <tr>
                                         <td style="width: 20%">DATE</td>
                                         <td style="width: 5px">:</td>
-                                        <td style="font-weight: bold">{{ $billOfPayment->created_at->format('F d, Y') }}</td>
+                                        <td style="font-weight: bold">{{ strtoupper($billOfPayment->created_at->format('F d, Y')) }}</td>
                                     </tr>
                                     <tr>
                                         <td>PAYMENT NUMBER</td>

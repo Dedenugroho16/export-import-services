@@ -44,7 +44,7 @@ class BillOfPaymentController extends Controller
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
                             <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
                                 Payment Details
                             </a>
                             <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
@@ -197,13 +197,14 @@ class BillOfPaymentController extends Controller
         $totalPaid = 0;
 
         foreach ($billOfPayment->transactions as $transaction) {
-            $transaction->formatted_date = \Carbon\Carbon::parse($transaction->date)->format('F d, Y');
+            $transaction->formatted_date = \Carbon\Carbon::parse($transaction->date)->format('M d, Y');
             $totalPaid += $transaction->paid;
         }
 
         $totalInWords = NumberToWords::convert($totalPaid);
+        $hashedId = IdHashHelper::encode($id);
 
-        return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords'));
+        return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords', 'hashedId'));
     } 
 
     public function edit($hash)
@@ -331,5 +332,71 @@ class BillOfPaymentController extends Controller
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('bill-of-payment_' . $hashId . '.pdf');
+    }
+
+    public function paymentDetailstExport($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $company = Company::first();
+        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($decodedId);
+        $billOfPayment->transactions->load('detailTransactions');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
+        $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+                ? ImageHelper::getBase64Image('storage/' . $company->logo)
+                : ImageHelper::getBase64Image('storage/logo.png');
+
+        $totalPaid = 0;
+
+        foreach ($billOfPayment->transactions as $transaction) {
+            $transaction->formatted_date = \Carbon\Carbon::parse($transaction->date)->format('M d, Y');
+            $totalPaid += $transaction->paid;
+        }
+
+        $totalInWords = NumberToWords::convert($totalPaid);
+        $hashedId = IdHashHelper::encode($decodedId);
+
+        $pdf = PDF::loadView('bill-of-payments.paymentDetailsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalPaid', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address'));
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->stream('payment-details_' . $hashId . '.pdf');
+    }
+
+    public function paymentDetailstDownload($hashId)
+    {
+        $decodedId = IdHashHelper::decode($hashId);
+        $company = Company::first();
+        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($decodedId);
+        $billOfPayment->transactions->load('detailTransactions');
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
+        $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+                ? ImageHelper::getBase64Image('storage/' . $company->logo)
+                : ImageHelper::getBase64Image('storage/logo.png');
+
+        $totalPaid = 0;
+
+        foreach ($billOfPayment->transactions as $transaction) {
+            $transaction->formatted_date = \Carbon\Carbon::parse($transaction->date)->format('M d, Y');
+            $totalPaid += $transaction->paid;
+        }
+
+        $totalInWords = NumberToWords::convert($totalPaid);
+        $hashedId = IdHashHelper::encode($decodedId);
+
+        $pdf = PDF::loadView('bill-of-payments.paymentDetailsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalPaid', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address'));
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->download('payment-details_' . $hashId . '.pdf');
     }
 }

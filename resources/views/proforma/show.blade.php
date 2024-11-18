@@ -338,7 +338,7 @@
                             <div class="mt-3">
                                 <div class="text-end">
                                     <p><strong><em>{{ $totalInWords }} USD</em></strong></p>
-                                    <p><em>Payment Condition: FOB (Free on Board)</em></p>
+                                    <p><em>Payment Condition: {{ $proformaInvoice->payment_condition}}</em></p>
                                 </div>
                                 <div class="mt-7">
                                     <table class="text-center" style="width: auto; float:right">
