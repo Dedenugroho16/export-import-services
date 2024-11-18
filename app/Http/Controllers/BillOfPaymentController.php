@@ -130,7 +130,9 @@ class BillOfPaymentController extends Controller
             'no_inv' => 'required',
             'payment_number' => 'required',
             'id_client' => 'required',
-            'total' => 'required',
+            'total' => 'required|numeric|gte:0',
+        ], [
+            'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
         ]);
 
         $data['created_by'] = Auth::id();
@@ -204,7 +206,7 @@ class BillOfPaymentController extends Controller
         $totalInWords = NumberToWords::convert($totalPaid);
 
         return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords'));
-    } 
+    }
 
     public function edit($hash)
     {
@@ -248,7 +250,9 @@ class BillOfPaymentController extends Controller
             'month' => 'required',
             'no_inv' => 'required',
             'id_client' => 'required',
-            'total' => 'required',
+            'total' => 'required|numeric|gte:0',
+        ], [
+            'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
         ]);
 
         // Dapatkan BillOfPayment berdasarkan ID
