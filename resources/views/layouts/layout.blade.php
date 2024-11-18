@@ -287,40 +287,41 @@
                                     </span>
                                 </a>
                             </li>
-                            <li
-                                class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction*') ? 'show' : '' }}">
-                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction*') ? 'active' : '' }}"
-                                    href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction*') ? 'true' : 'false' }}">
+                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}" 
+                                href="#" 
+                                id="navbarDropdown" 
+                                role="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <circle cx="6" cy="19" r="2" />
-                                            <circle cx="17" cy="19" r="2" />
-                                            <path d="M17 17h-11v-14h-2" />
-                                            <path d="M6 5l14 1l-1 7h-13" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <circle cx="6" cy="19" r="2"/>
+                                            <circle cx="17" cy="19" r="2"/>
+                                            <path d="M17 17h-11v-14h-2"/>
+                                            <path d="M6 5l14 1l-1 7h-13"/>
                                         </svg>
                                     </span>
                                     <span class="nav-link-title">Transaksi</span>
                                 </a>
-                                <div class="dropdown-menu {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction*') ? 'show' : '' }}"
-                                    aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}"
-                                        href="{{ route('proforma.index') }}">
-                                        <span class="nav-link-title">Proforma Invoices</span>
-                                    </a>
-                                    <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
-                                        href="{{ url('/incomplete-invoice') }}">
-                                        <span class="nav-link-title">Unconfirmed Invoices</span>
-                                    </a>
-                                    <a class="dropdown-item {{ Request::is('transaction*') ? 'active-item' : '' }}"
-                                        href="{{ url('/transaction') }}">
-                                        <span class="nav-link-title">Final Invoice</span>
-                                    </a>
-                                </div>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
+                                            Proforma Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
+                                            Unconfirmed Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
+                                            Final Invoice
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('transactions.rekap') }}">
@@ -381,13 +382,12 @@
                             </li>
                         @endif
                         @if (auth()->user()->role === 'operator')
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('clients*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('clients.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
                                             <circle cx="12" cy="12" r="3" />
                                             <path d="M12 3v6" />
                                             <path d="M12 15v6" />
@@ -402,14 +402,12 @@
                                     <span class="nav-link-title">Client</span>
                                 </a>
                             </li>
-
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('products*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/products') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
                                             <rect x="3" y="4" width="18" height="16" rx="2" />
                                             <path d="M3 6h18" />
                                             <path d="M7 10h10" />
@@ -419,7 +417,7 @@
                                     <span class="nav-link-title">Produk</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('commodities*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/commodities') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -433,7 +431,7 @@
                                     <span class="nav-link-title">Komoditas</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('countries*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/countries') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -453,7 +451,43 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}" 
+                                href="#" 
+                                id="navbarDropdown" 
+                                role="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <circle cx="6" cy="19" r="2"/>
+                                            <circle cx="17" cy="19" r="2"/>
+                                            <path d="M17 17h-11v-14h-2"/>
+                                            <path d="M6 5l14 1l-1 7h-13"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Transaksi</span>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
+                                            Proforma Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
+                                            Unconfirmed Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
+                                            Final Invoice
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('transactions.rekap') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -472,38 +506,9 @@
                                     <span class="nav-link-title">Rekap Sales</span>
                                 </a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-                                    role="button" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <circle cx="6" cy="19" r="2" />
-                                            <circle cx="17" cy="19" r="2" />
-                                            <path d="M17 17h-11v-14h-2" />
-                                            <path d="M6 5l14 1l-1 7h-13" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">Transaksi</span>
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('proforma.index') }}">
-                                        <span class="nav-link-title">Proforma Invoice</span>
-                                    </a>
-                                    <a class="dropdown-item" href="{{ url('/transaction') }}">
-                                        <span class="nav-link-title">Invoice</span>
-                                    </a>
-                                </div>
-                            </li>
                         @endif
-
-                        {{-- Director menu --}}
                         @if (auth()->user()->role === 'director')
-                            <li class="nav-item">
+                            <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('company.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -525,45 +530,61 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-                                    role="button" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
+                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}" 
+                                href="#" 
+                                id="navbarDropdown" 
+                                role="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <circle cx="6" cy="19" r="2" />
-                                            <circle cx="17" cy="19" r="2" />
-                                            <path d="M17 17h-11v-14h-2" />
-                                            <path d="M6 5l14 1l-1 7h-13" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <circle cx="6" cy="19" r="2"/>
+                                            <circle cx="17" cy="19" r="2"/>
+                                            <path d="M17 17h-11v-14h-2"/>
+                                            <path d="M6 5l14 1l-1 7h-13"/>
                                         </svg>
                                     </span>
                                     <span class="nav-link-title">Transaksi</span>
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('proforma.index') }}">
-                                        <span class="nav-link-title">Proforma Invoice</span>
-                                    </a>
-                                    <a class="dropdown-item" href="{{ url('/transaction') }}">
-                                        <span class="nav-link-title">Invoice</span>
-                                    </a>
-                                </div>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
+                                            Proforma Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
+                                            Unconfirmed Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
+                                            Final Invoice
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
+                        @endif
                         @elseif(auth()->user()->role === 'finance')
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('bill-of-payments.index') }}">
+                            <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-cash" viewBox="0 0 16 16">
-                                            <path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-invoice">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                             <path
-                                                d="M0 4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V6a2 2 0 0 1-2-2z" />
+                                                d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                            <path d="M9 7l1 0" />
+                                            <path d="M9 13l6 0" />
+                                            <path d="M13 17l2 0" />
                                         </svg>
                                     </span>
-                                    <span class="nav-link-title">Bill of Payment</span>
+                                    <span class="nav-link-title">Bill Of Payment</span>
                                 </a>
                             </li>
                         @endif
