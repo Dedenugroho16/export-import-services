@@ -280,6 +280,7 @@ class BillOfPaymentController extends Controller
         $billOfPayment->transactions->load('detailTransactions');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
         $address = $company ? $company->address : '';
@@ -299,7 +300,7 @@ class BillOfPaymentController extends Controller
         $totalInWords = NumberToWords::convert($totalBill);
         $hashedId = IdHashHelper::encode($decodedId);
 
-        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address'));
+        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address', 'background'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('bill-of-payment_' . $hashId . '.pdf');
@@ -313,6 +314,7 @@ class BillOfPaymentController extends Controller
         $billOfPayment->transactions->load('detailTransactions');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
         $address = $company ? $company->address : '';
@@ -332,7 +334,7 @@ class BillOfPaymentController extends Controller
         $totalInWords = NumberToWords::convert($totalBill);
         $hashedId = IdHashHelper::encode($decodedId);
 
-        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address'));
+        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address', 'background'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('bill-of-payment_' . $hashId . '.pdf');
@@ -346,6 +348,7 @@ class BillOfPaymentController extends Controller
         $billOfPayment->transactions->load('detailTransactions');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
         $address = $company ? $company->address : '';
@@ -365,8 +368,8 @@ class BillOfPaymentController extends Controller
         $totalInWords = NumberToWords::convert($totalPaid);
         $hashedId = IdHashHelper::encode($decodedId);
 
-        $pdf = PDF::loadView('bill-of-payments.paymentDetailsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalPaid', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address'));
-        $pdf->setPaper('A4', 'landscape');
+        $pdf = PDF::loadView('bill-of-payments.paymentDetailsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalPaid', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address', 'background'));
+        $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('payment-details_' . $hashId . '.pdf');
     }
@@ -379,6 +382,7 @@ class BillOfPaymentController extends Controller
         $billOfPayment->transactions->load('detailTransactions');
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
         $address = $company ? $company->address : '';
@@ -398,8 +402,8 @@ class BillOfPaymentController extends Controller
         $totalInWords = NumberToWords::convert($totalPaid);
         $hashedId = IdHashHelper::encode($decodedId);
 
-        $pdf = PDF::loadView('bill-of-payments.paymentDetailsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalPaid', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address'));
-        $pdf->setPaper('A4', 'landscape');
+        $pdf = PDF::loadView('bill-of-payments.paymentDetailsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalPaid', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address', 'background'));
+        $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('payment-details_' . $hashId . '.pdf');
     }

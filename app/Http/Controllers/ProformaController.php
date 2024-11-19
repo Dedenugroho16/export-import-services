@@ -412,8 +412,10 @@ class ProformaController extends Controller
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
         $signatureUrl = $proformaInvoice->approverUser->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
@@ -447,7 +449,9 @@ class ProformaController extends Controller
             'emailIcon',
             'phoneNumber',
             'email',
-            'signature'
+            'signature',
+            'background',
+            'address'
         ));
         $pdf->setPaper('A4', 'portrait');
 
@@ -464,8 +468,10 @@ class ProformaController extends Controller
         $totalInWords = NumberToWords::convert($proformaInvoice->total);
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
         $signatureUrl = $proformaInvoice->approverUser->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
@@ -500,7 +506,9 @@ class ProformaController extends Controller
             'emailIcon',
             'phoneNumber',
             'email',
-            'signature'
+            'signature',
+            'background',
+            'address'
         ));
         $pdf->setPaper('A4', 'portrait');
 

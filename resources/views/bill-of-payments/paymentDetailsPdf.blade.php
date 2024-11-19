@@ -7,23 +7,37 @@
     <title>Payment-details-pdf</title>
 </head>
 <style>
-    body{
+    @page {
+         margin: 0;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('{{ public_path("storage/background.jpg") }}');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: center;
         font-size: 15px;
+    }
+    .content {
+        padding: 8mm 12mm 8mm;
     }
     .section-satu {
         width: 100%;
         border-collapse: collapse;
+        margin-bottom: 7mm;
         font-size: 14px;
     }
     .info table {
         width: 100%;
-        margin-top: 5mm;
+        margin-top: 10mm;
     }
     .table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 5mm;
-        text-align: center;
+        margin-top: 10mm;
     }
     .table th, .table td {
         border: 1px solid black;
@@ -36,25 +50,25 @@
     }
     .bank-info{
         width: 100%;
-        margin-bottom: 3mm;
+        margin-top: 10mm;
     }
     .approve-section {
         width: auto;
-        font-size: 14px;
         text-align: center;
         float: right;
-        margin-top: 2mm;
+        margin-top: 10mm;
     }
     .footer {
         font-family: Arial, Helvetica, sans-serif;
-        text-align: left;
-        font-size: 12px;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-    } 
+            text-align: left;
+            font-size: 12px;
+            position: absolute;
+            bottom: 10mm;
+            width: 100%;
+    }
 </style>
 <body>
+    <div class="content">
     <table class="section-satu">
         <tr>
             <td>
@@ -70,27 +84,27 @@
         </tr>
     </table>
 
-    <h2 style="text-align: center">PAYMENT DETAILS</h2>
+    <h2 style="text-align: center">PAYMENT DETAIL</h2>
 
     <div class="info">
         <table >
             <tr>
-                <td style="width: 20%">DATE</td>
+                <td style="width: 25%">Date</td>
                 <td style="width: 2%">:</td>
                 <td style="font-weight: bold">{{ strtoupper($billOfPayment->created_at->format('F d, Y')) }}</td>
             </tr>
             <tr>
-                <td>PAYMENT NUMBER</td>
+                <td>Payment Number</td>
                 <td>:</td>
                 <td style="font-weight: bold">{{ $billOfPayment->payment_number}}</td>
             </tr>
             <tr>
-                <td>BUYER NAME</td>
+                <td>Buyer Name</td>
                 <td>:</td>
                 <td style="font-weight: bold">{{ $billOfPayment->client->name}}</td>
             </tr>
             <tr>
-                <td>COMPANY NAME</td>
+                <td>Company Name</td>
                 <td>:</td>
                 <td style="font-weight: bold">{{ $billOfPayment->client->company_name}}</td>
             </tr>
@@ -102,7 +116,7 @@
             <thead>
                 <tr>
                     <th>NO</th>
-                    <th>PROFORMA INVOICE NUMBER</th>
+                    <th>PI NUMBER</th>
                     <th>CODE</th>
                     <th>DATE</th>
                     <th>AMOUNT</th>
@@ -114,7 +128,7 @@
                 @forelse ($billOfPayment->transactions as $index => $transaction)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $transaction->number }}</td>
+                    <td style="text-align: left;">{{ $transaction->number }}</td>
                     <td>{{ $transaction->code }}</td>
                     <td>{{ $transaction->formatted_date }}</td>
                     <td style="text-align: right;">{{ number_format($transaction->total) }}</td>
@@ -127,7 +141,7 @@
                 </tr>
                 @endforelse
             </tbody>
-            <tfoot>
+            <tfoot style="border: none">
                 <tr id="totalRow" style="border: none">
                     <td style="text-align: right; border: none" colspan="5">AMOUNT OF PAYMENT</td>
                     <td class="bg-black" style="font-weight: bold; border:none; text-align: right;">{{ number_format($totalPaid) }}</td>
@@ -140,34 +154,18 @@
             </tfoot>
         </table>
     </div>
-    <table class="approve-section">
-        <tr>
-            <td style="font-weight: bold">Approved By</td>
-        </tr>
-        <tr>
-            <td><img src="{{ $signature }}" alt="Tanda Tangan" style="width: 80px;"></td>
-        </tr>
-        <tr>
-            <td style="border-bottom: 1px solid black;">{{ $billOfPayment->createdBy ? $billOfPayment->createdBy->name : 'N/A' }}</td>
-        </tr>
-        <tr>
-            <td>{{ $billOfPayment->createdBy ? $billOfPayment->createdBy->role : 'N/A' }}</td>
-        </tr>
-    </table> 
-
-    </table>    
-    <footer class="footer">
+    <div>
         <table class="bank-info">
             <tr>
                 <td style="font-weight: bold">REMITTANCE ADVISE</td>
             </tr>
             <tr>
-                <td style="width: 20%">Beneficiary Account Name</td>
+                <td style="width: 35%">Beneficiary Account Name</td>
                 <td style="width: 2%">:</td>
                 <td>{{$company->bank_account_name ?? '-'}}</td>
             </tr>
             <tr>
-                <td>Beneficiary Account Number</td>
+                <td>Beneficiary Account Number USD</td>
                 <td>:</td>
                 <td>{{$company->bank_account_number ?? '-'}}</td>
             </tr>
@@ -187,14 +185,31 @@
                 <td>{{$company->swift_code ?? '-'}}</td>
             </tr>
         </table>
+    </div>
+
+    <table class="approve-section">
+        <tr>
+            <td style="font-weight: bold">Approved By</td>
+        </tr>
+        <tr>
+            <td><img src="{{ $signature }}" alt="Tanda Tangan" style="width: 100px; margin-top:5mm;"></td>
+        </tr>
+        <tr>
+            <td style="border-bottom: 1px solid black;">{{ $billOfPayment->createdBy ? $billOfPayment->createdBy->name : 'N/A' }}</td>
+        </tr>
+        <tr>
+            <td>{{ $billOfPayment->createdBy ? $billOfPayment->createdBy->role : 'N/A' }}</td>
+        </tr>
+    </table>    
+    <footer class="footer">
         <table style="font-size: 10px; border-collapse: collapse; width: 100%;">
             <tr>
-                <td style="font-weight: bolder;">HEAD OFFICE</td>
+                <td style="font-weight: bolder; color:rgb(2, 107, 228);">HEAD OFFICE</td>
                 <td>:</td>
-                <td>{{ $company->address ?? '' }}</td>
+                <td>{{ $company->address ?? 'JL.POLINGGA NO.5 RT.02/RW.13 SABANDAR, KARANG TENGAH, CIANJUR, JAWA BARAT - INDONESIA' }}</td>
             </tr>
             <tr>
-                <td style="font-weight: bolder;">BRANCH OFFICE</td>
+                <td style="font-weight: bolder; color:rgb(2, 107, 228);">BRANCH OFFICE</td>
                 <td>:</td>
                 <td>DS.JIKEN SURUHAN NO.45RT02/RW04 JIKEN, BLORA, JAWA TENGAH</td>
             </tr>
@@ -224,5 +239,6 @@
             </tr>
         </table>        
     </footer>
+</div>
 </body>
 </html>
