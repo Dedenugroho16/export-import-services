@@ -77,18 +77,20 @@
                 <div class="card-body">
                     <!-- Bagian Header -->
                     <div class="text-center mb-5" style="font-family: 'Times New Roman', Times, serif;">
-                        <img src="{{ Storage::url('logo1.png') }}" alt="Company Logo"
+                        <img src="{{ asset('storage/logo1.png') }}" alt="Company Logo"
                             style="max-width: 210px; max-height: 210px;">
-                        <h2 class="mb-1"><strong>PT PSN STATEMENT - MEHIO FOR WHOLE SALE<br>YEAR OF 2024</strong></h2>
+                        <h2 class="mb-1" style="text-decoration: underline;"><strong id="companyStatement">PT PSN
+                                STATEMENT - <br>YEAR OF
+                                2024</strong></h2>
                     </div>
 
                     <!-- Row for Invoices and Payments -->
                     <div class="row position-relative" style="display: flex; justify-content: space-between;">
                         <!-- Tabel Invoices -->
                         <div class="col-md-6">
-                            <h3 class="text-center mb-4"><strong>INVOICES</strong></h3>
+                            <h3 class="text-center mb-4" style="text-decoration: underline;"><strong>INVOICES</strong></h3>
                             <div id="rekap-table" class="table-responsive">
-                                <table class="table table-borderless table-vcenter table-nowrap" id="rekapTable"
+                                <table class="table table-borderless table-vcenter table-nowrap" id="invoicesTable"
                                     style="border-collapse: collapse;">
                                     <thead class="border-end border-dark">
                                         <tr>
@@ -99,24 +101,6 @@
                                         </tr>
                                     </thead>
                                     <tbody class="border-end border-dark">
-                                        <tr>
-                                            <td class="text-center">2024-11-01</td>
-                                            <td class="text-center">INV12345</td>
-                                            <td class="text-center">$1000</td>
-                                            <td class="text-center">$500</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">2024-11-05</td>
-                                            <td class="text-center">INV12346</td>
-                                            <td class="text-center">$1500</td>
-                                            <td class="text-center">$800</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">2024-11-10</td>
-                                            <td class="text-center">INV12347</td>
-                                            <td class="text-center">$2000</td>
-                                            <td class="text-center">$1200</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -124,9 +108,10 @@
 
                         <!-- Tabel Payments -->
                         <div class="col-md-6">
-                            <h3 class="text-center mb-4"><strong>PAYMENTS</strong></h3>
+                            <h3 class="text-center mb-4" style="text-decoration: underline;"><strong>PAYMENTS</strong>
+                            </h3>
                             <div id="payment-table" class="table-responsive">
-                                <table class="table table-borderless table-vcenter table-nowrap" id="paymentTable"
+                                <table class="table table-borderless table-vcenter table-nowrap" id="paymentsTable"
                                     style="border-collapse: collapse;">
                                     <thead class="border-start border-dark">
                                         <tr>
@@ -137,24 +122,6 @@
                                         </tr>
                                     </thead>
                                     <tbody class="border-start border-dark">
-                                        <tr>
-                                            <td class="text-center">2024-11-02</td>
-                                            <td class="text-center">Payment for INV12345</td>
-                                            <td class="text-center">$500</td>
-                                            <td class="text-center">$0</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">2024-11-06</td>
-                                            <td class="text-center">Payment for INV12346</td>
-                                            <td class="text-center">$800</td>
-                                            <td class="text-center">$0</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">2024-11-12</td>
-                                            <td class="text-center">Payment for INV12347</td>
-                                            <td class="text-center">$1200</td>
-                                            <td class="text-center">$0</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -172,52 +139,69 @@
                         width: '100%' // Membuat Select2 full size
                     });
 
-                    // $('#company_name').select2({
-                    //     placeholder: 'Select a company',
-                    //     allowClear: true,
-                    //     width: '100%',
-                    //     ajax: {
-                    //         url: "{{ route('clients.list') }}",
-                    //         dataType: 'json',
-                    //         delay: 250,
-                    //         data: function(params) {
-                    //             return {
-                    //                 search: params.term, // Istilah pencarian
-                    //                 page: params.page || 1 // Halaman yang diminta
-                    //             };
-                    //         },
-                    //         processResults: function(data) {
-                    //             return {
-                    //                 results: data.results.map(item => ({
-                    //                     id: item.id,
-                    //                     text: item.company_name
-                    //                 })),
-                    //                 pagination: {
-                    //                     more: data.pagination.more
-                    //                 }
-                    //             };
-                    //         },
-                    //         cache: true
-                    //     }
-                    // });
-
                     $('#company_name').select2({
                         ajax: {
-                            url: "{{ route('clients.list') }}", // Endpoint untuk mengambil data
+                            url: "{{ route('clients.list') }}", // Endpoint backend
                             dataType: 'json',
-                            delay: 250, // Delay untuk mengurangi beban server
+                            delay: 250, // Debounce untuk mengurangi beban server
+                            data: function(params) {
+                                return {
+                                    search: params.term, // Kirim input pencarian ke server
+                                    page: params.page || 1 // Untuk pagination jika ada
+                                };
+                            },
                             processResults: function(data) {
                                 return {
-                                    results: data.results // Ambil hasil dari response JSON
+                                    results: data.results, // Ambil hasil yang relevan
+                                    pagination: {
+                                        more: data.pagination.more // Atur pagination
+                                    }
                                 };
                             }
                         },
                         placeholder: 'Select a company',
                         width: '100%',
                         minimumInputLength: 1, // Mulai pencarian setelah 1 karakter
-                        allowClear: true // Opsi untuk menghapus pilihan
+                        allowClear: true
                     });
 
+
+                    // $('#company_name').on('select2:select', function(e) {
+                    //     let companyName = e.params.data.text; // Ambil nama perusahaan dari Select2
+                    //     let year = $('#yearSelect').val(); // Ambil tahun dari input
+
+                    //     // Update teks pada elemen
+                    //     $('#companyStatement').html(
+                    //         `PT PSN STATEMENT - ${companyName}<br>YEAR OF ${year}`);
+                    // });
+
+                    $('#company_name').on('select2:select', function(e) {
+                        let companyName = e.params.data.text; // Ambil nama perusahaan dari Select2
+                        let year = $('#yearSelect').val(); // Ambil tahun dari input
+
+                        // Update teks pada elemen
+                        $('#companyStatement').html(
+                            `PT PSN STATEMENT - ${companyName}<br>YEAR OF ${year}`
+                        );
+                    });
+
+                    // Tangani saat Select2 di-clear
+                    $('#company_name').on('select2:clear', function() {
+                        let year = $('#yearSelect').val(); // Tetap ambil tahun dari input jika ada
+                        $('#companyStatement').html(
+                            `PT PSN STATEMENT - <br>YEAR OF ${year}` // Hanya tampilkan tahun tanpa nama perusahaan
+                        );
+                    });
+
+                    $('#yearSelect').on('input', function() {
+                        let year = $(this).val(); // Ambil nilai input tahun
+                        let companyName = $('#company_name').select2('data')[0]?.text ||
+                            ''; // Ambil nama perusahaan atau default
+
+                        // Update teks pada elemen
+                        $('#companyStatement').html(
+                            `PT PSN STATEMENT - ${companyName}<br>YEAR OF ${year}`);
+                    });
                 });
             </script>
         @endsection

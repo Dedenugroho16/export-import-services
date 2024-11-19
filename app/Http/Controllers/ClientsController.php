@@ -161,23 +161,23 @@ class ClientsController extends Controller
     {
         $search = $request->input('search');
 
+        // Query untuk filter data berdasarkan company_name
         $query = Clients::query();
 
         if (!empty($search)) {
             $query->where('company_name', 'like', '%' . $search . '%');
         }
 
-        // Ambil data unik berdasarkan company_name
-        $clients = $query->select('company_name')
-            ->distinct()
+        $clients = $query->select('company_name') // Hanya ambil company_name
+            ->distinct() // Hilangkan duplikat
             ->orderBy('company_name', 'asc')
             ->paginate(10);
 
         return response()->json([
             'results' => $clients->map(function ($client) {
                 return [
-                    'id' => $client->company_name, // Isi value dengan company_name
-                    'text' => $client->company_name // Teks yang ditampilkan
+                    'id' => $client->company_name, // Value yang digunakan di select2
+                    'text' => $client->company_name // Teks yang tampil di select2
                 ];
             }),
             'pagination' => ['more' => $clients->hasMorePages()]
