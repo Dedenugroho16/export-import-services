@@ -646,16 +646,15 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0"
                                     data-bs-toggle="dropdown" aria-label="Open user menu">
-                                    <!-- Menggunakan gambar dari database atau gravatar sebagai default -->
                                     <span class="avatar avatar-sm rounded-circle"
-                                        style="background-image: url('{{ Auth::user()->profile_picture_url ? asset('storage/' . Auth::user()->profile_picture_url) : 'https://www.gravatar.com/avatar/' . md5(strtolower(trim(Auth::user()->email))) . '?d=mp' }}'); border-radius: 50%;"></span>
+                                        style="background-image: url('{{ Auth::user()->profile_picture_url ? asset('storage/' . Auth::user()->profile_picture_url) : '' }}'); 
+                                                border-radius: 50%; 
+                                                background-color: {{ Auth::user()->profile_picture_url ? 'transparent' : '#f0f0f0' }};">
+                                    </span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                     <a href="{{ route('profile.show') }}" class="dropdown-item">
                                         <i class="fas fa-user me-2"></i> Profil
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <i class="fas fa-cog me-2"></i> Pengaturan
                                     </a>
                                     <form id="logout-form" method="POST" action="{{ route('logout') }}">
                                         @csrf
