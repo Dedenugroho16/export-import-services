@@ -86,7 +86,7 @@
                                                 <tr>
                                                     <td><strong>Date</strong></td>
                                                     <td><strong>:</strong></td>
-                                                    <td class="text-end">{{ $transaction->date }}</td>
+                                                    <td class="text-end">{{ \Carbon\Carbon::parse($transaction->date)->format('l, F d, Y') }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Code</strong></td>

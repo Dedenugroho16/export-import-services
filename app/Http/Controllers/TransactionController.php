@@ -365,8 +365,10 @@ class TransactionController extends Controller
         $company = Company::first();
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
         $signatureUrl = $transaction->approverUser->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
@@ -387,7 +389,7 @@ class TransactionController extends Controller
             $priceAmount += $detail->price_amount;
         }
 
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature'));
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'background', 'address'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('packing_list_' . $hashId . '.pdf');
@@ -445,8 +447,10 @@ class TransactionController extends Controller
         $company = Company::first();
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
         $signatureUrl = $transaction->approverUser->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
@@ -467,7 +471,7 @@ class TransactionController extends Controller
             $priceAmount += $detail->price_amount;
         }
 
-        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature'));
+        $pdf = PDF::loadView('packing_list.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'background', 'address'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('packing_list_' . $hashId . '.pdf');
@@ -482,8 +486,10 @@ class TransactionController extends Controller
         $totalInWords = NumberToWords::convert($transaction->total);
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
         $signatureUrl = $transaction->approverUser->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
@@ -504,7 +510,7 @@ class TransactionController extends Controller
             $priceAmount += $detail->price_amount;
         }
 
-        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature'));
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'background', 'address'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('invoice_' . $hashId . '.pdf');
@@ -519,8 +525,10 @@ class TransactionController extends Controller
         $totalInWords = NumberToWords::convert($transaction->total);
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
         $phoneNumber = $company ? $company->phone_number : '';
         $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
         $signatureUrl = $transaction->approverUser->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
@@ -541,7 +549,7 @@ class TransactionController extends Controller
             $priceAmount += $detail->price_amount;
         }
 
-        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature'));
+        $pdf = PDF::loadView('transaction.pdf', compact('transaction', 'detailTransactions', 'company', 'logo', 'totalInWords', 'totalCarton', 'totalInner', 'totalNetWeight', 'priceAmount', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'background', 'address'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('invoice_' . $hashId . '.pdf');
