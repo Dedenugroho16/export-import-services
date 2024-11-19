@@ -97,7 +97,7 @@
                                                 <tr>
                                                     <td><strong>Date</strong></td>
                                                     <td><strong>:</strong></td>
-                                                    <td class="text-end">{{ $proformaInvoice->date }}</td>
+                                                    <td class="text-end">{{ \Carbon\Carbon::parse($proformaInvoice->date)->format('l, F d, Y') }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Code</strong></td>

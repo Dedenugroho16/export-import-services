@@ -7,8 +7,22 @@
     <title>Bill-of-payments-pdf</title>
 </head>
 <style>
-    body{
+    @page {
+         margin: 0;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('{{ public_path("storage/background.jpg") }}');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: center;
         font-size: 15px;
+    }
+    .content {
+        padding: 8mm 12mm 8mm;
     }
     .section-satu {
         width: 100%;
@@ -47,14 +61,15 @@
     }
     .footer {
         font-family: Arial, Helvetica, sans-serif;
-        text-align: left;
-        font-size: 12px;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-    } 
+            text-align: left;
+            font-size: 12px;
+            position: absolute;
+            bottom: 10mm;
+            width: 100%;
+    }
 </style>
 <body>
+    <div class="content">
     <table class="section-satu">
         <tr>
             <td>
@@ -75,7 +90,7 @@
     <div class="info">
         <table >
             <tr>
-                <td style="width: 20%">Month</td>
+                <td style="width: 25%">Month</td>
                 <td style="width: 2%">:</td>
                 <td style="font-weight: bold">{{ $billOfPayment->month}}</td>
             </tr>
@@ -146,27 +161,27 @@
             <tr>
                 <td style="width: 35%">Beneficiary Account Name</td>
                 <td style="width: 2%">:</td>
-                <td style="font-weight: bold">{{$company->bank_account_name}}</td>
+                <td style="font-weight: bold">{{$company->bank_account_name ?? '-'}}</td>
             </tr>
             <tr>
                 <td>Beneficiary Account Number USD</td>
                 <td>:</td>
-                <td style="font-weight: bold">{{$company->bank_account_number}}</td>
+                <td style="font-weight: bold">{{$company->bank_account_number ?? '-'}}</td>
             </tr>
             <tr>
                 <td>Beneficiary Bank Name</td>
                 <td>:</td>
-                <td style="font-weight: bold">{{$company->bank_name}}</td>
+                <td style="font-weight: bold">{{$company->bank_name ?? '-'}}</td>
             </tr>
             <tr>
                 <td>Beneficiary Bank Address</td>
                 <td>:</td>
-                <td style="font-weight: bold">{{$company->bank_address}}</td>
+                <td style="font-weight: bold">{{$company->bank_address ?? '-'}}</td>
             </tr>
             <tr>
                 <td>Swift Code</td>
                 <td>:</td>
-                <td style="font-weight: bold">{{$company->swift_code}}</td>
+                <td style="font-weight: bold">{{$company->swift_code ?? '-'}}</td>
             </tr>
         </table>
     </div>
@@ -191,12 +206,12 @@
     <footer class="footer">
         <table style="font-size: 10px; border-collapse: collapse; width: 100%;">
             <tr>
-                <td style="font-weight: bolder;">HEAD OFFICE</td>
+                <td style="font-weight: bolder; color:rgb(2, 107, 228);">HEAD OFFICE</td>
                 <td>:</td>
-                <td>{{ $company->address ?? '' }}</td>
+                <td>{{ $company->address ?? 'JL.POLINGGA NO.5 RT.02/RW.13 SABANDAR, KARANG TENGAH, CIANJUR, JAWA BARAT - INDONESIA' }}</td>
             </tr>
             <tr>
-                <td style="font-weight: bolder;">BRANCH OFFICE</td>
+                <td style="font-weight: bolder; color:rgb(2, 107, 228);">BRANCH OFFICE</td>
                 <td>:</td>
                 <td>DS.JIKEN SURUHAN NO.45RT02/RW04 JIKEN, BLORA, JAWA TENGAH</td>
             </tr>
@@ -226,5 +241,6 @@
             </tr>
         </table>        
     </footer>
+</div>
 </body>
 </html>
