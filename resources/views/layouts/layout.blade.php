@@ -566,7 +566,6 @@
                                     </li>
                                 </ul>
                             </li>
-                        @endif
                         @elseif(auth()->user()->role === 'finance')
                             <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
