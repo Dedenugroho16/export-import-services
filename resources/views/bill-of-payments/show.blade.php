@@ -5,7 +5,7 @@
     <div class="page-body">
         <div class="container-xl">
             <div class="mb-4 mt-4 d-flex justify-content-between">
-                <a href="{{ route('bill-of-payments.index') }}" class="btn btn-primary">
+                <a href="{{ route('bill-of-payment.index') }}" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
@@ -142,27 +142,27 @@
                                                 <tr>
                                                     <td style="width: 25%">Beneficiary Account Name</td>
                                                     <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->bank_account_name}}</td>
+                                                    <td style="font-weight: bold">{{$company->bank_account_name ?? '-'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Beneficiary Account Number USD</td>
                                                     <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->bank_account_number}}</td>
+                                                    <td style="font-weight: bold">{{$company->bank_account_number ?? '-'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Beneficiary Bank Name</td>
                                                     <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->bank_name}}</td>
+                                                    <td style="font-weight: bold">{{$company->bank_name ?? '-'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Beneficiary Bank Address</td>
                                                     <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->bank_address}}</td>
+                                                    <td style="font-weight: bold">{{$company->bank_address ?? '-'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Swift Code</td>
                                                     <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->swift_code}}</td>
+                                                    <td style="font-weight: bold">{{$company->swift_code ?? '-'}}</td>
                                                 </tr>
                                             </table>
                                         </div>

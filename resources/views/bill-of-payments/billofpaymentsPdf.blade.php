@@ -161,27 +161,27 @@
             <tr>
                 <td style="width: 35%">Beneficiary Account Name</td>
                 <td style="width: 2%">:</td>
-                <td style="font-weight: bold">{{$company->bank_account_name}}</td>
+                <td style="font-weight: bold">{{$company->bank_account_name ?? '-'}}</td>
             </tr>
             <tr>
                 <td>Beneficiary Account Number USD</td>
                 <td>:</td>
-                <td style="font-weight: bold">{{$company->bank_account_number}}</td>
+                <td style="font-weight: bold">{{$company->bank_account_number ?? '-'}}</td>
             </tr>
             <tr>
                 <td>Beneficiary Bank Name</td>
                 <td>:</td>
-                <td style="font-weight: bold">{{$company->bank_name}}</td>
+                <td style="font-weight: bold">{{$company->bank_name ?? '-'}}</td>
             </tr>
             <tr>
                 <td>Beneficiary Bank Address</td>
                 <td>:</td>
-                <td style="font-weight: bold">{{$company->bank_address}}</td>
+                <td style="font-weight: bold">{{$company->bank_address ?? '-'}}</td>
             </tr>
             <tr>
                 <td>Swift Code</td>
                 <td>:</td>
-                <td style="font-weight: bold">{{$company->swift_code}}</td>
+                <td style="font-weight: bold">{{$company->swift_code ?? '-'}}</td>
             </tr>
         </table>
     </div>
