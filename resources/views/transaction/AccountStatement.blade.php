@@ -172,34 +172,52 @@
                         width: '100%' // Membuat Select2 full size
                     });
 
+                    // $('#company_name').select2({
+                    //     placeholder: 'Select a company',
+                    //     allowClear: true,
+                    //     width: '100%',
+                    //     ajax: {
+                    //         url: "{{ route('clients.list') }}",
+                    //         dataType: 'json',
+                    //         delay: 250,
+                    //         data: function(params) {
+                    //             return {
+                    //                 search: params.term, // Istilah pencarian
+                    //                 page: params.page || 1 // Halaman yang diminta
+                    //             };
+                    //         },
+                    //         processResults: function(data) {
+                    //             return {
+                    //                 results: data.results.map(item => ({
+                    //                     id: item.id,
+                    //                     text: item.company_name
+                    //                 })),
+                    //                 pagination: {
+                    //                     more: data.pagination.more
+                    //                 }
+                    //             };
+                    //         },
+                    //         cache: true
+                    //     }
+                    // });
+
                     $('#company_name').select2({
-                        placeholder: 'Select a company',
-                        allowClear: true,
-                        width: '100%',
                         ajax: {
-                            url: "{{ route('clients.list') }}",
+                            url: "{{ route('clients.list') }}", // Endpoint untuk mengambil data
                             dataType: 'json',
-                            delay: 250,
-                            data: function(params) {
-                                return {
-                                    search: params.term, // Istilah pencarian
-                                    page: params.page || 1 // Halaman yang diminta
-                                };
-                            },
+                            delay: 250, // Delay untuk mengurangi beban server
                             processResults: function(data) {
                                 return {
-                                    results: data.results.map(item => ({
-                                        id: item.id,
-                                        text: item.company_name
-                                    })),
-                                    pagination: {
-                                        more: data.pagination.more
-                                    }
+                                    results: data.results // Ambil hasil dari response JSON
                                 };
-                            },
-                            cache: true
-                        }
+                            }
+                        },
+                        placeholder: 'Select a company',
+                        width: '100%',
+                        minimumInputLength: 1, // Mulai pencarian setelah 1 karakter
+                        allowClear: true // Opsi untuk menghapus pilihan
                     });
+
                 });
             </script>
         @endsection

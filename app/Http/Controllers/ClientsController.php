@@ -167,12 +167,19 @@ class ClientsController extends Controller
             $query->where('company_name', 'like', '%' . $search . '%');
         }
 
-        $clients = $query->select('id', 'company_name')
+        // Ambil data unik berdasarkan company_name
+        $clients = $query->select('company_name')
+            ->distinct()
             ->orderBy('company_name', 'asc')
-            ->paginate(10); // Untuk server-side pagination
+            ->paginate(10);
 
         return response()->json([
-            'results' => $clients->items(),
+            'results' => $clients->map(function ($client) {
+                return [
+                    'id' => $client->company_name, // Isi value dengan company_name
+                    'text' => $client->company_name // Teks yang ditampilkan
+                ];
+            }),
             'pagination' => ['more' => $clients->hasMorePages()]
         ]);
     }
