@@ -7,20 +7,30 @@
             <div
                 class="mb-4 mt-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
                 <!-- Filter by Stuffing Date -->
-                <form class="d-flex flex-column flex-md-row align-items-center mb-3 mb-md-0" method="GET" id="filterForm">
-                    <!-- Input Start Date -->
-                    <div class="input-group me-md-3 mb-2 mb-md-0" style="width: 250px;">
-                        <input type="number" class="form-control" id="start_date" name="start_date"
-                            value="{{ request('start_date') }}" min="1900" max="2099" placeholder="YYYY" required>
+                <form class="row align-items-center gy-2 gx-2 mb-3" method="GET" id="filterForm">
+                    <!-- Input Tahun -->
+                    <div class="col-auto">
+                        <label for="yearSelect" class="form-label mb-0" style="font-size: 0.9rem;">Pilih Tahun</label>
+                        <select name="year" id="yearSelect" class="form-select">
+                            <script>
+                                const yearSelect = $('#yearSelect');
+                                for (let year = new Date().getFullYear(); year <= new Date().getFullYear() + 99; year++) {
+                                    yearSelect.append(`<option value="${year}">${year}</option>`);
+                                }
+                            </script>
+                        </select>
                     </div>
 
-                    <!-- Select Company Name -->
-                    <div class="input-group me-md-3 mb-2 mb-md-0" style="width: 250px;">
-                        <select name="company_name" id="company_name" class="form-select"></select>
+                    <!-- Select Nama Perusahaan -->
+                    <div class="col-auto">
+                        <label for="company_name" class="form-label mb-0" style="font-size: 0.9rem;">Pilih
+                            Perusahaan</label>
+                        <select name="company_name" id="company_name" class="form-select">
+                        </select>
                     </div>
 
-                    <!-- Buttons -->
-                    <div class="d-flex">
+                    <!-- Tombol Filter dan Reset -->
+                    <div class="col-auto d-flex align-items-end">
                         <button type="button" id="filterBtn" class="btn btn-primary me-2">Filter</button>
                         <a href="{{ route('transactions.AccountStatement') }}" class="btn btn-secondary">Reset</a>
                     </div>
@@ -156,6 +166,12 @@
 
             <script>
                 $(document).ready(function() {
+                    $('#yearSelect').select2({
+                        placeholder: "Pilih Tahun",
+                        allowClear: true,
+                        width: '100%' // Membuat Select2 full size
+                    });
+
                     $('#company_name').select2({
                         placeholder: 'Select a company',
                         allowClear: true,
