@@ -156,4 +156,24 @@ class ClientsController extends Controller
 
         return view('clients.details', compact('client', 'hash'));
     }
+
+    public function getClients(Request $request)
+    {
+        $search = $request->input('search');
+
+        $query = Clients::query();
+
+        if (!empty($search)) {
+            $query->where('company_name', 'like', '%' . $search . '%');
+        }
+
+        $clients = $query->select('id', 'company_name')
+            ->orderBy('company_name', 'asc')
+            ->paginate(10); // Untuk server-side pagination
+
+        return response()->json([
+            'results' => $clients->items(),
+            'pagination' => ['more' => $clients->hasMorePages()]
+        ]);
+    }
 }

@@ -157,6 +157,9 @@ Route::get('/transactions/AccountStatement', [TransactionController::class, 'Acc
 Route::get('/transactions/rekap-pdf', [TransactionController::class, 'rekapPdf'])->name('transactions.rekapPdf');
 Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('transactions.downloadRekapPdf');
 
+// mencari company_name
+Route::get('/get-clients', [ClientsController::class, 'getClients'])->name('clients.list');
+
 // bill of payments
 Route::get('/bill-of-payment', [BillOfPaymentController::class, 'index'])->name('bill-of-payment.index');
 Route::get('/bill-of-payment/create', [BillOfPaymentController::class, 'create'])->name('bill-of-payment.create');

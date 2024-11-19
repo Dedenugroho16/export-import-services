@@ -287,37 +287,41 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
-                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}" 
-                                href="#" 
-                                id="navbarDropdown" 
-                                role="button" 
-                                data-bs-toggle="dropdown" 
-                                aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
+                            <li
+                                class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}"
+                                    href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                            <circle cx="6" cy="19" r="2"/>
-                                            <circle cx="17" cy="19" r="2"/>
-                                            <path d="M17 17h-11v-14h-2"/>
-                                            <path d="M6 5l14 1l-1 7h-13"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <circle cx="6" cy="19" r="2" />
+                                            <circle cx="17" cy="19" r="2" />
+                                            <path d="M17 17h-11v-14h-2" />
+                                            <path d="M6 5l14 1l-1 7h-13" />
                                         </svg>
                                     </span>
                                     <span class="nav-link-title">Transaksi</span>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}"
+                                            href="{{ route('proforma.index') }}">
                                             Proforma Invoices
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
+                                            href="{{ url('/incomplete-invoice') }}">
                                             Unconfirmed Invoices
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
+                                            href="{{ url('/transaction') }}">
                                             Final Invoice
                                         </a>
                                     </li>
@@ -386,8 +390,9 @@
                                 <a class="nav-link" href="{{ route('clients.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
                                             <circle cx="12" cy="12" r="3" />
                                             <path d="M12 3v6" />
                                             <path d="M12 15v6" />
@@ -406,8 +411,9 @@
                                 <a class="nav-link" href="{{ url('/products') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
                                             <rect x="3" y="4" width="18" height="16" rx="2" />
                                             <path d="M3 6h18" />
                                             <path d="M7 10h10" />
@@ -451,37 +457,41 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
-                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}" 
-                                href="#" 
-                                id="navbarDropdown" 
-                                role="button" 
-                                data-bs-toggle="dropdown" 
-                                aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
+                            <li
+                                class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}"
+                                    href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                            <circle cx="6" cy="19" r="2"/>
-                                            <circle cx="17" cy="19" r="2"/>
-                                            <path d="M17 17h-11v-14h-2"/>
-                                            <path d="M6 5l14 1l-1 7h-13"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <circle cx="6" cy="19" r="2" />
+                                            <circle cx="17" cy="19" r="2" />
+                                            <path d="M17 17h-11v-14h-2" />
+                                            <path d="M6 5l14 1l-1 7h-13" />
                                         </svg>
                                     </span>
                                     <span class="nav-link-title">Transaksi</span>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}"
+                                            href="{{ route('proforma.index') }}">
                                             Proforma Invoices
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
+                                            href="{{ url('/incomplete-invoice') }}">
                                             Unconfirmed Invoices
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
+                                            href="{{ url('/transaction') }}">
                                             Final Invoice
                                         </a>
                                     </li>
@@ -530,43 +540,47 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
-                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}" 
-                                href="#" 
-                                id="navbarDropdown" 
-                                role="button" 
-                                data-bs-toggle="dropdown" 
-                                aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
+                            <li
+                                class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}"
+                                    href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                            <circle cx="6" cy="19" r="2"/>
-                                            <circle cx="17" cy="19" r="2"/>
-                                            <path d="M17 17h-11v-14h-2"/>
-                                            <path d="M6 5l14 1l-1 7h-13"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <circle cx="6" cy="19" r="2" />
+                                            <circle cx="17" cy="19" r="2" />
+                                            <path d="M17 17h-11v-14h-2" />
+                                            <path d="M6 5l14 1l-1 7h-13" />
                                         </svg>
                                     </span>
                                     <span class="nav-link-title">Transaksi</span>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}"
+                                            href="{{ route('proforma.index') }}">
                                             Proforma Invoices
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
+                                            href="{{ url('/incomplete-invoice') }}">
                                             Unconfirmed Invoices
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
+                                            href="{{ url('/transaction') }}">
                                             Final Invoice
                                         </a>
                                     </li>
                                 </ul>
                             </li>
-                        {{-- @endif --}}
+                            {{-- @endif --}}
                         @elseif(auth()->user()->role === 'finance')
                             <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
