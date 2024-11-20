@@ -32,7 +32,7 @@
                     <!-- Tombol Filter dan Reset -->
                     <div class="col-auto d-flex align-items-end">
                         <button type="button" id="filterBtn" class="btn btn-primary me-2">Filter</button>
-                        <a href="{{ route('transactions.AccountStatement') }}" class="btn btn-secondary">Reset</a>
+                        <a id="resetBtn" class="btn btn-secondary">Reset</a>
                     </div>
                 </form>
 
@@ -165,16 +165,6 @@
                         allowClear: true
                     });
 
-
-                    // $('#company_name').on('select2:select', function(e) {
-                    //     let companyName = e.params.data.text; // Ambil nama perusahaan dari Select2
-                    //     let year = $('#yearSelect').val(); // Ambil tahun dari input
-
-                    //     // Update teks pada elemen
-                    //     $('#companyStatement').html(
-                    //         `PT PSN STATEMENT - ${companyName}<br>YEAR OF ${year}`);
-                    // });
-
                     $('#company_name').on('select2:select', function(e) {
                         let companyName = e.params.data.text; // Ambil nama perusahaan dari Select2
                         let year = $('#yearSelect').val(); // Ambil tahun dari input
@@ -201,6 +191,66 @@
                         // Update teks pada elemen
                         $('#companyStatement').html(
                             `PT PSN STATEMENT - ${companyName}<br>YEAR OF ${year}`);
+                    });
+
+                    // Inisialisasi DataTable
+                    let table = $('#invoicesTable').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: '{{ url('/transactions/AccountStatement/invoices-data') }}',
+                            data: function(d) {
+                                d.year = $('#yearSelect').val();
+                                d.company_name = $('#company_name').val();
+                            }
+                        },
+                        columns: [{
+                                data: 'date',
+                                className: 'text-center'
+                            },
+                            {
+                                data: 'number',
+                                className: 'text-center'
+                            },
+                            {
+                                data: 'total',
+                                className: 'text-center'
+                            },
+                            {
+                                data: 'balance',
+                                className: 'text-center'
+                            }
+                        ],
+                        order: [
+                            [0, 'asc']
+                        ], // Sort by DATE ascending
+                        pageLength: 10
+                    });
+
+                    // Filter button
+                    $('#filterBtn').click(function() {
+                        let year = $('#yearSelect').val();
+                        let company_name = $('#company_name').val();
+
+                        if (!year || !company_name) {
+                            $('#error-message').show();
+
+                            setTimeout(function() {
+                                $('#error-message').hide();
+                            }, 3000);
+
+                            return;
+                        }
+
+                        $('#error-message').hide();
+                        table.ajax.reload(); // Reload data sesuai filter
+                    });
+
+                    // Reset button
+                    $('#resetBtn').click(function() {
+                        $('#yearSelect').val(null).trigger('change'); // Reset Select2
+                        $('#company_name').val(null).trigger('change'); // Reset Select2
+                        table.ajax.reload(); // Reload data tanpa filter
                     });
                 });
             </script>
