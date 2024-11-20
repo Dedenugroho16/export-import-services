@@ -227,6 +227,40 @@
                         pageLength: 10
                     });
 
+                    let tableP = $('#paymentsTable').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: '{{ url('/transactions/AccountStatement/payments-data') }}',
+                            data: function(d) {
+                                d.year = $('#yearSelect').val(); // Ambil nilai tahun dari input
+                                d.company_name = $('#company_name')
+                            .val(); // Ambil nilai nama perusahaan dari input
+                            }
+                        },
+                        columns: [{
+                                data: 'created_at',
+                                className: 'text-center',
+                                title: 'DATE'
+                            },
+                            {
+                                data: 'payment_number',
+                                className: 'text-center',
+                                title: 'DESCRIPTION'
+                            },
+                            {
+                                data: 'paid',
+                                className: 'text-center',
+                                title: 'PAYMENT USD'
+                            },
+                            {
+                                data: 'balance',
+                                className: 'text-center',
+                                title: 'BALANCE'
+                            }
+                        ]
+                    });
+
                     // Filter button
                     $('#filterBtn').click(function() {
                         let year = $('#yearSelect').val();
@@ -244,6 +278,7 @@
 
                         $('#error-message').hide();
                         table.ajax.reload(); // Reload data sesuai filter
+                        tableP.ajax.reload(); // Reload data sesuai filter
                     });
 
                     // Reset button
@@ -251,6 +286,7 @@
                         $('#yearSelect').val(null).trigger('change'); // Reset Select2
                         $('#company_name').val(null).trigger('change'); // Reset Select2
                         table.ajax.reload(); // Reload data tanpa filter
+                        tableP.ajax.reload(); // Reload data tanpa filter
                     });
                 });
             </script>

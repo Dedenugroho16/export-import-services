@@ -14,6 +14,7 @@ use App\Models\Transaction;
 use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
+use App\Models\BillOfPayment;
 use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -582,6 +583,45 @@ class TransactionController extends Controller
                 })
                 ->editColumn('date', function ($transaction) {
                     return date('d-m-Y', strtotime($transaction->date));
+                })
+                ->make(true);
+        }
+    }
+
+    public function getAccountStatementPaymentsData(Request $request)
+    {
+        if ($request->ajax()) {
+            $year = $request->input('year');
+            $company_name = $request->input('company_name');
+
+            // Ambil data client berdasarkan nama perusahaan
+            $clientIds = Client::where('company_name', $company_name)->pluck('id');
+
+            // Query pembayaran dengan filter tahun dan id_client yang sesuai
+            $payments = BillOfPayment::query()
+                ->with([
+                    'transactions' => function ($query) {
+                        $query->select('id_bill', 'paid'); // Pastikan kolom yang dipilih sesuai dengan relasi
+                    }
+                ])
+                ->select(['id', 'created_at', 'payment_number'])
+                ->whereIn('id_client', $clientIds)
+                ->when($year, function ($query, $year) {
+                    return $query->whereYear('created_at', $year);
+                });
+
+            return DataTables::of($payments)
+                ->addColumn('paid', function ($payment) {
+                    return $payment->transactions->sum('paid') ?: 0; // Nilai default 0
+                })
+                ->addColumn('balance', function ($payment) {
+                    static $cumulativeBalance = 0;
+                    $paymentTotal = $payment->transactions->sum('paid') ?: 0; // Nilai default 0
+                    $cumulativeBalance += $paymentTotal;
+                    return $cumulativeBalance;
+                })
+                ->editColumn('created_at', function ($payment) {
+                    return date('d-m-Y', strtotime($payment->created_at));
                 })
                 ->make(true);
         }
