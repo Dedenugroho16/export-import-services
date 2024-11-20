@@ -23,44 +23,64 @@ class BillOfPaymentController extends Controller
     }
 
     public function getBillOfPayment()
-    {
-        $billOfPayments = BillOfPayment::with(['client', 'transactions'])
-            ->select(['id', 'month', 'no_inv', 'id_client', 'status']);
+{
+    $billOfPayments = BillOfPayment::with(['client', 'transactions'])
+        ->select(['id', 'month', 'no_inv', 'id_client', 'status']);
 
-        return DataTables::of($billOfPayments)
-            ->addIndexColumn() // Tambahkan baris ini
-            ->addColumn('client_name', function ($row) {
-                return $row->client ? $row->client->name : '-';
-            })
-            ->addColumn('company_name', function ($row) {
-                return $row->client ? $row->client->company_name : '-';
-            })
-            ->addColumn('aksi', function ($row) {
-                $hashId = IdHashHelper::encode($row->id);
-                return '
-                    <div class="dropdown">
-                        <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
-                            Aksi
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
-                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
-                                Payment Details
-                            </a>
-                            <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
-                                Tampilkan
-                            </a>
-                            <a href="' . route('bill-of-payment.edit', $hashId) . '" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
-                                Edit
-                            </a>
-                        </div>
-                    </div>';
-            })
-            ->rawColumns(['aksi'])
-            ->make(true);
-    }
+    return DataTables::of($billOfPayments)
+        ->addIndexColumn()
+        ->addColumn('client_name', function ($row) {
+            return $row->client ? $row->client->name : '-';
+        })
+        ->addColumn('company_name', function ($row) {
+            return $row->client ? $row->client->company_name : '-';
+        })
+        ->addColumn('status', function ($row) {
+            // Cek setiap transaksi yang terkait dengan BillOfPayment ini
+            $isPaid = true;
+
+            foreach ($row->transactions as $transaction) {
+                if ($transaction->paid < $transaction->total) {
+                    $isPaid = false;
+                    break; // Jika ada transaksi yang belum lunas, stop pengecekan
+                }
+            }
+
+            if ($isPaid) {
+                $row->status = 1;
+                $row->save();
+                return '<span class="badge bg-success text-white">Lunas</span>';
+            }
+                $row->status = 0;
+                $row->save();
+                return '<span class="badge bg-danger text-white">Belum Lunas</span>';
+        })
+        ->addColumn('aksi', function ($row) {
+            $hashId = IdHashHelper::encode($row->id);
+            return '
+                <div class="dropdown">
+                    <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
+                        Aksi
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
+                            Payment Details
+                        </a>
+                        <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                            Tampilkan
+                        </a>
+                        <a href="' . route('bill-of-payment.edit', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                            Edit
+                        </a>
+                    </div>
+                </div>';
+        })
+        ->rawColumns(['status', 'aksi']) // Pastikan rawColumns ini ada untuk merender HTML
+        ->make(true);
+}
 
     public function create()
     {
