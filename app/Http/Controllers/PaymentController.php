@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\DetailTransaction;
@@ -34,6 +35,31 @@ class PaymentController extends Controller
         $transactions = $request->input('transactions');
 
         foreach ($transactions as $data) {
+            $transaction = Transaction::find($data['id']);
+
+            if ($transaction) {
+                $transaction->id_bill = $data['id_bill'];
+                $transaction->save();
+            }
+
+            // Validasi setiap data transaksi
+            $validator = Validator::make($data, [
+                'id' => 'required|integer',
+                'id_bill' => 'required|integer',
+                'paid' => 'required|numeric|gte:0',
+                'description' => 'required|string',
+            ]);
+
+            // Jika validasi gagal, hentikan proses dan kembalikan respons error
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validasi data payment gagal',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // Jika validasi berhasil, masukkan data ke database
             Payment::create([
                 'id_transaction' => $data['id'],
                 'id_bill' => $data['id_bill'],
@@ -44,7 +70,7 @@ class PaymentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Bil of Payment berhasil dibuat'
+            'message' => 'Bill of Payment berhasil dibuat'
         ]);
     }
 
