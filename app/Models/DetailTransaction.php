@@ -34,4 +34,9 @@ class DetailTransaction extends Model
     {
         return $this->belongsTo(DetailProduct::class, 'id_detail_product');
     }
+    
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'id_detail_transaction');
+    }
 }
