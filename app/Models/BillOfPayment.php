@@ -37,6 +37,6 @@ class BillOfPayment extends Model
 
     public function payments()
     {
-        return $this->hasMany(Payment::class, 'id_bill');
+        return $this->hasMany(Payment::class, 'id_bill', 'id');
     }
 }
