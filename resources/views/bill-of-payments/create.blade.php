@@ -122,6 +122,7 @@
                                                     <th class="text-center">DESCRIPTION</th>
                                                     <th class="text-center">AMOUNT</th>
                                                     <th class="text-center">PAID</th>
+                                                    <th class="text-center">PAY</th>
                                                     <th class="text-center">BILL</th>
                                                     <th class="text-center">AKSI</th>
                                                 </tr>
@@ -130,7 +131,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <td class="text-end" colspan="5">
+                                                    <td class="text-end" colspan="6">
                                                         <label for="total" class="mr-2">AMOUNT OF BILL:</label>
                                                     </td>
                                                     <td class="text-center" style="width: 120px;">
@@ -227,8 +228,7 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payment.index') }}"
-                                    class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('bill-of-payment.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
                             </div>
                         </div>
@@ -287,6 +287,7 @@
                                             <th class="text-center">No</th>
                                             <th class="text-center">PI. NUMBER</th>
                                             <th class="text-center">CODE</th>
+                                            <th class="text-center">PAID</th>
                                             <th class="text-center">AMOUNT</th>
                                             <th class="text-center">AKSI</th>
                                         </tr>
@@ -424,6 +425,11 @@
                         className: 'text-center'
                     },
                     {
+                        data: 'total_paid',
+                        name: 'total_paid',
+                        className: 'text-center'
+                    },
+                    {
                         data: 'amount',
                         name: 'amount',
                         className: 'text-center'
@@ -434,14 +440,14 @@
                         searchable: false,
                         className: 'text-center',
                         render: function(data, type, row) {
-                            // Simpan ID transaksi di data-id tanpa menampilkan kolom ID di tabel
                             return `<button class="btn btn-primary btn-sm pilih-btn" 
-                        data-id="${row.id}" 
-                        data-number="${row.number}" 
-                        data-code="${row.code}" 
-                        data-amount="${row.amount}">
-                        Pilih
-                        </button>`;
+            data-id="${row.id}" 
+            data-number="${row.number}"
+            data-paid="${row.total_paid}" 
+            data-code="${row.code}" 
+            data-amount="${row.amount}">
+            Pilih
+            </button>`;
                         }
                     }
                 ],
@@ -488,20 +494,17 @@
             });
 
             function totalBill() {
-                var totalPaid = 0;
                 var totalBill = 0;
 
                 // Iterasi setiap baris untuk mendapatkan nilai total
                 $('#billOfPaymentTable tbody tr').each(function() {
-                    var paid = parseFloat($(this).find('.paid-input').val().replace(/,/g, '')) || 0;
-                    var bill = parseFloat($(this).find('.amount').text().replace(/,/g, '')) || 0;
+                    var bill = parseFloat($(this).find('.pi-bill').text().replace(/,/g, '')) || 0;
 
-                    totalPaid += paid;
                     totalBill += bill;
                 });
 
                 // Hitung grandTotal
-                var grandTotal = totalBill - totalPaid;
+                var grandTotal = totalBill;
 
                 var formattedGrandTotal = grandTotal.toLocaleString('en-US', {
                     minimumFractionDigits: 2
@@ -536,6 +539,7 @@
 
                 // Tambahkan baris baru ke tabel #billOfPaymentTable
                 var formattedAmount = parseFloat(data.amount).toLocaleString('en-US');
+                var formattedBill = parseFloat(data.amount - data.paid).toLocaleString('en-US');
                 var newRow = `
                                 <tr>
                                     <td class="text-center" style="display: none;">
@@ -552,11 +556,15 @@
                                     <td class="text-center amount">${formattedAmount}</td>
                                     <td class="text-center">
                                         <!-- Display-only input for formatting -->
+                                        <input type="text" class="form-control old-paid" value="${data.paid}" style="width: 120px;" readonly>
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- Display-only input for formatting -->
                                         <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
                                         <!-- Hidden input for actual value submission -->
                                         <input type="hidden" name="transactions[${data.id}][paid]" class="form-control paid">
                                     </td>
-                                    <td class="text-center pi-bill">${formattedAmount}</td>
+                                    <td class="text-center pi-bill">${formattedBill}</td>
                                     <td class="text-center">
                                         <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
                                     </td>
@@ -574,21 +582,28 @@
                     // Temukan baris tempat input ini berada
                     var row = $(this).closest('tr');
 
-                    // Ambil nilai dari input .paid-input dan hilangkan koma jika ada
+                    // Ambil nilai input .paid-input dan hilangkan koma jika ada
                     var paidInput = parseFloat(row.find('.paid-input').val().replace(/,/g, '')) ||
-                        0;
-                    var piBill = parseFloat(row.find('.amount').text().replace(/,/g, ''));
+                    0;
 
-                    var amountPiBill = piBill - paidInput;
+                    // Ambil nilai amount dan paid dari data (dalam hal ini, menggunakan data yang telah dikirimkan)
+                    var amount = parseFloat(row.find('.amount').text().replace(/,/g,
+                    '')); // nilai amount
+                    var paid = parseFloat(row.find('.old-paid').val().replace(/,/g,
+                    '')); // nilai paid sebelumnya
 
-                    // Format nilai paidInput ke format ribuan dengan dua desimal
+                    // Hitung sisa pi-bill setelah dikurangi nilai paid dan input terbaru
+                    var remainingPiBill = amount - (paid + paidInput);
+
+                    // Format nilai yang diformat ke format ribuan dengan dua desimal
                     var formattedPaidInput = paidInput.toLocaleString('en-US');
-                    var formattedPiBill = amountPiBill.toLocaleString('en-US');
+                    var formattedRemainingPiBill = remainingPiBill.toLocaleString('en-US');
 
                     // Update nilai yang diformat hanya di input .paid-input pada baris ini
-                    row.find('.pi-bill').text(formattedPiBill);
-                    row.find('.paid-input').val(formattedPaidInput);
-                    row.find('.paid').val(paidInput);
+                    row.find('.pi-bill').text(formattedRemainingPiBill); // Update pi-bill
+                    row.find('.paid-input').val(formattedPaidInput); // Update input paid
+                    row.find('.paid').val(paid +
+                    paidInput); // Update hidden input paid dengan nilai baru
 
                     // Jalankan fungsi totalBill untuk memperbarui total keseluruhan
                     totalBill();

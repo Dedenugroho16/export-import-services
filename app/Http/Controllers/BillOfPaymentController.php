@@ -102,14 +102,20 @@ class BillOfPaymentController extends Controller
     public function getProformaInvoices(Request $request)
     {
         if (!$request->has('id_client') || empty($request->id_client)) {
-            return datatables()->of(collect([]))->make(true); // Kembalikan data kosong jika `id_client` tidak ada
+            return datatables()->of(collect([]))->make(true); // Data kosong jika `id_client` tidak ada
         }
 
         $invoices = Transaction::where('approved', 1)
-            ->where('id_client', $request->id_client);
+            ->where('id_client', $request->id_client)
+            ->whereRaw('total <> (SELECT COALESCE(SUM(paid), 0) FROM payments WHERE payments.id_transaction = transactions.id)')
+            ->with('payments') // Pastikan relasi payments dimuat
+            ->get();
 
         return datatables()->of($invoices)
             ->addIndexColumn()
+            ->addColumn('total_paid', function ($row) {
+                return $row->payments->sum('paid'); // Hitung total dari relasi
+            })
             ->addColumn('amount', function ($row) {
                 return $row->total;
             })
@@ -180,7 +186,7 @@ class BillOfPaymentController extends Controller
         $hashedId = IdHashHelper::encode($id);
 
         return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords', 'hashedId'));
-    } 
+    }
 
     public function edit($hash)
     {
@@ -260,8 +266,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalBill = 0;
 
@@ -294,8 +300,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalBill = 0;
 
@@ -328,8 +334,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalPaid = 0;
 
@@ -362,8 +368,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalPaid = 0;
 
