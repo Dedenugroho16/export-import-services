@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DetailTransaction;
+use App\Models\Payment;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\DetailTransaction;
 
 class PaymentController extends Controller
 {
@@ -32,17 +34,12 @@ class PaymentController extends Controller
         $transactions = $request->input('transactions');
 
         foreach ($transactions as $data) {
-            // Ambil id dari setiap data
-            $transaction = DetailTransaction::find($data['id']);
-
-            if ($transaction) {
-                // Update data transaksi
-                $transaction->description = $data['description'];
-                $transaction->paid = $data['paid'];
-                $transaction->id_bill = $data['id_bill'];
-                // Tambahkan field lain sesuai kebutuhan
-                $transaction->save();
-            }
+            Payment::create([
+                'id_transaction' => $data['id'],
+                'id_bill' => $data['id_bill'],
+                'paid' => $data['paid'],
+                'description' => $data['description'],
+            ]);
         }
 
         return response()->json([

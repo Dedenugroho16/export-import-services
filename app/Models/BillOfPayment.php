@@ -15,7 +15,6 @@ class BillOfPayment extends Model
         'payment_number',
         'id_client',
         'total',
-        'status',
         'created_by',
         'updated_by',
     ];

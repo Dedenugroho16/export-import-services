@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string(column: 'payment_number');
             $table->unsignedBigInteger('id_client');
             $table->decimal('total', 10, 2);
-            $table->boolean('status')->default(false);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
