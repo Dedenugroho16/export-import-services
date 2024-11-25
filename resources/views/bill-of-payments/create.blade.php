@@ -98,7 +98,7 @@
                                 </div>
                             </div>
 
-                            <form id="formTransaction" action="{{ route('proforma-bop.update') }}">
+                            <form id="formTransaction" action="{{ route('payment.store') }}">
                                 @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">

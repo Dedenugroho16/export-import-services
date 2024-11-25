@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetailTransaction;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -27,7 +28,27 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Ambil data transactions dari request
+        $transactions = $request->input('transactions');
+
+        foreach ($transactions as $data) {
+            // Ambil id dari setiap data
+            $transaction = DetailTransaction::find($data['id']);
+
+            if ($transaction) {
+                // Update data transaksi
+                $transaction->description = $data['description'];
+                $transaction->paid = $data['paid'];
+                $transaction->id_bill = $data['id_bill'];
+                // Tambahkan field lain sesuai kebutuhan
+                $transaction->save();
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Bil of Payment berhasil dibuat'
+        ]);
     }
 
     /**

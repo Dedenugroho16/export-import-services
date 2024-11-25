@@ -147,31 +147,6 @@ class BillOfPaymentController extends Controller
         ]);
     }
 
-    public function PIUpdate(Request $request)
-    {
-        // Ambil data transactions dari request
-        $transactions = $request->input('transactions');
-
-        foreach ($transactions as $data) {
-            // Ambil id dari setiap data
-            $transaction = Transaction::find($data['id']);
-
-            if ($transaction) {
-                // Update data transaksi
-                $transaction->description = $data['description'];
-                $transaction->paid = $data['paid'];
-                $transaction->id_bill = $data['id_bill'];
-                // Tambahkan field lain sesuai kebutuhan
-                $transaction->save();
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Bil of Payment berhasil dibuat'
-        ]);
-    }
-
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);

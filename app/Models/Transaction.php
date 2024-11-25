@@ -42,7 +42,7 @@ class Transaction extends Model
         'id_bill',
         'paid',
         'description'
-    ];    
+    ];
 
     public function consignee()
     {
@@ -105,4 +105,8 @@ class Transaction extends Model
         return $this->belongsTo(BillOfPayment::class, 'id_bill', 'id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'id_transaction', 'id');
+    }
 }

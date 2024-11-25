@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -174,4 +175,4 @@ Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class
 // ! form
 Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');
 // Route untuk menangani form submission
-Route::post('/proforma-bop/update', [BillOfPaymentController::class, 'PIUpdate'])->name('proforma-bop.update');
+Route::post('/payment/store', [PaymentController::class, 'store'])->name('payment.store');
