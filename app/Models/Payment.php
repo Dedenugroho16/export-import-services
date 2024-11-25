@@ -23,6 +23,6 @@ class Payment extends Model
     
     public function detailTransaction()
     {
-        return $this->belongsTo(DetailTransaction::class, foreignKey: 'id_detail_transaction');
+        return $this->belongsTo(DetailTransaction::class,  'id_detail_transaction', 'id');
     }
 }
