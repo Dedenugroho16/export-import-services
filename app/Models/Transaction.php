@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\DescBill;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaction extends Model
 {
@@ -42,7 +43,7 @@ class Transaction extends Model
         'id_bill',
         'paid',
         'description'
-    ];    
+    ];
 
     public function consignee()
     {
@@ -100,9 +101,13 @@ class Transaction extends Model
         return $this->load(['createdBy', 'confirmedBy', 'editedBy']);
     }
 
-    public function billOfPayment()
+    public function descBills()
     {
-        return $this->belongsTo(BillOfPayment::class, 'id_bill', 'id');
+        return $this->hasMany(DescBill::class, 'id_transaction', 'id');
     }
-
+    
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'id_transaction', 'id');
+    }
 }
