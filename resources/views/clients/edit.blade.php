@@ -29,10 +29,6 @@
                                 <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $client->name) }}" required>
                             </div>
                             <div class="mb-3">
-                                <label for="company_name" class="form-label">Nama Perusahaan</label>
-                                <input type="text" id="company_name" name="company_name" class="form-control" value="{{ old('company_name', $client->company_name) }}" required>
-                            </div>
-                            <div class="mb-3">
                                 <label for="address" class="form-label">Alamat</label>
                                 <textarea id="address" name="address" class="form-control" required>{{ old('address', $client->address) }}</textarea>
                             </div>

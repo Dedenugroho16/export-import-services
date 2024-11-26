@@ -18,6 +18,7 @@ use App\Http\Controllers\BillOfPaymentController;
 use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\DetailTransactionController;
+use App\Http\Controllers\ClientCompanyController;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
@@ -175,3 +176,7 @@ Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class
 Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');
 // Route untuk menangani form submission
 Route::post('/proforma-bop/update', [BillOfPaymentController::class, 'PIUpdate'])->name('proforma-bop.update');
+
+// Client Company Route
+Route::resource('client-companies', ClientCompanyController::class);
+Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
