@@ -197,7 +197,7 @@ class BillOfPaymentController extends Controller
                     'payments' => function ($query) {
                         $query->select(
                             'id_transaction',
-                            DB::raw('SUM(paid) as total_paid')
+                            DB::raw('SUM(transfered) as total_paid')
                         )->groupBy('id_transaction'); // Tambahkan GROUP BY
                     }
                 ])

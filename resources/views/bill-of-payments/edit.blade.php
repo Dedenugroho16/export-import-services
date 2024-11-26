@@ -82,8 +82,9 @@
                                 </div>
                             </div>
 
-                            <form id="formTransaction" action="">
+                            <form id="formTransaction" action="{{ route('desc-bills.update') }}">
                                 @csrf
+                                @method('PUT')
                                 <div class="row mt-4">
                                     <div class="col-md-12">
                                         <div class="btn-group mb-1">
@@ -226,6 +227,12 @@
                             response.forEach(function(data) {
                                 var newRow = `
                                                 <tr>
+                                                    <td class="text-center" style="display: none;">
+                                                        <input class="id-proforma" type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
+                                                    </td>
+                                                    <td class="text-center" style="display: none;">
+                                                        <input type="hidden" id="id_bill" name="transactions[${data.id}][id_bill]">
+                                                    </td>
                                                     <td class="text-center">${data.number}</td>
                                                     <td class="text-center">${data.code}</td>
                                                     <td class="text-center">
@@ -235,7 +242,10 @@
                                                             placeholder="Enter description">
                                                     </td>
                                                     <td class="text-center amount">${data.total?.toLocaleString('en-US') || '0'}</td>
-                                                    <td class="text-center old-paid">${data.paid?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center" style="width:150px;">
+                                                        <input type="text" class="form-control" value="${data.paid?.toLocaleString('en-US') || '0'}" readonly>
+                                                        <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
+                                                    </td>
                                                     <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center">
                                                         <button class="btn btn-danger btn-sm delete-btn">Hapus</button>

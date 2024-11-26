@@ -176,5 +176,6 @@ Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class
 // ! form
 Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');
 Route::post('/desc-bills/store', [DescBillController::class, 'store'])->name('desc-bills.store');
+Route::put('/desc-bills/update', [DescBillController::class, 'update'])->name('desc-bills.update');
 // Route untuk menangani form submission
 Route::post('/payment/store', [PaymentController::class, 'store'])->name('payment.store');
