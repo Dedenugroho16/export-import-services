@@ -188,7 +188,6 @@
                     url: `/get-transactions/${idBillOfPayment}`,
                     method: 'GET',
                     success: function(response) {
-                        console.log(response);
                         // Kosongkan tbody untuk data yang baru di-load
                         $('#paymentDetailTable tbody').empty();
 
