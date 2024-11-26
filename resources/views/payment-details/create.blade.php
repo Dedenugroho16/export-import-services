@@ -429,7 +429,7 @@
                                                 .message, // Menampilkan pesan dari server
                                         }).then(function() {
                                             window.location.href =
-                                                '{{ route('bill-of-payment.index') }}'; // Redirect ke halaman yang diinginkan
+                                                '{{ route('bill-of-payments.details', $billOfPayment->id) }}'; // Redirect ke halaman yang diinginkan
                                         });
                                     } else {
                                         Swal.fire({
