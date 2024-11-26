@@ -225,6 +225,7 @@
 
                         if (response.length > 0) {
                             response.forEach(function(data) {
+                                let total = Number(data.total);
                                 var newRow = `
                                                 <tr>
                                                     <td class="text-center" style="display: none;">
@@ -241,7 +242,7 @@
                                                             value="${data.description || ''}" 
                                                             placeholder="Enter description">
                                                     </td>
-                                                    <td class="text-center amount">${data.total?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center amount">${total?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center" style="width:150px;">
                                                         <input type="text" class="form-control" value="${data.paid?.toLocaleString('en-US') || '0'}" readonly>
                                                         <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">

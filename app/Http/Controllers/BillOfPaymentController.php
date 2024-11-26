@@ -156,22 +156,11 @@ class BillOfPaymentController extends Controller
         return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
     }
 
-    public function paymentDetails($hash)
+    public function details(Request $request, $hash)
     {
-        $id = IdHashHelper::decode($hash);
-        $company = Company::first();
-        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($id);
-        $totalPaid = 0;
-
-        foreach ($billOfPayment->transactions as $transaction) {
-            $transaction->formatted_date = \Carbon\Carbon::parse($transaction->date)->format('M d, Y');
-            $totalPaid += $transaction->paid;
-        }
-
-        $totalInWords = NumberToWords::convert($totalPaid);
-        $hashedId = IdHashHelper::encode($id);
-
-        return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords', 'hashedId'));
+        $billId = IdHashHelper::decode($hash);
+        $billOfPayment = BillOfPayment::with('client')->findOrFail($billId);
+        return view('bill-of-payments.details', compact('billOfPayment'));
     }
 
     public function edit($hash)
@@ -192,13 +181,7 @@ class BillOfPaymentController extends Controller
             })
                 ->with([
                     'descBills' => function ($query) {
-                        $query->select('id_transaction', 'description');
-                    },
-                    'payments' => function ($query) {
-                        $query->select(
-                            'id_transaction',
-                            DB::raw('SUM(transfered) as total_paid')
-                        )->groupBy('id_transaction'); // Tambahkan GROUP BY
+                        $query->select('id_transaction', 'description', 'paid');
                     }
                 ])
                 ->select(
@@ -212,7 +195,7 @@ class BillOfPaymentController extends Controller
             // Gabungkan description dari desc_bills dan total_paid dari payments
             $transactions = $transactions->map(function ($transaction) {
                 $transaction->description = $transaction->descBills->pluck('description')->implode(', ');
-                $transaction->paid = $transaction->payments->sum('total_paid') ?: 0;
+                $transaction->paid = $transaction->descBills->pluck('paid')->implode(', ');
                 return $transaction;
             });
 

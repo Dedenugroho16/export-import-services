@@ -167,7 +167,7 @@ Route::get('/get-proforma-invoices', [BillOfPaymentController::class, 'getProfor
 Route::get('/bill-of-payment/data', [BillOfPaymentController::class, 'getBillOfPayment'])->name('bill-of-payment.data');
 Route::resource('bill-of-payment', BillOfPaymentController::class);
 Route::get('/get-transactions/{idBill}', [BillOfPaymentController::class, 'getTransactions'])->name('get-transactions');
-Route::get('/bill-of-payments/{hash}/details', [BillOfPaymentController::class, 'paymentDetails'])->name('bill-of-payments.details');
+Route::get('/bill-of-payments/details/{hash}', [BillOfPaymentController::class, 'details'])->name('bill-of-payments.details');
 Route::get('bill-of-payments/{hashId}/export-pdf', [BillOfPaymentController::class, 'bopExportPdf'])->name('billofpayments.exportPdf');
 Route::get('bill-of-payments/{hashId}/download-pdf', [BillOfPaymentController::class, 'bopDownloadPdf'])->name('billofpayments.downloadPdf');
 Route::get('/payment-details/export/{hashId}', [BillOfPaymentController::class, 'paymentDetailstExport'])->name('payment-details.export');
