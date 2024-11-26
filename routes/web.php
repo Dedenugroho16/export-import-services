@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DescBillController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -174,5 +175,6 @@ Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class
 
 // ! form
 Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');
+Route::post('/desc-bills/store', [DescBillController::class, 'store'])->name('desc-bills.store');
 // Route untuk menangani form submission
 Route::post('/payment/store', [PaymentController::class, 'store'])->name('payment.store');

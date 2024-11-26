@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\DescBill;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class BillOfPayment extends Model
 {
@@ -12,9 +13,9 @@ class BillOfPayment extends Model
     protected $fillable = [
         'month',
         'no_inv',
-        'payment_number',
         'id_client',
         'total',
+        'status',
         'created_by',
         'updated_by',
     ];
@@ -24,18 +25,13 @@ class BillOfPayment extends Model
         return $this->belongsTo(Client::class, 'id_client');
     }
 
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class, 'id_bill', 'id');
-    }
-
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function payments()
+    public function descBills()
     {
-        return $this->hasMany(Payment::class, 'id_bill', 'id');
+        return $this->hasMany(DescBill::class, 'id_bill', 'id');
     }
 }
