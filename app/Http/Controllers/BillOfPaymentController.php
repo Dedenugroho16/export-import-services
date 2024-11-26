@@ -26,7 +26,7 @@ class BillOfPaymentController extends Controller
     public function getBillOfPayment()
     {
         $billOfPayments = BillOfPayment::with(['client', 'descBills'])
-            ->select(['id', 'month', 'no_inv', 'id_client']);
+            ->select(['id', 'month', 'no_inv', 'id_client', 'status']);
 
         return DataTables::of($billOfPayments)
             ->addIndexColumn() // Tambahkan baris ini
@@ -46,7 +46,7 @@ class BillOfPaymentController extends Controller
                         <div class="dropdown-menu dropdown-menu-end">
                             <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
                                 <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
-                                Payment Details
+                                Lihat Payment Details
                             </a>
                             <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
@@ -161,23 +161,11 @@ class BillOfPaymentController extends Controller
         return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
     }
 
-
-    public function paymentDetails($hash)
+    public function details(Request $request, $hash)
     {
-        $id = IdHashHelper::decode($hash);
-        $company = Company::first();
-        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($id);
-        $totalPaid = 0;
-
-        foreach ($billOfPayment->transactions as $transaction) {
-            $transaction->formatted_date = \Carbon\Carbon::parse($transaction->date)->format('M d, Y');
-            $totalPaid += $transaction->paid;
-        }
-
-        $totalInWords = NumberToWords::convert($totalPaid);
-        $hashedId = IdHashHelper::encode($id);
-
-        return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords', 'hashedId'));
+        $billId = IdHashHelper::decode($hash);
+        $billOfPayment = BillOfPayment::with('client')->findOrFail($billId);
+        return view('bill-of-payments.details', compact('billOfPayment', 'hash'));
     }
 
     public function edit($hash)
@@ -198,13 +186,7 @@ class BillOfPaymentController extends Controller
             })
                 ->with([
                     'descBills' => function ($query) {
-                        $query->select('id_transaction', 'description');
-                    },
-                    'payments' => function ($query) {
-                        $query->select(
-                            'id_transaction',
-                            DB::raw('SUM(transfered) as total_paid')
-                        )->groupBy('id_transaction'); // Tambahkan GROUP BY
+                        $query->select('id_transaction', 'description', 'paid');
                     }
                 ])
                 ->select(
@@ -218,7 +200,7 @@ class BillOfPaymentController extends Controller
             // Gabungkan description dari desc_bills dan total_paid dari payments
             $transactions = $transactions->map(function ($transaction) {
                 $transaction->description = $transaction->descBills->pluck('description')->implode(', ');
-                $transaction->paid = $transaction->payments->sum('total_paid') ?: 0;
+                $transaction->paid = $transaction->descBills->pluck('paid')->implode(', ');
                 return $transaction;
             });
 
