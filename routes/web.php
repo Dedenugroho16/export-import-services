@@ -180,7 +180,6 @@ Route::post('/desc-bills/store', [DescBillController::class, 'store'])->name('de
 Route::put('/desc-bills/update', [DescBillController::class, 'update'])->name('desc-bills.update');
 // Route untuk menangani form submission
 Route::post('/payment/store', [PaymentController::class, 'store'])->name('payment.store');
-Route::post('/proforma-bop/update', [BillOfPaymentController::class, 'PIUpdate'])->name('proforma-bop.update');
 
 // Client Company Route
 Route::resource('client-companies', ClientCompanyController::class);
