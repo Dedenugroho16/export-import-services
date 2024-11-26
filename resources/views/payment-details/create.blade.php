@@ -64,7 +64,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p>{{ $buyer->name }}</p>
+                                                    <p>{{ $billOfPayment->client->name }}</p>
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
@@ -75,7 +75,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p>{{ $buyer->company_name }}</p>
+                                                    <p>nama perusahaan</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,7 +108,7 @@
                                             <tfoot>
                                                 <tr>
                                                     <td class="text-end" colspan="5">
-                                                        <label for="total" class="mr-2">AMOUNT OF BILL:</label>
+                                                        <label for="total" class="mr-2">AMOUNT OF PAYMENT:</label>
                                                     </td>
                                                     <td class="text-center" style="width: 120px;">
                                                         <div
@@ -130,9 +130,9 @@
                                 @csrf
                                 <input type="date" name="date" id="date">
                                 <input type="" id="id_bill_of_payment" name="id_bill_of_payment"
-                                    value="{{ $id }}">
+                                    value="{{ $billOfPayment->id }}">
                                 <input type="" id="payment_number" name="payment_number">
-                                <input type="" id="selectedClientId" name="id_client" value="{{ $buyer->id }}">
+                                <input type="" id="selectedClientId" name="id_client" value="{{ $billOfPayment->client->id }}">
                                 <input type="" id="total" name="total">
                             </form>
 
@@ -236,7 +236,7 @@
             }
 
             // Pastikan idBillOfPayment tersedia untuk memuat data dari database
-            var idBillOfPayment = "{{ $id }}";
+            var idBillOfPayment = "{{ $billOfPayment->id }}";
             if (idBillOfPayment) {
                 loadTransaction(idBillOfPayment);
             }

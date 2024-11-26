@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Clients;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
+use App\Models\BillOfPayment;
 use App\Models\PaymentDetail;
 
 class PaymentDetailController extends Controller
@@ -42,7 +43,7 @@ class PaymentDetailController extends Controller
     public function create($hash)
     {
         $id = IdHashHelper::decode($hash);
-        $buyer = Clients::findOrFail($id);
+        $billOfPayment = BillOfPayment::with(['descBills'], ['client'])->findOrFail($id);
 
         // Mengambil number terakhir dari tabel transaction
         $lastPaymentNumber = PaymentDetail::orderBy('payment_number', 'desc')->first();
@@ -58,7 +59,7 @@ class PaymentDetailController extends Controller
         $year = date('Y');
         $formattedPaymentNumber = $newPaymentNumber . '.' . $year . '/PSN/PM.OF';
 
-        return view('payment-details.create', compact('formattedPaymentNumber', 'buyer', 'id'));
+        return view('payment-details.create', compact('formattedPaymentNumber', 'billOfPayment'));
     }
 
     /**
