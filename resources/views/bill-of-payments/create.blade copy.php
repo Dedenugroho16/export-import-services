@@ -1,3 +1,34 @@
+// payment number
+        $lastPaymentNumber = BillOfPayment::orderBy('payment_number', 'desc')->first();
+        // Jika belum ada data di kolom number, mulai dari 0001
+        if ($lastPaymentNumber === null || empty($lastPaymentNumber->payment_number)) {
+            $newPaymentNumber = '0001';
+        } else {
+            // Mengambil number terakhir dan menambah 1, pastikan tetap 4 digit
+            $paymentNumber = intval($lastPaymentNumber->payment_number);
+            $newPaymentNumber = str_pad($paymentNumber + 1, 4, '0', STR_PAD_LEFT);
+        }
+
+        $year = date('Y');
+        $formattedPaymentNumber = $newPaymentNumber . '.' . $year . '/PSN/PM.OF';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @extends('layouts.layout')
 @section('title', 'Bill of Payment')
 
@@ -98,7 +129,7 @@
                                 </div>
                             </div>
 
-                            <form id="formTransaction" action="{{ route('desc-bills.store') }}">
+                            <form id="formTransaction" action="{{ route('payment.store') }}">
                                 @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">
@@ -122,6 +153,7 @@
                                                     <th class="text-center">DESCRIPTION</th>
                                                     <th class="text-center">AMOUNT</th>
                                                     <th class="text-center">PAID</th>
+                                                    <th class="text-center">PAY</th>
                                                     <th class="text-center">BILL</th>
                                                     <th class="text-center">AKSI</th>
                                                 </tr>
@@ -130,7 +162,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <td class="text-end" colspan="5">
+                                                    <td class="text-end" colspan="6">
                                                         <label for="total" class="mr-2">AMOUNT OF BILL:</label>
                                                     </td>
                                                     <td class="text-center" style="width: 120px;">
@@ -220,6 +252,7 @@
                                 @csrf
                                 <input type="" id="month" name="month">
                                 <input type="" id="no_inv" name="no_inv">
+                                <input type="" id="payment_number" name="payment_number">
                                 <input type="" id="selectedClientId" name="id_client">
                                 <input type="" id="total" name="total">
                             </form>
@@ -552,9 +585,15 @@
                                         <input type="text" name="transactions[${data.id}][description]" class="form-control description-input" placeholder="Enter description">
                                     </td>
                                     <td class="text-center amount">${formattedAmount}</td>
-                                    <td class="text-center" style="width:150px;">
-                                        <input type="text" class="form-control" value="${data.paid?.toLocaleString('en-US')}" readonly>
-                                        <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
+                                    <td class="text-center">
+                                        <!-- Display-only input for formatting -->
+                                        <input type="text" class="form-control old-paid" value="${data.paid}" style="width: 120px;" readonly>
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- Display-only input for formatting -->
+                                        <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
+                                        <!-- Hidden input for actual value submission -->
+                                        <input type="hidden" name="transactions[${data.id}][paid]" class="form-control paid">
                                     </td>
                                     <td class="text-center pi-bill">${formattedBill}</td>
                                     <td class="text-center">
@@ -569,6 +608,37 @@
 
                 // Menutup modal setelah produk dipilih
                 $('#PIModal').modal('hide');
+
+                $('#billOfPaymentTable tbody').on('input', '.paid-input', function() {
+                    // Temukan baris tempat input ini berada
+                    var row = $(this).closest('tr');
+
+                    // Ambil nilai input .paid-input dan hilangkan koma jika ada
+                    var paidInput = parseFloat(row.find('.paid-input').val().replace(/,/g, '')) ||
+                    0;
+
+                    // Ambil nilai amount dan paid dari data (dalam hal ini, menggunakan data yang telah dikirimkan)
+                    var amount = parseFloat(row.find('.amount').text().replace(/,/g,
+                    '')); // nilai amount
+                    var paid = parseFloat(row.find('.old-paid').val().replace(/,/g,
+                    '')); // nilai paid sebelumnya
+
+                    // Hitung sisa pi-bill setelah dikurangi nilai paid dan input terbaru
+                    var remainingPiBill = amount - (paid + paidInput);
+
+                    // Format nilai yang diformat ke format ribuan dengan dua desimal
+                    var formattedPaidInput = paidInput.toLocaleString('en-US');
+                    var formattedRemainingPiBill = remainingPiBill.toLocaleString('en-US');
+
+                    // Update nilai yang diformat hanya di input .paid-input pada baris ini
+                    row.find('.pi-bill').text(formattedRemainingPiBill); // Update pi-bill
+                    row.find('.paid-input').val(formattedPaidInput); // Update input paid
+                    row.find('.paid').val(paid +
+                    paidInput); // Update hidden input paid dengan nilai baru
+
+                    // Jalankan fungsi totalBill untuk memperbarui total keseluruhan
+                    totalBill();
+                });
 
                 // Event listener untuk tombol "Hapus"
                 $('#billOfPaymentTable').on('click', '.delete-btn', function() {
@@ -586,6 +656,22 @@
                 });
                 totalBill();
             });
+
+            function updatePaymentNumber() {
+                const currentDate = new Date();
+
+                // Dapatkan bulan dalam format angka Romawi
+                const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                const romanMonth = romanMonths[currentDate.getMonth()];
+
+                // Dapatkan tahun dalam format dua digit
+                const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
+
+                const formattedNumber = '/' + romanMonth + '/' +
+                    twoDigitYear;
+                const finalNumber = '{{ $formattedPaymentNumber }}' + formattedNumber;
+                $('#payment_number').val(finalNumber);
+            }
 
             function updateNumber() {
                 const currentDate = new Date();
@@ -605,6 +691,7 @@
             }
 
             updateNumber();
+            updatePaymentNumber();
 
             // Mendapatkan bulan dan tahun saat ini
             var currentDate = new Date();
@@ -612,7 +699,8 @@
                 year: 'numeric',
                 month: 'long'
             };
-            var monthYear = currentDate.toLocaleDateString('id-ID', options).toUpperCase();
+            var monthYear = currentDate.toLocaleDateString('id-ID', options)
+                .toUpperCase(); // Menggunakan 'id-ID' untuk format bahasa Indonesia dan toUpperCase untuk huruf kapital
 
             // Menetapkan nilai input #month
             $('#month').val(monthYear);
@@ -622,20 +710,14 @@
             function validateTransactionForm() {
                 var isValid = true;
 
-                // Cek semua input di dalam tabel kecuali yang memiliki id="id_bill"
-                var inputs = $('#billOfPaymentTable tbody input').not('#id_bill');
+                // Cek apakah ada input selain yang memiliki id="id_transaction"
+                var totalInputs = $('#billOfPaymentTable tbody input').length; // Total input dalam form
+                var otherInputs = $('#billOfPaymentTable tbody input').not('#id_bill')
+                    .length;
 
-                if (inputs.length === 0) {
-                    isValid = false; // Jika tidak ada input selain id_bill
+                if (otherInputs === 0) {
+                    isValid = false; // Jika tidak ada input selain id_transaction, form tidak valid
                     $('#pi_error').text('Data Proforma Invoice harus diisi!').show();
-                } else {
-                    inputs.each(function() {
-                        if ($(this).val().trim() === '') { // Jika ada input kosong
-                            isValid = false;
-                            $('#pi_error').text('Semua input harus diisi!').show();
-                            return false; // Keluar dari loop each lebih awal
-                        }
-                    });
                 }
 
                 return isValid; // Kembalikan status validasi
