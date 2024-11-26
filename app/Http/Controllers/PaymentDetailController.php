@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\BillOfPayment;
 use App\Models\PaymentDetail;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentDetailController extends Controller
 {
@@ -67,7 +68,32 @@ class PaymentDetailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'date' => 'required',
+            'id_bill_of_payment' => 'required',
+            'payment_number' => 'required',
+            'id_client' => 'required',
+            'total' => 'required|numeric|gte:0',
+        ], [
+            'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
+        ]);
+
+        $data['created_by'] = Auth::id();
+        // Cari BillOfPayment berdasarkan id_bill_of_payment
+        $billOfPayment = BillOfPayment::find($data['id_bill_of_payment']);
+
+        if ($billOfPayment) {
+            // Ubah status BillOfPayment
+            $billOfPayment->status = 1;
+            $billOfPayment->save(); // Simpan perubahan ke database
+        }
+        $paymentDetail = PaymentDetail::create($data);
+
+        // Return the id of the created paymentDetail
+        return response()->json([
+            'success' => true,
+            'id_pd' => $paymentDetail->id
+        ]);
     }
 
     /**

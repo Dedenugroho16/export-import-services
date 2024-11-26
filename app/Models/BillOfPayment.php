@@ -34,4 +34,9 @@ class BillOfPayment extends Model
     {
         return $this->hasMany(DescBill::class, 'id_bill', 'id');
     }
+    
+    public function paymentDetail()
+    {
+        return $this->hasOne(PaymentDetail::class, 'id_bill_of_payment', 'id');
+    }
 }

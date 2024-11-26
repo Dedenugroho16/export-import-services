@@ -35,18 +35,11 @@ class PaymentController extends Controller
         $transactions = $request->input('transactions');
 
         foreach ($transactions as $data) {
-            $transaction = Transaction::find($data['id']);
-
-            if ($transaction) {
-                $transaction->id_bill = $data['id_bill'];
-                $transaction->save();
-            }
-
             // Validasi setiap data transaksi
             $validator = Validator::make($data, [
                 'id' => 'required|integer',
-                'id_bill' => 'required|integer',
-                'paid' => 'required|numeric|gte:0',
+                'id_payment_detail' => 'required|integer',
+                'transfered' => 'required|numeric|gte:0',
                 'description' => 'required|string',
             ]);
 
@@ -62,15 +55,15 @@ class PaymentController extends Controller
             // Jika validasi berhasil, masukkan data ke database
             Payment::create([
                 'id_transaction' => $data['id'],
-                'id_bill' => $data['id_bill'],
-                'paid' => $data['paid'],
+                'id_payment_detail' => $data['id_payment_detail'],
+                'transfered' => $data['transfered'],
                 'description' => $data['description'],
             ]);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Bill of Payment berhasil dibuat'
+            'message' => 'Payment Details berhasil dibuat'
         ]);
     }
 

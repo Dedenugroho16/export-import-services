@@ -83,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <form id="formTransaction" action="{{ route('payment.store') }}">
+                            <form id="formTransaction" action="{{ route('payments.store') }}">
                                 @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">
@@ -125,8 +125,8 @@
                                 </div>
                             </form>
 
-                            <form id="formBOP" class="mt-2" method="POST"
-                                action="{{ route('bill-of-payment.store') }}">
+                            <form id="formPaymentDetails" class="mt-2" method="POST"
+                                action="{{ route('payment-details.store') }}">
                                 @csrf
                                 <input type="date" name="date" id="date">
                                 <input type="" id="id_bill_of_payment" name="id_bill_of_payment"
@@ -201,7 +201,7 @@
                                                         <input class="id-proforma" type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
                                                     </td>
                                                     <td class="text-center" style="display: none;">
-                                                        <input type="hidden" id="id_bill" name="transactions[${data.id}][id_bill]">
+                                                        <input type="hidden" id="id_payment_detail" name="transactions[${data.id}][id_payment_detail]">
                                                     </td>
                                                     <td class="text-center">${data.number}</td>
                                                     <td class="text-center">${data.code}</td>
@@ -330,23 +330,39 @@
 
             function validateTransactionForm() {
                 var isValid = true;
+                var errorMessage = 'Semua kolom wajib diisi!';
 
-                // Cek apakah ada input selain yang memiliki id="id_transaction"
-                var totalInputs = $('#paymentDetailTable tbody input').length; // Total input dalam form
-                var otherInputs = $('#paymentDetailTable tbody input').not('#id_bill')
-                    .length;
+                // Reset pesan error
+                $('#pi_error').text('').hide();
 
-                if (otherInputs === 0) {
-                    isValid = false; // Jika tidak ada input selain id_transaction, form tidak valid
-                    $('#pi_error').text('Data Proforma Invoice harus diisi!').show();
+                // Iterasi setiap baris dalam tbody
+                $('#paymentDetailTable tbody tr').each(function() {
+                    var row = $(this);
+                    var inputs = row.find(
+                    'input:not([type="hidden"])'); // Hanya memvalidasi input yang terlihat (bukan hidden)
+
+                    inputs.each(function() {
+                        var input = $(this);
+                        if (input.val().trim() === '') {
+                            isValid = false;
+                            input.addClass(
+                            'is-invalid'); // Tambahkan kelas untuk menandai input tidak valid
+                        } else {
+                            input.removeClass('is-invalid'); // Hapus tanda jika valid
+                        }
+                    });
+                });
+
+                if (!isValid) {
+                    $('#pi_error').text(errorMessage).show(); // Tampilkan pesan error
                 }
 
                 return isValid; // Kembalikan status validasi
             }
 
             $('#submitButton').on('click', function() {
-                var formBOP = $('#formBOP');
-                var formDataBOP = formBOP.serialize(); // Serialize form data
+                var formPaymentDetails = $('#formPaymentDetails');
+                var formDataPaymentDetails = formPaymentDetails.serialize(); // Serialize form data
 
                 // Disable the submit button to prevent multiple submissions
                 $(this).prop('disabled', true);
@@ -364,22 +380,23 @@
                     $('#submitButton').prop('disabled', false);
                     Swal.fire({
                         title: 'Terjadi Kesalahan!',
-                        text: 'Mohon lengkapi data Bill of Payment!',
+                        text: 'Mohon lengkapi data Payment Details!',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
                     return; // Hentikan proses jika form detail transaksi tidak valid
                 }
 
-                // Submit formBOP via AJAX
+                // Submit formPaymentDetails via AJAX
                 $.ajax({
-                    url: formBOP.attr('action'), // The action URL from the formBOP
+                    url: formPaymentDetails.attr(
+                    'action'), // The action URL from the formPaymentDetails
                     method: 'POST',
-                    data: formDataBOP,
+                    data: formDataPaymentDetails,
                     success: function(response) {
                         if (response.success) {
                             // Capture the returned id_bill from the response
-                            var idBill = response.id_bill;
+                            var idPD = response.id_pd;
 
                             // Now process formTransaction by appending the rows with the id_bill
                             var formTransaction = $('#formTransaction');
@@ -388,9 +405,9 @@
                                 $(this).find('input[name^="transactions"]').each(
                                     function() {
                                         if ($(this).attr('name').includes(
-                                                'id_bill')) {
+                                                'id_payment_detail')) {
                                             $(this).val(
-                                                idBill); // Set the value of id_bill
+                                                idPD); // Set the value of id_bill
                                         }
                                     });
                             });
