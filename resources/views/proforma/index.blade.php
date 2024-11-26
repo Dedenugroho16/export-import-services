@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Proforma Invoice')
+@section('title', 'Proforma Invoices')
 
 @section('content')
     <div class="page-body">
@@ -48,10 +48,10 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">No</th>
-                                        <th class="text-center">Code</th>
+                                        <th class="text-center">Kode</th>
                                         <th class="text-center">Number</th>
-                                        <th class="text-center">Client ID</th>
-                                        <th class="text-center">Consignee ID</th>
+                                        <th class="text-center">Client</th>
+                                        <th class="text-center">Consignee</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -68,16 +68,18 @@
             <div class="modal-content modal-centered">
                 <div class="modal-header border-bottom bg-transparent">
                     <h4 class="modal-title">Menunggu Persetujuan</h4>
-                    <a href="{{ route('proforma.create') }}" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M12 5l0 14" />
-                            <path d="M5 12l14 0" />
-                        </svg>
-                        Buat
-                    </a>
+                    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'operator')
+                        <a href="{{ route('proforma.create') }}" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 5l0 14" />
+                                <path d="M5 12l14 0" />
+                            </svg>
+                            Buat
+                        </a>
+                    @endif
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -88,13 +90,13 @@
                                 <table class="table table-striped table-hover" id="waitingProformaTable">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Code</th>
-                                            <th>Number</th>
-                                            <th>Date</th>
-                                            <th>Client</th>
-                                            <th>Consignee</th>
-                                            <th>Aksi</th>
+                                            <th class="text-center">No</th>
+                                            <th class="text-center">Kode</th>
+                                            <th class="text-center">Number</th>
+                                            <th class="text-center">Tanggal</th>
+                                            <th class="text-center">Client</th>
+                                            <th class="text-center">Consignee</th>
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -109,7 +111,6 @@
         </div>
     </div>
 
-
     <script>
         $(document).ready(function() {
             var approvedTable = $('#approvedTable').DataTable({
@@ -119,116 +120,103 @@
                     url: '{{ route('approved.data') }}',
                     type: 'GET'
                 },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'code',
-                        name: 'code',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'number',
-                        name: 'number',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'client',
-                        name: 'client',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'consignee',
-                        name: 'consignee',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    }
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
+                    { data: 'code', name: 'code', className: 'text-center' },
+                    { data: 'number', name: 'number', className: 'text-center' },
+                    { data: 'client', name: 'client' },
+                    { data: 'consignee', name: 'consignee' },
+                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
                 ],
-                order: [
-                    [1, 'asc']
-                ],
+                order: [[2, 'dsc']], 
                 columnDefs: [{
                     targets: 0,
                     render: function(data, type, row, meta) {
                         return meta.row + 1;
                     }
-                }]
+                }],
+                drawCallback: function() {
+                    // Terapkan style khusus untuk kolom client dan consignee
+                    $('#approvedTable td:nth-child(4), #approvedTable th:nth-child(4)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                    $('#approvedTable td:nth-child(5), #approvedTable th:nth-child(5)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                }
             });
 
             var table = $('#waitingProformaTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('proforma.data') }}', // Endpoint yang memuat data
+                    url: '{{ route('proforma.data') }}',
                     data: function(d) {
-                        d.approved = 0; // Mengirimkan approved = 0 sebagai filter ke server
+                        d.approved = 0;
                     }
                 },
                 responsive: true,
                 autoWidth: false,
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'code',
-                        name: 'code'
-                    },
-                    {
-                        data: 'number',
-                        name: 'number'
-                    },
-                    {
-                        data: 'date',
-                        name: 'date'
-                    },
-                    {
-                        data: 'client',
-                        name: 'client'
-                    },
-                    {
-                        data: 'consignee',
-                        name: 'consignee'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi',
-                        orderable: false,
-                        searchable: false
-                    },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'code', name: 'code', class: 'text-center' },
+                    { data: 'number', name: 'number', class: 'text-center' },
+                    { data: 'date', name: 'date', class: 'text-center' },
+                    { data: 'client', name: 'client' },
+                    { data: 'consignee', name: 'consignee' },
+                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false, class: 'text-center'}
                 ],
-                order: [
-                    [1, 'asc']
-                ],
+                order: [[2, 'dsc']],
                 columnDefs: [{
                     targets: 0,
                     render: function(data, type, row, meta) {
                         return meta.row + 1;
                     }
-                }]
+                }],
+                drawCallback: function() {
+                    // Terapkan style khusus untuk kolom client dan consignee
+                    $('#waitingProformaTable td:nth-child(5), #waitingProformaTable th:nth-child(5)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                    $('#waitingProformaTable td:nth-child(6), #waitingProformaTable th:nth-child(6)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                }
             });
 
-            // Handle approve button click with confirmation using SweetAlert
             $('#waitingProformaTable').on('click', '.approve-btn', function() {
-                var transactionId = $(this).data('id');
+            var transactionId = $(this).data('id');
+            var userSignatureUrl = '{{ auth()->user()->signature_url }}'; // Ambil URL tanda tangan pengguna
 
-                // Menampilkan konfirmasi SweetAlert
+            if (!userSignatureUrl) {
+                // Jika signature_url kosong, tampilkan alert dan tombol untuk menuju halaman profil
+                Swal.fire({
+                    title: 'Lengkapi Profil Anda',
+                    text: "Anda harus melengkapi tanda tangan untuk menyetujui Proforma invoice.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ke Profil',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '{{ route("profile.show") }}';
+                    }
+                });
+            } else {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Anda tidak dapat membatalkan setelah ini!",
-                    icon: 'warning',
+                    icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -236,37 +224,34 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika pengguna menekan tombol "Ya, Setujui!"
                         $.ajax({
-                            url: '{{ route('proforma.approve', ':id') }}'.replace(':id',
-                                transactionId),
+                            url: '{{ route('proforma.approve', ':id') }}'.replace(':id', transactionId),
                             type: 'POST',
                             data: {
-                                _token: '{{ csrf_token() }}' // CSRF token untuk keamanan
+                                _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                // Tampilkan pesan sukses dan reload tabel
                                 Swal.fire(
                                     'Disetujui!',
                                     'Proforma invoice telah disetujui.',
                                     'success'
                                 );
-                                table.ajax.reload(); // Reload tabel setelah sukses
-                                approvedTable.ajax
-                                    .reload(); // Reload tabel setelah sukses
+                                table.ajax.reload();
+                                approvedTable.ajax.reload();
                             },
                             error: function(xhr) {
-                                // Tampilkan pesan error jika terjadi kesalahan
                                 Swal.fire(
                                     'Error!',
-                                    'Terjadi kesalahan. Silakan coba lagi.',
+                                    'Anda tidak memiliki akses untuk menyetujui Proforma.',
                                     'error'
                                 );
                             }
                         });
                     }
                 });
-            });
+            }
+        });
+
         });
     </script>
 @endsection

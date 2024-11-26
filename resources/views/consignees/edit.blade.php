@@ -22,8 +22,8 @@
                         <!-- Edit Form -->
                         <form action="{{ route('consignees.update', \App\Helpers\IdHashHelper::encode($consignee->id)) }}" method="POST">
                             @csrf
-                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
                             @method('PUT')
+                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama Consignee</label>
                                 <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $consignee->name) }}" required>
@@ -37,7 +37,7 @@
                                 <input type="text" id="tel" name="tel" class="form-control" value="{{ old('tel', $consignee->tel) }}" required>
                             </div>
                             <div class="mb-5">
-                                <label for="id_client" class="form-label">ID Client</label>
+                                <label for="id_client" class="form-label">Nama Client</label>
                                 <select name="id_client" id="id_client" class="form-control" required>
                                     @foreach($clients as $client)
                                         <option value="{{ $client->id }}" {{ $client->id == $consignee->id_client ? 'selected' : '' }}>
@@ -47,8 +47,8 @@
                                 </select>
                             </div>
                             <div class="text-end">
-                                <a href="javascript:window.history.back();" class="btn btn-outline-primary">Kembali</a>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <a href="javascript:void(0);" class="btn btn-outline-primary" onclick="window.history.back();">Kembali</a>
+                                <button type="submit" class="btn btn-primary">Perbarui</button>
                             </div>
                         </form>
                     </div>

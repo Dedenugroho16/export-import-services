@@ -18,10 +18,7 @@ class ConsigneesController extends Controller
             $consignees = Consignee::with('client')->select('consignees.*');
             return DataTables::of($consignees)
                 ->addColumn('action', function($row){
-                    // Encode ID untuk keamanan
                     $hashId = IdHashHelper::encode($row->id);
-
-                    // Generate action buttons
                     $actionBtn = '
                         <div class="dropdown">
                             <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
@@ -70,7 +67,6 @@ class ConsigneesController extends Controller
 
     public function store(Request $request)
     {
-        // Validate incoming request
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
@@ -78,14 +74,11 @@ class ConsigneesController extends Controller
             'id_client' => 'required|exists:clients,id',
         ]);
 
-        // Create a new Consignee using the validated data
         Consignee::create($request->all());
 
-        // Fetch the client name for a more informative success message
         $clientName = Client::findOrFail($request->id_client)->name;
 
-        // Redirect back to clients.index with a success message
-        return redirect($request->input('previous_url', route('products.index')))->with('Data berhasil ditambahkan.');
+        return redirect($request->input('previous_url', route('clients.index')))->with( 'success' ,'Data berhasil ditambahkan.');
     }
 
     public function edit($hash)
@@ -109,15 +102,18 @@ class ConsigneesController extends Controller
         $consignee = Consignee::findOrFail($id);
         $consignee->update($request->all());
 
-        return redirect($request->input('previous_url', route('products.index')))
-        ->with('details_success', 'Data berhasil diupdate.');
+        return redirect($request->input('previous_url', route('clients.index')))
+        ->with('success', 'Data berhasil diperbarui.');
     }
 
-    public function show($hash)
+    public function show($hashedConsigneeId)
     {
-        $id = IdHashHelper::decode($hash);
-        $consignee = Consignee::with('client')->findOrFail($id);
-        return view('consignees.show', compact('consignee'));
+        $consigneeId = IdHashHelper::decode($hashedConsigneeId);
+        $consignee = Consignee::findOrFail($consigneeId);
+
+        $hashedClientId = IdHashHelper::encode($consignee->id_client);
+
+        return view('consignees.show', compact('consignee', 'hashedClientId'));
     }
 
     public function destroy($hash)
@@ -126,6 +122,6 @@ class ConsigneesController extends Controller
         $consignee = Consignee::findOrFail($id);
         $consignee->delete();
 
-        return redirect()->back()->with('details_success', 'Data berhasil dihapus.');
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }

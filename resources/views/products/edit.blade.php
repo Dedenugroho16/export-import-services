@@ -22,6 +22,7 @@
                         <form action="{{ route('products.update', \App\Helpers\IdHashHelper::encode($product->id)) }}" method="POST">
                             @csrf
                             @method('PUT')
+                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
                             <div class="mb-3">
                                 <label for="code" class="form-label">Kode Produk</label>
                                 <input type="text" id="code" name="code" class="form-control" value="{{ old('code', $product->code) }}" required>
@@ -48,8 +49,8 @@
                             </div>
 
                             <div class="text-end">
-                                <a href="{{ route('products.index') }}" class="btn btn-outline-primary">Kembali</a>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <a href="javascript:void(0);" class="btn btn-outline-primary" onclick="window.history.back();">Kembali</a>
+                                <button type="submit" class="btn btn-primary">Perbarui</button>
                             </div>
                         </form>
                     </div>

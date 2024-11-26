@@ -23,7 +23,7 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('id_product');
             $table->unsignedBigInteger('id_commodity');
             $table->string('container');
-            $table->decimal('net_weight', 8, 2);
+            $table->integer('net_weight');
             $table->decimal('gross_weight', 8, 2);
             $table->string('payment_term');
             $table->date('stuffing_date')->nullable();
@@ -31,9 +31,15 @@ class CreateTransactionsTable extends Migration
             $table->string('container_number')->nullable();
             $table->string('seal_number')->nullable();
             $table->string('product_ncm');
+            $table->string('payment_condition');
             $table->decimal('freight_cost', 10, 2);
             $table->decimal('total', 10, 2);
             $table->boolean('approved')->default(false);
+            $table->unsignedBigInteger('approver')->nullable();
+            $table->timestamp('approved_at')->nullable();
+            $table->unsignedBigInteger('confirmed_by')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('edited_by')->nullable();
             $table->timestamps();
 
             $table->foreign('id_consignee')->references('id')->on('consignees')->onDelete('cascade');

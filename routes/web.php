@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\DescBillController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductsController;
@@ -13,6 +16,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\BillOfPaymentController;
 use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\DetailTransactionController;
@@ -64,17 +68,29 @@ Route::get('detail-products/create/{hash}', [DetailProductController::class, 'cr
 // Country Routes using resource
 Route::resource('countries', CountryController::class);
 
-// Branch Routes
-Route::resource('branches', BranchController::class);
+// Company Routes using resource
+Route::resource('company', CompanyController::class);
 
 // Transaction Routes using resource
+// web.php
+Route::get('/ajax-products', [ProductsController::class, 'getProducts']);
+Route::get('/ajax-commodities', [CommoditiesController::class, 'getCommodities']);
+Route::get('/ajax-countries', [CountryController::class, 'getCountries']);
 // Route::resource('transaction', TransactionController::class);
 Route::get('/get-invoice', [TransactionController::class, 'getInvoice'])->name('getInvoice');
+Route::get('/get-incomplete-invoice', [TransactionController::class, 'getIncompleteInvoice'])->name('getIncompleteInvoice');
+Route::get('incomplete-invoice', [TransactionController::class, 'incomplete'])->name('incomplete-invoice');
 Route::get('transaction', [TransactionController::class, 'index'])->name('transaction.index');
 Route::get('transaction/create/{id}', [TransactionController::class, 'create'])->name('transaction.create');
 Route::get('/transaction/{hashId}', [TransactionController::class, 'show'])->name('transaction.show');
+Route::post('/invoice/completing/{id}', [TransactionController::class, 'completingInvoice'])->name('invoice.compliting');
 // Route untuk update transaksi
 Route::put('/transaction/update/{id}', [TransactionController::class, 'update'])->name('transaction.update');
+
+// update detail transaction route
+Route::post('/detail-transaction/update/{id}', [DetailTransactionController::class, 'update'])->name('detail-transaction.update');
+// Route untuk delete detail transaction
+Route::delete('/detail-transaction/delete/{id_detail_transaction}/{id_detail_product}', [DetailTransactionController::class, 'destroy']);
 
 // Route Packing List
 Route::get('/packing-list/{hashId}', [TransactionController::class, 'packingListShow'])->name('packingList.show');
@@ -85,14 +101,24 @@ Route::get('proforma/create', [ProformaController::class, 'create'])->name('prof
 Route::post('/proforma/store', [ProformaController::class, 'store'])->name('proforma.store');
 Route::get('/proforma/show/{id}', [ProformaController::class, 'show'])->name('proforma.show');
 Route::get('/proforma/edit/{hash}', [ProformaController::class, 'edit'])->name('proforma.edit');
+Route::post('/proforma/update/{id}', [ProformaController::class, 'update'])->name('proforma.update');
 Route::get('proforma/data', [ProformaController::class, 'getProformaData'])->name('proforma.data');
 Route::get('/approved-proforma/data', [ProformaController::class, 'getApprovedData'])->name('approved.data');
+Route::get('/get-detail-transaction/{idTransaction}', [ProformaController::class, 'getDetailTransaction'])->name('get-detail-transaction');
+// fungsi untuk mengecek detail transaction dari transaction untuk mencegah memilih detail produk lebih dari 1x
+// Route untuk mendapatkan selectedProductIds dengan ID transaksi
+Route::get('/get-selected-product-ids/{id}', [ProformaController::class, 'getSelectedProductIds']);
+
 // APPROVE
-Route::post('proforma/approve/{id}', [TransactionController::class, 'approveProforma'])->name('proforma.approve');
+Route::post('proforma/approve/{id}', [ProformaController::class, 'approveProforma'])->name('proforma.approve');
+
+// Get Clients
+Route::get('/clients/data', [ProformaController::class, 'getClientsData'])->name('clients.data');
 
 // Get Consignees
 Route::get('/get-consignees/{client_id}', [App\Http\Controllers\TransactionController::class, 'getConsignees']);
 Route::get('/get-detail-products', [TransactionController::class, 'getDetailProducts'])->name('get-detail-products');
+Route::get('/edit-get-detail-products', [ProformaController::class, 'editGetDetailProducts'])->name('edit-get-detail-products');
 
 // Detail Transaction Route
 Route::post('/detailtransaction/store', [DetailTransactionController::class, 'store'])->name('detailtransaction.store');
@@ -100,16 +126,56 @@ Route::post('/detailtransaction/store', [DetailTransactionController::class, 'st
 // Logout Route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Register Route (Hanya untuk tamu)
-Route::view('/register', 'auth.register')->name('register')->middleware('guest');
-Route::post('/register', [AuthController::class, 'register'])->middleware('guest');
-
 // Login Routes (Hanya untuk tamu)
 Route::view('/login', 'auth.login')->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 
 Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
 Route::resource('users', UserController::class);
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+Route::post('users/{id}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggleActive');
 
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
-Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+// Route untuk menampilkan halaman profil
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+
+// Route untuk memperbarui profil
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+// Route export to pdf
+Route::get('/packing-list/{id}/export-pdf', [TransactionController::class, 'exportPdf'])->name('packing-list.exportPdf');
+Route::get('/packing-list/{id}/download-pdf', [TransactionController::class, 'downloadPdf'])->name('packing-list.downloadPdf');
+Route::get('/transaction/{id}/export-pdf', [TransactionController::class, 'transactionExportPdf'])->name('transaction.exportPdf');
+Route::get('/transaction/{id}/download-pdf', [TransactionController::class, 'transactionDownloadPdf'])->name('transaction.downloadPdf');
+Route::get('/proforma/{id}/export-pdf', [ProformaController::class, 'proformaExportPdf'])->name('proforma.exportPdf');
+Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaDownloadPdf'])->name('proforma.downloadPdf');
+
+// Route getConsigneeByid
+Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getConsigneesByClient'])->name('consignees.byClient');
+
+// Route Rekap Sales
+Route::get('/transactions/rekap', [TransactionController::class, 'rekapSales'])->name('transactions.rekap');
+Route::get('/transactions/AccountStatement', [TransactionController::class, 'AccountStatement'])->name('transactions.AccountStatement');
+Route::get('/transactions/rekap-pdf', [TransactionController::class, 'rekapPdf'])->name('transactions.rekapPdf');
+Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('transactions.downloadRekapPdf');
+
+// bill of payments
+Route::get('/bill-of-payment', [BillOfPaymentController::class, 'index'])->name('bill-of-payment.index');
+Route::get('/bill-of-payment/create', [BillOfPaymentController::class, 'create'])->name('bill-of-payment.create');
+// Route::get('/bill-of-payment/edit/{hash}', [BillOfPaymentController::class, 'edit'])->name('bill-of-payment.create');
+Route::get('/get-proforma-invoices', [BillOfPaymentController::class, 'getProformaInvoices'])->name('getProformaInvoices');
+Route::get('/bill-of-payment/data', [BillOfPaymentController::class, 'getBillOfPayment'])->name('bill-of-payment.data');
+Route::resource('bill-of-payment', BillOfPaymentController::class);
+Route::get('/get-transactions/{idBill}', [BillOfPaymentController::class, 'getTransactions'])->name('get-transactions');
+Route::get('/bill-of-payments/{hash}/details', [BillOfPaymentController::class, 'paymentDetails'])->name('bill-of-payments.details');
+Route::get('bill-of-payments/{hashId}/export-pdf', [BillOfPaymentController::class, 'bopExportPdf'])->name('billofpayments.exportPdf');
+Route::get('bill-of-payments/{hashId}/download-pdf', [BillOfPaymentController::class, 'bopDownloadPdf'])->name('billofpayments.downloadPdf');
+Route::get('/payment-details/export/{hashId}', [BillOfPaymentController::class, 'paymentDetailstExport'])->name('payment-details.export');
+Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class, 'paymentDetailstDownload'])->name('payment-details.download');
+
+// ! form
+Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');
+Route::post('/desc-bills/store', [DescBillController::class, 'store'])->name('desc-bills.store');
+Route::put('/desc-bills/update', [DescBillController::class, 'update'])->name('desc-bills.update');
+// Route untuk menangani form submission
+Route::post('/payment/store', [PaymentController::class, 'store'])->name('payment.store');

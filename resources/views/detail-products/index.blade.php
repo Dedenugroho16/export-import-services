@@ -38,7 +38,7 @@
 
                         <!-- Data Table -->
                         <div class="table-responsive">
-                            <table id="myTable" class="table card-table table-vcenter text-nowrap">
+                            <table id="myTable" class="table card-table table-hover table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th class="text-center">ID Product</th>
@@ -77,8 +77,8 @@
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center' }
             ],
             language: {
-                        lengthMenu: "Tampilkan _MENU_ entri",
-                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                        lengthMenu: "Tampilkan _MENU_ Data",
+                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
                         paginate: {
                             first: "Pertama",
                             last: "Terakhir",

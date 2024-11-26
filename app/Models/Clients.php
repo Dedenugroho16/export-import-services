@@ -11,6 +11,7 @@ class Clients extends Model
 
     protected $fillable = [
         'name',
+        'company_name',
         'address',
         'PO_BOX',
         'tel',
@@ -27,5 +28,10 @@ class Clients extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'id_client');
+    }
+    
+    public function billOfPayments()
+    {
+        return $this->hasMany(BillOfPayment::class, 'id_client');
     }
 }

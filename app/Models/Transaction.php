@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\DescBill;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaction extends Model
 {
@@ -31,11 +32,19 @@ class Transaction extends Model
         'container_number',
         'seal_number',
         'product_ncm',
+        'payment_condition',
         'freight_cost',
         'total',
-        'approved'
+        'approved',
+        'approver',
+        'created_by',
+        'confirmed_by',
+        'edited_by',
+        'id_bill',
+        'paid',
+        'description'
     ];
-    
+
     public function consignee()
     {
         return $this->belongsTo(Consignee::class, 'id_consignee');
@@ -65,5 +74,40 @@ class Transaction extends Model
     public function detailTransactions()
     {
         return $this->hasMany(DetailTransaction::class, 'id_transaction');
+    }
+
+    public function approverUser()
+    {
+        return $this->belongsTo(User::class, 'approver', 'id');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function confirmedBy()
+    {
+        return $this->belongsTo(User::class, 'confirmed_by');
+    }
+
+    public function editedBy()
+    {
+        return $this->belongsTo(User::class, 'edited_by');
+    }
+
+    public function getUserRelations()
+    {
+        return $this->load(['createdBy', 'confirmedBy', 'editedBy']);
+    }
+
+    public function descBills()
+    {
+        return $this->hasMany(DescBill::class, 'id_transaction', 'id');
+    }
+    
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'id_transaction', 'id');
     }
 }

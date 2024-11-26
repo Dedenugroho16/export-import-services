@@ -1,82 +1,152 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Sign In</title>
     <!-- CSS files -->
-    <link href="./dist/css/tabler.min.css?1692870487" rel="stylesheet"/>
-    <link href="./dist/css/tabler-flags.min.css?1692870487" rel="stylesheet"/>
-    <link href="./dist/css/tabler-payments.min.css?1692870487" rel="stylesheet"/>
-    <link href="./dist/css/tabler-vendors.min.css?1692870487" rel="stylesheet"/>
-    <link href="./dist/css/demo.min.css?1692870487" rel="stylesheet"/>
+    <link href="./dist/css/tabler.min.css?1692870487" rel="stylesheet" />
+    <link href="./dist/css/tabler-flags.min.css?1692870487" rel="stylesheet" />
+    <link href="./dist/css/tabler-payments.min.css?1692870487" rel="stylesheet" />
+    <link href="./dist/css/tabler-vendors.min.css?1692870487" rel="stylesheet" />
+    <link href="./dist/css/demo.min.css?1692870487" rel="stylesheet" />
     <style>
-      @import url('https://rsms.me/inter/inter.css');
-      :root {
-      	--tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
-      }
-      body {
-      	font-feature-settings: "cv03", "cv04", "cv11";
-      }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #007bff 0%, #ffffff 100%);
+        }
+
+        .card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .card img {
+            max-width: 80px;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: none;
+            background: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border: none;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 12px;
+            width: 100%;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+
+        .form-check-label {
+            color: #666;
+        }
     </style>
-  </head>
-  <body  class=" d-flex flex-column">
-    <script src="./dist/js/demo-theme.min.js?1692870487"></script>
-    <div class="page page-center">
-      <div class="container container-tight py-4">
-        <div class="card card-md">
-          <div class="card-body">
-            <h2 class="h2 text-center mb-4">Masuk ke akun anda</h2>
-            <form action="{{ route('login') }}" method="post" autocomplete="off">
+</head>
+
+<body>
+    <div class="card">
+        <!-- Company Logo -->
+        <div class="text-center">
+            @if (isset($company) && !empty($company->logo))
+                <img src="{{ Storage::url($company->logo) }}" alt="Company Logo" style="width: 60px;">
+            @else
+                <img src="" alt="Logo Perusahaan" style="width: 60px;">
+            @endif
+        </div>
+        <!-- Login Form -->
+        <h2>Masuk ke akun anda</h2>
+        <form action="{{ route('login') }}" method="post" autocomplete="off">
             @csrf
-            {{-- Email --}}
+
+            {{-- Login (Username or Email) --}}
             <div class="mb-3">
-                <label class="form-label" for="email">Email</label>
-                <input type="text" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror">
-                @error('email')
+                <input type="text" name="login" value="{{ old('login') }}"
+                    class="form-control @error('login') is-invalid @enderror" placeholder="Username atau Email">
+                @error('login')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-
             </div>
 
-            {{-- password --}}
+            {{-- Password --}}
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <div class="input-group input-group-flat">
-                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror">
+                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                    placeholder="Password">
                 @error('password')
-                <div class="invalid-feedback">{{ $message }}</div>
+                    <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-
-                </div>
             </div>
-              {{-- Notifikasi Login Gagal --}}
-                @if($errors->has('failed'))
+
+            {{-- Login Failed Notification --}}
+            @if ($errors->has('failed'))
                 <div class="alert alert-danger">
                     {{ $errors->first('failed') }}
                 </div>
-              @endif
-              <div class="mb-2">
+            @endif
+
+            {{-- Remember Me --}}
+            <div class="mb-2 text-start">
                 <label class="form-check">
-                  <input type="checkbox" class="form-check-input"/>
-                  <span class="form-check-label">Ingat saya di perangkat ini</span>
+                    <input type="checkbox" class="form-check-input" name="remember" />
+                    <span class="form-check-label">Ingat saya di perangkat ini</span>
                 </label>
-              </div>
-              <div class="form-footer">
-                <button type="submit" class="btn btn-primary w-100">Masuk</button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="text-center text-secondary mt-3">
-          Belum punya akun? <a href="{{ route('register') }}" tabindex="-1">Daftar</a>
-        </div>
-      </div>
+            </div>
+
+            {{-- Submit Button --}}
+            <button type="submit" class="btn btn-primary">Masuk</button>
+        </form>
     </div>
-    <!-- Libs JS -->
+
     <!-- Tabler Core -->
     <script src="./dist/js/tabler.min.js?1692870487" defer></script>
     <script src="./dist/js/demo.min.js?1692870487" defer></script>
-  </body>
+</body>
+
 </html>

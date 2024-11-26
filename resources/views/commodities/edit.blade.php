@@ -22,6 +22,7 @@
                         <form action="{{ route('commodities.update', \App\Helpers\IdHashHelper::encode($commodity->id)) }}" method="POST">
                             @csrf
                             @method('PUT')
+                            <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
                                 <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $commodity->name) }}" required>
@@ -29,7 +30,7 @@
                             <!-- Anda dapat menambahkan field tambahan sesuai kebutuhan di sini -->
                             <div class="text-end">
                                 <a href="{{ route('commodities.index') }}" class="btn btn-outline-primary">Kembali</a>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" class="btn btn-primary">Perbarui</button>
                             </div>
                         </form>
                     </div>

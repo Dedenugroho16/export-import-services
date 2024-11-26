@@ -64,7 +64,7 @@ class DetailProductController extends Controller
             abort(404);
         }
         return view('detail-products.create', [
-            'product' => $product // Kirim produk ke view
+            'product' => $product
         ]);
     }
     
@@ -84,16 +84,21 @@ class DetailProductController extends Controller
         $product = Product::findOrFail($request->id_product);
         $productName = $product->name;
 
-        return redirect($request->input('previous_url', route('products.index')))->with('details_success', 'Data berhasil ditambahkan.');
+        return redirect($request->input('previous_url', route('products.index')))->with('success', 'Data berhasil ditambahkan.');
     }
 
     // Display the specified detail product
     public function show($hash)
     {
+        // Decode hash untuk mendapatkan ID detail produk
         $id = IdHashHelper::decode($hash);
+
         $detailProduct = DetailProduct::with('product')->findOrFail($id);
 
-        return view('detail-products.show', compact('detailProduct'));
+        // Hash ID produk untuk digunakan pada tombol "Back"
+        $hashedProductId = IdHashHelper::encode($detailProduct->id_product);
+        
+        return view('detail-products.show', compact('detailProduct', 'hashedProductId'));
     }
 
     // Show the form for editing the specified detail product
@@ -101,12 +106,12 @@ class DetailProductController extends Controller
     {
         $id = IdHashHelper::decode($hash);
         $detailProduct = DetailProduct::findOrFail($id);
-        $products = Product::all(); // Get all products
+        $products = Product::all();
 
         return view('detail-products.edit', [
             'detailProduct' => $detailProduct,
             'products' => $products,
-            'hash' => $hash // Pass the hash to the view for the form action
+            'hash' => $hash
         ]);
     }
 
@@ -129,7 +134,7 @@ class DetailProductController extends Controller
         $detailProduct->update($request->all());
 
         return redirect($request->input('previous_url', route('products.index')))
-        ->with('details_success', 'Data berhasil diupdate.');
+        ->with('success', 'Data berhasil diperbarui.');
     }
 
 
@@ -139,6 +144,6 @@ class DetailProductController extends Controller
         $detailProduct = DetailProduct::findOrFail($id);
         $detailProduct->delete();
 
-        return redirect()->back()->with('details_success', 'Data berhasil dihapus.');
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }

@@ -16,7 +16,7 @@
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-body">
-                        <!-- Success Message for Deleting, Editing, or Adding Client -->
+                        <!-- Success Message for Deleting, Editing, or Adding Data -->
                         @if (session('success'))
                         <div class="alert alert-important alert-success alert-dismissible" role="alert">
                             <div class="d-flex">
@@ -33,10 +33,10 @@
                         @endif
                         <!-- Table Starts Here -->
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap" id="clientTable">
+                            <table class="table card-table table-hover table-vcenter text-nowrap" id="clientTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">#</th>
+                                        <th class="text-center">No</th>
                                         <th class="text-center">Nama</th>
                                         <th class="text-center">Alamat</th>
                                         <th class="text-center">PO BOX</th>
@@ -64,46 +64,53 @@
             processing: false,
             serverSide: true,
             ajax: "{{ route('clients.index') }}",
-                 columns: [
-                    { data: 'id', name: 'id', class: 'text-center' },
-                    { data: 'name', name: 'name'},
-                    { data: 'address', name: 'address' },
-                    { data: 'PO_BOX', name: 'PO_BOX', class: 'text-center' },
-                    { data: 'tel', name: 'tel', class: 'text-center' },
-                    { data: 'fax', name: 'fax', class: 'text-center' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
-                    ],
-                    language: {
-                        lengthMenu: "Tampilkan _MENU_ entri",
-                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                        paginate: {
-                            first: "Pertama",
-                            last: "Terakhir",
-                            next: "Selanjutnya",
-                            previous: "Sebelumnya"
-                        },
-                        search: "Cari :",
-                        infoFiltered: "(disaring dari total _MAX_ entri)"
-                        },
-                        lengthMenu: [5, 10, 25, 50],
-                        pageLength: 10,
-
-                        drawCallback: function() {
-                                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
-                                $('#clientTable td:nth-child(2), #clientTable th:nth-child(2)').css({
-                                    'max-width': '200px',
-                                    'white-space': 'normal',
-                                    'word-wrap': 'break-word'
-                                });
-                                $('#clientTable td:nth-child(3), #clientTable th:nth-child(3)').css({
-                                    'max-width': '250px',
-                                    'overflow': 'hidden',
-                                    'text-overflow': 'ellipsis'
-                                });
-                            }
-                        });
-                    });
-            </script>
+            columns: [
+                { 
+                    data: null, 
+                    class: 'text-center',
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                },
+                { data: 'name', name: 'name' },
+                { data: 'address', name: 'address' },
+                { data: 'PO_BOX', name: 'PO_BOX', class: 'text-center' },
+                { data: 'tel', name: 'tel', class: 'text-center' },
+                { data: 'fax', name: 'fax', class: 'text-center' },
+                { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
+            ],
+            language: {
+                lengthMenu: "Tampilkan _MENU_ Data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                search: "Cari :",
+                infoFiltered: "(disaring dari total _MAX_ entri)"
+            },
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 10,
+            drawCallback: function() {
+                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
+                $('#clientTable td:nth-child(2), #clientTable th:nth-child(2)').css({
+                    'max-width': '200px',
+                    'white-space': 'normal',
+                    'word-wrap': 'break-word'
+                });
+                $('#clientTable td:nth-child(3), #clientTable th:nth-child(3)').css({
+                    'max-width': '250px',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis'
+                });
+            }
+        });
+    });
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -129,6 +136,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+$(document).ready(function() {
+        setTimeout(function() {
+            $('.alert-dismissible').fadeOut();
+        }, 3000);
+    });
 </script>
 
 @endsection

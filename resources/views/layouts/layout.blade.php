@@ -3,10 +3,11 @@
 
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Dashboard</title>
+    <title>@yield('title', 'Default Title')</title>
     <!-- CSS files -->
     <link href="{{ asset('dist/css/tabler.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('dist/css/tabler-flags.min.css') }}" rel="stylesheet" />
@@ -34,6 +35,20 @@
 
         body {
             font-feature-settings: "cv03", "cv04", "cv11";
+        }
+
+        /* Border left untuk menu dropdown yang aktif */
+        .dropdown-item.active-item {
+            border-left: 3px solid #0d6efd;
+            /* Warna bg-primary */
+            padding-left: 16px;
+            /* Tambahkan padding agar teks tidak terlalu dekat */
+            /* background-color: #f8f9fa; */
+            /* Warna latar opsional */
+            color: #0d6efd;
+            /* Warna teks opsional */
+            font-weight: 500;
+            /* Teks lebih tebal */
         }
 
         .nav-link {
@@ -113,6 +128,17 @@
             border-color: #ff9800;
             box-shadow: 0 0 5px rgba(255, 152, 0, 0.8);
         }
+
+        .table-wrapper,
+        .table-responsive {
+            overflow: visible;
+        }
+
+        #rekap-table {
+            max-width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
     </style>
 
     {{-- JQuery --}}
@@ -132,15 +158,15 @@
                     aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <h1 class="navbar-brand navbar-brand-autodark">
+                <h1 class="navbar-brand ">
                     <a href=".">
-                        <img src="{{ asset('static/logo.svg') }}" width="110" height="32" alt="Tabler"
-                            class="navbar-brand-image">
+                        <img src="{{ asset('storage/logo2.png') }}" alt="Logo" class="navbar-brand-image"
+                            style="width: 190px; height: auto;">
                     </a>
                 </h1>
                 <div class="collapse navbar-collapse" id="sidebar-menu">
-                    <ul class="navbar-nav pt-lg-3">
-                        <li class="nav-item">
+                    <ul class="navbar-nav">
+                        <li class="nav-item {{ Request::is('/*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('home') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -152,171 +178,403 @@
                                         <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
                                     </svg>
                                 </span>
-                                <span class="nav-link-title">
-                                    Dashboard
-                                </span>
+                                <span class="nav-link-title">Dashboard</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('clients.index') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <circle cx="12" cy="12" r="3" />
-                                        <path d="M12 3v6" />
-                                        <path d="M12 15v6" />
-                                        <path d="M3 12h6" />
-                                        <path d="M15 12h6" />
-                                        <path d="M5.6 5.6l4.2 4.2" />
-                                        <path d="M18.4 18.4l-4.2 -4.2" />
-                                        <path d="M18.4 5.6l-4.2 4.2" />
-                                        <path d="M5.6 18.4l4.2 -4.2" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Client
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/products') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <rect x="3" y="4" width="18" height="16" rx="2" />
-                                        <path d="M3 6h18" />
-                                        <path d="M7 10h10" />
-                                        <path d="M7 14h10" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Produk
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/commodities') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <circle cx="12" cy="12" r="9" />
-                                        <path d="M9 12h6m-3 -3v6" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Komoditas
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/countries') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <circle cx="12" cy="12" r="9" />
-                                        <line x1="3.6" y1="9" x2="20.4" y2="9" />
-                                        <line x1="3.6" y1="15" x2="20.4" y2="15" />
-                                        <path d="M11.5 3a17 17 0 0 0 0 18" />
-                                        <path d="M12.5 3a17 17 0 0 1 0 18" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Negara
-                                </span>
-                            </a>
-                        </li>
-                        {{-- <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/transaction/create') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <circle cx="6" cy="19" r="2" />
-                                        <circle cx="17" cy="19" r="2" />
-                                        <path d="M17 17h-11v-14h-2" />
-                                        <path d="M6 5l14 1l-1 7h-13" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Buat Transaksi
-                                </span>
-                            </a>
-                        </li> --}}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('users.index') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <circle cx="12" cy="7" r="4" />
-                                        <path d="M20 21l-2 -2a5 5 0 0 0 -7 -7l-5 5" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Data User
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('branches.index') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-building-community">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path
-                                            d="M8 9l5 5v7h-5v-4m0 4h-5v-7l5 -5m1 1v-6a1 1 0 0 1 1 -1h10a1 1 0 0 1 1 1v17h-8" />
-                                        <path d="M13 7l0 .01" />
-                                        <path d="M17 7l0 .01" />
-                                        <path d="M17 11l0 .01" />
-                                        <path d="M17 15l0 .01" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Data Cabang
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <circle cx="6" cy="19" r="2" />
-                                        <circle cx="17" cy="19" r="2" />
-                                        <path d="M17 17h-11v-14h-2" />
-                                        <path d="M6 5l14 1l-1 7h-13" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">Transaksi</span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('proforma.index') }}">
-                                    <span class="nav-link-title">Proforma Invoice</span>
+                        @if (auth()->user()->role === 'admin')
+                            <li class="nav-item {{ Request::is('clients*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('clients.index') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="3" />
+                                            <path d="M12 3v6" />
+                                            <path d="M12 15v6" />
+                                            <path d="M3 12h6" />
+                                            <path d="M15 12h6" />
+                                            <path d="M5.6 5.6l4.2 4.2" />
+                                            <path d="M18.4 18.4l-4.2 -4.2" />
+                                            <path d="M18.4 5.6l-4.2 4.2" />
+                                            <path d="M5.6 18.4l4.2 -4.2" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Client</span>
                                 </a>
-                                <a class="dropdown-item" href="{{ url('/transaction') }}">
-                                    <span class="nav-link-title">Invoice</span>
+                            </li>
+                            <li class="nav-item {{ Request::is('products*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ url('/products') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="16" rx="2" />
+                                            <path d="M3 6h18" />
+                                            <path d="M7 10h10" />
+                                            <path d="M7 14h10" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Produk</span>
                                 </a>
-                            </div>
+                            </li>
+                            <li class="nav-item {{ Request::is('commodities*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ url('/commodities') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="9" />
+                                            <path d="M9 12h6m-3 -3v6" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Komoditas</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('countries*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ url('/countries') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <circle cx="12" cy="12" r="9" />
+                                            <line x1="3.6" y1="9" x2="20.4" y2="9" />
+                                            <line x1="3.6" y1="15" x2="20.4" y2="15" />
+                                            <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                            <path d="M12.5 3a17 17 0 0 1 0 18" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Negara
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('users*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('users.index') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="12" cy="7" r="4" />
+                                            <path d="M20 21l-2 -2a5 5 0 0 0 -7 -7l-5 5" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Data User</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('company.index') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-building-skyscraper">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M3 21l18 0" />
+                                            <path d="M5 21v-14l8 -4v18" />
+                                            <path d="M19 21v-10l-6 -4" />
+                                            <path d="M9 9l0 .01" />
+                                            <path d="M9 12l0 .01" />
+                                            <path d="M9 15l0 .01" />
+                                            <path d="M9 18l0 .01" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Data Perusahaan
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}" 
+                                href="#" 
+                                id="navbarDropdown" 
+                                role="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <circle cx="6" cy="19" r="2"/>
+                                            <circle cx="17" cy="19" r="2"/>
+                                            <path d="M17 17h-11v-14h-2"/>
+                                            <path d="M6 5l14 1l-1 7h-13"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Transaksi</span>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
+                                            Proforma Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
+                                            Unconfirmed Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
+                                            Final Invoice
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('transactions.rekap') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-bar-chart">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M3 17l6-6l4 4l6-8" />
+                                        <path d="M14 3v18" />
+                                        <path d="M7 9v9" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">Rekap Sales</span>
+                            </a>
                         </li>
+                        <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 6h14c.553 0 1 .447 1 1v10c0 .553-.447 1-1 1H5c-.553 0-1-.447-1-1V7c0-.553.447-1 1-1z" />
+                                        <path d="M3 10h18" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">Bill Of Payment</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-banknote">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M2 6h20" />
+                                        <path d="M2 12h20" />
+                                        <path d="M2 18h20" />
+                                        <path d="M12 6v12" />
+                                        <path d="M12 6h0" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">Account Statement</span>
+                            </a>
+                        </li>
+                        @endif
+                        @if (auth()->user()->role === 'operator')
+                            <li class="nav-item {{ Request::is('clients*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('clients.index') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="3" />
+                                            <path d="M12 3v6" />
+                                            <path d="M12 15v6" />
+                                            <path d="M3 12h6" />
+                                            <path d="M15 12h6" />
+                                            <path d="M5.6 5.6l4.2 4.2" />
+                                            <path d="M18.4 18.4l-4.2 -4.2" />
+                                            <path d="M18.4 5.6l-4.2 4.2" />
+                                            <path d="M5.6 18.4l4.2 -4.2" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Client</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('products*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ url('/products') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="16" rx="2" />
+                                            <path d="M3 6h18" />
+                                            <path d="M7 10h10" />
+                                            <path d="M7 14h10" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Produk</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('commodities*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ url('/commodities') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="9" />
+                                            <path d="M9 12h6m-3 -3v6" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Komoditas</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('countries*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ url('/countries') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <circle cx="12" cy="12" r="9" />
+                                            <line x1="3.6" y1="9" x2="20.4" y2="9" />
+                                            <line x1="3.6" y1="15" x2="20.4" y2="15" />
+                                            <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                            <path d="M12.5 3a17 17 0 0 1 0 18" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Negara
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}" 
+                                href="#" 
+                                id="navbarDropdown" 
+                                role="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <circle cx="6" cy="19" r="2"/>
+                                            <circle cx="17" cy="19" r="2"/>
+                                            <path d="M17 17h-11v-14h-2"/>
+                                            <path d="M6 5l14 1l-1 7h-13"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Transaksi</span>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
+                                            Proforma Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
+                                            Unconfirmed Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
+                                            Final Invoice
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('transactions.rekap') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-text">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                                            <path
+                                                d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                            <path d="M9 12h6" />
+                                            <path d="M9 16h6" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Rekap Sales</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if (auth()->user()->role === 'director')
+                            <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('company.index') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-building-skyscraper">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M3 21l18 0" />
+                                            <path d="M5 21v-14l8 -4v18" />
+                                            <path d="M19 21v-10l-6 -4" />
+                                            <path d="M9 9l0 .01" />
+                                            <path d="M9 12l0 .01" />
+                                            <path d="M9 15l0 .01" />
+                                            <path d="M9 18l0 .01" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Data Perusahaan
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}" 
+                                href="#" 
+                                id="navbarDropdown" 
+                                role="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <circle cx="6" cy="19" r="2"/>
+                                            <circle cx="17" cy="19" r="2"/>
+                                            <path d="M17 17h-11v-14h-2"/>
+                                            <path d="M6 5l14 1l-1 7h-13"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Transaksi</span>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
+                                            Proforma Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
+                                            Unconfirmed Invoices
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
+                                            Final Invoice
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @elseif(auth()->user()->role === 'finance')
+                            <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-invoice">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                            <path
+                                                d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                            <path d="M9 7l1 0" />
+                                            <path d="M9 13l6 0" />
+                                            <path d="M13 17l2 0" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Bill Of Payment</span>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>
         </aside>
+
 
         <div class="page-wrapper">
             <div class="mb-3">
@@ -372,18 +630,18 @@
                                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0"
                                     data-bs-toggle="dropdown" aria-label="Open user menu">
                                     <span class="avatar avatar-sm rounded-circle"
-                                        style="background-image: url('https://www.gravatar.com/avatar/?d=mp'); border-radius: 50%;"></span>
+                                        style="background-image: url('{{ Auth::user()->profile_picture_url ? asset('storage/' . Auth::user()->profile_picture_url) : '' }}'); 
+                                                border-radius: 50%; 
+                                                background-color: {{ Auth::user()->profile_picture_url ? 'transparent' : '#f0f0f0' }};">
+                                    </span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                     <a href="{{ route('profile.show') }}" class="dropdown-item">
                                         <i class="fas fa-user me-2"></i> Profil
                                     </a>
-                                    <a href="#" class="dropdown-item">
-                                        <i class="fas fa-cog me-2"></i> Pengaturan
-                                    </a>
-                                    <form method="POST" action="{{ route('logout') }}">
+                                    <form id="logout-form" method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="dropdown-item">
+                                        <button type="button" class="dropdown-item" onclick="confirmLogout()">
                                             <i class="fas fa-sign-out-alt me-2"></i> Keluar
                                         </button>
                                     </form>
@@ -434,6 +692,65 @@
     {{-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> --}}
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Apakah Anda yakin ingin keluar?',
+                text: "Anda akan keluar dari sesi ini, pastikan telah menyimpan pekerjaan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, keluar',
+                cancelButtonText: 'Batal',
+                buttonsStyling: true,
+                showClass: {
+                    popup: 'swal2-show',
+                    backdrop: 'swal2-backdrop-show',
+                    icon: 'swal2-icon-show'
+                },
+                hideClass: {
+                    popup: 'swal2-hide',
+                    backdrop: 'swal2-backdrop-hide',
+                    icon: 'swal2-icon-hide'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logout-form').submit();
+                }
+            })
+        }
+    </script>
+
+    <script>
+        function confirmDelete(url) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = url;
+                    form.innerHTML = `
+                        <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                        <input type="hidden" name="_method" value="DELETE">
+                    `;
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
+    </script>
 
 </body>
 
