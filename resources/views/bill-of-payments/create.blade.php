@@ -552,7 +552,9 @@
                                         <input type="text" name="transactions[${data.id}][description]" class="form-control description-input" placeholder="Enter description">
                                     </td>
                                     <td class="text-center amount">${formattedAmount}</td>
-                                    <td class="text-center old-paid">${data.paid}</td>
+                                    <td class="text-center">
+                                        <input type="text" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
+                                    </td>
                                     <td class="text-center pi-bill">${formattedBill}</td>
                                     <td class="text-center">
                                         <button class="btn btn-danger btn-sm delete-btn">Hapus</button>

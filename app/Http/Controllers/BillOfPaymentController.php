@@ -94,14 +94,14 @@ class BillOfPaymentController extends Controller
 
         $invoices = Transaction::where('approved', 1)
             ->where('id_client', $request->id_client)
-            ->whereRaw('total <> (SELECT COALESCE(SUM(paid), 0) FROM payments WHERE payments.id_transaction = transactions.id)')
+            ->whereRaw('total <> (SELECT COALESCE(SUM(transfered), 0) FROM payments WHERE payments.id_transaction = transactions.id)')
             ->with('payments') // Pastikan relasi payments dimuat
             ->get();
 
         return datatables()->of($invoices)
             ->addIndexColumn()
             ->addColumn('total_paid', function ($row) {
-                return $row->payments->sum('paid'); // Hitung total dari relasi
+                return $row->payments->sum('transfered');
             })
             ->addColumn('amount', function ($row) {
                 return $row->total;

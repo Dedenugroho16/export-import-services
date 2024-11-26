@@ -20,6 +20,7 @@ class DescBillController extends Controller
                 'id' => 'required|integer',
                 'id_bill' => 'required|integer',
                 'description' => 'required|string',
+                'paid' => 'required|numeric|gte:0',
             ]);
 
             // Jika validasi gagal, hentikan proses dan kembalikan respons error
@@ -36,6 +37,7 @@ class DescBillController extends Controller
                 'id_transaction' => $data['id'],
                 'id_bill' => $data['id_bill'],
                 'description' => $data['description'],
+                'paid' => $data['paid'],
             ]);
         }
 
