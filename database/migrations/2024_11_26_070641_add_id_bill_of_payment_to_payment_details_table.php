@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::table('payment_details', function (Blueprint $table) {
             $table->unsignedBigInteger('id_bill_of_payment')->nullable()->after('id');
-            $table->foreign('id_bill_of_payment')->references('id')->on('bill_of_payment')->onDelete('cascade'); // Menambahkan foreign key
+            $table->foreign('id_bill_of_payment')->references('id')->on('bill_of_payments')->onDelete('cascade'); // Menambahkan foreign key
         });
     }
 

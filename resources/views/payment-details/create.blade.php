@@ -1,16 +1,6 @@
 // payment number
         $lastPaymentNumber = BillOfPayment::orderBy('payment_number', 'desc')->first();
-        // Jika belum ada data di kolom number, mulai dari 0001
-        if ($lastPaymentNumber === null || empty($lastPaymentNumber->payment_number)) {
-            $newPaymentNumber = '0001';
-        } else {
-            // Mengambil number terakhir dan menambah 1, pastikan tetap 4 digit
-            $paymentNumber = intval($lastPaymentNumber->payment_number);
-            $newPaymentNumber = str_pad($paymentNumber + 1, 4, '0', STR_PAD_LEFT);
-        }
-
-        $year = date('Y');
-        $formattedPaymentNumber = $newPaymentNumber . '.' . $year . '/PSN/PM.OF';
+        
 
 
 
