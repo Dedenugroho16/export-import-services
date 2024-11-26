@@ -132,7 +132,8 @@
                                 <input type="" id="id_bill_of_payment" name="id_bill_of_payment"
                                     value="{{ $billOfPayment->id }}">
                                 <input type="" id="payment_number" name="payment_number">
-                                <input type="" id="selectedClientId" name="id_client" value="{{ $billOfPayment->client->id }}">
+                                <input type="" id="selectedClientId" name="id_client"
+                                    value="{{ $billOfPayment->client->id }}">
                                 <input type="" id="total" name="total">
                             </form>
 
@@ -212,7 +213,8 @@
                                                     <td class="text-center amount">${total?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center paid">${data.paid?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center" style="width:150px;">
-                                                        <input type="" name="transactions[${data.id}][transfered]" class="form-control" placeholder="Uang ditransfer">
+                                                        <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer">
+                                                        <input type="" name="transactions[${data.id}][transfered]" class="form-control transfered" placeholder="Uang ditransfer">
                                                     </td>
                                                     <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
                                                 </tr>
@@ -222,7 +224,7 @@
                         } else {
                             $('#paymentDetailTable tbody').append(`
                         <tr>
-                            <td colspan="6" class="text-center">Tidak ada detail transaksi yang tersedia.</td>
+                            <td colspan="6" class="text-center" id="nullDetailTransaction">Tidak ada detail transaksi yang tersedia.</td>
                         </tr>
                     `);
                         }
@@ -235,32 +237,48 @@
                 });
             }
 
+            // Pasang event listener di luar loop
+            $('#paymentDetailTable tbody').on('input', '.transfered-input', function() {
+                var row = $(this).closest('tr');
+                var paymentInput = row.find('.transfered-input');
+
+                var payment = parseFloat(paymentInput.val().replace(/,/g, '')) || 0;
+                var formattedPayment = payment.toLocaleString('en-US');
+                row.find('.transfered-input').val(formattedPayment);
+                row.find('.transfered').val(payment);
+
+                updateAmounts();
+            });
+
             // Pastikan idBillOfPayment tersedia untuk memuat data dari database
             var idBillOfPayment = "{{ $billOfPayment->id }}";
             if (idBillOfPayment) {
                 loadTransaction(idBillOfPayment);
             }
 
-            function totalBill() {
-                var totalBill = 0;
+            function updateAmounts() {
+                var totalPayment = 0;
 
-                // Iterasi setiap baris untuk mendapatkan nilai total
-                $('#paymentDetailTable tbody tr').each(function() {
-                    var bill = parseFloat($(this).find('.pi-bill').text().replace(/,/g, '')) || 0;
+                // Jika tabel kosong atau hanya ada baris "Tidak ada barang", reset semua nilai ke 0
+                if ($('#paymentDetailTable tbody tr').length === 0 || $(
+                        '#paymentDetailTable tbody').find('#nullDetailTransaction').length > 0) {
+                    totalPayment = 0;
+                } else {
+                    // Iterasi setiap baris untuk mendapatkan nilai total
+                    $('#paymentDetailTable tbody tr').each(function() {
+                        var payment = parseFloat($(this).find('.transfered-input').val().replace(
+                            /,/g, '')) || 0;
 
-                    totalBill += bill;
-                });
+                        totalPayment += payment;
+                    });
+                }
 
-                // Hitung grandTotal
-                var grandTotal = totalBill;
+                // Format hasil perhitungan dengan pemisah ribuan en-US
+                var formattedTotalPayment = totalPayment.toLocaleString('en-US');
 
-                var formattedGrandTotal = grandTotal.toLocaleString('en-US', {
-                    minimumFractionDigits: 2
-                });
-
-                // Update nilai total di elemen input total-display
-                $('.total-display').val(formattedGrandTotal);
-                $('#total').val(grandTotal);
+                // Update nilai total di footer dengan format yang benar
+                $('.total-display').val(formattedTotalPayment);
+                $('#total').val(totalPayment);
             }
 
             function updatePaymentNumber() {
