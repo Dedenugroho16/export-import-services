@@ -82,7 +82,7 @@
                                 </div>
                             </div>
 
-                            <form id="formTransaction" action="{{ route('proforma-bop.update') }}">
+                            <form id="formTransaction" action="">
                                 @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">
@@ -107,6 +107,7 @@
                                                     <th class="text-center">AMOUNT</th>
                                                     <th class="text-center">PAID</th>
                                                     <th class="text-center">BILL</th>
+                                                    <th class="text-center">AKSI</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -191,48 +192,25 @@
     <script>
         $(document).ready(function() {
             function totalBill() {
-                var totalPaid = 0;
                 var totalBill = 0;
 
                 // Iterasi setiap baris untuk mendapatkan nilai total
                 $('#billOfPaymentTable tbody tr').each(function() {
-                    var paid = parseFloat($(this).find('.paid').val()) ||
-                        0; // Nilai asli dari input tersembunyi
                     var bill = parseFloat($(this).find('.pi-bill').text().replace(/,/g, '')) || 0;
 
-                    totalPaid += paid;
                     totalBill += bill;
                 });
 
                 // Hitung grandTotal
-                var grandTotal = totalBill - totalPaid;
+                var grandTotal = totalBill;
 
-                // Format grandTotal dengan toLocaleString dan tampilkan di .total-display
-                var formattedGrandTotal = grandTotal.toLocaleString('en-US');
+                var formattedGrandTotal = grandTotal.toLocaleString('en-US', {
+                    minimumFractionDigits: 2
+                });
 
                 // Update nilai total di elemen input total-display
                 $('.total-display').val(formattedGrandTotal);
-                $('#total').val(grandTotal); // Update hidden field dengan nilai tanpa format
-            }
-
-            function addDynamicEventListeners() {
-                // Event listener untuk perubahan pada .paid-input
-                $('#billOfPaymentTable tbody').on('input', '.paid-input', function() {
-                    var row = $(this).closest('tr'); // Mendapatkan baris tempat input berada
-                    var input = $(this);
-
-                    // Ambil nilai dari .paid-input dan hapus format (koma) jika ada
-                    var paidValue = parseFloat(input.val().replace(/,/g, '')) || 0;
-
-                    // Update input tersembunyi .paid untuk penyimpanan nilai asli tanpa format
-                    row.find('.paid').val(paidValue);
-
-                    // Format kembali nilai di .paid-input agar menampilkan dengan format toLocaleString
-                    input.val(paidValue.toLocaleString('en-US'));
-
-                    // Perbarui total bill setelah setiap perubahan
-                    totalBill();
-                });
+                $('#total').val(grandTotal);
             }
 
             function loadTransaction(idBillOfPayment) {
@@ -240,53 +218,39 @@
                     url: `/get-transactions/${idBillOfPayment}`,
                     method: 'GET',
                     success: function(response) {
+                        console.log(response);
                         // Kosongkan tbody untuk data yang baru di-load
                         $('#billOfPaymentTable tbody').empty();
 
                         if (response.length > 0) {
                             response.forEach(function(data) {
-                                var paid = data.paid || 0;
-                                var intPaid = Math.floor(paid);
-                                var formattedPaid = intPaid.toLocaleString('en-US');
-
-                                var total = data.total || 0;
-                                var intTotal = Math.floor(total);
-                                var formattedTotal = intTotal.toLocaleString('en-US');
-
                                 var newRow = `
-                        <tr>
-                            <td class="text-center" style="display: none;">
-                                <input type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
-                            </td>
-                            <td class="text-center" style="display: none;">
-                                <input type="hidden" id="id_bill" name="transactions[${data.id}][id_bill]">
-                            </td>
-                            <td class="text-center">${data.number}</td>
-                            <td class="text-center">${data.code}</td>
-                            <td class="text-center">
-                                <input type="text" name="transactions[${data.id}][description]" class="form-control description-input" value="${data.description}">
-                            </td>
-                            <td class="text-center amount">${formattedTotal}</td>
-                            <td class="text-center">
-                                <input type="text" class="form-control paid-input" style="width: 120px;" value="${formattedPaid}"> <!-- Langsung menggunakan formattedPaid -->
-                                <input type="hidden" name="transactions[${data.id}][paid]" class="form-control paid" value="${paid}">
-                            </td>
-                            <td class="text-center pi-bill">${formattedTotal}</td>
-                        </tr>
-                    `;
+                                                <tr>
+                                                    <td class="text-center">${data.number}</td>
+                                                    <td class="text-center">${data.code}</td>
+                                                    <td class="text-center">
+                                                        <input type="text" name="transactions[${data.id}][description]" 
+                                                            class="form-control description-input" 
+                                                            value="${data.description || ''}" 
+                                                            placeholder="Enter description">
+                                                    </td>
+                                                    <td class="text-center amount">${data.total?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center old-paid">${data.paid?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center">
+                                                        <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
+                                                    </td>
+                                                </tr>
+                                            `;
                                 $('#billOfPaymentTable tbody').append(newRow);
                             });
-
-                            // Panggil addDynamicEventListeners setelah elemen baru ditambahkan
-                            addDynamicEventListeners();
                         } else {
                             $('#billOfPaymentTable tbody').append(`
-                    <tr>
-                        <td colspan="6" class="text-center">Tidak ada detail transaksi yang tersedia.</td>
-                    </tr>
-                `);
+                        <tr>
+                            <td colspan="6" class="text-center">Tidak ada detail transaksi yang tersedia.</td>
+                        </tr>
+                    `);
                         }
-
                         // Update total setelah data dimuat
                         totalBill();
                     },

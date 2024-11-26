@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_payment')->nullable()->after('id'); // Menambahkan kolom id_bill
-            $table->foreign('id_payment')->references('id')->on('payment_details')->onDelete('cascade'); // Menambahkan foreign key
+            $table->unsignedBigInteger('id_payment_detail')->nullable()->after('id'); // Menambahkan kolom id_bill
+            $table->foreign('id_payment_detail')->references('id')->on('payment_details')->onDelete('cascade'); // Menambahkan foreign key
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->dropForeign(['id_payment']); // Menghapus foreign key
-            $table->dropColumn('id_payment'); // Menghapus kolom id_bill
+            $table->dropForeign(['id_payment_detail']); // Menghapus foreign key
+            $table->dropColumn('id_payment_detail'); // Menghapus kolom id_bill
         });
     }
 };

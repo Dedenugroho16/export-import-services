@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_transaction');
-            $table->decimal('paid', 10, 2);
+            $table->decimal('transfered', 10, 2);
             $table->string('description');
             $table->timestamps();
 

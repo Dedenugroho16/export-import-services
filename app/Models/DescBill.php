@@ -13,6 +13,7 @@ class DescBill extends Model
         'id_transaction',
         'id_bill',
         'description',
+        'paid',
     ];
 
     public function transaction()

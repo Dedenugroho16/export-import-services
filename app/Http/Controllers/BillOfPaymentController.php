@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Transaction;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
-use App\Helpers\ImageHelper;
-use App\Helpers\NumberToWords;
 use App\Models\BillOfPayment;
-use App\Models\Company;
-use Illuminate\Support\Facades\Auth;
-use Yajra\DataTables\Facades\DataTables;
+use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
 
 class BillOfPaymentController extends Controller
 {
@@ -24,7 +25,7 @@ class BillOfPaymentController extends Controller
 
     public function getBillOfPayment()
     {
-        $billOfPayments = BillOfPayment::with(['client', 'transactions'])
+        $billOfPayments = BillOfPayment::with(['client', 'descBills'])
             ->select(['id', 'month', 'no_inv', 'id_client']);
 
         return DataTables::of($billOfPayments)
@@ -177,7 +178,7 @@ class BillOfPaymentController extends Controller
     {
         $id = IdHashHelper::decode($hash);
 
-        $billOfPayment = BillOfPayment::with(['transactions'], ['client'])->findOrFail($id);
+        $billOfPayment = BillOfPayment::with(['descBills'], ['client'])->findOrFail($id);
 
         return view('bill-of-payments.edit', compact('billOfPayment'));
     }
@@ -185,26 +186,40 @@ class BillOfPaymentController extends Controller
     public function getTransactions($idBill)
     {
         try {
-            // Ambil transaksi berdasarkan id_transaction dengan join ke detail_products
-            $transactions = Transaction::where('transactions.id_bill', $idBill)
+            // Ambil data transaksi dengan relasi ke desc_bills dan payments
+            $transactions = Transaction::whereHas('descBills', function ($query) use ($idBill) {
+                $query->where('id_bill', $idBill);
+            })
+                ->with([
+                    'descBills' => function ($query) {
+                        $query->select('id_transaction', 'description');
+                    },
+                    'payments' => function ($query) {
+                        $query->select(
+                            'id_transaction',
+                            DB::raw('SUM(paid) as total_paid')
+                        )->groupBy('id_transaction'); // Tambahkan GROUP BY
+                    }
+                ])
                 ->select(
-                    'transactions.*',
                     'transactions.id',
                     'transactions.number',
                     'transactions.code',
-                    'transactions.description',
-                    'transactions.total',
-                    'transactions.paid',
-                    'transactions.total as bill' // Asumsikan bill sama dengan total
+                    'transactions.total'
                 )
                 ->get();
 
-            // Return JSON response
+            // Gabungkan description dari desc_bills dan total_paid dari payments
+            $transactions = $transactions->map(function ($transaction) {
+                $transaction->description = $transaction->descBills->pluck('description')->implode(', ');
+                $transaction->paid = $transaction->payments->sum('total_paid') ?: 0;
+                return $transaction;
+            });
+
             return response()->json($transactions);
         } catch (\Exception $e) {
-            // Jika ada error, log error dan kembalikan response error 500
             \Log::error("Error fetching transactions: " . $e->getMessage());
-            return response()->json(['error' => 'Terjadi kesalahan pada server'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
