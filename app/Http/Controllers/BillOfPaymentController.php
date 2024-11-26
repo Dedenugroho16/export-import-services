@@ -138,23 +138,29 @@ class BillOfPaymentController extends Controller
     }
 
     public function show($hash)
-    {
-        $id = IdHashHelper::decode($hash);
-        $company = Company::first();
-        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($id);
-        $billOfPayment->transactions->load('detailTransactions');
-        $totalBill = 0;
+{
+    $id = IdHashHelper::decode($hash);
+    $company = Company::first();
+    $billOfPayment = BillOfPayment::with([
+        'client',
+        'createdBy',
+        'descBills.transaction',
+    ])->findOrFail($id);
 
-        foreach ($billOfPayment->transactions as $transaction) {
-            $transaction->bill = $transaction->total - $transaction->paid;
-            $totalBill += $transaction->bill;
-        }
+    $totalBill = 0;
 
-        $totalInWords = NumberToWords::convert($totalBill);
-        $hashedId = IdHashHelper::encode($id);
-
-        return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
+    foreach ($billOfPayment->descBills as $descBill) {
+        $transaction = $descBill->transaction;
+        $transaction->bill = $transaction->total - $transaction->paid;
+        $totalBill += $transaction->bill;
     }
+
+    $totalInWords = NumberToWords::convert($totalBill);
+    $hashedId = IdHashHelper::encode($id);
+
+    return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
+}
+
 
     public function paymentDetails($hash)
     {
