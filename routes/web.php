@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\DescBillController;
-use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -9,7 +7,9 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DescBillController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProformaController;
 use App\Http\Controllers\DashboardController;
@@ -18,6 +18,7 @@ use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\BillOfPaymentController;
 use App\Http\Controllers\DetailProductController;
+use App\Http\Controllers\PaymentDetailController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\DetailTransactionController;
 
@@ -162,7 +163,6 @@ Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'd
 // bill of payments
 Route::get('/bill-of-payment', [BillOfPaymentController::class, 'index'])->name('bill-of-payment.index');
 Route::get('/bill-of-payment/create', [BillOfPaymentController::class, 'create'])->name('bill-of-payment.create');
-// Route::get('/bill-of-payment/edit/{hash}', [BillOfPaymentController::class, 'edit'])->name('bill-of-payment.create');
 Route::get('/get-proforma-invoices', [BillOfPaymentController::class, 'getProformaInvoices'])->name('getProformaInvoices');
 Route::get('/bill-of-payment/data', [BillOfPaymentController::class, 'getBillOfPayment'])->name('bill-of-payment.data');
 Route::resource('bill-of-payment', BillOfPaymentController::class);
@@ -172,6 +172,10 @@ Route::get('bill-of-payments/{hashId}/export-pdf', [BillOfPaymentController::cla
 Route::get('bill-of-payments/{hashId}/download-pdf', [BillOfPaymentController::class, 'bopDownloadPdf'])->name('billofpayments.downloadPdf');
 Route::get('/payment-details/export/{hashId}', [BillOfPaymentController::class, 'paymentDetailstExport'])->name('payment-details.export');
 Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class, 'paymentDetailstDownload'])->name('payment-details.download');
+
+
+// payment details
+Route::get('/payment-details/{hash}', [PaymentDetailController::class, 'create'])->name('payment-details.create');
 
 // ! form
 Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');

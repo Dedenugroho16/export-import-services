@@ -160,7 +160,7 @@ class BillOfPaymentController extends Controller
     {
         $billId = IdHashHelper::decode($hash);
         $billOfPayment = BillOfPayment::with('client')->findOrFail($billId);
-        return view('bill-of-payments.details', compact('billOfPayment'));
+        return view('bill-of-payments.details', compact('billOfPayment', 'hash'));
     }
 
     public function edit($hash)
