@@ -17,7 +17,7 @@ class CreateDetailTransactionsTable extends Migration
             $table->integer('inner_qty_carton');
             $table->decimal('unit_price', 10, 2);
             $table->integer('net_weight');
-            $table->decimal('price_amount', 10, 2);
+            $table->decimal('price_amount');
             $table->timestamps();
 
             $table->foreign('id_transaction')->references('id')->on('transactions')->onDelete('cascade');

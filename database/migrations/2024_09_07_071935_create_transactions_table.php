@@ -32,7 +32,6 @@ class CreateTransactionsTable extends Migration
             $table->string('seal_number')->nullable();
             $table->string('product_ncm');
             $table->string('payment_condition');
-            $table->string('description')->nullable();
             $table->decimal('freight_cost', 10, 2);
             $table->decimal('total', 10, 2);
             $table->boolean('approved')->default(false);

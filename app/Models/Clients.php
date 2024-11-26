@@ -11,7 +11,6 @@ class Clients extends Model
 
     protected $fillable = [
         'name',
-        'company_name',
         'address',
         'PO_BOX',
         'tel',

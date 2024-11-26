@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Transaction;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
-use App\Helpers\ImageHelper;
-use App\Helpers\NumberToWords;
 use App\Models\BillOfPayment;
-use App\Models\Company;
-use Illuminate\Support\Facades\Auth;
-use Yajra\DataTables\Facades\DataTables;
+use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
 
 class BillOfPaymentController extends Controller
 {
@@ -24,43 +25,63 @@ class BillOfPaymentController extends Controller
 
     public function getBillOfPayment()
     {
-        $billOfPayments = BillOfPayment::with(['client', 'transactions'])
-            ->select(['id', 'month', 'no_inv', 'id_client', 'status']);
+        $billOfPayments = BillOfPayment::with(['client', 'descBills'])
+            ->select(['id', 'month', 'no_inv', 'id_client']);
 
-        return DataTables::of($billOfPayments)
-            ->addIndexColumn() // Tambahkan baris ini
-            ->addColumn('client_name', function ($row) {
-                return $row->client ? $row->client->name : '-';
-            })
-            ->addColumn('company_name', function ($row) {
-                return $row->client ? $row->client->company_name : '-';
-            })
-            ->addColumn('aksi', function ($row) {
-                $hashId = IdHashHelper::encode($row->id);
-                return '
-                    <div class="dropdown">
-                        <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
-                            Aksi
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
-                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
-                                Payment Details
-                            </a>
-                            <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
-                                Tampilkan
-                            </a>
-                            <a href="' . route('bill-of-payment.edit', $hashId) . '" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
-                                Edit
-                            </a>
-                        </div>
-                    </div>';
-            })
-            ->rawColumns(['aksi'])
-            ->make(true);
-    }
+    return DataTables::of($billOfPayments)
+        ->addIndexColumn()
+        ->addColumn('client_name', function ($row) {
+            return $row->client ? $row->client->name : '-';
+        })
+        ->addColumn('company_name', function ($row) {
+            return $row->client ? $row->client->company_name : '-';
+        })
+        ->addColumn('status', function ($row) {
+            // Cek setiap transaksi yang terkait dengan BillOfPayment ini
+            $isPaid = true;
+
+            foreach ($row->transactions as $transaction) {
+                if ($transaction->paid < $transaction->total) {
+                    $isPaid = false;
+                    break; // Jika ada transaksi yang belum lunas, stop pengecekan
+                }
+            }
+
+            if ($isPaid) {
+                $row->status = 1;
+                $row->save();
+                return '<span class="badge bg-success text-white">Lunas</span>';
+            }
+                $row->status = 0;
+                $row->save();
+                return '<span class="badge bg-danger text-white">Belum Lunas</span>';
+        })
+        ->addColumn('aksi', function ($row) {
+            $hashId = IdHashHelper::encode($row->id);
+            return '
+                <div class="dropdown">
+                    <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
+                        Aksi
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
+                            Payment Details
+                        </a>
+                        <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                            Tampilkan
+                        </a>
+                        <a href="' . route('bill-of-payment.edit', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                            Edit
+                        </a>
+                    </div>
+                </div>';
+        })
+        ->rawColumns(['status', 'aksi']) // Pastikan rawColumns ini ada untuk merender HTML
+        ->make(true);
+}
 
     public function create()
     {
@@ -82,36 +103,26 @@ class BillOfPaymentController extends Controller
         // Menggabungkan $newNumber dengan dua digit tanggal
         $formattedNumber = $newNumber . '/' . $twoDigitMonth;
 
-        // payment number
-        $lastPaymentNumber = BillOfPayment::orderBy('payment_number', 'desc')->first();
-        // Jika belum ada data di kolom number, mulai dari 0001
-        if ($lastPaymentNumber === null || empty($lastPaymentNumber->payment_number)) {
-            $newPaymentNumber = '0001';
-        } else {
-            // Mengambil number terakhir dan menambah 1, pastikan tetap 4 digit
-            $paymentNumber = intval($lastPaymentNumber->payment_number);
-            $newPaymentNumber = str_pad($paymentNumber + 1, 4, '0', STR_PAD_LEFT);
-        }
-
-        $year = date('Y');
-        $formattedPaymentNumber = $newPaymentNumber . '.' . $year . '/PSN/PM.OF';
-
-        return view('bill-of-payments.create', compact('formattedNumber', 'formattedPaymentNumber'));
+        return view('bill-of-payments.create', compact('formattedNumber'));
     }
 
     public function getProformaInvoices(Request $request)
     {
         if (!$request->has('id_client') || empty($request->id_client)) {
-            return datatables()->of(collect([]))->make(true); // Kembalikan data kosong jika `id_client` tidak ada
+            return datatables()->of(collect([]))->make(true); // Data kosong jika `id_client` tidak ada
         }
 
         $invoices = Transaction::where('approved', 1)
-            ->whereNotNull('stuffing_date')
-            ->whereNull('id_bill')
-            ->where('id_client', $request->id_client);
+            ->where('id_client', $request->id_client)
+            ->whereRaw('total <> (SELECT COALESCE(SUM(transfered), 0) FROM payments WHERE payments.id_transaction = transactions.id)')
+            ->with('payments') // Pastikan relasi payments dimuat
+            ->get();
 
         return datatables()->of($invoices)
             ->addIndexColumn()
+            ->addColumn('total_paid', function ($row) {
+                return $row->payments->sum('transfered');
+            })
             ->addColumn('amount', function ($row) {
                 return $row->total;
             })
@@ -128,7 +139,6 @@ class BillOfPaymentController extends Controller
         $data = $request->validate([
             'month' => 'required',
             'no_inv' => 'required',
-            'payment_number' => 'required',
             'id_client' => 'required',
             'total' => 'required|numeric|gte:0',
         ], [
@@ -144,31 +154,6 @@ class BillOfPaymentController extends Controller
         return response()->json([
             'success' => true,
             'id_bill' => $billOfPayment->id
-        ]);
-    }
-
-    public function PIUpdate(Request $request)
-    {
-        // Ambil data transactions dari request
-        $transactions = $request->input('transactions');
-
-        foreach ($transactions as $data) {
-            // Ambil id dari setiap data
-            $transaction = Transaction::find($data['id']);
-
-            if ($transaction) {
-                // Update data transaksi
-                $transaction->description = $data['description'];
-                $transaction->paid = $data['paid'];
-                $transaction->id_bill = $data['id_bill'];
-                // Tambahkan field lain sesuai kebutuhan
-                $transaction->save();
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Bil of Payment berhasil dibuat'
         ]);
     }
 
@@ -207,13 +192,13 @@ class BillOfPaymentController extends Controller
         $hashedId = IdHashHelper::encode($id);
 
         return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords', 'hashedId'));
-    } 
+    }
 
     public function edit($hash)
     {
         $id = IdHashHelper::decode($hash);
 
-        $billOfPayment = BillOfPayment::with(['transactions'], ['client'])->findOrFail($id);
+        $billOfPayment = BillOfPayment::with(['descBills'], ['client'])->findOrFail($id);
 
         return view('bill-of-payments.edit', compact('billOfPayment'));
     }
@@ -221,26 +206,40 @@ class BillOfPaymentController extends Controller
     public function getTransactions($idBill)
     {
         try {
-            // Ambil transaksi berdasarkan id_transaction dengan join ke detail_products
-            $transactions = Transaction::where('transactions.id_bill', $idBill)
+            // Ambil data transaksi dengan relasi ke desc_bills dan payments
+            $transactions = Transaction::whereHas('descBills', function ($query) use ($idBill) {
+                $query->where('id_bill', $idBill);
+            })
+                ->with([
+                    'descBills' => function ($query) {
+                        $query->select('id_transaction', 'description');
+                    },
+                    'payments' => function ($query) {
+                        $query->select(
+                            'id_transaction',
+                            DB::raw('SUM(transfered) as total_paid')
+                        )->groupBy('id_transaction'); // Tambahkan GROUP BY
+                    }
+                ])
                 ->select(
-                    'transactions.*',
                     'transactions.id',
                     'transactions.number',
                     'transactions.code',
-                    'transactions.description',
-                    'transactions.total',
-                    'transactions.paid',
-                    'transactions.total as bill' // Asumsikan bill sama dengan total
+                    'transactions.total'
                 )
                 ->get();
 
-            // Return JSON response
+            // Gabungkan description dari desc_bills dan total_paid dari payments
+            $transactions = $transactions->map(function ($transaction) {
+                $transaction->description = $transaction->descBills->pluck('description')->implode(', ');
+                $transaction->paid = $transaction->payments->sum('total_paid') ?: 0;
+                return $transaction;
+            });
+
             return response()->json($transactions);
         } catch (\Exception $e) {
-            // Jika ada error, log error dan kembalikan response error 500
             \Log::error("Error fetching transactions: " . $e->getMessage());
-            return response()->json(['error' => 'Terjadi kesalahan pada server'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -287,8 +286,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalBill = 0;
 
@@ -321,8 +320,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalBill = 0;
 
@@ -355,8 +354,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalPaid = 0;
 
@@ -389,8 +388,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalPaid = 0;
 
