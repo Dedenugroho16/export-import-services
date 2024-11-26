@@ -1,19 +1,19 @@
-@extends('layouts.layout')
-@section('title', 'Profile')
+@extends('layouts.layout') 
+@section('title', 'Profile') 
 
 @section('content')
-<div class="container mt-3">
+<div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-lg-12">
+        <div class="col-lg-10">
             <div class="card shadow border-0 rounded-lg modern-card">
-                <div class="card-header text-white py-4 d-flex justify-content-between align-items-center" style="background-color: #182433;">
-                    <h4 class="mb-0">Welcome, {{ $user->name }}!</h4>
-                    <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                        <i class="bi bi-pencil-square"></i> Lengkapi Profile
-                    </button>
+                <div class="card-header text-white" style="background-color: #007bff;">
+                    <a href="{{ route('home') }}" class="text-secondary">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="white"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-left me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+                    </a> 
+                    <h2 class="mb-0">User Information</h2>
                 </div>
-
                 <div class="card-body">
+                    <!-- Alert Section -->
                     @if(session('status'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             {{ session('status') }}
@@ -32,99 +32,108 @@
                         </div>
                     @endif
 
-                    <p class="lead text-muted mb-4">Welcome back! Here's a quick overview of your profile and account details. You can manage your settings and explore additional features below.</p>
+                    <!-- Profile Section -->
+                    <div class="container">
+                        <div class="row align-items-center mb-5">
+                            <!-- Profile Picture -->
+                            <div class="col-md-4 text-center profile-card">
+                                <img src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" 
+                                    alt="Profile Picture" 
+                                    class="img-fluid rounded-circle profile-image shadow-lg mb-4">
+                            </div>
 
-                    <div class="row align-items-center mb-4">
-                        <div class="col-md-4 text-center mb-3 mb-md-0 profile-card">
-                            <img src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" 
-                                 alt="Profile Picture" 
-                                 class="img-fluid img-thumbnail rounded-circle profile-image">
-                        </div>
-                        <div class="col-md-8">
-                            <h5 class="fw-bold mb-3">User Information</h5>
-                            <div class="shadow-sm p-4 bg-white rounded border border-light">
-                                <ul class="list-group list-group-flush modern-list">
-                                    <li class="list-group-item py-2" style="border: none; padding-left: 20px; padding-right: 20px;">
-                                        <strong style="color: #5a5a5a;">Name:</strong> {{ $user->name }}
-                                    </li>
-                                    <li class="list-group-item py-2" style="border: none; padding-left: 20px; padding-right: 20px;">
-                                        <strong style="color: #5a5a5a;">Email:</strong> {{ $user->email }}
-                                    </li>
-                                    <li class="list-group-item py-2" style="border: none; padding-left: 20px; padding-right: 20px;">
-                                        <strong style="color: #5a5a5a;">Role:</strong> {{ $user->role }}
-                                    </li>
-                                    <li class="list-group-item py-2" style="border: none; padding-left: 20px; padding-right: 20px;">
-                                        <strong style="color: #5a5a5a;">Member Since:</strong> {{ $user->created_at->format('d M Y') }}
-                                    </li>
-                                    <li class="list-group-item py-2" style="border: none; padding-left: 20px; padding-right: 20px;">
-                                        <strong style="color: #5a5a5a;">Signature:</strong>
-                                        <img src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}" 
-                                             alt="Signature" 
-                                             class="signature-image" 
-                                             style="max-width: 180px; height: auto; border-radius: 8px;">
-                                    </li>
-                                </ul>
+                            <!-- User Information -->
+                            <div class="col-md-8">
+                                <div class="user-info-card shadow p-4 bg-white rounded">
+                                    <h3 class="fw-bold text-primary mb-4">Welcome, {{ $user->name }}!</h3>
+                                    <table class="table table-hover table-borderless">
+                                        <tr>
+                                            <th class="text-secondary">Username</th>
+                                            <td>:</td>
+                                            <td>{{ $user->username }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-secondary">Nama</th>
+                                            <td>:</td>
+                                            <td>{{ $user->name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-secondary">Role</th>
+                                            <td>:</td>
+                                            <td class="text-capitalize">{{ $user->role }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-secondary">Bergabung Pada</th>
+                                            <td>:</td>
+                                            <td class="text-capitalize">{{ $user->created_at->format('d F, Y') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-secondary">Tanda Tangan</th>
+                                            <td>:</td>
+                                            <td>
+                                                <img src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}" 
+                                                    alt="Signature" 
+                                                    class="img-fluid signature-image shadow-sm" style="width: 200px">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                                                Edit Profile
+                                           </button></td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Buttons Section -->
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 80%; ">
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Edit Profile</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editProfileForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;"> <!-- Add max-height and scroll -->
-                    <div class="text-center mb-3">
-                        <img id="currentProfilePicture" src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" alt="Profile Picture" class="img-fluid img-thumbnail rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-                        <p class="text-muted mt-2">Current Profile Picture</p>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img id="currentProfilePicture" src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" 
+                             class="img-fluid rounded-circle shadow profile-image-preview" style="width: 120px; height: 120px;">
                     </div>
-                    <div class="row">
-                        <div class="mb-2">
-                        <label for="edit_profile_picture" class="form-label">Upload Profile Picture</label>
-                        <input type="file" class="form-control" id="edit_profile_picture" name="profile_picture" accept="image/*" onchange="previewProfilePicture(event)">
-                        <small class="form-text text-muted">Leave blank if you don't want to change the photo.</small>
+                    <div class="mb-5">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
                     </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="edit_name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="edit_name" name="name" value="{{ $user->name }}" required>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="edit_email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="edit_email" name="email" value="{{ $user->email }}" required>
-                        </div>
+                    <div class="mb-5">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-2">
-                            <label for="edit_password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="edit_password" name="password">
-                            <small class="form-text text-muted">Leave blank if you don't want to change the password.</small>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="edit_password_confirmation" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation">
-                        </div>
+                    <div class="mb-5">
+                        <label class="form-label">Upload Profile Picture</label>
+                        <input type="file" class="form-control" name="profile_picture" accept="image/*" onchange="previewProfilePicture(event)">
                     </div>
-                    <div class="mb-2">
-                        <label for="edit_signature" class="form-label">Upload Signature (PNG only)</label>
-                        <input type="file" class="form-control" id="edit_signature" name="signature" accept="image/png" onchange="previewSignature(event)">
-                        <small class="form-text text-muted">Leave blank if you don't want to change the signature.</small>
+                    <div class="mb-5">
+                        <label class="form-label">Upload Signature (PNG only)</label>
+                        <input type="file" class="form-control" name="signature" accept="image/png" onchange="previewSignature(event)">
                     </div>
-                    <div class="text-center mb-3">
-                        <img id="currentSignature" src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}" alt="Signature Image" class="img-fluid img-thumbnail" style="width: 250px; height: 125px; object-fit: cover;">
+                    <div class="mb-5">
+                        <img id="currentSignature" src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}" 
+                             class="img-fluid signature-image-preview" style="width: 200px">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     <button type="submit" class="btn btn-primary">Update Profile</button>
                 </div>
             </form>
@@ -133,74 +142,72 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('editProfileModal');
-        modal.addEventListener('hidden.bs.modal', function () {
-            document.getElementById('editProfileForm').reset();
-            document.getElementById('currentProfilePicture').src = "{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}";
-            document.getElementById('currentSignature').src = "{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}";
-        });
-    });
+function previewProfilePicture(event) {
+    const reader = new FileReader();
+    reader.onload = () => document.getElementById('currentProfilePicture').src = reader.result;
+    reader.readAsDataURL(event.target.files[0]);
+}
 
-    function previewProfilePicture(event) {
-        const reader = new FileReader();
-        reader.onload = function(){
-            const output = document.getElementById('currentProfilePicture');
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-    
-    function previewSignature(event) {
-        const reader = new FileReader();
-        reader.onload = function(){
-            const output = document.getElementById('currentSignature');
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
+function previewSignature(event) {
+    const reader = new FileReader();
+    reader.onload = () => document.getElementById('currentSignature').src = reader.result;
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+$(document).ready(function() {
+        setTimeout(function() {
+            $('.alert-dismissible').fadeOut();
+        }, 3000);
+    });
 </script>
 
 <style>
-    .modern-card {
-        border-radius: 20px;
-        background-color: #fff;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        padding: 15px;
-    }
+.modern-card {
+    border-radius: 15px;
+    background-color: #f8f9fa;
+}
 
-    .profile-card {
-        width: 150px;
-        height: 150px;
-        margin: 0 auto;
-    }
+.profile-card {
+    width: 200px;
+    margin: auto;
+}
 
-    .profile-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+.signature-image {
+    max-width: 200px;
+    height: auto;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    padding: 5px;
+}
+.profile-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border: 5px solid #f0f0f5;
+}
 
-    .signature-image {
-        width: 180px;
-        height: 90px;
-        object-fit: cover;
-        border: 2px solid #dee2e6;
-        border-radius: 10px;
-        padding: 5px;
-    }
+.user-info-card {
+    transition: all 0.3s ease;
+}
 
-    .modern-list .list-group-item {
-        border: none;
-        padding: 8px 10px;
-    }
+.user-info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
 
-    .modal-body {
-        padding: 1rem;
-    }
+.table th {
+    width: 150px;
+    font-weight: bold;
+}
 
-    .modal-footer {
-        padding: 0.5rem;
-    }
+.signature-image {
+    width: 100%;
+    max-width: 250px;
+    object-fit: contain;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 5px;
+}
+
 </style>
 @endsection

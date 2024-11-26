@@ -324,62 +324,45 @@
                                 </ul>
                             </li>
                             <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('transactions.rekap') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-text">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path
-                                                d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
-                                            <path
-                                                d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
-                                            <path d="M9 12h6" />
-                                            <path d="M9 16h6" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">Rekap Sales</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-invoice">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                            <path
-                                                d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                                            <path d="M9 7l1 0" />
-                                            <path d="M9 13l6 0" />
-                                            <path d="M13 17l2 0" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">Bill Of Payment</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-invoice">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                            <path
-                                                d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                                            <path d="M9 7l1 0" />
-                                            <path d="M9 13l6 0" />
-                                            <path d="M13 17l2 0" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">Account Statement</span>
-                                </a>
-                            </li>
+                            <a class="nav-link" href="{{ route('transactions.rekap') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-bar-chart">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M3 17l6-6l4 4l6-8" />
+                                        <path d="M14 3v18" />
+                                        <path d="M7 9v9" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">Rekap Sales</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 6h14c.553 0 1 .447 1 1v10c0 .553-.447 1-1 1H5c-.553 0-1-.447-1-1V7c0-.553.447-1 1-1z" />
+                                        <path d="M3 10h18" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">Bill Of Payment</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-banknote">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M2 6h20" />
+                                        <path d="M2 12h20" />
+                                        <path d="M2 18h20" />
+                                        <path d="M12 6v12" />
+                                        <path d="M12 6h0" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">Account Statement</span>
+                            </a>
+                        </li>
                         @endif
                         @if (auth()->user()->role === 'operator')
                             <li class="nav-item {{ Request::is('clients*') ? 'active' : '' }}">
@@ -646,16 +629,15 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0"
                                     data-bs-toggle="dropdown" aria-label="Open user menu">
-                                    <!-- Menggunakan gambar dari database atau gravatar sebagai default -->
                                     <span class="avatar avatar-sm rounded-circle"
-                                        style="background-image: url('{{ Auth::user()->profile_picture_url ? asset('storage/' . Auth::user()->profile_picture_url) : 'https://www.gravatar.com/avatar/' . md5(strtolower(trim(Auth::user()->email))) . '?d=mp' }}'); border-radius: 50%;"></span>
+                                        style="background-image: url('{{ Auth::user()->profile_picture_url ? asset('storage/' . Auth::user()->profile_picture_url) : '' }}'); 
+                                                border-radius: 50%; 
+                                                background-color: {{ Auth::user()->profile_picture_url ? 'transparent' : '#f0f0f0' }};">
+                                    </span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                     <a href="{{ route('profile.show') }}" class="dropdown-item">
                                         <i class="fas fa-user me-2"></i> Profil
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <i class="fas fa-cog me-2"></i> Pengaturan
                                     </a>
                                     <form id="logout-form" method="POST" action="{{ route('logout') }}">
                                         @csrf
