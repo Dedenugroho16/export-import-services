@@ -59,6 +59,10 @@
                                         <th>Fax</th>
                                         <td>{{ $client->fax }}</td>
                                     </tr>
+                                    <tr>
+                                        <th>Nama Perusahaan</th>
+                                        <td>{{ $client->company->company_name ?? 'N/A' }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
 

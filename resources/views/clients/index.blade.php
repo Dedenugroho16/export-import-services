@@ -34,17 +34,18 @@
                         <!-- Table Starts Here -->
                         <div class="table-responsive">
                             <table class="table card-table table-hover table-vcenter text-nowrap" id="clientTable">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">No</th>
-                                        <th class="text-center">Nama</th>
-                                        <th class="text-center">Alamat</th>
-                                        <th class="text-center">PO BOX</th>
-                                        <th class="text-center">Telepon</th>
-                                        <th class="text-center">Fax</th>
-                                        <th class="text-center">Aksi</th>
-                                    </tr>
-                                </thead>
+                            <thead>
+                                <tr>
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">Nama</th>
+                                    <th class="text-center">Alamat</th>
+                                    <th class="text-center">PO BOX</th>
+                                    <th class="text-center">Telepon</th>
+                                    <th class="text-center">Fax</th>
+                                    <th class="text-center">Nama Perusahaan</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
                                 <tbody>
 
                                 </tbody>
@@ -79,6 +80,7 @@
                 { data: 'PO_BOX', name: 'PO_BOX', class: 'text-center' },
                 { data: 'tel', name: 'tel', class: 'text-center' },
                 { data: 'fax', name: 'fax', class: 'text-center' },
+                { data: 'company_name', name: 'company_name', class: 'text-center' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
             ],
             language: {

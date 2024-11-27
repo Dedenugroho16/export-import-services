@@ -25,6 +25,16 @@ use App\Http\Controllers\ClientCompanyController;
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
 
+Route::get('/ajax-companies', function (Request $request) {
+    $search = $request->get('q'); // Ambil kata kunci pencarian dari query string
+    $companies = ClientCompany::where('company_name', 'like', "%{$search}%") // Pencarian berdasarkan nama perusahaan
+                              ->select('id', 'company_name') // Pilih hanya id dan nama perusahaan
+                              ->get(); // Ambil hasilnya
+
+    return response()->json($companies); // Kirimkan hasil dalam format JSON
+})->name('ajax-companies');
+
+
 // Client Routes using resource
 Route::resource('clients', ClientsController::class);
 Route::get('clients', [ClientsController::class, 'index'])->name('clients.index');

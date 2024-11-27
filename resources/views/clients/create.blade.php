@@ -4,7 +4,7 @@
 @section('content')
 <div class="page-body">
     <div class="container-xl">
- <!-- Form Section -->
+        <!-- Form Section -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
@@ -26,8 +26,8 @@
                                 <input type="text" id="name" name="name" class="form-control" required>
                             </div>
                             <div class="mb-3">
-                                <label for="company_name" class="form-label">Nama Perusahaan</label>
-                                <select class="form-control" id="company_name" name="client_company" required></select>
+                                <label for="client_company_id" class="form-label">Nama Perusahaan</label>
+                                <select class="form-control" id="client_company_id" name="client_company_id" required></select>
                             </div>                            
                             <div class="mb-3">
                                 <label for="address" class="form-label">Alamat</label>
@@ -59,36 +59,36 @@
 
 <script>
     // Inisialisasi Select2 untuk input company_name
-$('#company_name').select2({
-    ajax: {
-        url: '{{ route('ajax-companies') }}',  // Menggunakan route yang sudah dibuat
-        dataType: 'json',
-        delay: 250,  // Mengatur delay sebelum melakukan pencarian
-        data: function(params) {
-            return {
-                q: params.term  // Mengirimkan kata kunci pencarian ke server
-            };
+    $('#client_company_id').select2({
+        ajax: {
+            url: '{{ route('ajax-companies') }}',  // Menggunakan route yang sudah dibuat
+            dataType: 'json',
+            delay: 250,  // Mengatur delay sebelum melakukan pencarian
+            data: function(params) {
+                return {
+                    q: params.term  // Mengirimkan kata kunci pencarian ke server
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data.map(function(company) {
+                        return {
+                            id: company.id,  // Menyimpan ID perusahaan
+                            text: company.company_name  // Menampilkan nama perusahaan
+                        };
+                    })
+                };
+            },
+            cache: true
         },
-        processResults: function(data) {
-            return {
-                results: data.map(function(company) {
-                    return {
-                        id: company.id,  // Menyimpan ID perusahaan
-                        text: company.company_name  // Menampilkan nama perusahaan
-                    };
-                })
-            };
+        placeholder: "Pilih Nama Perusahaan",  // Placeholder saat belum ada pilihan
+        templateResult: function(company) {
+            if (company.loading) return company.text;  // Tampilkan saat loading
+            return $('<span>' + company.text + '</span>');  // Tampilkan nama perusahaan
         },
-        cache: true
-    },
-    placeholder: "Pilih Nama Perusahaan",  // Placeholder saat belum ada pilihan
-    templateResult: function(company) {
-        if (company.loading) return company.text;  // Tampilkan saat loading
-        return $('<span>' + company.text + '</span>');  // Tampilkan nama perusahaan
-    },
-    templateSelection: function(company) {
-        return $('<span>' + company.text + '</span>');  // Tampilkan nama perusahaan setelah dipilih
-    }
-});
+        templateSelection: function(company) {
+            return $('<span>' + company.text + '</span>');  // Tampilkan nama perusahaan setelah dipilih
+        }
+    });
 </script>
 @endsection
