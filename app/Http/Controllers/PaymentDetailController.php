@@ -150,6 +150,57 @@ class PaymentDetailController extends Controller
         return view('payment-details.edit', compact('paymentDetails', 'hashedBOPId'));
     }
 
+    public function getTransactions($idBill, $idPaymentDetail)
+    {
+        try {
+            // Ambil data transaksi dengan relasi ke desc_bills dan payments
+            $transactions = Transaction::whereHas('descBills', function ($query) use ($idBill) {
+                $query->where('id_bill', $idBill);
+            })
+                ->with([
+                    'descBills' => function ($query) use ($idBill) {
+                        $query->where('id_bill', $idBill)
+                            ->select('id_transaction', 'description', 'paid');
+                    },
+                    'payments' => function ($query) use ($idPaymentDetail) {
+                        $query->where('id_payment_detail', $idPaymentDetail)
+                            ->select('id_transaction', 'description', 'transfered', 'id_payment_detail');
+                    }
+                ])
+                ->select(
+                    'transactions.id',
+                    'transactions.number',
+                    'transactions.code',
+                    'transactions.total'
+                )
+                ->get();
+
+            // Proses data untuk setiap transaksi
+            $transactions = $transactions->map(function ($transaction) use ($idPaymentDetail) {
+                // Ambil deskripsi dari descBills
+                $transaction->description = $transaction->descBills->where('id_transaction', $transaction->id)->pluck('description')->implode(', ');
+
+                // Ambil deskripsi dari payments dengan filter id_payment_detail
+                $transaction->descriptionPayments = $transaction->payments
+                    ->where('id_transaction', $transaction->id) // Filter berdasarkan id_transaction
+                    ->where('id_payment_detail', $idPaymentDetail) // Filter tambahan berdasarkan id_payment_detail
+                    ->pluck('description');
+                
+                $transaction->descriptionTransfered = $transaction->payments
+                    ->where('id_transaction', $transaction->id) // Filter berdasarkan id_transaction
+                    ->where('id_payment_detail', $idPaymentDetail) // Filter tambahan berdasarkan id_payment_detail
+                    ->pluck('transfered');
+
+                return $transaction;
+            });
+
+            return response()->json($transactions);
+        } catch (\Exception $e) {
+            \Log::error("Error fetching transactions: " . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      */

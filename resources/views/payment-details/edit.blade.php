@@ -131,7 +131,8 @@
                                 <input type="date" name="date" id="date" value="{{ $paymentDetails->date }}">
                                 <input type="" id="id_bill_of_payment" name="id_bill_of_payment"
                                     value="{{ $paymentDetails->billOfPayment->id }}">
-                                <input type="" id="payment_number" name="payment_number" value="{{ $paymentDetails->payment_number }}">
+                                <input type="" id="payment_number" name="payment_number"
+                                    value="{{ $paymentDetails->payment_number }}">
                                 <input type="" id="selectedClientId" name="id_client"
                                     value="{{ $paymentDetails->client->id }}">
                                 <input type="" id="total" name="total">
@@ -183,9 +184,9 @@
 
     <script>
         $(document).ready(function() {
-            function loadTransaction(idBillOfPayment) {
+            function loadTransaction(idBillOfPayment, idPaymentDetail) {
                 $.ajax({
-                    url: `/get-transactions/${idBillOfPayment}`,
+                    url: `/get-transactions/${idBillOfPayment}/${idPaymentDetail}`,
                     method: 'GET',
                     success: function(response) {
                         // Kosongkan tbody untuk data yang baru di-load
@@ -207,12 +208,12 @@
                                                     <td class="text-center">
                                                         <input type="text" name="transactions[${data.id}][description]" 
                                                             class="form-control description-input"
-                                                            value="{{ $paymentDetails->description }}">
+                                                            value="${data.descriptionPayments || ''}">
                                                     </td>
                                                     <td class="text-center amount">${total?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center paid">${data.paid?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center" style="width:150px;">
-                                                        <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer">
+                                                        <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer" value="${data.descriptionTransfered || ''}">
                                                         <input type="" name="transactions[${data.id}][transfered]" class="form-control transfered" placeholder="Uang ditransfer">
                                                     </td>
                                                     <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
@@ -251,8 +252,9 @@
 
             // Pastikan idBillOfPayment tersedia untuk memuat data dari database
             var idBillOfPayment = "{{ $paymentDetails->billOfPayment->id }}";
-            if (idBillOfPayment) {
-                loadTransaction(idBillOfPayment);
+            var idPaymentDetail = "{{ $paymentDetails->id }}";
+            if (idBillOfPayment && idPaymentDetail) {
+                loadTransaction(idBillOfPayment, idPaymentDetail);
             }
 
             function updateAmounts() {
@@ -293,14 +295,15 @@
                 $('#paymentDetailTable tbody tr').each(function() {
                     var row = $(this);
                     var inputs = row.find(
-                    'input:not([type="hidden"])'); // Hanya memvalidasi input yang terlihat (bukan hidden)
+                        'input:not([type="hidden"])'
+                        ); // Hanya memvalidasi input yang terlihat (bukan hidden)
 
                     inputs.each(function() {
                         var input = $(this);
                         if (input.val().trim() === '') {
                             isValid = false;
                             input.addClass(
-                            'is-invalid'); // Tambahkan kelas untuk menandai input tidak valid
+                                'is-invalid'); // Tambahkan kelas untuk menandai input tidak valid
                         } else {
                             input.removeClass('is-invalid'); // Hapus tanda jika valid
                         }
@@ -344,7 +347,7 @@
                 // Submit formPaymentDetails via AJAX
                 $.ajax({
                     url: formPaymentDetails.attr(
-                    'action'), // The action URL from the formPaymentDetails
+                        'action'), // The action URL from the formPaymentDetails
                     method: 'POST',
                     data: formDataPaymentDetails,
                     success: function(response) {

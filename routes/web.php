@@ -180,7 +180,7 @@ Route::get('/payment-details/{hash}/edit', [PaymentDetailController::class, 'edi
 Route::get('/payment-details/{hash}', [PaymentDetailController::class, 'show'])->name('payment-details.show');
 Route::get('/payment-details/{hashedId}/export-pdf', [PaymentDetailController::class, 'exportPdf'])->name('payment-details.exportPdf');
 Route::get('/payment-details/{hashedId}/download', [PaymentDetailController::class, 'downloadPdf'])->name('payment-details.download');
-
+Route::get('/get-transactions/{idBill}/{idPaymentDetail}', [PaymentDetailController::class, 'getTransactions'])->name('get-transactions');
 
 // ! form
 Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');
