@@ -152,7 +152,7 @@ class BillOfPaymentController extends Controller
 
         foreach ($billOfPayment->descBills as $descBill) {
             $transaction = $descBill->transaction;
-            $transaction->bill = $transaction->total - $transaction->paid;
+            $transaction->bill = $transaction->total - $descBill->paid;
             $totalBill += $transaction->bill;
         }
 
