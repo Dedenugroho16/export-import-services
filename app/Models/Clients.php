@@ -34,4 +34,9 @@ class Clients extends Model
     {
         return $this->hasMany(BillOfPayment::class, 'id_client');
     }
+
+    public function paymentDetails()
+    {
+        return $this->hasMany(PaymentDetail::class, 'id_client', 'id');
+    }
 }

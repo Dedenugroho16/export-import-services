@@ -21,8 +21,13 @@ class Payment extends Model
         return $this->belongsTo(BillOfPayment::class, 'id_bill', 'id');
     }
     
+    public function paymentDetail()
+    {
+        return $this->belongsTo(PaymentDetail::class, 'id_payment_detail', 'id');
+    }
+
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class,  'id_transaction', 'id');
+        return $this->belongsTo(Transaction::class, 'id_transaction', 'id');
     }
 }
