@@ -48,7 +48,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <!-- Success Message for Deleting, Editing, or Adding Data -->
+                        <h3>PEMBAYARAN</h3>
                         @if (session('success'))
                         <div class="alert alert-important alert-success alert-dismissible" role="alert">
                             <div class="d-flex">
@@ -65,13 +65,13 @@
                         @endif
                         <!-- DataTables Integration -->
                         <div class="table-responsive">
-                            <table id="consigneeById" class="table card-table table-hover table-vcenter text-nowrap">
+                            <table id="paymentDetailsTable" class="table card-table table-hover table-vcenter text-nowrap">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th class="text-center">No</th>
-                                        <th class="text-center">Nama</th>
-                                        <th class="text-center">Alamat</th>
-                                        <th class="text-center">Telepon</th>
+                                        <th class="text-center">Payment Number</th>
+                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Total</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -83,4 +83,62 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#paymentDetailsTable').DataTable({
+            processing: false,
+            serverSide: true,
+            paging: false,
+            searching: false,
+            info: false,
+            ajax: {
+                url: "{{ route('bill-of-payments.details', $hash) }}",
+                type: 'GET'
+            },
+            columns: [
+                { 
+                    data: null, 
+                    class: 'text-center',
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut
+                    },
+                    orderable: false,
+                    searchable: false
+                },
+                { data: 'payment_number', name: 'payment_number', class: 'text-center'},
+                { data: 'date', name: 'date', class: 'text-center'},
+                { data: 'total', name: 'total', class: 'text-center'},
+                { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
+            ],
+            language: {
+                lengthMenu: "Tampilkan _MENU_ Data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                search: "Cari :",
+                infoFiltered: "(disaring dari total _MAX_ entri)"
+            },
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 10,
+            drawCallback: function() {
+                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
+                $('#consigneeById td:nth-child(2), #consigneeById th:nth-child(2)').css({
+                    'max-width': '200px',
+                    'white-space': 'normal',
+                    'word-wrap': 'break-word'
+                });
+                $('#consigneeById td:nth-child(3), #consigneeById th:nth-child(3)').css({
+                    'max-width': '250px',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis'
+                });
+            }
+        });
+    });
+</script>
 @endsection
