@@ -39,7 +39,7 @@
                             </tr>
                             <tr>
                                 <th>Total</th>
-                                <td>{{ $billOfPayment->total }}</td>
+                                <td>{{ number_format($billOfPayment->total) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -110,7 +110,14 @@
                 },
                 { data: 'payment_number', name: 'payment_number', class: 'text-center'},
                 { data: 'date', name: 'date', class: 'text-center'},
-                { data: 'total', name: 'total', class: 'text-center'},
+                { data: 'total', name: 'total', className: 'text-center',
+                    render: function(data, type, row) {
+                        return new Intl.NumberFormat('en-US', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        }).format(data);
+                    }
+                },
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
             ],
             language: {
