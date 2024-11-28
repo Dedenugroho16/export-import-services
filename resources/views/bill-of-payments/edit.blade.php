@@ -87,14 +87,6 @@
                                 @method('PUT')
                                 <div class="row mt-4">
                                     <div class="col-md-12">
-                                        <div class="btn-group mb-1">
-                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#PIModal">
-                                                <i data-feather="search"></i> Cari proforma invoices
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
                                         <span class="error-message" id="pi_error"
                                             style="color: red; display: none;"></span>
                                     </div>
@@ -108,7 +100,6 @@
                                                     <th class="text-center">AMOUNT</th>
                                                     <th class="text-center">PAID</th>
                                                     <th class="text-center">BILL</th>
-                                                    <th class="text-center">AKSI</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -151,40 +142,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade text-left" id="PIModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-            <div class="modal-content modal-centered">
-                <div class="modal-header border-bottom bg-transparent">
-                    <h4 class="modal-title">Proforma Invoices</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover" id="PITable">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">No</th>
-                                            <th class="text-center">PI. NUMBER</th>
-                                            <th class="text-center">CODE</th>
-                                            <th class="text-center">AMOUNT</th>
-                                            <th class="text-center">AKSI</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
-                        aria-label="Close">Tutup</button>
                 </div>
             </div>
         </div>
@@ -247,9 +204,6 @@
                                                         <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
                                                     </td>
                                                     <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
-                                                    </td>
                                                 </tr>
                                             `;
                                 $('#billOfPaymentTable tbody').append(newRow);
