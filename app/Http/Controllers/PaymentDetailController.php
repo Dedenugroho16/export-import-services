@@ -107,6 +107,7 @@ class PaymentDetailController extends Controller
         $paymentDetail = PaymentDetail::with([
             'client',
             'createdBy',
+            'billOfPayment',
             'payments.transaction'
         ])->findOrFail($id);
 
@@ -118,7 +119,8 @@ class PaymentDetailController extends Controller
 
         $totalInWords = NumberToWords::convert($paymentDetail->total);
         $hashedId = IdHashHelper::encode($paymentDetail->id);
-       return view('payment-details.show', compact('paymentDetail', 'company', 'totalInWords', 'hashedId'));
+        $hashedBOPId = IdHashHelper::encode($paymentDetail->billOfPayment->id);
+       return view('payment-details.show', compact('paymentDetail', 'company', 'totalInWords', 'hashedId', 'hashedBOPId'));
     }    
 
     public function edit(string $id)

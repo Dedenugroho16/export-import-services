@@ -5,7 +5,7 @@
     <div class="page-body">
         <div class="container-xl">
             <div class="mb-4 mt-4 d-flex justify-content-between">
-                <a href="{{ route('bill-of-payments.details', $hashedId) }}" class="btn btn-primary">
+                <a href="{{ route('bill-of-payments.details', $hashedBOPId) }}" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
