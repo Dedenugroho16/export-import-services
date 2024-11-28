@@ -25,4 +25,9 @@ class DescBill extends Model
     {
         return $this->belongsTo(BillOfPayment::class, 'id_bill', 'id');
     }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class, 'id_payment', 'id');
+    }
 }

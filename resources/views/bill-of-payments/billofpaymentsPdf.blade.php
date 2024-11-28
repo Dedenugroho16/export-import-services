@@ -126,21 +126,23 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($billOfPayment->transactions as $index => $transaction)
-                <tr>
-                    <td style="text-align: center;">{{ $index + 1 }}</td>
-                    <td>{{ $transaction->number }}</td>
-                    <td style="text-align: center;">{{ $transaction->code }}</td>
-                    <td>{{ $transaction->description }}</td>
-                    <td style="text-align: right;">{{ number_format($transaction->total) }}</td>
-                    <td style="text-align: right;">{{ number_format($transaction->paid) }}</td>
-                    <td style="text-align: right;">{{ number_format($transaction->bill) }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7" class="text-center">Tidak ada data transaksi</td>
-                </tr>
-                @endforelse
+                @forelse ($billOfPayment->descBills as $index => $descBill)
+                    @if ($descBill->transaction)
+                        <tr>
+                            <td style="text-align: center;">{{ $index + 1 }}</td>
+                            <td>{{ $descBill->transaction->number }}</td>
+                            <td style="text-align: center;">{{ $descBill->transaction->code }}</td>
+                            <td>{{$descBill->description }}</td>
+                            <td style="text-align: right;">{{ number_format($descBill->transaction->total) }}</td>
+                            <td style="text-align: right;">{{ number_format($descBill->paid) }}</td>
+                            <td style="text-align: right;">{{ number_format($descBill->transaction->bill) }}</td>
+                        </tr>
+                    @endif
+                    @empty
+                    <tr>
+                        <td colspan="7" class="text-center">Tidak ada data transaksi</td>
+                    </tr>
+                 @endforelse
             </tbody>
             <tfoot>
                 <tr id="totalRow" style="font-weight: bold;">

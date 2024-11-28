@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\DescBillController;
-use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -9,7 +7,9 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DescBillController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProformaController;
 use App\Http\Controllers\DashboardController;
@@ -18,6 +18,7 @@ use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\BillOfPaymentController;
 use App\Http\Controllers\DetailProductController;
+use App\Http\Controllers\PaymentDetailController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\DetailTransactionController;
 use App\Http\Controllers\ClientCompanyController;
@@ -173,24 +174,28 @@ Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'd
 // bill of payments
 Route::get('/bill-of-payment', [BillOfPaymentController::class, 'index'])->name('bill-of-payment.index');
 Route::get('/bill-of-payment/create', [BillOfPaymentController::class, 'create'])->name('bill-of-payment.create');
-// Route::get('/bill-of-payment/edit/{hash}', [BillOfPaymentController::class, 'edit'])->name('bill-of-payment.create');
 Route::get('/get-proforma-invoices', [BillOfPaymentController::class, 'getProformaInvoices'])->name('getProformaInvoices');
 Route::get('/bill-of-payment/data', [BillOfPaymentController::class, 'getBillOfPayment'])->name('bill-of-payment.data');
 Route::resource('bill-of-payment', BillOfPaymentController::class);
 Route::get('/get-transactions/{idBill}', [BillOfPaymentController::class, 'getTransactions'])->name('get-transactions');
-Route::get('/bill-of-payments/{hash}/details', [BillOfPaymentController::class, 'paymentDetails'])->name('bill-of-payments.details');
+Route::get('/bill-of-payments/details/{hash}', [BillOfPaymentController::class, 'details'])->name('bill-of-payments.details');
 Route::get('bill-of-payments/{hashId}/export-pdf', [BillOfPaymentController::class, 'bopExportPdf'])->name('billofpayments.exportPdf');
 Route::get('bill-of-payments/{hashId}/download-pdf', [BillOfPaymentController::class, 'bopDownloadPdf'])->name('billofpayments.downloadPdf');
 Route::get('/payment-details/export/{hashId}', [BillOfPaymentController::class, 'paymentDetailstExport'])->name('payment-details.export');
 Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class, 'paymentDetailstDownload'])->name('payment-details.download');
+
+
+// payment details
+Route::get('/payment-details/{hash}/create', [PaymentDetailController::class, 'create'])->name('payment-details.create');
+Route::get('/payment-details/{hash}', [PaymentDetailController::class, 'show'])->name('payment-details.show');
+Route::get('/payment-details/{hashedId}/export-pdf', [PaymentDetailController::class, 'exportPdf'])->name('payment-details.exportPdf');
+Route::get('/payment-details/{hashedId}/download', [PaymentDetailController::class, 'downloadPdf'])->name('payment-details.download');
+
 
 // ! form
 Route::post('/bill-of-payment/store', [BillOfPaymentController::class, 'store'])->name('bill-of-payment.store');
 Route::post('/desc-bills/store', [DescBillController::class, 'store'])->name('desc-bills.store');
 Route::put('/desc-bills/update', [DescBillController::class, 'update'])->name('desc-bills.update');
 // Route untuk menangani form submission
-Route::post('/payment/store', [PaymentController::class, 'store'])->name('payment.store');
-
-// Client Company Route
-Route::resource('client-companies', ClientCompanyController::class);
-Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
+Route::post('/payments/store', [PaymentController::class, 'store'])->name('payments.store');
+Route::post('/payment-details/store', [PaymentDetailController::class, 'store'])->name('payment-details.store');
