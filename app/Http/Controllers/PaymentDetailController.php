@@ -179,6 +179,7 @@ class PaymentDetailController extends Controller
             $transactions = $transactions->map(function ($transaction) use ($idPaymentDetail) {
                 // Ambil deskripsi dari descBills
                 $transaction->description = $transaction->descBills->where('id_transaction', $transaction->id)->pluck('description')->implode(', ');
+                $transaction->paid = $transaction->descBills->where('id_transaction', $transaction->id)->pluck('paid')->implode(', ');
 
                 // Ambil deskripsi dari payments dengan filter id_payment_detail
                 $transaction->descriptionPayments = $transaction->payments
