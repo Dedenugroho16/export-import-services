@@ -195,6 +195,10 @@
                         if (response.length > 0) {
                             response.forEach(function(data) {
                                 let total = Number(data.total);
+                                let transferedValue = parseFloat(data.descriptionTransfered ||
+                                    0);
+                                let formattedTransfered = transferedValue.toLocaleString(
+                                    'en-US');
                                 var newRow = `
                                                 <tr>
                                                     <td class="text-center" style="display: none;">
@@ -213,8 +217,8 @@
                                                     <td class="text-center amount">${total?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center paid">${data.paid?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center" style="width:150px;">
-                                                        <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer" value="${data.descriptionTransfered || ''}">
-                                                        <input type="" name="transactions[${data.id}][transfered]" class="form-control transfered" placeholder="Uang ditransfer">
+                                                        <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer" value="${formattedTransfered}">
+                                                        <input type="" name="transactions[${data.id}][transfered]" class="form-control transfered" value="${transferedValue}">
                                                     </td>
                                                     <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
                                                 </tr>
@@ -228,8 +232,7 @@
                         </tr>
                     `);
                         }
-                        // Update total setelah data dimuat
-                        totalBill();
+                        updateAmounts();
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching detail transactions:', error);
@@ -244,10 +247,10 @@
 
                 var payment = parseFloat(paymentInput.val().replace(/,/g, '')) || 0;
                 var formattedPayment = payment.toLocaleString('en-US');
-                row.find('.transfered-input').val(formattedPayment);
-                row.find('.transfered').val(payment);
+                row.find('.transfered-input').val(formattedPayment); // Update tampilan input
+                row.find('.transfered').val(payment); // Update nilai hidden input
 
-                updateAmounts();
+                updateAmounts(); // Perbarui total saat input berubah
             });
 
             // Pastikan idBillOfPayment tersedia untuk memuat data dari database
@@ -260,26 +263,29 @@
             function updateAmounts() {
                 var totalPayment = 0;
 
-                // Jika tabel kosong atau hanya ada baris "Tidak ada barang", reset semua nilai ke 0
-                if ($('#paymentDetailTable tbody tr').length === 0 || $(
-                        '#paymentDetailTable tbody').find('#nullDetailTransaction').length > 0) {
-                    totalPayment = 0;
-                } else {
-                    // Iterasi setiap baris untuk mendapatkan nilai total
-                    $('#paymentDetailTable tbody tr').each(function() {
-                        var payment = parseFloat($(this).find('.transfered-input').val().replace(
-                            /,/g, '')) || 0;
+                // Iterasi setiap baris untuk mendapatkan nilai total transfered
+                $('#paymentDetailTable tbody tr').each(function() {
+                    var row = $(this);
 
-                        totalPayment += payment;
-                    });
-                }
+                    // Ambil nilai dari transfered-input
+                    var paymentInput = row.find('.transfered-input');
+                    var payment = parseFloat(paymentInput.val().replace(/,/g, '')) || 0;
 
-                // Format hasil perhitungan dengan pemisah ribuan en-US
+                    // Format nilai untuk tampilan
+                    var formattedPayment = payment.toLocaleString('en-US');
+
+                    // Perbarui nilai transfered-input dan hidden transfered
+                    paymentInput.val(formattedPayment);
+                    row.find('.transfered').val(payment);
+
+                    // Tambahkan ke total
+                    totalPayment += payment;
+                });
+
+                // Format hasil total dan update ke footer
                 var formattedTotalPayment = totalPayment.toLocaleString('en-US');
-
-                // Update nilai total di footer dengan format yang benar
-                $('.total-display').val(formattedTotalPayment);
-                $('#total').val(totalPayment);
+                $('.total-display').val(formattedTotalPayment); // Untuk tampilan
+                $('#total').val(totalPayment); // Nilai asli
             }
         });
 
@@ -296,7 +302,7 @@
                     var row = $(this);
                     var inputs = row.find(
                         'input:not([type="hidden"])'
-                        ); // Hanya memvalidasi input yang terlihat (bukan hidden)
+                    ); // Hanya memvalidasi input yang terlihat (bukan hidden)
 
                     inputs.each(function() {
                         var input = $(this);
