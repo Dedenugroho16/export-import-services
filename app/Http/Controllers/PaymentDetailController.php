@@ -107,19 +107,18 @@ class PaymentDetailController extends Controller
         $paymentDetail = PaymentDetail::with([
             'client',
             'createdBy',
-            'descBills.transaction.payments',
+            'payments.transaction'
         ])->findOrFail($id);
 
-        foreach ($paymentDetail->descBills as $descBill) {
-            if ($descBill->transaction && $descBill->transaction->date) {
-                $descBill->transaction->formatted_date = \Carbon\Carbon::parse($descBill->transaction->date)->format('M d, Y');
+        foreach ($paymentDetail->payments as $payment) {
+            if ($payment->transaction) {
+                $payment->transaction->formatted_date = \Carbon\Carbon::parse($payment->transaction->date)->format('M d, Y');
             }
         }
-    
+
         $totalInWords = NumberToWords::convert($paymentDetail->total);
         $hashedId = IdHashHelper::encode($paymentDetail->id);
-    
-        return view('payment-details.show', compact('company', 'paymentDetail', 'totalInWords', 'hashedId'));
+       return view('payment-details.show', compact('paymentDetail', 'company', 'totalInWords', 'hashedId'));
     }    
 
     public function edit(string $id)
@@ -147,8 +146,11 @@ class PaymentDetailController extends Controller
     {
         $id = IdHashHelper::decode($hashedId);
         $company = Company::first();
-        $paymentDetail = PaymentDetail::with(['client', 'createdBy', 'descBills.transaction.payments'])
-            ->findOrFail($id);
+        $paymentDetail = PaymentDetail::with([
+            'client',
+            'createdBy',
+            'payments.transaction'
+        ])->findOrFail($id);
 
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
@@ -165,9 +167,10 @@ class PaymentDetailController extends Controller
             ? ImageHelper::getBase64Image('storage/' . $company->logo)
             : ImageHelper::getBase64Image('storage/logo.png');
 
-        foreach ($paymentDetail->descBills as $descBill) {
-            if ($descBill->transaction && $descBill->transaction->date) {
-                $descBill->transaction->formatted_date = \Carbon\Carbon::parse($descBill->transaction->date)->format('M d, Y');
+
+        foreach ($paymentDetail->payments as $payment) {
+            if ($payment->transaction) {
+                $payment->transaction->formatted_date = \Carbon\Carbon::parse($payment->transaction->date)->format('M d, Y');
             }
         }
 
@@ -194,8 +197,11 @@ class PaymentDetailController extends Controller
     {
         $id = IdHashHelper::decode($hashedId);
         $company = Company::first();
-        $paymentDetail = PaymentDetail::with(['client', 'createdBy', 'descBills.transaction.payments'])
-            ->findOrFail($id);
+        $paymentDetail = PaymentDetail::with([
+            'client',
+            'createdBy',
+            'payments.transaction'
+        ])->findOrFail($id);
 
         $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
         $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
@@ -212,12 +218,13 @@ class PaymentDetailController extends Controller
             ? ImageHelper::getBase64Image('storage/' . $company->logo)
             : ImageHelper::getBase64Image('storage/logo.png');
 
-        foreach ($paymentDetail->descBills as $descBill) {
-            if ($descBill->transaction && $descBill->transaction->date) {
-                $descBill->transaction->formatted_date = \Carbon\Carbon::parse($descBill->transaction->date)->format('M d, Y');
+
+        foreach ($paymentDetail->payments as $payment) {
+            if ($payment->transaction) {
+                $payment->transaction->formatted_date = \Carbon\Carbon::parse($payment->transaction->date)->format('M d, Y');
             }
         }
-
+        
         $pdf = PDF::loadView('payment-details.pdf', compact(
             'logo', 
             'company', 

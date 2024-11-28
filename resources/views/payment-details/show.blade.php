@@ -5,7 +5,7 @@
     <div class="page-body">
         <div class="container-xl">
             <div class="mb-4 mt-4 d-flex justify-content-between">
-                <a href="{{ route('bill-of-payment.index') }}" class="btn btn-primary">
+                <a href="{{ route('bill-of-payments.details', $hashedId) }}" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
@@ -31,16 +31,16 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="#"
+                            <a class="dropdown-item" href="{{ route('payment-details.exportPdf', $hashedId) }}" 
                                 target="_blank">
                                 Ekspor PDF
                             </a>
-                        </li>
+                        </li>                        
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{ route('payment-details.download', $hashedId) }}">
                                 Download PDF
                             </a>
-                        </li>
+                        </li>                        
                     </ul>
                 </div>
             </div>
@@ -106,23 +106,17 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse ($paymentDetail->descBills as $index => $descBill)
-                                                    @if ($descBill->transaction)
-                                                        <tr>
-                                                            <td class="text-center">{{ $index + 1 }}</td>
-                                                            <td class="text-center">{{ $descBill->transaction->number }}</td>
-                                                            <td class="text-center">{{ $descBill->transaction->code }}</td>
-                                                            <td class="text-center">{{ $descBill->transaction->date }}</td>
-                                                            <td class="text-end amount">{{ number_format($descBill->transaction->total) }}</td>
-                                                            <td class="text-end tranfered">{{ $descBill->transaction->payments->first()->transfered ?? '-' }}</td>
-                                                            <td>{{ $descBill->transaction->payments->first()->description ?? '-' }}</td>
-                                                        </tr>
-                                                    @endif
-                                                @empty
+                                                @foreach ($paymentDetail->payments as $key => $payment)
                                                     <tr>
-                                                        <td colspan="7" class="text-center">Tidak ada data transaksi</td>
+                                                        <td class="text-center">{{ $key + 1 }}</td>
+                                                        <td class="text-center">{{ $payment->transaction->number }}</td>
+                                                        <td class="text-center">{{ $payment->transaction->code }}</td>
+                                                        <td class="text-center">{{ $payment->transaction->formatted_date }}</td>
+                                                        <td class="text-end">{{ number_format($payment->transaction->total) }}</td>
+                                                        <td class="text-end">{{ number_format($payment->transfered) }}</td>
+                                                        <td>{{ $payment->description }}</td>
                                                     </tr>
-                                                @endforelse
+                                                @endforeach
                                             </tbody>
                                             <tfoot>
                                                 <tr id="totalRow" style="border: none">

@@ -125,24 +125,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($paymentDetail->descBills as $index => $descBill)
-                        @if ($descBill->transaction)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td style="text-align: left;">{{ $descBill->transaction->number }}</td>
-                                <td>{{ $descBill->transaction->code }}</td>
-                                <td>{{ $descBill->transaction->formatted_date }}</td>
-                                <td style="text-align: right;">{{ number_format($descBill->transaction->total) }}</td>
-                                <td style="text-align: right;">{{ number_format($descBill->transaction->payments->first()->transfered ?? '-') }}</td>
-                                <td style="text-align: left;">{{ $descBill->transaction->payments->first()->description ?? '-' }}</td>
-                            </tr>
-                        @endif
-                    @empty
+                    @foreach ($paymentDetail->payments as $key => $payment)
                         <tr>
-                            <td colspan="7" class="text-center">Tidak ada data transaksi</td>
+                            <td>{{ $key + 1 }}</td>
+                            <td>{{ $payment->transaction->number }}</td>
+                            <td>{{ $payment->transaction->code }}</td>
+                            <td>{{ $payment->transaction->formatted_date }}</td>
+                            <td style="text-align: right;">{{ number_format($payment->transaction->total) }}</td>
+                            <td style="text-align: right;">{{ number_format($payment->transfered) }}</td>
+                            <td style="text-align: left;">{{ $payment->description }}</td>
                         </tr>
-                    @endforelse
-                </tbody>
+                    @endforeach
                 <tfoot style="border: none">
                     <tr id="totalRow" style="border: none">
                         <td style="text-align: right; border: none" colspan="5">AMOUNT OF PAYMENT</td>
