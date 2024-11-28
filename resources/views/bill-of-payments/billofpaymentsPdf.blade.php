@@ -134,7 +134,7 @@
                             <td style="text-align: center;">{{ $descBill->transaction->code }}</td>
                             <td>{{$descBill->description }}</td>
                             <td style="text-align: right;">{{ number_format($descBill->transaction->total) }}</td>
-                            <td style="text-align: right;">{{ number_format($descBill->transaction->paid) }}</td>
+                            <td style="text-align: right;">{{ number_format($descBill->paid) }}</td>
                             <td style="text-align: right;">{{ number_format($descBill->transaction->bill) }}</td>
                         </tr>
                     @endif
