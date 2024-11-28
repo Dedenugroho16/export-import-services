@@ -192,7 +192,7 @@ class BillOfPaymentController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        
+
         return view('bill-of-payments.details', compact('billOfPayment', 'hash'));
     }
 
@@ -213,8 +213,9 @@ class BillOfPaymentController extends Controller
                 $query->where('id_bill', $idBill);
             })
                 ->with([
-                    'descBills' => function ($query) {
-                        $query->select('id_transaction', 'description', 'paid');
+                    'descBills' => function ($query) use ($idBill) {
+                        $query->where('id_bill', $idBill) // Filter hanya untuk $idBill
+                            ->select('id_transaction', 'description', 'paid');
                     }
                 ])
                 ->select(
@@ -227,8 +228,8 @@ class BillOfPaymentController extends Controller
 
             // Gabungkan description dari desc_bills dan total_paid dari payments
             $transactions = $transactions->map(function ($transaction) {
-                $transaction->description = $transaction->descBills->pluck('description')->implode(', ');
-                $transaction->paid = $transaction->descBills->pluck('paid')->implode(', ');
+                $transaction->description = $transaction->descBills->pluck('description');
+                $transaction->paid = $transaction->descBills->pluck('paid');
                 return $transaction;
             });
 
