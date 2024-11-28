@@ -176,6 +176,7 @@ Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class
 
 // payment details
 Route::get('/payment-details/{hash}/create', [PaymentDetailController::class, 'create'])->name('payment-details.create');
+Route::get('/payment-details/{hash}/edit', [PaymentDetailController::class, 'edit'])->name('payment-details.edit');
 Route::get('/payment-details/{hash}', [PaymentDetailController::class, 'show'])->name('payment-details.show');
 Route::get('/payment-details/{hashedId}/export-pdf', [PaymentDetailController::class, 'exportPdf'])->name('payment-details.exportPdf');
 Route::get('/payment-details/{hashedId}/download', [PaymentDetailController::class, 'downloadPdf'])->name('payment-details.download');

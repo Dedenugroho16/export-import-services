@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
+use App\Models\Transaction;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
-use App\Helpers\ImageHelper;
-use App\Helpers\NumberToWords;
 use App\Models\BillOfPayment;
-use App\Models\Company;
 use App\Models\PaymentDetail;
+use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -105,7 +106,7 @@ class PaymentDetailController extends Controller
     {
         $id = IdHashHelper::decode($hash);
         $company = Company::first();
-    
+
         $paymentDetail = PaymentDetail::with([
             'client',
             'createdBy',
@@ -122,12 +123,31 @@ class PaymentDetailController extends Controller
         $totalInWords = NumberToWords::convert($paymentDetail->total);
         $hashedId = IdHashHelper::encode($paymentDetail->id);
         $hashedBOPId = IdHashHelper::encode($paymentDetail->billOfPayment->id);
-       return view('payment-details.show', compact('paymentDetail', 'company', 'totalInWords', 'hashedId', 'hashedBOPId'));
-    }    
+        return view('payment-details.show', compact('paymentDetail', 'company', 'totalInWords', 'hashedId', 'hashedBOPId'));
+    }
 
-    public function edit(string $id)
+    public function edit($hash)
     {
-        //
+        $id = IdHashHelper::decode($hash);
+
+        $transactions = Transaction::whereHas('payments', function ($query) use ($id) {
+            $query->where('id_payment_detail', $id);
+        })->get();
+
+        $paymentDetails = PaymentDetail::with([
+            'payments' => function ($query) use ($id) {
+                $query->where('id_payment_detail', $id)->select('id', 'id_payment_detail', 'description');
+            },
+            'client',
+            'billOfPayment'
+        ])->findOrFail($id);
+
+        // Gabungkan description dari relasi payments menjadi properti tambahan
+        $paymentDetails->description = $paymentDetails->payments->pluck('description')->implode(', ');
+
+        $hashedBOPId = IdHashHelper::encode($paymentDetails->billOfPayment->id);
+
+        return view('payment-details.edit', compact('paymentDetails', 'hashedBOPId'));
     }
 
     /**
@@ -179,17 +199,17 @@ class PaymentDetailController extends Controller
         }
 
         $pdf = PDF::loadView('payment-details.pdf', compact(
-            'logo', 
-            'company', 
+            'logo',
+            'company',
             'hashedId',
-            'totalInWords', 
-            'phoneIcon', 
-            'emailIcon', 
-            'phoneNumber', 
-            'email', 
-            'signature', 
-            'address', 
-            'background', 
+            'totalInWords',
+            'phoneIcon',
+            'emailIcon',
+            'phoneNumber',
+            'email',
+            'signature',
+            'address',
+            'background',
             'paymentDetail'
         ));
         $pdf->setPaper('A4', 'portrait');
@@ -228,19 +248,19 @@ class PaymentDetailController extends Controller
                 $payment->transaction->formatted_date = \Carbon\Carbon::parse($payment->transaction->date)->format('M d, Y');
             }
         }
-        
+
         $pdf = PDF::loadView('payment-details.pdf', compact(
-            'logo', 
-            'company', 
+            'logo',
+            'company',
             'hashedId',
-            'totalInWords', 
-            'phoneIcon', 
-            'emailIcon', 
-            'phoneNumber', 
-            'email', 
-            'signature', 
-            'address', 
-            'background', 
+            'totalInWords',
+            'phoneIcon',
+            'emailIcon',
+            'phoneNumber',
+            'email',
+            'signature',
+            'address',
+            'background',
             'paymentDetail'
         ));
         $pdf->setPaper('A4', 'portrait');
