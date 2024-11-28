@@ -99,6 +99,18 @@
                         className: 'text-center'
                     }
                 ],
+                language: {
+                lengthMenu: "Tampilkan _MENU_ Data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                search: "Cari :",
+                infoFiltered: "(disaring dari total _MAX_ entri)"
+            },
                 order: [
                     [2, 'dsc']
                 ], // Mengurutkan berdasarkan kolom pertama (No)
