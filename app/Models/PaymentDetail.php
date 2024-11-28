@@ -18,13 +18,23 @@ class PaymentDetail extends Model
         'created_by',
     ];
 
-    public function client()
-    {
-        return $this->belongsTo(Clients::class,  'id_client', 'id');
-    }
-    
     public function billOfPayment()
     {
         return $this->belongsTo(BillOfPayment::class,  'id_bill_of_payment', 'id');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'id_client', 'id');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'id_payment_detail', 'id');
     }
 }

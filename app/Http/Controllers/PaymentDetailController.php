@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use App\Models\Clients;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
+use App\Helpers\ImageHelper;
+use App\Helpers\NumberToWords;
 use App\Models\BillOfPayment;
+use App\Models\Company;
 use App\Models\PaymentDetail;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PaymentDetailController extends Controller
 {
@@ -96,17 +99,28 @@ class PaymentDetailController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($hash)
     {
-        //
-    }
+        $id = IdHashHelper::decode($hash);
+        $company = Company::first();
+    
+        $paymentDetail = PaymentDetail::with([
+            'client',
+            'createdBy',
+            'payments.transaction'
+        ])->findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+        foreach ($paymentDetail->payments as $payment) {
+            if ($payment->transaction) {
+                $payment->transaction->formatted_date = \Carbon\Carbon::parse($payment->transaction->date)->format('M d, Y');
+            }
+        }
+
+        $totalInWords = NumberToWords::convert($paymentDetail->total);
+        $hashedId = IdHashHelper::encode($paymentDetail->id);
+       return view('payment-details.show', compact('paymentDetail', 'company', 'totalInWords', 'hashedId'));
+    }    
+
     public function edit(string $id)
     {
         //
@@ -126,5 +140,107 @@ class PaymentDetailController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function exportPdf($hashedId)
+    {
+        $id = IdHashHelper::decode($hashedId);
+        $company = Company::first();
+        $paymentDetail = PaymentDetail::with([
+            'client',
+            'createdBy',
+            'payments.transaction'
+        ])->findOrFail($id);
+
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
+        $totalInWords = NumberToWords::convert($paymentDetail->total);
+
+        $signatureUrl = $paymentDetail->createdBy->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
+
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+
+        foreach ($paymentDetail->payments as $payment) {
+            if ($payment->transaction) {
+                $payment->transaction->formatted_date = \Carbon\Carbon::parse($payment->transaction->date)->format('M d, Y');
+            }
+        }
+
+        $pdf = PDF::loadView('payment-details.pdf', compact(
+            'logo', 
+            'company', 
+            'hashedId',
+            'totalInWords', 
+            'phoneIcon', 
+            'emailIcon', 
+            'phoneNumber', 
+            'email', 
+            'signature', 
+            'address', 
+            'background', 
+            'paymentDetail'
+        ));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream('payment-details_' . $hashedId . '.pdf');
+    }
+
+    public function downloadPdf($hashedId)
+    {
+        $id = IdHashHelper::decode($hashedId);
+        $company = Company::first();
+        $paymentDetail = PaymentDetail::with([
+            'client',
+            'createdBy',
+            'payments.transaction'
+        ])->findOrFail($id);
+
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
+        $phoneNumber = $company ? $company->phone_number : '';
+        $email = $company ? $company->email : '';
+        $address = $company ? $company->address : '';
+        $totalInWords = NumberToWords::convert($paymentDetail->total);
+
+        $signatureUrl = $paymentDetail->createdBy->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
+
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+
+        foreach ($paymentDetail->payments as $payment) {
+            if ($payment->transaction) {
+                $payment->transaction->formatted_date = \Carbon\Carbon::parse($payment->transaction->date)->format('M d, Y');
+            }
+        }
+        
+        $pdf = PDF::loadView('payment-details.pdf', compact(
+            'logo', 
+            'company', 
+            'hashedId',
+            'totalInWords', 
+            'phoneIcon', 
+            'emailIcon', 
+            'phoneNumber', 
+            'email', 
+            'signature', 
+            'address', 
+            'background', 
+            'paymentDetail'
+        ));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('payment-details_' . $hashedId . '.pdf');
     }
 }
