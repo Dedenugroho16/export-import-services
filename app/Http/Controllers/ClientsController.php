@@ -124,7 +124,7 @@ class ClientsController extends Controller
     {
         // Decode hash menjadi client_id
         $clientId = IdHashHelper::decode($hash);
-        $client = Clients::with('company')->find($id); 
+        $client = Clients::with('company')->find($clientId); 
         $client = Clients::findOrFail($clientId);
 
         if ($request->ajax()) {

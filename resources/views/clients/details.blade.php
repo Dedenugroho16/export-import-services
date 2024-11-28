@@ -28,6 +28,10 @@
                                 <td>{{ $client->name }}</td>
                             </tr>
                             <tr>
+                                <th>Nama Perusahaan</th>
+                                <td>{{ $client->company->company_name ?? 'N/A' }}</td>
+                            </tr>
+                            <tr>
                                 <th>Alamat</th>
                                 <td>{{ $client->address }}</td>
                             </tr>

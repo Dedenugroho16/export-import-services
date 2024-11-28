@@ -37,12 +37,12 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">No</th>
-                                    <th class="text-center">Nama</th>
+                                    <th class="text-center">Nama Client</th>
+                                    <th class="text-center">Nama Perusahaan</th>
                                     <th class="text-center">Alamat</th>
                                     <th class="text-center">PO BOX</th>
                                     <th class="text-center">Telepon</th>
                                     <th class="text-center">Fax</th>
-                                    <th class="text-center">Nama Perusahaan</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -76,11 +76,11 @@
                     searchable: false
                 },
                 { data: 'name', name: 'name' },
+                { data: 'company_name', name: 'company_name', class: 'text-center'},
                 { data: 'address', name: 'address' },
                 { data: 'PO_BOX', name: 'PO_BOX', class: 'text-center' },
                 { data: 'tel', name: 'tel', class: 'text-center' },
                 { data: 'fax', name: 'fax', class: 'text-center' },
-                { data: 'company_name', name: 'company_name', class: 'text-center' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
             ],
             language: {
@@ -99,13 +99,13 @@
             pageLength: 10,
             drawCallback: function() {
                 // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
-                $('#clientTable td:nth-child(2), #clientTable th:nth-child(2)').css({
-                    'max-width': '200px',
+                $('#clientTable td:nth-child(2), #clientTable td:nth-child(3)').css({
+                    'max-width': '250px',
                     'white-space': 'normal',
                     'word-wrap': 'break-word'
                 });
-                $('#clientTable td:nth-child(3), #clientTable th:nth-child(3)').css({
-                    'max-width': '250px',
+                $('#clientTable td:nth-child(4), #clientTable th:nth-child(4)').css({
+                    'max-width': '200px',
                     'overflow': 'hidden',
                     'text-overflow': 'ellipsis'
                 });

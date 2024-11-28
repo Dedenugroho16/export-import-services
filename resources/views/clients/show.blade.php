@@ -44,6 +44,10 @@
                                         <td>{{ $client->name }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Nama Perusahaan</th>
+                                        <td>{{ $client->company->company_name ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>Alamat</th>
                                         <td style="word-wrap: break-word; max-width: 300px;">{{ $client->address }}</td>
                                     </tr>
@@ -58,10 +62,6 @@
                                     <tr>
                                         <th>Fax</th>
                                         <td>{{ $client->fax }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Nama Perusahaan</th>
-                                        <td>{{ $client->company->company_name ?? 'N/A' }}</td>
                                     </tr>
                                 </tbody>
                             </table>
