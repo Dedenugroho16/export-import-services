@@ -63,7 +63,9 @@ class PaymentDetailController extends Controller
         $year = date('Y');
         $formattedPaymentNumber = $newPaymentNumber . '.' . $year . '/PSN/PM.OF';
 
-        return view('payment-details.create', compact('formattedPaymentNumber', 'billOfPayment'));
+        $hashedBOPId = IdHashHelper::encode($billOfPayment->id);
+
+        return view('payment-details.create', compact('formattedPaymentNumber', 'billOfPayment', 'hashedBOPId'));
     }
 
     /**
