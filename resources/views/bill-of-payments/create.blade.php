@@ -98,7 +98,7 @@
                                 </div>
                             </div>
 
-                            <form id="formTransaction" action="{{ route('proforma-bop.update') }}">
+                            <form id="formTransaction" action="{{ route('desc-bills.store') }}">
                                 @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">
@@ -220,15 +220,13 @@
                                 @csrf
                                 <input type="" id="month" name="month">
                                 <input type="" id="no_inv" name="no_inv">
-                                <input type="" id="payment_number" name="payment_number">
                                 <input type="" id="selectedClientId" name="id_client">
                                 <input type="" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payment.index') }}"
-                                    class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('bill-of-payment.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
                             </div>
                         </div>
@@ -287,6 +285,7 @@
                                             <th class="text-center">No</th>
                                             <th class="text-center">PI. NUMBER</th>
                                             <th class="text-center">CODE</th>
+                                            <th class="text-center">PAID</th>
                                             <th class="text-center">AMOUNT</th>
                                             <th class="text-center">AKSI</th>
                                         </tr>
@@ -424,6 +423,11 @@
                         className: 'text-center'
                     },
                     {
+                        data: 'total_paid',
+                        name: 'total_paid',
+                        className: 'text-center'
+                    },
+                    {
                         data: 'amount',
                         name: 'amount',
                         className: 'text-center'
@@ -434,14 +438,14 @@
                         searchable: false,
                         className: 'text-center',
                         render: function(data, type, row) {
-                            // Simpan ID transaksi di data-id tanpa menampilkan kolom ID di tabel
                             return `<button class="btn btn-primary btn-sm pilih-btn" 
-                        data-id="${row.id}" 
-                        data-number="${row.number}" 
-                        data-code="${row.code}" 
-                        data-amount="${row.amount}">
-                        Pilih
-                        </button>`;
+            data-id="${row.id}" 
+            data-number="${row.number}"
+            data-paid="${row.total_paid}" 
+            data-code="${row.code}" 
+            data-amount="${row.amount}">
+            Pilih
+            </button>`;
                         }
                     }
                 ],
@@ -488,20 +492,17 @@
             });
 
             function totalBill() {
-                var totalPaid = 0;
                 var totalBill = 0;
 
                 // Iterasi setiap baris untuk mendapatkan nilai total
                 $('#billOfPaymentTable tbody tr').each(function() {
-                    var paid = parseFloat($(this).find('.paid-input').val().replace(/,/g, '')) || 0;
-                    var bill = parseFloat($(this).find('.amount').text().replace(/,/g, '')) || 0;
+                    var bill = parseFloat($(this).find('.pi-bill').text().replace(/,/g, '')) || 0;
 
-                    totalPaid += paid;
                     totalBill += bill;
                 });
 
                 // Hitung grandTotal
-                var grandTotal = totalBill - totalPaid;
+                var grandTotal = totalBill;
 
                 var formattedGrandTotal = grandTotal.toLocaleString('en-US', {
                     minimumFractionDigits: 2
@@ -536,6 +537,7 @@
 
                 // Tambahkan baris baru ke tabel #billOfPaymentTable
                 var formattedAmount = parseFloat(data.amount).toLocaleString('en-US');
+                var formattedBill = parseFloat(data.amount - data.paid).toLocaleString('en-US');
                 var newRow = `
                                 <tr>
                                     <td class="text-center" style="display: none;">
@@ -550,13 +552,11 @@
                                         <input type="text" name="transactions[${data.id}][description]" class="form-control description-input" placeholder="Enter description">
                                     </td>
                                     <td class="text-center amount">${formattedAmount}</td>
-                                    <td class="text-center">
-                                        <!-- Display-only input for formatting -->
-                                        <input type="text" class="form-control paid-input" placeholder="Enter paid" style="width: 120px;">
-                                        <!-- Hidden input for actual value submission -->
-                                        <input type="hidden" name="transactions[${data.id}][paid]" class="form-control paid">
+                                    <td class="text-center" style="width:150px;">
+                                        <input type="text" class="form-control" value="${data.paid?.toLocaleString('en-US')}" readonly>
+                                        <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
                                     </td>
-                                    <td class="text-center pi-bill">${formattedAmount}</td>
+                                    <td class="text-center pi-bill">${formattedBill}</td>
                                     <td class="text-center">
                                         <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
                                     </td>
@@ -569,30 +569,6 @@
 
                 // Menutup modal setelah produk dipilih
                 $('#PIModal').modal('hide');
-
-                $('#billOfPaymentTable tbody').on('input', '.paid-input', function() {
-                    // Temukan baris tempat input ini berada
-                    var row = $(this).closest('tr');
-
-                    // Ambil nilai dari input .paid-input dan hilangkan koma jika ada
-                    var paidInput = parseFloat(row.find('.paid-input').val().replace(/,/g, '')) ||
-                        0;
-                    var piBill = parseFloat(row.find('.amount').text().replace(/,/g, ''));
-
-                    var amountPiBill = piBill - paidInput;
-
-                    // Format nilai paidInput ke format ribuan dengan dua desimal
-                    var formattedPaidInput = paidInput.toLocaleString('en-US');
-                    var formattedPiBill = amountPiBill.toLocaleString('en-US');
-
-                    // Update nilai yang diformat hanya di input .paid-input pada baris ini
-                    row.find('.pi-bill').text(formattedPiBill);
-                    row.find('.paid-input').val(formattedPaidInput);
-                    row.find('.paid').val(paidInput);
-
-                    // Jalankan fungsi totalBill untuk memperbarui total keseluruhan
-                    totalBill();
-                });
 
                 // Event listener untuk tombol "Hapus"
                 $('#billOfPaymentTable').on('click', '.delete-btn', function() {
@@ -610,22 +586,6 @@
                 });
                 totalBill();
             });
-
-            function updatePaymentNumber() {
-                const currentDate = new Date();
-
-                // Dapatkan bulan dalam format angka Romawi
-                const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-                const romanMonth = romanMonths[currentDate.getMonth()];
-
-                // Dapatkan tahun dalam format dua digit
-                const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
-
-                const formattedNumber = '/' + romanMonth + '/' +
-                    twoDigitYear;
-                const finalNumber = '{{ $formattedPaymentNumber }}' + formattedNumber;
-                $('#payment_number').val(finalNumber);
-            }
 
             function updateNumber() {
                 const currentDate = new Date();
@@ -645,7 +605,6 @@
             }
 
             updateNumber();
-            updatePaymentNumber();
 
             // Mendapatkan bulan dan tahun saat ini
             var currentDate = new Date();
@@ -653,8 +612,7 @@
                 year: 'numeric',
                 month: 'long'
             };
-            var monthYear = currentDate.toLocaleDateString('id-ID', options)
-                .toUpperCase(); // Menggunakan 'id-ID' untuk format bahasa Indonesia dan toUpperCase untuk huruf kapital
+            var monthYear = currentDate.toLocaleDateString('id-ID', options).toUpperCase();
 
             // Menetapkan nilai input #month
             $('#month').val(monthYear);
@@ -664,14 +622,20 @@
             function validateTransactionForm() {
                 var isValid = true;
 
-                // Cek apakah ada input selain yang memiliki id="id_transaction"
-                var totalInputs = $('#billOfPaymentTable tbody input').length; // Total input dalam form
-                var otherInputs = $('#billOfPaymentTable tbody input').not('#id_bill')
-                    .length;
+                // Cek semua input di dalam tabel kecuali yang memiliki id="id_bill"
+                var inputs = $('#billOfPaymentTable tbody input').not('#id_bill');
 
-                if (otherInputs === 0) {
-                    isValid = false; // Jika tidak ada input selain id_transaction, form tidak valid
+                if (inputs.length === 0) {
+                    isValid = false; // Jika tidak ada input selain id_bill
                     $('#pi_error').text('Data Proforma Invoice harus diisi!').show();
+                } else {
+                    inputs.each(function() {
+                        if ($(this).val().trim() === '') { // Jika ada input kosong
+                            isValid = false;
+                            $('#pi_error').text('Semua input harus diisi!').show();
+                            return false; // Keluar dari loop each lebih awal
+                        }
+                    });
                 }
 
                 return isValid; // Kembalikan status validasi

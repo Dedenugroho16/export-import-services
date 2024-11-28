@@ -59,26 +59,33 @@ class UserController extends Controller
 
     // Menyimpan data pengguna baru
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'username' => 'required|string|max:255|unique:users', // Validasi username
-            'password' => 'required|string|confirmed',
-            'role' => 'required|string|max:255',
-        ]);
+{
+    // Validasi input
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users', 
+        'username' => 'required|string|max:255|unique:users', 
+        'password' => 'required|string|confirmed', 
+        'role' => 'required|string|max:255', 
+    ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'username' => $request->username, // Menyimpan username
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'is_active' => true, // Set akun baru aktif secara default
-        ]);
+    // Membuat user baru
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'username' => $request->username, 
+        'password' => Hash::make($request->password), 
+        'role' => $request->role,
+        'is_active' => true, 
+    ]);
 
-        return response()->json(['success' => true, 'message' => 'User created successfully.']);
-    }
+    // Mengembalikan respons sukses
+    return response()->json([
+        'success' => true,
+        'message' => 'User created successfully.',
+    ]);
+}
+
 
     // Menampilkan form edit pengguna
     public function edit($id)

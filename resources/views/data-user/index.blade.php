@@ -213,27 +213,46 @@
 
         // Reset form ketika modal ditutup
         $('#addUserModal').on('hidden.bs.modal', function() {
-            $('#addUserForm')[0].reset(); // Reset form
+            $('#addUserForm')[0].reset();
         });
 
-        // Handle Add User form submission
+        
         $('#addUserForm').on('submit', function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: "{{ route('users.store') }}",
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    $('#addUserModal').modal('hide');
-                    table.ajax.reload();
-                    showAlert('Data berhasil ditambahkan.');
-                },
-                error: function(xhr) {
-                    let errorMessage = 'Terjadi kesalahan: ' + (xhr.responseJSON?.message || xhr.responseText);
-                    alert(errorMessage);
-                }
-            });
-        });
+    e.preventDefault();
+
+    // Clear previous errors
+    $('.invalid-feedback').remove(); 
+    $('.form-control').removeClass('is-invalid');
+
+    $.ajax({
+        url: "{{ route('users.store') }}",
+        method: 'POST',
+        data: $(this).serialize(),
+        success: function(response) {
+            $('#addUserModal').modal('hide');
+            table.ajax.reload();
+            showAlert('Data berhasil ditambahkan.', 'success');
+            $('#addUserForm')[0].reset();
+            $('.form-control').removeClass('is-invalid'); 
+        },
+        error: function(xhr) {
+            if (xhr.responseJSON?.errors) {
+                $.each(xhr.responseJSON.errors, function(field, messages) {
+                    let inputField = $('#' + field);
+                    inputField.addClass('is-invalid');
+                    inputField.after('<div class="invalid-feedback" style="color: red;">' + messages.join('<br>') + '</div>');
+                    setTimeout(function() {
+                        inputField.next('.invalid-feedback').fadeOut('slow', function() {
+                            $(this).remove(); 
+                        });
+                        inputField.removeClass('is-invalid'); 
+                    }, 5000); 
+                });
+            }
+        }
+    });
+});
+
 
         // Handle Edit User form submission
         $('#editUserForm').on('submit', function(e) {

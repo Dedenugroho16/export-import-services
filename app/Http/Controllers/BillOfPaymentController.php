@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Transaction;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
-use App\Helpers\ImageHelper;
-use App\Helpers\NumberToWords;
 use App\Models\BillOfPayment;
-use App\Models\Company;
-use Illuminate\Support\Facades\Auth;
-use Yajra\DataTables\Facades\DataTables;
+use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
 
 class BillOfPaymentController extends Controller
 {
@@ -24,7 +25,7 @@ class BillOfPaymentController extends Controller
 
     public function getBillOfPayment()
     {
-        $billOfPayments = BillOfPayment::with(['client', 'transactions'])
+        $billOfPayments = BillOfPayment::with(['client', 'descBills'])
             ->select(['id', 'month', 'no_inv', 'id_client', 'status']);
 
         return DataTables::of($billOfPayments)
@@ -45,7 +46,7 @@ class BillOfPaymentController extends Controller
                         <div class="dropdown-menu dropdown-menu-end">
                             <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
                                 <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
-                                Payment Details
+                                Lihat Payment Details
                             </a>
                             <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
@@ -82,36 +83,26 @@ class BillOfPaymentController extends Controller
         // Menggabungkan $newNumber dengan dua digit tanggal
         $formattedNumber = $newNumber . '/' . $twoDigitMonth;
 
-        // payment number
-        $lastPaymentNumber = BillOfPayment::orderBy('payment_number', 'desc')->first();
-        // Jika belum ada data di kolom number, mulai dari 0001
-        if ($lastPaymentNumber === null || empty($lastPaymentNumber->payment_number)) {
-            $newPaymentNumber = '0001';
-        } else {
-            // Mengambil number terakhir dan menambah 1, pastikan tetap 4 digit
-            $paymentNumber = intval($lastPaymentNumber->payment_number);
-            $newPaymentNumber = str_pad($paymentNumber + 1, 4, '0', STR_PAD_LEFT);
-        }
-
-        $year = date('Y');
-        $formattedPaymentNumber = $newPaymentNumber . '.' . $year . '/PSN/PM.OF';
-
-        return view('bill-of-payments.create', compact('formattedNumber', 'formattedPaymentNumber'));
+        return view('bill-of-payments.create', compact('formattedNumber'));
     }
 
     public function getProformaInvoices(Request $request)
     {
         if (!$request->has('id_client') || empty($request->id_client)) {
-            return datatables()->of(collect([]))->make(true); // Kembalikan data kosong jika `id_client` tidak ada
+            return datatables()->of(collect([]))->make(true); // Data kosong jika `id_client` tidak ada
         }
 
         $invoices = Transaction::where('approved', 1)
-            ->whereNotNull('stuffing_date')
-            ->whereNull('id_bill')
-            ->where('id_client', $request->id_client);
+            ->where('id_client', $request->id_client)
+            ->whereRaw('total <> (SELECT COALESCE(SUM(transfered), 0) FROM payments WHERE payments.id_transaction = transactions.id)')
+            ->with('payments') // Pastikan relasi payments dimuat
+            ->get();
 
         return datatables()->of($invoices)
             ->addIndexColumn()
+            ->addColumn('total_paid', function ($row) {
+                return $row->payments->sum('transfered');
+            })
             ->addColumn('amount', function ($row) {
                 return $row->total;
             })
@@ -128,7 +119,6 @@ class BillOfPaymentController extends Controller
         $data = $request->validate([
             'month' => 'required',
             'no_inv' => 'required',
-            'payment_number' => 'required',
             'id_client' => 'required',
             'total' => 'required|numeric|gte:0',
         ], [
@@ -147,40 +137,20 @@ class BillOfPaymentController extends Controller
         ]);
     }
 
-    public function PIUpdate(Request $request)
-    {
-        // Ambil data transactions dari request
-        $transactions = $request->input('transactions');
-
-        foreach ($transactions as $data) {
-            // Ambil id dari setiap data
-            $transaction = Transaction::find($data['id']);
-
-            if ($transaction) {
-                // Update data transaksi
-                $transaction->description = $data['description'];
-                $transaction->paid = $data['paid'];
-                $transaction->id_bill = $data['id_bill'];
-                // Tambahkan field lain sesuai kebutuhan
-                $transaction->save();
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Bil of Payment berhasil dibuat'
-        ]);
-    }
-
     public function show($hash)
     {
         $id = IdHashHelper::decode($hash);
         $company = Company::first();
-        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($id);
-        $billOfPayment->transactions->load('detailTransactions');
+        $billOfPayment = BillOfPayment::with([
+            'client',
+            'createdBy',
+            'descBills.transaction',
+        ])->findOrFail($id);
+
         $totalBill = 0;
 
-        foreach ($billOfPayment->transactions as $transaction) {
+        foreach ($billOfPayment->descBills as $descBill) {
+            $transaction = $descBill->transaction;
             $transaction->bill = $transaction->total - $transaction->paid;
             $totalBill += $transaction->bill;
         }
@@ -191,29 +161,18 @@ class BillOfPaymentController extends Controller
         return view('bill-of-payments.show', compact('company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords'));
     }
 
-    public function paymentDetails($hash)
+    public function details(Request $request, $hash)
     {
-        $id = IdHashHelper::decode($hash);
-        $company = Company::first();
-        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($id);
-        $totalPaid = 0;
-
-        foreach ($billOfPayment->transactions as $transaction) {
-            $transaction->formatted_date = \Carbon\Carbon::parse($transaction->date)->format('M d, Y');
-            $totalPaid += $transaction->paid;
-        }
-
-        $totalInWords = NumberToWords::convert($totalPaid);
-        $hashedId = IdHashHelper::encode($id);
-
-        return view('bill-of-payments.payment-details', compact('company', 'billOfPayment', 'totalPaid', 'totalInWords', 'hashedId'));
-    } 
+        $billId = IdHashHelper::decode($hash);
+        $billOfPayment = BillOfPayment::with('client')->findOrFail($billId);
+        return view('bill-of-payments.details', compact('billOfPayment', 'hash'));
+    }
 
     public function edit($hash)
     {
         $id = IdHashHelper::decode($hash);
 
-        $billOfPayment = BillOfPayment::with(['transactions'], ['client'])->findOrFail($id);
+        $billOfPayment = BillOfPayment::with(['descBills'], ['client'])->findOrFail($id);
 
         return view('bill-of-payments.edit', compact('billOfPayment'));
     }
@@ -221,26 +180,34 @@ class BillOfPaymentController extends Controller
     public function getTransactions($idBill)
     {
         try {
-            // Ambil transaksi berdasarkan id_transaction dengan join ke detail_products
-            $transactions = Transaction::where('transactions.id_bill', $idBill)
+            // Ambil data transaksi dengan relasi ke desc_bills dan payments
+            $transactions = Transaction::whereHas('descBills', function ($query) use ($idBill) {
+                $query->where('id_bill', $idBill);
+            })
+                ->with([
+                    'descBills' => function ($query) {
+                        $query->select('id_transaction', 'description', 'paid');
+                    }
+                ])
                 ->select(
-                    'transactions.*',
                     'transactions.id',
                     'transactions.number',
                     'transactions.code',
-                    'transactions.description',
-                    'transactions.total',
-                    'transactions.paid',
-                    'transactions.total as bill' // Asumsikan bill sama dengan total
+                    'transactions.total'
                 )
                 ->get();
 
-            // Return JSON response
+            // Gabungkan description dari desc_bills dan total_paid dari payments
+            $transactions = $transactions->map(function ($transaction) {
+                $transaction->description = $transaction->descBills->pluck('description')->implode(', ');
+                $transaction->paid = $transaction->descBills->pluck('paid')->implode(', ');
+                return $transaction;
+            });
+
             return response()->json($transactions);
         } catch (\Exception $e) {
-            // Jika ada error, log error dan kembalikan response error 500
             \Log::error("Error fetching transactions: " . $e->getMessage());
-            return response()->json(['error' => 'Terjadi kesalahan pada server'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -274,33 +241,54 @@ class BillOfPaymentController extends Controller
 
     public function bopExportPdf($hashId)
     {
-        $decodedId = IdHashHelper::decode($hashId);
+        $id = IdHashHelper::decode($hashId);
         $company = Company::first();
-        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($decodedId);
-        $billOfPayment->transactions->load('detailTransactions');
-        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
-        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
-        $background = ImageHelper::getBase64Image('storage/background.jpg');
-        $phoneNumber = $company ? $company->phone_number : '';
-        $email = $company ? $company->email : '';
-        $address = $company ? $company->address : '';
-        $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
-        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
-        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+        $billOfPayment = BillOfPayment::with([
+            'client',
+            'createdBy',
+            'descBills.transaction',
+        ])->findOrFail($id);
 
         $totalBill = 0;
-
-        foreach ($billOfPayment->transactions as $transaction) {
-            $transaction->bill = $transaction->total - $transaction->paid;
-            $totalBill += $transaction->bill;
+        foreach ($billOfPayment->descBills as $descBill) {
+            if ($descBill->transaction) {
+                $transaction = $descBill->transaction;
+                $transaction->bill = $transaction->total - $transaction->paid;
+                $totalBill += $transaction->bill;
+            }
         }
 
         $totalInWords = NumberToWords::convert($totalBill);
-        $hashedId = IdHashHelper::encode($decodedId);
+        $hashedId = IdHashHelper::encode($id);
 
-        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address', 'background'));
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
+        $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+        $phoneNumber = $company->phone_number ?? '-';
+        $email = $company->email ?? '-';
+        $address = $company->address ?? '-';
+
+        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact(
+            'logo',
+            'company',
+            'billOfPayment',
+            'hashedId',
+            'totalBill',
+            'totalInWords',
+            'phoneIcon',
+            'emailIcon',
+            'phoneNumber',
+            'email',
+            'signature',
+            'address',
+            'background'
+        ));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('bill-of-payment_' . $hashId . '.pdf');
@@ -308,33 +296,54 @@ class BillOfPaymentController extends Controller
 
     public function bopDownloadPdf($hashId)
     {
-        $decodedId = IdHashHelper::decode($hashId);
+        $id = IdHashHelper::decode($hashId);
         $company = Company::first();
-        $billOfPayment = BillOfPayment::with(['client', 'transactions.detailTransactions'])->findOrFail($decodedId);
-        $billOfPayment->transactions->load('detailTransactions');
-        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
-        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
-        $background = ImageHelper::getBase64Image('storage/background.jpg');
-        $phoneNumber = $company ? $company->phone_number : '';
-        $email = $company ? $company->email : '';
-        $address = $company ? $company->address : '';
-        $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
-        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
-        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+        $billOfPayment = BillOfPayment::with([
+            'client',
+            'createdBy',
+            'descBills.transaction',
+        ])->findOrFail($id);
 
         $totalBill = 0;
-
-        foreach ($billOfPayment->transactions as $transaction) {
-            $transaction->bill = $transaction->total - $transaction->paid;
-            $totalBill += $transaction->bill;
+        foreach ($billOfPayment->descBills as $descBill) {
+            if ($descBill->transaction) {
+                $transaction = $descBill->transaction;
+                $transaction->bill = $transaction->total - $transaction->paid;
+                $totalBill += $transaction->bill;
+            }
         }
 
         $totalInWords = NumberToWords::convert($totalBill);
-        $hashedId = IdHashHelper::encode($decodedId);
+        $hashedId = IdHashHelper::encode($id);
 
-        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact('logo', 'company', 'billOfPayment', 'hashedId', 'totalBill', 'totalInWords', 'phoneIcon', 'emailIcon', 'phoneNumber', 'email', 'signature', 'address', 'background'));
+        $phoneIcon = ImageHelper::getBase64Image('storage/phone.png');
+        $emailIcon = ImageHelper::getBase64Image('storage/mail.png');
+        $background = ImageHelper::getBase64Image('storage/background.jpg');
+        $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
+        $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
+
+        $phoneNumber = $company->phone_number ?? '-';
+        $email = $company->email ?? '-';
+        $address = $company->address ?? '-';
+
+        $pdf = PDF::loadView('bill-of-payments.billofpaymentsPdf', compact(
+            'logo',
+            'company',
+            'billOfPayment',
+            'hashedId',
+            'totalBill',
+            'totalInWords',
+            'phoneIcon',
+            'emailIcon',
+            'phoneNumber',
+            'email',
+            'signature',
+            'address',
+            'background'
+        ));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('bill-of-payment_' . $hashId . '.pdf');
@@ -355,8 +364,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalPaid = 0;
 
@@ -389,8 +398,8 @@ class BillOfPaymentController extends Controller
         $signatureUrl = $billOfPayment->createdBy->signature_url ?? null;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
         $logo = $company && !empty($company->logo) && Storage::exists($company->logo)
-                ? ImageHelper::getBase64Image('storage/' . $company->logo)
-                : ImageHelper::getBase64Image('storage/logo.png');
+            ? ImageHelper::getBase64Image('storage/' . $company->logo)
+            : ImageHelper::getBase64Image('storage/logo.png');
 
         $totalPaid = 0;
 

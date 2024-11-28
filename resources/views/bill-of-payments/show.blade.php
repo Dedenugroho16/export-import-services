@@ -73,122 +73,127 @@
                                     <tr>
                                         <td style="width: 20%">Month</td>
                                         <td style="width: 5px">:</td>
-                                        <td style="font-weight: bold">{{ $billOfPayment->month}}</td>
+                                        <td style="font-weight: bold">{{ $billOfPayment->month }}</td>
                                     </tr>
                                     <tr>
                                         <td>No. Inv</td>
                                         <td>:</td>
-                                        <td style="font-weight: bold">{{ $billOfPayment->no_inv}}</td>
+                                        <td style="font-weight: bold">{{ $billOfPayment->no_inv }}</td>
                                     </tr>
                                     <tr>
                                         <td>Buyer Name</td>
                                         <td>:</td>
-                                        <td style="font-weight: bold">{{ $billOfPayment->client->name}}</td>
+                                        <td style="font-weight: bold">{{ $billOfPayment->client->name }}</td>
                                     </tr>
                                     <tr>
                                         <td>Company Name</td>
                                         <td>:</td>
-                                        <td style="font-weight: bold">{{ $billOfPayment->client->company_name}}</td>
+                                        <td style="font-weight: bold">{{ $billOfPayment->client->company_name }}</td>
                                     </tr>
                                 </table>
+                            
                                 <div>
-                                    <div>
-                                        <table class="table-sm table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">NO</th>
-                                                    <th class="text-center">PI NUMBER</th>
-                                                    <th class="text-center">CODE</th>
-                                                    <th class="text-center">DESCRIPTION</th>
-                                                    <th class="text-center">AMOUNT</th>
-                                                    <th class="text-center">PAID</th>
-                                                    <th class="text-center">BILL</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($billOfPayment->transactions as $index => $transaction)
-                                                <tr>
-                                                    <td class="text-center">{{ $index + 1 }}</td>
-                                                    <td class="text-center">{{ $transaction->number }}</td>
-                                                    <td class="text-center">{{ $transaction->code }}</td>
-                                                    <td>{{ $transaction->description }}</td>
-                                                    <td class="text-end amount">{{ number_format($transaction->total) }}</td>
-                                                    <td class="text-end paid">{{ number_format($transaction->paid) }}</td>
-                                                    <td class="text-end bill">{{ number_format($transaction->bill) }}</td>
-                                                </tr>
-                                                @empty
+                                    <table class="table-sm table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">NO</th>
+                                                <th class="text-center">PI NUMBER</th>
+                                                <th class="text-center">CODE</th>
+                                                <th class="text-center">DESCRIPTION</th>
+                                                <th class="text-center">AMOUNT</th>
+                                                <th class="text-center">PAID</th>
+                                                <th class="text-center">BILL</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($billOfPayment->descBills as $index => $descBill)
+                                                @if ($descBill->transaction)
+                                                    <tr>
+                                                        <td class="text-center">{{ $index + 1 }}</td>
+                                                        <td class="text-center">{{ $descBill->transaction->number }}</td>
+                                                        <td class="text-center">{{ $descBill->transaction->code }}</td>
+                                                        <td>{{ $descBill->description }}</td>
+                                                        <td class="text-end amount">{{ number_format($descBill->transaction->total) }}</td>
+                                                        <td class="text-end paid">{{ number_format($descBill->transaction->paid) }}</td>
+                                                        <td class="text-end bill">{{ number_format($descBill->transaction->bill) }}</td>
+                                                    </tr>
+                                                @endif
+                                            @empty
                                                 <tr>
                                                     <td colspan="7" class="text-center">Tidak ada data transaksi</td>
                                                 </tr>
-                                                @endforelse
-                                            </tbody>
-                                            <tfoot>
-                                                <tr id="totalRow" style="font-weight: bold;">
-                                                    <td class="text-end" colspan="6">AMOUNT OF BILL</td>
-                                                    <td class="text-end bg-black text-white">{{ number_format($totalBill) }}</td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                        <div class="mt-3">
-                                            <div class="text-end">
-                                                <p><strong><em>In Words: {{ $totalInWords }} USD</em></strong></p>
-                                            </div>
-                                        </div>                             
-                                        <div>
-                                            <table class="table-sm mt-6" style="font-size: 14px">
-                                                <tr>
-                                                    <td style="font-weight: bold" colspan="3">REMITTANCE ADVISE</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 25%">Beneficiary Account Name</td>
-                                                    <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->bank_account_name ?? '-'}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Beneficiary Account Number USD</td>
-                                                    <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->bank_account_number ?? '-'}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Beneficiary Bank Name</td>
-                                                    <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->bank_name ?? '-'}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Beneficiary Bank Address</td>
-                                                    <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->bank_address ?? '-'}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Swift Code</td>
-                                                    <td>:</td>
-                                                    <td style="font-weight: bold">{{$company->swift_code ?? '-'}}</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="mt-6">
-                                            <table class="text-center" style="width: auto; float:right">
-                                                <tr>
-                                                    <td>{{ $billOfPayment->created_at->format('F d, Y') }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><p style="font-weight: bold">Approved By</p></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><img src="{{ asset('storage/' . $billOfPayment->createdBy->signature_url) }}" alt="Signature"
-                                                        width="100px" style="margin-bottom: 10px;"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="border-bottom: 1px solid black;">{{ $billOfPayment->createdBy ? $billOfPayment->createdBy->name : 'N/A' }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ $billOfPayment->createdBy ? $billOfPayment->createdBy->role : 'N/A' }}</td>
-                                                </tr>
-                                            </table>
+                                            @endforelse
+                                        </tbody>
+                                        <tfoot>
+                                            <tr id="totalRow" style="font-weight: bold;">
+                                                <td class="text-end" colspan="6">AMOUNT OF BILL</td>
+                                                <td class="text-end bg-black text-white">{{ number_format($totalBill) }}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                            
+                                    <div class="mt-3">
+                                        <div class="text-end">
+                                            <p><strong><em>In Words: {{ $totalInWords }} USD</em></strong></p>
                                         </div>
                                     </div>
+                            
+                                    <div>
+                                        <table class="table-sm mt-6" style="font-size: 14px">
+                                            <tr>
+                                                <td style="font-weight: bold" colspan="3">REMITTANCE ADVISE</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 25%">Beneficiary Account Name</td>
+                                                <td>:</td>
+                                                <td style="font-weight: bold">{{ $company->bank_account_name ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Beneficiary Account Number USD</td>
+                                                <td>:</td>
+                                                <td style="font-weight: bold">{{ $company->bank_account_number ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Beneficiary Bank Name</td>
+                                                <td>:</td>
+                                                <td style="font-weight: bold">{{ $company->bank_name ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Beneficiary Bank Address</td>
+                                                <td>:</td>
+                                                <td style="font-weight: bold">{{ $company->bank_address ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Swift Code</td>
+                                                <td>:</td>
+                                                <td style="font-weight: bold">{{ $company->swift_code ?? '-' }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                            
+                                    <div class="mt-6">
+                                        <table class="text-center" style="width: auto; float:right">
+                                            <tr>
+                                                <td>{{ $billOfPayment->created_at->format('F d, Y') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><p style="font-weight: bold">Approved By</p></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <img src="{{ asset('storage/' . $billOfPayment->createdBy->signature_url) }}" alt="Signature" width="100px" style="margin-bottom: 10px;">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom: 1px solid black;">{{ $billOfPayment->createdBy->name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ $billOfPayment->createdBy->role }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                            </div>                            
                         </div>
                     </div>
                 </div>
