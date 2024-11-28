@@ -199,3 +199,6 @@ Route::put('/desc-bills/update', [DescBillController::class, 'update'])->name('d
 // Route untuk menangani form submission
 Route::post('/payments/store', [PaymentController::class, 'store'])->name('payments.store');
 Route::post('/payment-details/store', [PaymentDetailController::class, 'store'])->name('payment-details.store');
+// Client Company Route
+Route::resource('client-companies', ClientCompanyController::class);
+Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
