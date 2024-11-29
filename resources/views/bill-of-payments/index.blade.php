@@ -83,6 +83,18 @@
                 { data: 'status', name: 'status' },
                 { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
             ],
+            language: {
+                lengthMenu: "Tampilkan _MENU_ Data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                search: "Cari :",
+                infoFiltered: "(disaring dari total _MAX_ Data)"
+            },
             order: [[2, 'dsc']],
             drawCallback: function() {
                 $('#bill-of-payments td:nth-child(4), #bill-of-payments td:nth-child(5), #bill-of-payments td:nth-child(6)').css({

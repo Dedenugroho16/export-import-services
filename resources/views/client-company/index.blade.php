@@ -1,17 +1,20 @@
 @extends('layouts.layout')
-@section('title', 'Client')
-
+@section('title', 'Client Company')
 @section('content')
 <div class="page-body">
     <div class="container-xl">
-        <!-- Dashboard Header and Add Client Button -->
+        <!-- Header dan Tombol Tambah Komoditas -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
-            <a href="{{ route('clients.create') }}" class="btn btn-primary">
-                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+            <a href="{{ route('client-companies.create') }}" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-plus">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 5v14" />
+                    <path d="M5 12h14" />
+                </svg>
                 Tambah
             </a>
         </div>
-        <!-- Clients Section -->
+        <!-- Section Tabel Komoditas -->
         <div class="row row-deck row-cards">
             <div class="col-12">
                 <div class="card mb-5">
@@ -31,27 +34,22 @@
                             <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
                         </div>
                         @endif
-                        <!-- Table Starts Here -->
+                        <!-- Tabel Komoditas -->
                         <div class="table-responsive">
-                            <table class="table card-table table-hover table-vcenter text-nowrap" id="clientTable">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">No</th>
-                                    <th class="text-center">Nama Client</th>
-                                    <th class="text-center">Nama Perusahaan</th>
-                                    <th class="text-center">Alamat</th>
-                                    <th class="text-center">PO BOX</th>
-                                    <th class="text-center">Telepon</th>
-                                    <th class="text-center">Fax</th>
-                                    <th class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
+                            <table class="table card-table table-vcenter text-nowrap" id="clientCompanyTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Nama Perusahaan</th>
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
 
                                 </tbody>
                             </table>
                         </div>
-                        <!-- Table ends here -->
+                        <!-- Tabel Berakhir -->
                     </div>
                 </div>
             </div>
@@ -59,12 +57,18 @@
     </div>
 </div>
 
+
+<!-- Script DataTables -->
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#clientTable').DataTable({
+        $('#clientCompanyTable').DataTable({
             processing: false,
             serverSide: true,
-            ajax: "{{ route('clients.index') }}",
+            ajax: "{{ route('client-companies.index') }}",
+            autoWidth: false,
+            columnDefs: [
+                { width: '200px', targets: 1 }
+            ],
             columns: [
                 { 
                     data: null, 
@@ -75,12 +79,7 @@
                     orderable: false,
                     searchable: false
                 },
-                { data: 'name', name: 'name' },
-                { data: 'company_name', name: 'company_name', class: 'text-center'},
-                { data: 'address', name: 'address' },
-                { data: 'PO_BOX', name: 'PO_BOX', class: 'text-center' },
-                { data: 'tel', name: 'tel', class: 'text-center' },
-                { data: 'fax', name: 'fax', class: 'text-center' },
+                { data: 'company_name', name: 'company_name', class: 'text-center' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
             ],
             language: {
@@ -95,25 +94,23 @@
                 search: "Cari :",
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
-            lengthMenu: [5, 10, 25, 50],
+            lengthMenu: [5, 10, 25, 50], // Tentukan jumlah data yang ditampilkan per halaman
             pageLength: 10,
-            drawCallback: function() {
-                // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
-                $('#clientTable td:nth-child(2), #clientTable td:nth-child(3)').css({
-                    'max-width': '250px',
-                    'white-space': 'normal',
-                    'word-wrap': 'break-word'
-                });
-                $('#clientTable td:nth-child(4), #clientTable th:nth-child(4)').css({
-                    'max-width': '200px',
-                    'overflow': 'hidden',
-                    'text-overflow': 'ellipsis'
+
+            drawCallback: function() {                              
+                $('#clientCompanyTable td:nth-child(2), #clientCompanyTable th:nth-child(2)').css({
+                    'width': '70%', 
+                   });
+                $('#clientCompanyTable td:nth-child(3), #clientCompanyTable th:nth-child(3)').css({
+                    'max-width': '30%',
+                    'text-align': 'right'
                 });
             }
         });
     });
 </script>
 
+<!-- Script Validasi Form -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const forms = document.querySelectorAll('form');
@@ -133,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!isValid) {
                 e.preventDefault(); // Stop form from submitting
-                alert('Please fill in all required fields.');
+                alert('Harap isi semua field yang dibutuhkan.');
             }
         });
     });

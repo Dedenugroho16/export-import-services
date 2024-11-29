@@ -194,6 +194,7 @@
                         if (response.length > 0) {
                             response.forEach(function(data) {
                                 let total = Number(data.total);
+                                var formattedPaid = parseFloat(data.paid).toLocaleString('en-US');
                                 var newRow = `
                                                 <tr>
                                                     <td class="text-center" style="display: none;">
@@ -210,7 +211,7 @@
                                                             placeholder="Enter description">
                                                     </td>
                                                     <td class="text-center amount">${total?.toLocaleString('en-US') || '0'}</td>
-                                                    <td class="text-center paid">${data.paid?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center paid">${formattedPaid}</td>
                                                     <td class="text-center" style="width:150px;">
                                                         <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer">
                                                         <input type="" name="transactions[${data.id}][transfered]" class="form-control transfered" placeholder="Uang ditransfer">

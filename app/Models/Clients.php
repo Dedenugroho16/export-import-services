@@ -11,14 +11,20 @@ class Clients extends Model
 
     protected $fillable = [
         'name',
-        'company_name',
         'address',
         'PO_BOX',
         'tel',
         'fax',
+        'client_company_id', 
     ];
 
-    // Definisi relasi one-to-many
+    
+    public function clientCompany()
+    {
+        return $this->belongsTo(ClientCompany::class, 'client_company_id');
+    }
+
+
     public function consignees()
     {
         return $this->hasMany(Consignee::class, 'id_client');
@@ -29,14 +35,14 @@ class Clients extends Model
     {
         return $this->hasMany(Transaction::class, 'id_client');
     }
-    
+
     public function billOfPayments()
     {
         return $this->hasMany(BillOfPayment::class, 'id_client');
     }
 
-    public function paymentDetails()
+    public function company()
     {
-        return $this->hasMany(PaymentDetail::class, 'id_client', 'id');
+        return $this->belongsTo(ClientCompany::class, 'client_company_id');
     }
 }

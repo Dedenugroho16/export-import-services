@@ -139,6 +139,15 @@
             overflow-x: auto;
             white-space: nowrap;
         }
+
+        /* Menyesuaikan tinggi Select2 */
+        .select2-container--default .select2-selection--single {
+            height: 40px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 40px !important;
+        }
     </style>
 
     {{-- JQuery --}}
@@ -200,6 +209,20 @@
                                         </svg>
                                     </span>
                                     <span class="nav-link-title">Client</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('client-company*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('client-companies.index') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="9" />
+                                            <path d="M9 12h6m-3 -3v6" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Client Company</span>
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('products*') ? 'active' : '' }}">
@@ -674,7 +697,7 @@
                         </div>
                         <div class="col-12 col-md">
                             <div class="text-center">
-                                <a href="." class="link-secondary">Your Company</a> &copy; 2024
+                                <a href="." class="link-secondary">Madtive Studio</a> &copy; 2024
                             </div>
                         </div>
                     </div>

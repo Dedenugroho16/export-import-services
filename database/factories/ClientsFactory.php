@@ -17,7 +17,7 @@ class ClientsFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->company,
+            'name' => $this->faker->name,
             'address' => $this->faker->address,
             'PO_BOX' => $this->faker->postcode,
             'tel' => $this->faker->phoneNumber,

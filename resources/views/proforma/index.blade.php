@@ -128,6 +128,18 @@
                     { data: 'consignee', name: 'consignee' },
                     { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
                 ],
+                language: {
+                lengthMenu: "Tampilkan _MENU_ Data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                search: "Cari :",
+                infoFiltered: "(disaring dari total _MAX_ entri)"
+                },
                 order: [[2, 'dsc']], 
                 columnDefs: [{
                     targets: 0,
@@ -170,6 +182,18 @@
                     { data: 'consignee', name: 'consignee' },
                     { data: 'aksi', name: 'aksi', orderable: false, searchable: false, class: 'text-center'}
                 ],
+                language: {
+                lengthMenu: "Tampilkan _MENU_ Data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                search: "Cari :",
+                infoFiltered: "(disaring dari total _MAX_ entri)"
+                },
                 order: [[2, 'dsc']],
                 columnDefs: [{
                     targets: 0,
