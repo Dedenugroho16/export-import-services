@@ -242,9 +242,21 @@
                 var paymentInput = row.find('.transfered-input');
 
                 var payment = parseFloat(paymentInput.val().replace(/,/g, '')) || 0;
+                var piBill = parseFloat(row.find('.pi-bill').text().replace(/,/g, '')) || 0;
                 var formattedPayment = payment.toLocaleString('en-US');
                 row.find('.transfered-input').val(formattedPayment);
                 row.find('.transfered').val(payment);
+
+                if (payment > piBill) {
+                    $('#submitButton').prop('disabled', true); // Disable tombol submit
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Jumlah Transfer Tidak Valid',
+                        text: 'Nilai transfer tidak boleh lebih besar dari jumlah yang harus dibayar.',
+                    });
+                } else {
+                    $('#submitButton').prop('disabled', false); // Aktifkan tombol jika valid
+                }
 
                 updateAmounts();
             });
@@ -338,14 +350,15 @@
                 $('#paymentDetailTable tbody tr').each(function() {
                     var row = $(this);
                     var inputs = row.find(
-                    'input:not([type="hidden"])'); // Hanya memvalidasi input yang terlihat (bukan hidden)
+                        'input:not([type="hidden"])'
+                    ); // Hanya memvalidasi input yang terlihat (bukan hidden)
 
                     inputs.each(function() {
                         var input = $(this);
                         if (input.val().trim() === '') {
                             isValid = false;
                             input.addClass(
-                            'is-invalid'); // Tambahkan kelas untuk menandai input tidak valid
+                                'is-invalid'); // Tambahkan kelas untuk menandai input tidak valid
                         } else {
                             input.removeClass('is-invalid'); // Hapus tanda jika valid
                         }
@@ -389,7 +402,7 @@
                 // Submit formPaymentDetails via AJAX
                 $.ajax({
                     url: formPaymentDetails.attr(
-                    'action'), // The action URL from the formPaymentDetails
+                        'action'), // The action URL from the formPaymentDetails
                     method: 'POST',
                     data: formDataPaymentDetails,
                     success: function(response) {
@@ -442,19 +455,19 @@
                                 error: function(xhr, status, error) {
                                     Swal.fire({
                                         icon: 'error',
-                                        title: 'Terjadi Kesalahan!',
-                                        text: 'Gagal mengirimkan Proforma Invoice.',
+                                        title: 'Gagal Menyimpan Data!',
+                                        text: response.message ||
+                                            'Terjadi kesalahan validasi data. Periksa input Anda dan coba lagi.',
                                     });
                                 }
                             });
-
                         } else {
                             $(this).prop('disabled', false);
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Gagal membuat Bill of Payment!',
+                                title: 'Gagal Menyimpan Data!',
                                 text: response.message ||
-                                    'Terjadi kesalahan saat membuat Bill of Payment.',
+                                    'Terjadi kesalahan validasi data. Periksa input Anda dan coba lagi.',
                             });
                         }
                     },

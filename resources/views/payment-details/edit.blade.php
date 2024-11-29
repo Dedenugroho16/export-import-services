@@ -83,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <form id="formTransaction" action="{{ route('payments.store') }}">
+                            <form id="formTransaction" action="{{ route('payments.update') }}">
                                 @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">
@@ -126,7 +126,7 @@
                             </form>
 
                             <form id="formPaymentDetails" class="mt-2" method="POST"
-                                action="{{ route('payment-details.store') }}">
+                                action="{{ route('payment-details.update', $paymentDetails->id) }}">
                                 @csrf
                                 <input type="date" name="date" id="date" value="{{ $paymentDetails->date }}">
                                 <input type="" id="id_bill_of_payment" name="id_bill_of_payment"
@@ -140,8 +140,8 @@
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payment.index') }}" class="btn btn-outline-primary">Kembali</a>
-                                <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
+                                <a href="{{ route('bill-of-payments.details', $hashedBOPId) }}" class="btn btn-outline-primary">Kembali</a>
+                                <button type="button" id="submitButton" class="btn btn-primary">Perbarui</button>
                             </div>
                         </div>
                     </div>
@@ -240,15 +240,26 @@
                 });
             }
 
-            // Pasang event listener di luar loop
             $('#paymentDetailTable tbody').on('input', '.transfered-input', function() {
                 var row = $(this).closest('tr');
                 var paymentInput = row.find('.transfered-input');
 
                 var payment = parseFloat(paymentInput.val().replace(/,/g, '')) || 0;
+                var piBill = parseFloat(row.find('.pi-bill').text().replace(/,/g, '')) || 0;
                 var formattedPayment = payment.toLocaleString('en-US');
                 row.find('.transfered-input').val(formattedPayment); // Update tampilan input
                 row.find('.transfered').val(payment); // Update nilai hidden input
+
+                if (payment > piBill) {
+                    $('#submitButton').prop('disabled', true); // Disable tombol submit
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Jumlah Transfer Tidak Valid',
+                        text: 'Nilai transfer tidak boleh lebih besar dari jumlah yang harus dibayar.',
+                    });
+                } else {
+                    $('#submitButton').prop('disabled', false); // Aktifkan tombol jika valid
+                }
 
                 updateAmounts(); // Perbarui total saat input berubah
             });
@@ -358,24 +369,22 @@
                     data: formDataPaymentDetails,
                     success: function(response) {
                         if (response.success) {
-                            // Capture the returned id_bill from the response
                             var idPD = response.id_pd;
 
-                            // Now process formTransaction by appending the rows with the id_bill
                             var formTransaction = $('#formTransaction');
                             $('#paymentDetailTable tbody tr').each(function() {
-                                // For each row in the table, set the id_bill for the hidden input
+                                // Cari input yang memiliki name id_payment_detail
                                 $(this).find('input[name^="transactions"]').each(
                                     function() {
                                         if ($(this).attr('name').includes(
                                                 'id_payment_detail')) {
                                             $(this).val(
-                                                idPD); // Set the value of id_bill
+                                                idPD
+                                            ); // Pastikan idPD dari respons di-set
                                         }
                                     });
                             });
 
-                            // Submit formTransaction via AJAX after setting id_bill
                             var formDataTransaction = formTransaction
                                 .serialize(); // Serialize form data
                             $.ajax({
@@ -406,19 +415,19 @@
                                 error: function(xhr, status, error) {
                                     Swal.fire({
                                         icon: 'error',
-                                        title: 'Terjadi Kesalahan!',
-                                        text: 'Gagal mengirimkan Proforma Invoice.',
+                                        title: 'Gagal Menyimpan Data!',
+                                        text: response.message ||
+                                            'Terjadi kesalahan validasi data. Periksa input Anda dan coba lagi.',
                                     });
                                 }
                             });
-
                         } else {
                             $(this).prop('disabled', false);
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Gagal membuat Bill of Payment!',
+                                title: 'Gagal Menyimpan Data!',
                                 text: response.message ||
-                                    'Terjadi kesalahan saat membuat Bill of Payment.',
+                                    'Terjadi kesalahan validasi data. Periksa input Anda dan coba lagi.',
                             });
                         }
                     },

@@ -221,15 +221,14 @@ class PaymentDetailController extends Controller
         $paymentDetail = PaymentDetail::findOrFail($id);
 
         // Perbarui data yang divalidasi
-        $data['updated_by'] = Auth::id(); // Tambahkan updated_by sebagai ID pengguna yang mengedit
+        $data['updated_by'] = Auth::id();
 
         // Lakukan update pada data paymentDetail
         $paymentDetail->update($data);
 
-        // Kembalikan respons JSON sebagai feedback sukses dengan ID paymentDetail yang diperbarui
         return response()->json([
             'success' => true,
-            'id_bill' => $paymentDetail->id
+            'id_pd' => $paymentDetail->id
         ]);
     }
 

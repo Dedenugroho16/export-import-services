@@ -88,27 +88,24 @@ class PaymentController extends Controller
      */
     public function update(Request $request)
     {
-        // Ambil data transactions dari request
-        $transactions = $request->input('transactions');
+        // Validasi awal semua data
+        $validatedData = $request->validate([
+            'transactions' => 'required|array',
+            'transactions.*.id' => 'required|integer',
+            'transactions.*.id_payment_detail' => 'required|integer',
+            'transactions.*.transfered' => 'required|numeric|gte:0',
+            'transactions.*.description' => 'required|string',
+        ], [
+            'transactions.*.id.required' => 'ID transaksi wajib diisi.',
+            'transactions.*.id_payment_detail.required' => 'ID Payment Detail wajib diisi.',
+            'transactions.*.transfered.required' => 'Nominal transfer wajib diisi.',
+            'transactions.*.description.required' => 'Deskripsi transaksi wajib diisi.',
+        ]);
+
+        $transactions = $validatedData['transactions'];
 
         foreach ($transactions as $data) {
-            // Validasi setiap data transaksi
-            $validator = Validator::make($data, [
-                'id' => 'required|integer',
-                'id_payment_detail' => 'required|integer',
-                'transfered' => 'required|numeric|gte:0',
-                'description' => 'required|string',
-            ]);
-
-            // Jika validasi gagal, hentikan proses dan kembalikan respons error
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validasi data payment gagal',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
+            // Cari data pembayaran sesuai dengan ID transaksi dan ID Payment Detail
             $payment = Payment::where('id_transaction', $data['id'])
                 ->where('id_payment_detail', $data['id_payment_detail'])
                 ->first();
@@ -119,10 +116,10 @@ class PaymentController extends Controller
                     'transfered' => $data['transfered'],
                 ]);
             } else {
-                // Jika tidak ada, beri respons bahwa data tidak ditemukan
+                // Kembalikan error jika data pembayaran tidak ditemukan
                 return response()->json([
                     'success' => false,
-                    'message' => 'Payments tidak ditemukan untuk transaksi ' . $data['id'] . ' dan Payment Details ' . $data['id_payment_detail'],
+                    'message' => "Payments tidak ditemukan untuk transaksi ID {$data['id']} dan Payment Detail ID {$data['id_payment_detail']}",
                 ], 404);
             }
         }

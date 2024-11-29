@@ -188,4 +188,6 @@ Route::post('/desc-bills/store', [DescBillController::class, 'store'])->name('de
 Route::put('/desc-bills/update', [DescBillController::class, 'update'])->name('desc-bills.update');
 // Route untuk menangani form submission
 Route::post('/payments/store', [PaymentController::class, 'store'])->name('payments.store');
+Route::post('/payments/update', [PaymentController::class, 'update'])->name('payments.update');
 Route::post('/payment-details/store', [PaymentDetailController::class, 'store'])->name('payment-details.store');
+Route::post('/payment-details/update/{id}', [PaymentDetailController::class, 'update'])->name('payment-details.update');
