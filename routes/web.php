@@ -203,3 +203,6 @@ Route::post('/payments/store', [PaymentController::class, 'store'])->name('payme
 Route::post('/payments/update', [PaymentController::class, 'update'])->name('payments.update');
 Route::post('/payment-details/store', [PaymentDetailController::class, 'store'])->name('payment-details.store');
 Route::post('/payment-details/update/{id}', [PaymentDetailController::class, 'update'])->name('payment-details.update');
+// Client Company Route
+Route::resource('client-companies', ClientCompanyController::class);
+Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
