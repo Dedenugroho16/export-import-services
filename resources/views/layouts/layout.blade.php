@@ -212,7 +212,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('client-company*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('client-companies.index') }}">
+                                <a class="nav-link" href="{{ route('company.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2"
