@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ClientCompany;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -17,11 +18,11 @@ use App\Http\Controllers\ConsigneesController;
 use App\Http\Controllers\CommoditiesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\BillOfPaymentController;
+use App\Http\Controllers\ClientCompanyController;
 use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\PaymentDetailController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\DetailTransactionController;
-use App\Http\Controllers\ClientCompanyController;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
