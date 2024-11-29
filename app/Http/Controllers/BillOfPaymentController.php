@@ -26,16 +26,18 @@ class BillOfPaymentController extends Controller
 
     public function getBillOfPayment()
     {
-        $billOfPayments = BillOfPayment::with(['client', 'descBills'])
+        $billOfPayments = BillOfPayment::with(['client.clientCompany'])
             ->select(['id', 'month', 'no_inv', 'id_client', 'status']);
 
         return DataTables::of($billOfPayments)
-            ->addIndexColumn() // Tambahkan baris ini
+            ->addIndexColumn()
             ->addColumn('client_name', function ($row) {
                 return $row->client ? $row->client->name : '-';
             })
             ->addColumn('company_name', function ($row) {
-                return $row->client ? $row->client->company_name : '-';
+                return $row->client && $row->client->clientCompany
+                    ? $row->client->clientCompany->company_name
+                    : '-';
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
@@ -46,7 +48,6 @@ class BillOfPaymentController extends Controller
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
                             <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
-                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
                                 Lihat Payment Details
                             </a>
                             <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
@@ -143,7 +144,7 @@ class BillOfPaymentController extends Controller
         $id = IdHashHelper::decode($hash);
         $company = Company::first();
         $billOfPayment = BillOfPayment::with([
-            'client',
+            'client.clientCompany',
             'createdBy',
             'descBills.transaction',
         ])->findOrFail($id);
@@ -273,7 +274,7 @@ class BillOfPaymentController extends Controller
         $id = IdHashHelper::decode($hashId);
         $company = Company::first();
         $billOfPayment = BillOfPayment::with([
-            'client',
+            'client.clientCompany',
             'createdBy',
             'descBills.transaction',
         ])->findOrFail($id);
@@ -328,7 +329,7 @@ class BillOfPaymentController extends Controller
         $id = IdHashHelper::decode($hashId);
         $company = Company::first();
         $billOfPayment = BillOfPayment::with([
-            'client',
+            'client.clientCompany',
             'createdBy',
             'descBills.transaction',
         ])->findOrFail($id);

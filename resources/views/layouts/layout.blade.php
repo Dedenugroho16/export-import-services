@@ -194,19 +194,7 @@
                             <li class="nav-item {{ Request::is('clients*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('clients.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="3" />
-                                            <path d="M12 3v6" />
-                                            <path d="M12 15v6" />
-                                            <path d="M3 12h6" />
-                                            <path d="M15 12h6" />
-                                            <path d="M5.6 5.6l4.2 4.2" />
-                                            <path d="M18.4 18.4l-4.2 -4.2" />
-                                            <path d="M18.4 5.6l-4.2 4.2" />
-                                            <path d="M5.6 18.4l4.2 -4.2" />
-                                        </svg>
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
                                     </span>
                                     <span class="nav-link-title">Client</span>
                                 </a>
@@ -214,13 +202,7 @@
                             <li class="nav-item {{ Request::is('client-company*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('client-companies.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="9" />
-                                            <path d="M9 12h6m-3 -3v6" />
-                                        </svg>
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-buildings"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 21v-15c0 -1 1 -2 2 -2h5c1 0 2 1 2 2v15" /><path d="M16 8h2c1 0 2 1 2 2v11" /><path d="M3 21h18" /><path d="M10 12v0" /><path d="M10 16v0" /><path d="M10 8v0" /><path d="M7 12v0" /><path d="M7 16v0" /><path d="M7 8v0" /><path d="M17 12v0" /><path d="M17 16v0" /></svg>
                                     </span>
                                     <span class="nav-link-title">Client Company</span>
                                 </a>
@@ -291,19 +273,7 @@
                             <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('company.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-building-skyscraper">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M3 21l18 0" />
-                                            <path d="M5 21v-14l8 -4v18" />
-                                            <path d="M19 21v-10l-6 -4" />
-                                            <path d="M9 9l0 .01" />
-                                            <path d="M9 12l0 .01" />
-                                            <path d="M9 15l0 .01" />
-                                            <path d="M9 18l0 .01" />
-                                        </svg>
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-databricks"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l9 5l9 -5v-3l-9 5l-9 -5v-3l9 5l9 -5v-3l-9 5l-9 -5l9 -5l5.418 3.01" /></svg>
                                     </span>
                                     <span class="nav-link-title">
                                         Data Perusahaan
@@ -349,12 +319,7 @@
                             <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('transactions.rekap') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-bar-chart">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M3 17l6-6l4 4l6-8" />
-                                        <path d="M14 3v18" />
-                                        <path d="M7 9v9" />
-                                    </svg>
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chart-bar-popular"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M9 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M15 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M4 20h14" /></svg>
                                 </span>
                                 <span class="nav-link-title">Rekap Sales</span>
                             </a>
@@ -362,11 +327,7 @@
                         <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M5 6h14c.553 0 1 .447 1 1v10c0 .553-.447 1-1 1H5c-.553 0-1-.447-1-1V7c0-.553.447-1 1-1z" />
-                                        <path d="M3 10h18" />
-                                    </svg>
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-dollar"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" /><path d="M12 17v1m0 -8v1" /></svg>
                                 </span>
                                 <span class="nav-link-title">Bill Of Payment</span>
                             </a>

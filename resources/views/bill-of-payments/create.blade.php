@@ -133,7 +133,7 @@
                                                     <td class="text-end" colspan="5">
                                                         <label for="total" class="mr-2">AMOUNT OF BILL:</label>
                                                     </td>
-                                                    <td class="text-center" style="width: 120px;">
+                                                    <td class="text-center" style="width: 150px;">
                                                         <div
                                                             class="form-group d-flex align-items-center justify-content-center">
                                                             <input type="text" step="0.01"

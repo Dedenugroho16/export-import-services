@@ -25,7 +25,7 @@ class PaymentDetail extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class, 'id_client', 'id');
+        return $this->belongsTo(Clients::class, 'id_client', 'id');
     }
 
     public function createdBy()

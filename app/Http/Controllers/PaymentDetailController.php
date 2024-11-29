@@ -108,7 +108,7 @@ class PaymentDetailController extends Controller
         $company = Company::first();
 
         $paymentDetail = PaymentDetail::with([
-            'client',
+            'client.clientCompany',
             'createdBy',
             'billOfPayment',
             'payments.transaction'
@@ -245,7 +245,7 @@ class PaymentDetailController extends Controller
         $id = IdHashHelper::decode($hashedId);
         $company = Company::first();
         $paymentDetail = PaymentDetail::with([
-            'client',
+            'client.clientCompany',
             'createdBy',
             'payments.transaction'
         ])->findOrFail($id);
@@ -296,7 +296,7 @@ class PaymentDetailController extends Controller
         $id = IdHashHelper::decode($hashedId);
         $company = Company::first();
         $paymentDetail = PaymentDetail::with([
-            'client',
+            'client.clientCompany',
             'createdBy',
             'payments.transaction'
         ])->findOrFail($id);
