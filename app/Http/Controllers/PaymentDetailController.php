@@ -81,7 +81,7 @@ class PaymentDetailController extends Controller
             'id_client' => 'required',
             'total' => 'required|numeric|gte:0',
         ], [
-            'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
+            'total.gte' => 'Nilai transfered tidak boleh melebihi nilai bill.',
         ]);
 
         $data['created_by'] = Auth::id();
@@ -186,7 +186,7 @@ class PaymentDetailController extends Controller
                     ->where('id_transaction', $transaction->id) // Filter berdasarkan id_transaction
                     ->where('id_payment_detail', $idPaymentDetail) // Filter tambahan berdasarkan id_payment_detail
                     ->pluck('description');
-                
+
                 $transaction->descriptionTransfered = $transaction->payments
                     ->where('id_transaction', $transaction->id) // Filter berdasarkan id_transaction
                     ->where('id_payment_detail', $idPaymentDetail) // Filter tambahan berdasarkan id_payment_detail
@@ -205,9 +205,32 @@ class PaymentDetailController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+            'date' => 'required',
+            'id_bill_of_payment' => 'required',
+            'payment_number' => 'required',
+            'id_client' => 'required',
+            'total' => 'required|numeric|gte:0',
+        ], [
+            'total.gte' => 'Nilai transfered tidak boleh melebihi nilai bill.',
+        ]);
+
+        // Dapatkan paymentDetail berdasarkan ID
+        $paymentDetail = PaymentDetail::findOrFail($id);
+
+        // Perbarui data yang divalidasi
+        $data['updated_by'] = Auth::id(); // Tambahkan updated_by sebagai ID pengguna yang mengedit
+
+        // Lakukan update pada data paymentDetail
+        $paymentDetail->update($data);
+
+        // Kembalikan respons JSON sebagai feedback sukses dengan ID paymentDetail yang diperbarui
+        return response()->json([
+            'success' => true,
+            'id_bill' => $paymentDetail->id
+        ]);
     }
 
     /**

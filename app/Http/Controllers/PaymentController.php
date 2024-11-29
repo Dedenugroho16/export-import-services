@@ -86,9 +86,51 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        // Ambil data transactions dari request
+        $transactions = $request->input('transactions');
+
+        foreach ($transactions as $data) {
+            // Validasi setiap data transaksi
+            $validator = Validator::make($data, [
+                'id' => 'required|integer',
+                'id_payment_detail' => 'required|integer',
+                'transfered' => 'required|numeric|gte:0',
+                'description' => 'required|string',
+            ]);
+
+            // Jika validasi gagal, hentikan proses dan kembalikan respons error
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validasi data payment gagal',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $payment = Payment::where('id_transaction', $data['id'])
+                ->where('id_payment_detail', $data['id_payment_detail'])
+                ->first();
+
+            if ($payment) {
+                $payment->update([
+                    'description' => $data['description'],
+                    'transfered' => $data['transfered'],
+                ]);
+            } else {
+                // Jika tidak ada, beri respons bahwa data tidak ditemukan
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Payments tidak ditemukan untuk transaksi ' . $data['id'] . ' dan Payment Details ' . $data['id_payment_detail'],
+                ], 404);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Payment Details berhasil diperbarui',
+        ]);
     }
 
     /**
