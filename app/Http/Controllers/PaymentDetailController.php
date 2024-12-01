@@ -79,6 +79,7 @@ class PaymentDetailController extends Controller
             'id_bill_of_payment' => 'required',
             'payment_number' => 'required',
             'id_client' => 'required',
+            'id_client_company' => 'required|exists:client_company,id',
             'total' => 'required|numeric|gte:0',
         ], [
             'total.gte' => 'Nilai transfered tidak boleh melebihi nilai bill.',

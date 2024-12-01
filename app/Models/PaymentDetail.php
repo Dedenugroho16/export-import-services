@@ -16,6 +16,7 @@ class PaymentDetail extends Model
         'id_client',
         'total',
         'created_by',
+        'id_client_company',
     ];
 
     public function billOfPayment()
@@ -36,5 +37,10 @@ class PaymentDetail extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class, 'id_payment_detail', 'id');
+    }
+
+    public function clientCompany()
+    {
+        return $this->belongsTo(ClientCompany::class, 'id_client_company', 'id');
     }
 }

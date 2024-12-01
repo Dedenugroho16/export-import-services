@@ -75,7 +75,8 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p>nama perusahaan</p>
+                                                    <p>{{ $paymentDetails->client && $paymentDetails->client->clientCompany 
+                                                    ? $paymentDetails->client->clientCompany->company_name : '-' }}</p>
                                                 </div>
                                             </div>
                                         </div>
