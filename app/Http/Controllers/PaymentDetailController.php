@@ -342,4 +342,36 @@ class PaymentDetailController extends Controller
 
         return $pdf->download('payment-details_' . $hashedId . '.pdf');
     }
+
+    public function openingBalanceCreate()
+    {
+        return view('opening-balance.create');
+    }
+
+    public function openingBalanceStore(Request $request)
+    {
+        // Validasi data yang diterima
+        $validatedData = $request->validate([
+            'no_inv' => 'required|string|max:255',
+            'total' => 'required|numeric|min:0',
+            'month' => 'required|string',
+            'id_client' => 'required|integer|exists:clients,id',
+            'id_client_company' => 'required|exists:client_company,id',
+        ]);
+
+        // Membuat data baru di tabel 'payment_details'
+        $paymentDetail = PaymentDetail::create([
+            'payment_number' => $validatedData['no_inv'], // Nomor pembayaran/invoice
+            'date' => now(),
+            'id_client' => $validatedData['id_client'],
+            'id_client_company' => $validatedData['id_client_company'],
+            'total' => $validatedData['total'],
+            'created_by' => auth()->user()->id, // Mendapatkan ID pengguna yang sedang login
+            'id_bill_of_payment' => null, // Sesuaikan logika untuk ID terkait jika diperlukan
+        ]);
+
+        // Redirect atau memberikan respons sesuai kebutuhan
+        return redirect()->route('opening-balance.create')
+            ->with('success', 'Payment Detail successfully created.');
+    }
 }
