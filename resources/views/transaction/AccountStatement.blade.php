@@ -6,10 +6,9 @@
         <div class="container-xl">
             <div
                 class="mb-4 mt-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                <!-- Filter by Stuffing Date -->
-                <form class="row align-items-center gy-2 gx-2 mb-3" method="GET" id="filterForm">
+                <form class="row align-items-center gy-2 gx-3 mb-3" method="GET" id="filterForm">
                     <!-- Input Tahun -->
-                    <div class="col-auto">
+                    <div class="col-sm-12 col-md-4">
                         <label for="yearSelect" class="form-label mb-0" style="font-size: 0.9rem;">Pilih Tahun</label>
                         <select name="year" id="yearSelect" class="form-select">
                             <script>
@@ -22,7 +21,7 @@
                     </div>
 
                     <!-- Select Nama Perusahaan -->
-                    <div class="col-auto">
+                    <div class="col-sm-12 col-md-4">
                         <label for="company_name" class="form-label mb-0" style="font-size: 0.9rem;">Pilih
                             Perusahaan</label>
                         <select name="company_name" id="company_name" class="form-select">
@@ -30,9 +29,10 @@
                     </div>
 
                     <!-- Tombol Filter dan Reset -->
-                    <div class="col-auto d-flex align-items-end">
-                        <button type="button" id="filterBtn" class="btn btn-primary me-2">Filter</button>
-                        <a id="resetBtn" class="btn btn-secondary">Reset</a>
+                    <div class="col-sm-12 col-md-4 d-flex align-items-end">
+                        <button type="button" id="filterBtn"
+                            class="btn btn-primary w-100 w-md-auto me-md-2">Filter</button>
+                        <a id="resetBtn" class="btn btn-secondary w-100 w-md-auto">Reset</a>
                     </div>
                 </form>
 
@@ -89,7 +89,7 @@
                         <!-- Tabel Invoices -->
                         <div class="col-md-6">
                             <h3 class="text-center mb-4" style="text-decoration: underline;"><strong>INVOICES</strong></h3>
-                            <div id="rekap-table" class="table-responsive">
+                            <div id="rekap-table" class="table-responsive" style="overflow: hidden; width: 100%;">
                                 <table class="table table-borderless table-vcenter table-nowrap" id="invoicesTable"
                                     style="border-collapse: collapse;">
                                     <thead class="border-end border-dark">
@@ -140,29 +140,23 @@
                     });
 
                     $('#company_name').select2({
+                        placeholder: 'Select a Company',
                         ajax: {
-                            url: "{{ route('clients.list') }}", // Endpoint backend
+                            url: '{{ route('client-companies.get') }}',
                             dataType: 'json',
-                            delay: 250, // Debounce untuk mengurangi beban server
+                            delay: 250,
                             data: function(params) {
                                 return {
-                                    search: params.term, // Kirim input pencarian ke server
-                                    page: params.page || 1 // Untuk pagination jika ada
+                                    search: params.term, // Kata kunci pencarian
                                 };
                             },
                             processResults: function(data) {
                                 return {
-                                    results: data.results, // Ambil hasil yang relevan
-                                    pagination: {
-                                        more: data.pagination.more // Atur pagination
-                                    }
+                                    results: data.results, // Data untuk ditampilkan
                                 };
-                            }
+                            },
+                            cache: true,
                         },
-                        placeholder: 'Select a company',
-                        width: '100%',
-                        minimumInputLength: 1, // Mulai pencarian setelah 1 karakter
-                        allowClear: true
                     });
 
                     $('#company_name').on('select2:select', function(e) {
@@ -177,9 +171,9 @@
 
                     // Tangani saat Select2 di-clear
                     $('#company_name').on('select2:clear', function() {
-                        let year = $('#yearSelect').val(); // Tetap ambil tahun dari input jika ada
+                        let year = $('#yearSelect').val();
                         $('#companyStatement').html(
-                            `PT PSN STATEMENT - <br>YEAR OF ${year}` // Hanya tampilkan tahun tanpa nama perusahaan
+                            `PT PSN STATEMENT - <br>YEAR OF ${year}`
                         );
                     });
 
@@ -214,11 +208,25 @@
                             },
                             {
                                 data: 'total',
-                                className: 'text-center'
+                                className: 'text-center',
+                                render: function(data) {
+                                    return new Intl.NumberFormat('en-US', {
+                                        style: 'decimal',
+                                        minimumFractionDigits: 2, // Ensure 2 decimal places
+                                        maximumFractionDigits: 2
+                                    }).format(data); // Format the balance value
+                                }
                             },
                             {
                                 data: 'balance',
-                                className: 'text-center'
+                                className: 'text-center',
+                                render: function(data) {
+                                    return new Intl.NumberFormat('en-US', {
+                                        style: 'decimal',
+                                        minimumFractionDigits: 2, // Ensure 2 decimal places
+                                        maximumFractionDigits: 2
+                                    }).format(data); // Format the balance value
+                                }
                             }
                         ],
                         order: [
@@ -235,11 +243,11 @@
                             data: function(d) {
                                 d.year = $('#yearSelect').val(); // Ambil nilai tahun dari input
                                 d.company_name = $('#company_name')
-                            .val(); // Ambil nilai nama perusahaan dari input
+                                    .val(); // Ambil nilai nama perusahaan dari input
                             }
                         },
                         columns: [{
-                                data: 'created_at',
+                                data: 'date',
                                 className: 'text-center',
                                 title: 'DATE'
                             },
@@ -249,14 +257,28 @@
                                 title: 'DESCRIPTION'
                             },
                             {
-                                data: 'paid',
+                                data: 'total',
                                 className: 'text-center',
-                                title: 'PAYMENT USD'
+                                title: 'PAYMENT USD',
+                                render: function(data) {
+                                    return new Intl.NumberFormat('en-US', {
+                                        style: 'decimal',
+                                        minimumFractionDigits: 2, // Ensure 2 decimal places
+                                        maximumFractionDigits: 2
+                                    }).format(data); // Format the balance value
+                                }
                             },
                             {
                                 data: 'balance',
                                 className: 'text-center',
-                                title: 'BALANCE'
+                                title: 'BALANCE',
+                                render: function(data) {
+                                    return new Intl.NumberFormat('en-US', {
+                                        style: 'decimal',
+                                        minimumFractionDigits: 2, // Ensure 2 decimal places
+                                        maximumFractionDigits: 2
+                                    }).format(data); // Format the balance value
+                                }
                             }
                         ]
                     });
@@ -285,6 +307,11 @@
                     $('#resetBtn').click(function() {
                         $('#yearSelect').val(null).trigger('change'); // Reset Select2
                         $('#company_name').val(null).trigger('change'); // Reset Select2
+
+                        $('#companyStatement').html(
+                            `PT PSN STATEMENT - <br>YEAR OF` // Hanya tampilkan tahun tanpa nama perusahaan
+                        );
+
                         table.ajax.reload(); // Reload data tanpa filter
                         tableP.ajax.reload(); // Reload data tanpa filter
                     });

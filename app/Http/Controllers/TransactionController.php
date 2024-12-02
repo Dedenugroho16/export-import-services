@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\BillOfPayment;
 use App\Models\DetailProduct;
+use App\Models\PaymentDetail;
 use App\Helpers\NumberToWords;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\DetailTransaction;
@@ -568,12 +569,11 @@ class TransactionController extends Controller
             $company_name = $request->input('company_name');
 
             // Ambil data client berdasarkan nama perusahaan
-            $clientIds = Client::where('company_name', $company_name)->pluck('id');
+            $clientIds = Client::where('client_company_id', $company_name)->pluck('id');
 
             // Query transaksi dengan filter tahun dan id_client yang sesuai
             $transactions = Transaction::query()
                 ->select(['date', 'number', 'total'])
-                ->whereNotNull('id_bill')
                 ->whereIn('id_client', $clientIds) // Filter hanya transaksi dengan id_client sesuai
                 ->when($year, function ($query, $year) {
                     return $query->whereYear('date', $year);
@@ -586,7 +586,7 @@ class TransactionController extends Controller
                     return $cumulativeBalance;
                 })
                 ->editColumn('date', function ($transaction) {
-                    return date('d-m-Y', strtotime($transaction->date));
+                    return date('d/m/Y', strtotime($transaction->date));
                 })
                 ->make(true);
         }
@@ -599,33 +599,29 @@ class TransactionController extends Controller
             $company_name = $request->input('company_name');
 
             // Ambil data client berdasarkan nama perusahaan
-            $clientIds = Client::where('company_name', $company_name)->pluck('id');
+            $clientIds = Client::where('client_company_id', $company_name)->pluck('id');
 
-            // Query pembayaran dengan filter tahun dan id_client yang sesuai
-            $payments = BillOfPayment::query()
-                ->with([
-                    'transactions' => function ($query) {
-                        $query->select('id_bill', 'paid'); // Pastikan kolom yang dipilih sesuai dengan relasi
-                    }
-                ])
-                ->select(['id', 'created_at', 'payment_number'])
-                ->whereIn('id_client', $clientIds)
+                $payments = PaymentDetail::query()
+                ->select(['date', 'payment_number', 'total'])
+                ->whereIn('id_client', $clientIds) // Filter hanya transaksi dengan id_client sesuai
                 ->when($year, function ($query, $year) {
-                    return $query->whereYear('created_at', $year);
-                });
+                    return $query->whereYear('date', $year);
+                })
+                ->orderByRaw("CASE WHEN payment_number LIKE '%OPENING BALANCE%' THEN 1 ELSE 2 END")
+                ->orderBy('date', 'asc');
 
             return DataTables::of($payments)
-                ->addColumn('paid', function ($payment) {
-                    return $payment->transactions->sum('paid') ?: 0; // Nilai default 0
+                ->addColumn('total', function ($payment) {
+                    return $payment->total; // Nilai default 0
                 })
                 ->addColumn('balance', function ($payment) {
                     static $cumulativeBalance = 0;
-                    $paymentTotal = $payment->transactions->sum('paid') ?: 0; // Nilai default 0
+                    $paymentTotal = $payment->total ?: 0; // Nilai default 0
                     $cumulativeBalance += $paymentTotal;
                     return $cumulativeBalance;
                 })
-                ->editColumn('created_at', function ($payment) {
-                    return date('d-m-Y', strtotime($payment->created_at));
+                ->editColumn('date', function ($transaction) {
+                    return date('d/m/Y', strtotime($transaction->date));
                 })
                 ->make(true);
         }
