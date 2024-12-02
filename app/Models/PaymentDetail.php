@@ -16,6 +16,7 @@ class PaymentDetail extends Model
         'id_client',
         'total',
         'created_by',
+        'updated_by',
         'id_client_company',
     ];
 
