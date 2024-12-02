@@ -169,8 +169,13 @@ Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getC
 // Route Rekap Sales
 Route::get('/transactions/rekap', [TransactionController::class, 'rekapSales'])->name('transactions.rekap');
 Route::get('/transactions/AccountStatement', [TransactionController::class, 'AccountStatement'])->name('transactions.AccountStatement');
+Route::get('/transactions/AccountStatement/invoices-data', [TransactionController::class, 'getAccountStatementInvoicesData'])->name('transactions.getAccountStatementInvoicesData');
+Route::get('/transactions/AccountStatement/payments-data', [TransactionController::class, 'getAccountStatementPaymentsData'])->name('transactions.getAccountStatementPaymentsData');
 Route::get('/transactions/rekap-pdf', [TransactionController::class, 'rekapPdf'])->name('transactions.rekapPdf');
 Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('transactions.downloadRekapPdf');
+
+// mencari company_name
+Route::get('/get-clients', [ClientsController::class, 'getClients'])->name('clients.list');
 
 // bill of payments
 Route::get('/bill-of-payment', [BillOfPaymentController::class, 'index'])->name('bill-of-payment.index');

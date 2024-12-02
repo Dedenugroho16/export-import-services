@@ -14,6 +14,7 @@ class BillOfPayment extends Model
         'month',
         'no_inv',
         'id_client',
+        'id_client_company',
         'total',
         'status',
         'created_by',
@@ -38,5 +39,10 @@ class BillOfPayment extends Model
     public function paymentDetail()
     {
         return $this->hasOne(PaymentDetail::class, 'id_bill_of_payment', 'id');
+    }
+
+    public function clientCompany()
+    {
+        return $this->belongsTo(ClientCompany::class, 'id_client_company', 'id');
     }
 }

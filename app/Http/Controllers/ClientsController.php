@@ -49,6 +49,9 @@ class ClientsController extends Controller
             ->addColumn('company_name', function ($row) {
                 return $row->company->company_name ?? 'N/A';
             })
+            ->addColumn('company_id', function ($row) {
+                return $row->company->id ?? '';
+            })
             ->rawColumns(['action'])
             ->make(true);
     }
@@ -158,5 +161,32 @@ class ClientsController extends Controller
         }
 
         return view('clients.details', compact('client', 'hash'));
+    }
+
+    public function getClients(Request $request)
+    {
+        $search = $request->input('search');
+
+        // Query untuk filter data berdasarkan company_name
+        $query = Clients::query();
+
+        if (!empty($search)) {
+            $query->where('company_name', 'like', '%' . $search . '%');
+        }
+
+        $clients = $query->select('company_name') // Hanya ambil company_name
+            ->distinct() // Hilangkan duplikat
+            ->orderBy('company_name', 'asc')
+            ->paginate(10);
+
+        return response()->json([
+            'results' => $clients->map(function ($client) {
+                return [
+                    'id' => $client->company_name, // Value yang digunakan di select2
+                    'text' => $client->company_name // Teks yang tampil di select2
+                ];
+            }),
+            'pagination' => ['more' => $clients->hasMorePages()]
+        ]);
     }
 }

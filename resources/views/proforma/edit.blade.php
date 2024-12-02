@@ -985,9 +985,9 @@
                 const selectedProductOption = $('#product').find(':selected');
 
                 // Ambil data kode produk
-                if (selectedProductOption && selectedProductOption.data('code') ===
-                    "{{ $productSelected->code }}") {
-                    productAbbreviation = selectedProductOption.data('code');
+                if (selectedProductOption && selectedProductOption.data('abbreviation') ===
+                    "{{ $productSelected->abbreviation }}") {
+                    productAbbreviation = selectedProductOption.data('abbreviation');
                 } else {
                     const productData = $('#product').select2('data');
                     productAbbreviation = productData.length ? productData[0].abbreviation : null;
@@ -1018,7 +1018,7 @@
             // Pantau perubahan pada dropdown product dan country untuk memperbarui kode
             $('#product, #country').on('change', function() {
                 updateProductCode();
-                updateNumber()
+                updateNumber();
             });
 
             // Jalankan fungsi updateProductCode saat halaman dimuat untuk menginisialisasi

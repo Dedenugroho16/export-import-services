@@ -130,6 +130,7 @@ class BillOfPaymentController extends Controller
             'month' => 'required',
             'no_inv' => 'required',
             'id_client' => 'required',
+            'id_client_company' => 'required|exists:client_company,id',
             'total' => 'required|numeric|gte:0',
         ], [
             'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
@@ -223,7 +224,7 @@ class BillOfPaymentController extends Controller
     {
         $id = IdHashHelper::decode($hash);
 
-        $billOfPayment = BillOfPayment::with(['descBills'], ['client'])->findOrFail($id);
+        $billOfPayment = BillOfPayment::with(['descBills'], ['client.clientCompany'])->findOrFail($id);
 
         return view('bill-of-payments.edit', compact('billOfPayment'));
     }
