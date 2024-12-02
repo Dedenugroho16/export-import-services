@@ -3,23 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clients;
-use App\Helpers\IdHashHelper;
 use App\Models\Consignee;
 use Illuminate\Http\Request;
+use App\Helpers\IdHashHelper;
+use App\Models\ClientCompany;
 use Yajra\DataTables\Facades\DataTables;
 
 class ClientsController extends Controller
 {
     public function index(Request $request)
-{
-    if ($request->ajax()) {
-        $client = Clients::with('company')->get();
+    {
+        if ($request->ajax()) {
+            $client = Clients::with('company')->get();
 
-        return DataTables::of($client)
-            ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                $hashId = IdHashHelper::encode($row->id);
-                $actionBtn = '
+            return DataTables::of($client)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $hashId = IdHashHelper::encode($row->id);
+                    $actionBtn = '
                 <div class="dropdown">
                     <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">
                         Aksi
@@ -44,20 +45,20 @@ class ClientsController extends Controller
                     </div>
                 </div>';
 
-                return $actionBtn;
-            })
-            ->addColumn('company_name', function ($row) {
-                return $row->company->company_name ?? 'N/A';
-            })
-            ->addColumn('company_id', function ($row) {
-                return $row->company->id ?? '';
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-    }
+                    return $actionBtn;
+                })
+                ->addColumn('company_name', function ($row) {
+                    return $row->company->company_name ?? 'N/A';
+                })
+                ->addColumn('company_id', function ($row) {
+                    return $row->company->id ?? '';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
 
-    return view('clients.index');
-}
+        return view('clients.index');
+    }
 
 
 
@@ -127,7 +128,7 @@ class ClientsController extends Controller
     {
         // Decode hash menjadi client_id
         $clientId = IdHashHelper::decode($hash);
-        $client = Clients::with('company')->find($clientId); 
+        $client = Clients::with('company')->find($clientId);
         $client = Clients::findOrFail($clientId);
 
         if ($request->ajax()) {
@@ -163,30 +164,29 @@ class ClientsController extends Controller
         return view('clients.details', compact('client', 'hash'));
     }
 
-    public function getClients(Request $request)
+    public function getClientCompanies(Request $request)
     {
         $search = $request->input('search');
 
-        // Query untuk filter data berdasarkan company_name
-        $query = Clients::query();
+        // Query untuk filter data berdasarkan client_company_name
+        $query = ClientCompany::query();
 
         if (!empty($search)) {
             $query->where('company_name', 'like', '%' . $search . '%');
         }
 
-        $clients = $query->select('company_name') // Hanya ambil company_name
-            ->distinct() // Hilangkan duplikat
+        $clientCompanies = $query->select('id', 'company_name') // Ambil ID dan Nama Perusahaan
             ->orderBy('company_name', 'asc')
             ->paginate(10);
 
         return response()->json([
-            'results' => $clients->map(function ($client) {
+            'results' => $clientCompanies->map(function ($company) {
                 return [
-                    'id' => $client->company_name, // Value yang digunakan di select2
-                    'text' => $client->company_name // Teks yang tampil di select2
+                    'id' => $company->id, // ID sebagai value
+                    'text' => $company->company_name // Nama perusahaan sebagai teks
                 ];
             }),
-            'pagination' => ['more' => $clients->hasMorePages()]
+            'pagination' => ['more' => $clientCompanies->hasMorePages()]
         ]);
     }
 }
