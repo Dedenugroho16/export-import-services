@@ -13,7 +13,7 @@
                         <path d="M12 5v14" />
                         <path d="M5 12h14" />
                     </svg>
-                    Buat Balance
+                    Tambah
                 </a>
             </div>
                     <div class="card">
@@ -25,7 +25,7 @@
                                         <tr>
                                             <th class="text-center">No</th>
                                             <th class="text-center">Description</th>
-                                            <th class="text-center">Client_company_name</th>
+                                            <th class="text-center">Company Name</th>
                                             <th class="text-center">Date</th>
                                             <th class="text-center">Total</th>
                                         </tr>

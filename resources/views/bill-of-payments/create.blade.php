@@ -324,7 +324,6 @@
                     {
                         data: 'name',
                         name: 'name',
-                        class: 'text-center'
                     },
                     {
                         data: 'company_name',
@@ -339,7 +338,6 @@
                     {
                         data: 'address',
                         name: 'address',
-                        class: 'text-center'
                     },
                     {
                         data: null,
@@ -372,7 +370,7 @@
                         'white-space': 'normal',
                         'word-wrap': 'break-word'
                     });
-                    $('#clientsModalTable td:nth-child(3), #clientsModalTable td:nth-child(4)').css({
+                    $('#clientsModalTable td:nth-child(3), #clientsModalTable td:nth-child(4), #clientsModalTable td:nth-child(5)').css({
                         'max-width': '250px',
                         'white-space': 'normal',
                         'word-wrap': 'break-word'
