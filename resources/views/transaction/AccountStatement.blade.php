@@ -102,6 +102,13 @@
                                     </thead>
                                     <tbody class="border-end border-dark">
                                     </tbody>
+                                    <tfoot>
+                                        <tr id="totalBalance" style="font-weight: bold;">
+                                            <td class="text-center">TOTAL</td>
+                                            <td colspan="2"></td>
+                                            <td class="text-center" id="totalBalanceInvoice">0</td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -123,7 +130,20 @@
                                     </thead>
                                     <tbody class="border-start border-dark">
                                     </tbody>
+                                    <tfoot>
+                                        <tr id="totalBalance" style="font-weight: bold;">
+                                            <td class="text-center">TOTAL</td>
+                                            <td colspan="2"></td>
+                                            <td class="text-center" id="totalBalancePayment">0</td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center align-items-center mt-6">
+                            <div class="border border-dark px-1 py-1 bg-light text-center">
+                                <h4 class="m-0">BALANCE: <span id="balanceValue">0</span></h4>
                             </div>
                         </div>
                     </div>
@@ -133,6 +153,23 @@
 
             <script>
                 $(document).ready(function() {
+                    function updateBalance() {
+                        // Ambil nilai dari totalBalanceInvoice dan totalBalancePayment
+                        let totalInvoice = parseFloat($('#totalBalanceInvoice').text().replace(/,/g, '')) || 0;
+                        let totalPayment = parseFloat($('#totalBalancePayment').text().replace(/,/g, '')) || 0;
+
+                        // Hitung balance
+                        let balance =  totalPayment - totalInvoice;
+
+                        // Format hasil menggunakan Intl.NumberFormat
+                        let formattedBalance = new Intl.NumberFormat('en-US', {
+                            style: 'decimal'
+                        }).format(balance);
+
+                        // Tampilkan hasil ke elemen
+                        $('#balanceValue').text(formattedBalance);
+                    }
+
                     $('#yearSelect').select2({
                         placeholder: "Pilih Tahun",
                         allowClear: true,
@@ -211,9 +248,7 @@
                                 className: 'text-center',
                                 render: function(data) {
                                     return new Intl.NumberFormat('en-US', {
-                                        style: 'decimal',
-                                        minimumFractionDigits: 2, // Ensure 2 decimal places
-                                        maximumFractionDigits: 2
+                                        style: 'decimal'
                                     }).format(data); // Format the balance value
                                 }
                             },
@@ -221,18 +256,32 @@
                                 data: 'balance',
                                 className: 'text-center',
                                 render: function(data) {
-                                    return new Intl.NumberFormat('en-US', {
-                                        style: 'decimal',
-                                        minimumFractionDigits: 2, // Ensure 2 decimal places
-                                        maximumFractionDigits: 2
-                                    }).format(data); // Format the balance value
+                                    return '<b>' + new Intl.NumberFormat('en-US', {
+                                        style: 'decimal'
+                                    }).format(data) + '</b>'; // Format the balance value with bold font
                                 }
                             }
                         ],
                         order: [
                             [0, 'asc']
                         ], // Sort by DATE ascending
-                        pageLength: 10
+                        pageLength: 10,
+                        footerCallback: function(row, data, start, end, display) {
+                            // Hitung total balance untuk invoices
+                            let totalBalanceInvoice = 0;
+                            data.forEach(function(item) {
+                                totalBalanceInvoice += parseFloat(item.total || 0);
+                            });
+
+                            // Format total balance dengan Intl.NumberFormat
+                            let formattedTotal = new Intl.NumberFormat('en-US', {
+                                style: 'decimal'
+                            }).format(totalBalanceInvoice);
+
+                            // Set hasil ke elemen footer
+                            $('#totalBalanceInvoice').text(formattedTotal);
+                            updateBalance();
+                        }
                     });
 
                     let tableP = $('#paymentsTable').DataTable({
@@ -262,9 +311,7 @@
                                 title: 'PAYMENT USD',
                                 render: function(data) {
                                     return new Intl.NumberFormat('en-US', {
-                                        style: 'decimal',
-                                        minimumFractionDigits: 2, // Ensure 2 decimal places
-                                        maximumFractionDigits: 2
+                                        style: 'decimal'
                                     }).format(data); // Format the balance value
                                 }
                             },
@@ -273,14 +320,29 @@
                                 className: 'text-center',
                                 title: 'BALANCE',
                                 render: function(data) {
-                                    return new Intl.NumberFormat('en-US', {
-                                        style: 'decimal',
-                                        minimumFractionDigits: 2, // Ensure 2 decimal places
-                                        maximumFractionDigits: 2
-                                    }).format(data); // Format the balance value
+                                    return '<b>' + new Intl.NumberFormat('en-US', {
+                                        style: 'decimal'
+                                    }).format(data) + '</b>'; // Format the balance value with bold font
                                 }
                             }
-                        ]
+                        ],
+                        footerCallback: function(row, data, start, end, display) {
+                            // Hitung total balance untuk payments
+                            let totalBalancePayment = 0;
+                            data.forEach(function(item) {
+                                totalBalancePayment += parseFloat(item.total || 0);
+                            });
+
+                            // Format total balance dengan Intl.NumberFormat
+                            let formattedTotal = new Intl.NumberFormat('en-US', {
+                                style: 'decimal',
+                                maximumFractionDigits: 0
+                            }).format(totalBalancePayment);
+
+                            // Set hasil ke elemen footer
+                            $('#totalBalancePayment').text(formattedTotal);
+                            updateBalance();
+                        }
                     });
 
                     // Filter button
