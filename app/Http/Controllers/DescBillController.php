@@ -55,13 +55,12 @@ class DescBillController extends Controller
         foreach ($transactions as $data) {
             // Validasi setiap data transaksi
             $validator = Validator::make($data, [
-                'id' => 'required|integer|exists:transactions,id',   // Pastikan id_transaction ada di tabel transactions
-                'id_bill' => 'required|integer|exists:bill_of_payments,id',      // Pastikan id_bill ada di tabel bills
-                'description' => 'required|string',                   // Deskripsi wajib ada
-                'paid' => 'required|numeric|gte:0',                   // Pastikan paid adalah angka dan >= 0
+                'id' => 'required|integer|exists:transactions,id',
+                'id_bill' => 'required|integer|exists:bill_of_payments,id',
+                'description' => 'required|string',
+                'paid' => 'required|numeric|gte:0',
             ]);
 
-            // Jika validasi gagal, hentikan proses dan kembalikan respons error
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
@@ -70,16 +69,14 @@ class DescBillController extends Controller
                 ], 422);
             }
 
-            // Periksa apakah data DescBill sudah ada
             $descBill = DescBill::where('id_transaction', $data['id'])
                 ->where('id_bill', $data['id_bill'])
                 ->first();
 
             if ($descBill) {
-                // Jika sudah ada, update data yang ada
                 $descBill->update([
-                    'description' => $data['description'],  // Update description
-                    'paid' => $data['paid'],                // Update paid
+                    'description' => $data['description'],
+                    'paid' => $data['paid'],
                 ]);
             } else {
                 // Jika tidak ada, beri respons bahwa data tidak ditemukan

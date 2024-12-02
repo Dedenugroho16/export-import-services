@@ -107,7 +107,8 @@
             <tr>
                 <td>Company Name</td>
                 <td>:</td>
-                <td style="font-weight: bold">{{ $billOfPayment->client->company_name}}</td>
+                <td style="font-weight: bold">{{ $billOfPayment->client && $billOfPayment->client->clientCompany 
+                                            ? $billOfPayment->client->clientCompany->company_name : '-' }}</td>
             </tr>
         </table>
     </div>
@@ -134,7 +135,7 @@
                             <td style="text-align: center;">{{ $descBill->transaction->code }}</td>
                             <td>{{$descBill->description }}</td>
                             <td style="text-align: right;">{{ number_format($descBill->transaction->total) }}</td>
-                            <td style="text-align: right;">{{ number_format($descBill->transaction->paid) }}</td>
+                            <td style="text-align: right;">{{ number_format($descBill->paid) }}</td>
                             <td style="text-align: right;">{{ number_format($descBill->transaction->bill) }}</td>
                         </tr>
                     @endif

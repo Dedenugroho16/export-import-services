@@ -235,26 +235,35 @@
             @endif
         </div>
         <style>
-            /* CSS untuk mengatur tinggi kartu agar seragam */
-            .small-card {
-                width: 12rem; /* Lebar setiap kartu */
-                font-size: 0.75rem; /* Ukuran font lebih kecil */
-                margin: 0.5rem; /* Jarak antar kartu */
-            }
+    /* CSS untuk mengatur tinggi kartu agar seragam */
+    .small-card {
+        width: 12rem; /* Lebar setiap kartu */
+        font-size: 0.75rem; /* Ukuran font lebih kecil */
+        margin: 0.5rem; /* Jarak antar kartu */
+        border-radius: 0.5rem; /* Sudut melengkung pada setiap kartu */
+        overflow: hidden; /* Hapus elemen yang keluar dari batas kartu */
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Menggunakan box-shadow untuk efek border */
+    }
 
-            .small-card .card-body {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between; /* Ruang di antara elemen dalam kartu */
-                padding: 0.5rem; /* Padding kecil */
-            }
+    .small-card:hover {
+        transform: scale(1.05); /* Zoom sedikit saat hover */
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Menggunakan box-shadow daripada border */
+    }
 
-            .small-card .btn {
-                font-size: 0.7rem; /* Ukuran font tombol lebih kecil */
-                padding: 0.2rem 0.4rem; /* Padding kecil untuk tombol */
-                margin-top: auto; /* Pastikan tombol selalu berada di bagian bawah */
-            }
-        </style>
+    .small-card .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Ruang di antara elemen dalam kartu */
+        padding: 0.5rem; /* Padding kecil */
+    }
+
+    .small-card .btn {
+        font-size: 0.7rem; /* Ukuran font tombol lebih kecil */
+        padding: 0.2rem 0.4rem; /* Padding kecil untuk tombol */
+        margin-top: auto; /* Pastikan tombol selalu berada di bagian bawah */
+    }
+</style>
+
     </div>
 </div>
 @endsection

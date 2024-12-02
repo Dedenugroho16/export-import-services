@@ -36,7 +36,7 @@ class ProformaController extends Controller
             ->where('approved', 0) // Kondisi approved harus 0
             ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
 
-        return DataTables::of($proformaInvoice)
+            return DataTables::of($proformaInvoice)
             ->addColumn('client', function ($row) {
                 return $row->client->name;
             })
@@ -45,39 +45,53 @@ class ProformaController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-
-                // Membuat dropdown untuk tombol aksi dengan tombol "Setujui" di bagian atas
+        
                 $actionBtn = '
                     <div class="dropdown">
                         <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
                             Aksi
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">';
-
+        
                 if (in_array(auth()->user()->role, ['director', 'admin'])) {
                     $actionBtn .= '
-                                    <button class="dropdown-item approve-btn text-success" data-id="' . $row->id . '">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-checkbox me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 11l3 3l8 -8" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
-                                        Setujui
-                                    </button>';
+                        <button class="dropdown-item approve-btn text-success" data-id="' . $row->id . '">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-checkbox me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 11l3 3l8 -8" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
+                            Setujui
+                        </button>';
                 }
-
+        
                 $actionBtn .= '
-                            <a href="' . route('proforma.show', $hashId) . '" class="dropdown-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
-                                Lihat Detail
-                            </a>
-                            <a href="' . route('proforma.edit', $hashId) . '" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
-                                Edit
-                            </a>
+                    <a href="' . route('proforma.show', $hashId) . '" class="dropdown-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M17 7l-10 10" />
+                            <path d="M8 7l9 0l0 9" />
+                        </svg>
+                        Lihat Detail
+                    </a>';
+
+                if (in_array(auth()->user()->role, ['director', 'admin', 'operator'])) {
+                    $actionBtn .= '
+                        <a href="' . route('proforma.edit', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/>
+                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/>
+                                <path d="M16 5l3 3"/>
+                            </svg>
+                            Edit
+                        </a>';
+                }
+        
+                $actionBtn .= '
                         </div>
                     </div>';
-
+        
                 return $actionBtn;
             })
             ->rawColumns(['aksi'])
-            ->make(true);
+            ->make(true);        
     }
 
     public function approveProforma($id)
@@ -111,31 +125,52 @@ class ProformaController extends Controller
     public function getApprovedData()
     {
         $approvedInvoices = Transaction::with(['client', 'consignee'])
-            ->where('approved', 1) // Mengambil transaksi yang disetujui
-            ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'stuffing_date']); // Tambahkan stuffing_date ke dalam select
+            ->where('approved', 1)
+            ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'stuffing_date']);
 
-        return DataTables::of($approvedInvoices)
+            return DataTables::of($approvedInvoices)
             ->addColumn('client', function ($row) {
-                return $row->client->name;  // Mengambil nama client dari relasi
+                return $row->client->name; 
             })
             ->addColumn('consignee', function ($row) {
-                return $row->consignee->name;  // Mengambil nama consignee dari relasi
+                return $row->consignee->name; 
             })
             ->addColumn('aksi', function ($row) {
-                // Link untuk melihat detail
                 $hashId = IdHashHelper::encode($row->id);
-                $lihatDetail = '<a href="' . route('proforma.show', $hashId) . '" class="btn btn-sm btn-info">Lihat Detail</a>';
-
-                // Cek jika stuffing_date bernilai null, tampilkan tombol "Buat Invoice"
-                $buatInvoice = '';
-                if (is_null($row->stuffing_date)) {
-                    $hashId = IdHashHelper::encode($row->id);
+                $actionBtn = '
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
+                            Aksi
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">';
+        
+                $actionBtn .= '
+                    <a href="' . route('proforma.show', $hashId) . '" class="dropdown-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                        Lihat Detail
+                    </a>';
+        
+                if (in_array(auth()->user()->role, ['admin', 'director', 'operator'])) {
+                    $actionBtn .= '
+                        <a href="' . route('proforma.edit', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/>
+                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/>
+                                <path d="M16 5l3 3"/>
+                            </svg>
+                            Edit
+                        </a>';
                 }
-
-                return $lihatDetail;
+        
+                $actionBtn .= '
+                        </div>
+                    </div>';
+        
+                return $actionBtn;
             })
-            ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
-            ->make(true);
+            ->rawColumns(['aksi']) 
+            ->make(true);        
     }
 
     public function create()

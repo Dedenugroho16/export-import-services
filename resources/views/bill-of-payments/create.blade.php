@@ -32,7 +32,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-7">
                                             <div class="row">
                                                 <div class="col-4">
                                                     <p>Month</p>
@@ -133,7 +133,7 @@
                                                     <td class="text-end" colspan="5">
                                                         <label for="total" class="mr-2">AMOUNT OF BILL:</label>
                                                     </td>
-                                                    <td class="text-center" style="width: 120px;">
+                                                    <td class="text-center" style="width: 150px;">
                                                         <div
                                                             class="form-group d-flex align-items-center justify-content-center">
                                                             <input type="text" step="0.01"
@@ -322,17 +322,14 @@
                     {
                         data: 'name',
                         name: 'name',
-                        class: 'text-center'
                     },
                     {
                         data: 'company_name',
                         name: 'company_name',
-                        class: 'text-center'
                     },
                     {
                         data: 'address',
                         name: 'address',
-                        class: 'text-center'
                     },
                     {
                         data: null,
@@ -360,14 +357,14 @@
                 pageLength: 10,
                 drawCallback: function() {
                     $('#clientsModalTable td:nth-child(2), #clientsModalTable th:nth-child(2)').css({
-                        'max-width': '200px',
+                        'max-width': '250px',
                         'white-space': 'normal',
                         'word-wrap': 'break-word'
                     });
-                    $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
-                        'max-width': '280px',
-                        'overflow': 'hidden',
-                        'text-overflow': 'ellipsis'
+                    $('#clientsModalTable td:nth-child(3), #clientsModalTable td:nth-child(4)').css({
+                        'max-width': '250px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
                     });
                 }
             });
@@ -425,12 +422,24 @@
                     {
                         data: 'total_paid',
                         name: 'total_paid',
-                        className: 'text-center'
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            return new Intl.NumberFormat('en-US', {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            }).format(data);
+                        }
                     },
                     {
                         data: 'amount',
                         name: 'amount',
-                        className: 'text-center'
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            return new Intl.NumberFormat('en-US', {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            }).format(data);
+                        }
                     },
                     {
                         data: null,

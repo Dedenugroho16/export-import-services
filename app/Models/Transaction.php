@@ -105,7 +105,7 @@ class Transaction extends Model
     {
         return $this->hasMany(DescBill::class, 'id_transaction', 'id');
     }
-    
+
     public function payments()
     {
         return $this->hasMany(Payment::class, 'id_transaction', 'id');

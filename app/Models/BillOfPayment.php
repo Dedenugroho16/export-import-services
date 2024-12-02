@@ -22,7 +22,7 @@ class BillOfPayment extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class, 'id_client');
+        return $this->belongsTo(Clients::class, 'id_client');
     }
 
     public function createdBy()

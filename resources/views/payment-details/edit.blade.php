@@ -53,7 +53,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p id="payment-number-display">-</p>
+                                                    <p id="payment-number-display">{{ $paymentDetails->payment_number }}</p>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -64,7 +64,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p>{{ $billOfPayment->client->name }}</p>
+                                                    <p>{{ $paymentDetails->client->name }}</p>
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
@@ -75,8 +75,8 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p>{{ $billOfPayment->client && $billOfPayment->client->clientCompany 
-                                                    ? $billOfPayment->client->clientCompany->company_name : '-' }}</p>
+                                                    <p>{{ $paymentDetails->client && $paymentDetails->client->clientCompany 
+                                                    ? $paymentDetails->client->clientCompany->company_name : '-' }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,7 +84,7 @@
                                 </div>
                             </div>
 
-                            <form id="formTransaction" action="{{ route('payments.store') }}">
+                            <form id="formTransaction" action="{{ route('payments.update') }}">
                                 @csrf
                                 <div class="row mt-4">
                                     <div class="col-md-12">
@@ -127,24 +127,22 @@
                             </form>
 
                             <form id="formPaymentDetails" class="mt-2" method="POST"
-                                action="{{ route('payment-details.store') }}">
+                                action="{{ route('payment-details.update', $paymentDetails->id) }}">
                                 @csrf
-                                <input type="date" name="date" id="date">
+                                <input type="date" name="date" id="date" value="{{ $paymentDetails->date }}">
                                 <input type="" id="id_bill_of_payment" name="id_bill_of_payment"
-                                    value="{{ $billOfPayment->id }}">
-                                <input type="" id="payment_number" name="payment_number">
+                                    value="{{ $paymentDetails->billOfPayment->id }}">
+                                <input type="" id="payment_number" name="payment_number"
+                                    value="{{ $paymentDetails->payment_number }}">
                                 <input type="" id="selectedClientId" name="id_client"
-                                    value="{{ $billOfPayment->client->id }}">
-                                <input type="" id="selectedCompanyId" name="id_client_company"
-                                    value="{{ $billOfPayment->client && $billOfPayment->client->clientCompany 
-                                    ? $billOfPayment->client->clientCompany->id : '' }}">
+                                    value="{{ $paymentDetails->client->id }}">
                                 <input type="" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
                             <div class="text-end mt-6">
-                                <a href="{{ route('bill-of-payment.index') }}" class="btn btn-outline-primary">Kembali</a>
-                                <button type="button" id="submitButton" class="btn btn-primary">Buat</button>
+                                <a href="{{ route('bill-of-payments.details', $hashedBOPId) }}" class="btn btn-outline-primary">Kembali</a>
+                                <button type="button" id="submitButton" class="btn btn-primary">Perbarui</button>
                             </div>
                         </div>
                     </div>
@@ -187,9 +185,9 @@
 
     <script>
         $(document).ready(function() {
-            function loadTransaction(idBillOfPayment) {
+            function loadTransaction(idBillOfPayment, idPaymentDetail) {
                 $.ajax({
-                    url: `/get-transactions/${idBillOfPayment}`,
+                    url: `/get-transactions/${idBillOfPayment}/${idPaymentDetail}`,
                     method: 'GET',
                     success: function(response) {
                         // Kosongkan tbody untuk data yang baru di-load
@@ -198,7 +196,10 @@
                         if (response.length > 0) {
                             response.forEach(function(data) {
                                 let total = Number(data.total);
-                                var formattedPaid = parseFloat(data.paid).toLocaleString('en-US');
+                                let transferedValue = parseFloat(data.descriptionTransfered ||
+                                    0);
+                                let formattedTransfered = transferedValue.toLocaleString(
+                                    'en-US');
                                 var newRow = `
                                                 <tr>
                                                     <td class="text-center" style="display: none;">
@@ -212,13 +213,13 @@
                                                     <td class="text-center">
                                                         <input type="text" name="transactions[${data.id}][description]" 
                                                             class="form-control description-input"
-                                                            placeholder="Enter description">
+                                                            value="${data.descriptionPayments || ''}">
                                                     </td>
                                                     <td class="text-center amount">${total?.toLocaleString('en-US') || '0'}</td>
-                                                    <td class="text-center paid">${formattedPaid}</td>
+                                                    <td class="text-center paid">${data.paid?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center" style="width:150px;">
-                                                        <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer">
-                                                        <input type="" name="transactions[${data.id}][transfered]" class="form-control transfered" placeholder="Uang ditransfer">
+                                                        <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer" value="${formattedTransfered}">
+                                                        <input type="" name="transactions[${data.id}][transfered]" class="form-control transfered" value="${transferedValue}">
                                                     </td>
                                                     <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
                                                 </tr>
@@ -232,8 +233,7 @@
                         </tr>
                     `);
                         }
-                        // Update total setelah data dimuat
-                        totalBill();
+                        updateAmounts();
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching detail transactions:', error);
@@ -241,7 +241,6 @@
                 });
             }
 
-            // Pasang event listener di luar loop
             $('#paymentDetailTable tbody').on('input', '.transfered-input', function() {
                 var row = $(this).closest('tr');
                 var paymentInput = row.find('.transfered-input');
@@ -249,8 +248,8 @@
                 var payment = parseFloat(paymentInput.val().replace(/,/g, '')) || 0;
                 var piBill = parseFloat(row.find('.pi-bill').text().replace(/,/g, '')) || 0;
                 var formattedPayment = payment.toLocaleString('en-US');
-                row.find('.transfered-input').val(formattedPayment);
-                row.find('.transfered').val(payment);
+                row.find('.transfered-input').val(formattedPayment); // Update tampilan input
+                row.find('.transfered').val(payment); // Update nilai hidden input
 
                 if (payment > piBill) {
                     $('#submitButton').prop('disabled', true); // Disable tombol submit
@@ -263,87 +262,46 @@
                     $('#submitButton').prop('disabled', false); // Aktifkan tombol jika valid
                 }
 
-                updateAmounts();
+                updateAmounts(); // Perbarui total saat input berubah
             });
 
             // Pastikan idBillOfPayment tersedia untuk memuat data dari database
-            var idBillOfPayment = "{{ $billOfPayment->id }}";
-            if (idBillOfPayment) {
-                loadTransaction(idBillOfPayment);
+            var idBillOfPayment = "{{ $paymentDetails->billOfPayment->id }}";
+            var idPaymentDetail = "{{ $paymentDetails->id }}";
+            if (idBillOfPayment && idPaymentDetail) {
+                loadTransaction(idBillOfPayment, idPaymentDetail);
             }
 
             function updateAmounts() {
                 var totalPayment = 0;
 
-                // Jika tabel kosong atau hanya ada baris "Tidak ada barang", reset semua nilai ke 0
-                if ($('#paymentDetailTable tbody tr').length === 0 || $(
-                        '#paymentDetailTable tbody').find('#nullDetailTransaction').length > 0) {
-                    totalPayment = 0;
-                } else {
-                    // Iterasi setiap baris untuk mendapatkan nilai total
-                    $('#paymentDetailTable tbody tr').each(function() {
-                        var payment = parseFloat($(this).find('.transfered-input').val().replace(
-                            /,/g, '')) || 0;
+                // Iterasi setiap baris untuk mendapatkan nilai total transfered
+                $('#paymentDetailTable tbody tr').each(function() {
+                    var row = $(this);
 
-                        totalPayment += payment;
-                    });
-                }
+                    // Ambil nilai dari transfered-input
+                    var paymentInput = row.find('.transfered-input');
+                    var payment = parseFloat(paymentInput.val().replace(/,/g, '')) || 0;
 
-                // Format hasil perhitungan dengan pemisah ribuan en-US
+                    // Format nilai untuk tampilan
+                    var formattedPayment = payment.toLocaleString('en-US');
+
+                    // Perbarui nilai transfered-input dan hidden transfered
+                    paymentInput.val(formattedPayment);
+                    row.find('.transfered').val(payment);
+
+                    // Tambahkan ke total
+                    totalPayment += payment;
+                });
+
+                // Format hasil total dan update ke footer
                 var formattedTotalPayment = totalPayment.toLocaleString('en-US');
-
-                // Update nilai total di footer dengan format yang benar
-                $('.total-display').val(formattedTotalPayment);
-                $('#total').val(totalPayment);
+                $('.total-display').val(formattedTotalPayment); // Untuk tampilan
+                $('#total').val(totalPayment); // Nilai asli
             }
-
-            function updatePaymentNumber() {
-                const currentDate = new Date();
-
-                // Dapatkan bulan dalam format angka Romawi
-                const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-                const romanMonth = romanMonths[currentDate.getMonth()];
-
-                // Dapatkan tahun dalam format dua digit
-                const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
-
-                const formattedNumber = '/' + romanMonth + '/' +
-                    twoDigitYear;
-                const finalNumber = '{{ $formattedPaymentNumber }}' + formattedNumber;
-                $('#payment_number').val(finalNumber);
-                $('#payment-number-display').text(finalNumber);
-            }
-            updatePaymentNumber();
-
-            // Mendapatkan bulan dan tahun saat ini
-            var currentDate = new Date();
-            var options = {
-                year: 'numeric',
-                month: 'long'
-            };
-            var monthYear = currentDate.toLocaleDateString('id-ID', options)
-                .toUpperCase(); // Menggunakan 'id-ID' untuk format bahasa Indonesia dan toUpperCase untuk huruf kapital
-
-            // Menetapkan nilai input #month
-            $('#month').val(monthYear);
         });
 
         $(document).ready(function() {
-            function setTodayDate() {
-                var today = new Date();
-                var day = String(today.getDate()).padStart(2, '0'); // Mengambil tanggal, 2 digit
-                var month = String(today.getMonth() + 1).padStart(2, '0'); // Mengambil bulan, 2 digit
-                var year = today.getFullYear(); // Mengambil tahun 4 digit
-
-                var formattedDate = year + '-' + month + '-' + day; // Format YYYY-MM-DD
-
-                // Mengisi input dengan nilai tanggal hari ini
-                document.getElementById('date').value = formattedDate;
-            }
-
-            // Panggil fungsi untuk mengatur tanggal saat ini pada input date
-            setTodayDate();
-
             function validateTransactionForm() {
                 var isValid = true;
                 var errorMessage = 'Semua kolom wajib diisi!';
@@ -412,24 +370,22 @@
                     data: formDataPaymentDetails,
                     success: function(response) {
                         if (response.success) {
-                            // Capture the returned id_bill from the response
                             var idPD = response.id_pd;
 
-                            // Now process formTransaction by appending the rows with the id_bill
                             var formTransaction = $('#formTransaction');
                             $('#paymentDetailTable tbody tr').each(function() {
-                                // For each row in the table, set the id_bill for the hidden input
+                                // Cari input yang memiliki name id_payment_detail
                                 $(this).find('input[name^="transactions"]').each(
                                     function() {
                                         if ($(this).attr('name').includes(
                                                 'id_payment_detail')) {
                                             $(this).val(
-                                                idPD); // Set the value of id_bill
+                                                idPD
+                                            ); // Pastikan idPD dari respons di-set
                                         }
                                     });
                             });
 
-                            // Submit formTransaction via AJAX after setting id_bill
                             var formDataTransaction = formTransaction
                                 .serialize(); // Serialize form data
                             $.ajax({

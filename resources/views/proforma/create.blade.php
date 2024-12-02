@@ -1577,9 +1577,9 @@
                         'word-wrap': 'break-word'
                     });
                     $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
-                        'max-width': '280px',
-                        'overflow': 'hidden',
-                        'text-overflow': 'ellipsis'
+                        'max-width': '250px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
                     });
                 }
             });
@@ -1683,8 +1683,8 @@
                     $('#consigneeModalTable td:nth-child(3), #consigneeModalTable th:nth-child(3)')
                         .css({
                             'max-width': '250px',
-                            'overflow': 'hidden',
-                            'text-overflow': 'ellipsis'
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
                         });
                 }
             });

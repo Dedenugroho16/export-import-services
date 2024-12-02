@@ -86,9 +86,48 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        // Validasi awal semua data
+        $validatedData = $request->validate([
+            'transactions' => 'required|array',
+            'transactions.*.id' => 'required|integer',
+            'transactions.*.id_payment_detail' => 'required|integer',
+            'transactions.*.transfered' => 'required|numeric|gte:0',
+            'transactions.*.description' => 'required|string',
+        ], [
+            'transactions.*.id.required' => 'ID transaksi wajib diisi.',
+            'transactions.*.id_payment_detail.required' => 'ID Payment Detail wajib diisi.',
+            'transactions.*.transfered.required' => 'Nominal transfer wajib diisi.',
+            'transactions.*.description.required' => 'Deskripsi transaksi wajib diisi.',
+        ]);
+
+        $transactions = $validatedData['transactions'];
+
+        foreach ($transactions as $data) {
+            // Cari data pembayaran sesuai dengan ID transaksi dan ID Payment Detail
+            $payment = Payment::where('id_transaction', $data['id'])
+                ->where('id_payment_detail', $data['id_payment_detail'])
+                ->first();
+
+            if ($payment) {
+                $payment->update([
+                    'description' => $data['description'],
+                    'transfered' => $data['transfered'],
+                ]);
+            } else {
+                // Kembalikan error jika data pembayaran tidak ditemukan
+                return response()->json([
+                    'success' => false,
+                    'message' => "Payments tidak ditemukan untuk transaksi ID {$data['id']} dan Payment Detail ID {$data['id_payment_detail']}",
+                ], 404);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Payment Details berhasil diperbarui',
+        ]);
     }
 
     /**

@@ -29,8 +29,12 @@
                                 <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $client->name) }}" required>
                             </div>
                             <div class="mb-3">
-                                <label for="company_name" class="form-label">Nama Perusahaan</label>
-                                <input type="text" id="company_name" name="company_name" class="form-control" value="{{ old('company_name', $client->company_name) }}" required>
+                                <label for="client_company_id" class="form-label">Nama Perusahaan</label>
+                                <select class="form-control" id="client_company_id" name="client_company_id" required>
+                                    @if($client->company)
+                                        <option value="{{ $client->company->id }}" selected>{{ $client->company->company_name }}</option>
+                                    @endif
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="address" class="form-label">Alamat</label>
@@ -59,4 +63,39 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Inisialisasi Select2 untuk input company_name
+    $('#client_company_id').select2({
+        ajax: {
+            url: '{{ route('ajax-companies') }}',  // Endpoint AJAX untuk mengambil data perusahaan
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term  // Mengirimkan kata kunci pencarian ke server
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data.map(function(company) {
+                        return {
+                            id: company.id,  // Menyimpan ID perusahaan
+                            text: company.company_name  // Menampilkan nama perusahaan
+                        };
+                    })
+                };
+            },
+            cache: true
+        },
+        placeholder: "Pilih Nama Perusahaan",
+        templateResult: function(company) {
+            if (company.loading) return company.text;
+            return $('<span>' + company.text + '</span>');
+        },
+        templateSelection: function(company) {
+            return $('<span>' + company.text + '</span>');
+        }
+    });
+</script>
 @endsection
