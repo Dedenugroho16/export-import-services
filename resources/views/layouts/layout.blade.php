@@ -337,6 +337,21 @@
                                     <span class="nav-link-title">Rekap Sales</span>
                                 </a>
                             </li>
+                            <li class="nav-item {{ Request::is('opening-balance*') ? 'active' : '' }}"> 
+                                <a class="nav-link" href="{{ route('opening-balance.index') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-cash">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <rect x="7" y="9" width="14" height="10" rx="2" />
+                                        <circle cx="14" cy="14" r="2" />
+                                        <path d="M17 9v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v2" />
+                                        <path d="M10 14h-6" />
+                                        <path d="M12 17v.01" />
+                                    </svg>
+                                    </span>
+                                    <span class="nav-link-title">Opening Balance</span> 
+                                </a>
+                            </li>
                             <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -510,6 +525,7 @@
                                     <span class="nav-link-title">Account Statement</span>
                                 </a>
                             </li>
+                            
                         @endif
                         @if (auth()->user()->role === 'director')
                             <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">

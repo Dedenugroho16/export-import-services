@@ -195,6 +195,7 @@ Route::get('/payment-details/download/{hashId}', [BillOfPaymentController::class
 Route::get('/payment-details/{hash}/create', [PaymentDetailController::class, 'create'])->name('payment-details.create');
 Route::get('/opening-balance/create', [PaymentDetailController::class, 'openingBalanceCreate'])->name('opening-balance.create');
 Route::post('/opening-balance/store', [PaymentDetailController::class, 'openingBalanceStore'])->name('opening-balance.store');
+Route::get('/opening-balance', [PaymentDetailController::class, 'openingBalanceIndex'])->name('opening-balance.index');
 Route::get('/payment-details/{hash}/edit', [PaymentDetailController::class, 'edit'])->name('payment-details.edit');
 Route::get('/payment-details/{hash}', [PaymentDetailController::class, 'show'])->name('payment-details.show');
 Route::get('/payment-details/{hashedId}/export-pdf', [PaymentDetailController::class, 'exportPdf'])->name('payment-details.exportPdf');

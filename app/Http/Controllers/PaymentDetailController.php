@@ -343,6 +343,12 @@ class PaymentDetailController extends Controller
         return $pdf->download('payment-details_' . $hashedId . '.pdf');
     }
 
+    public function openingBalanceIndex()
+    {
+        return view('opening-balance.index');
+    }
+
+
     public function openingBalanceCreate()
     {
         return view('opening-balance.create');
