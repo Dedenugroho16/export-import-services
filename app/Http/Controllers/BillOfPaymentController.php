@@ -224,7 +224,7 @@ class BillOfPaymentController extends Controller
     {
         $id = IdHashHelper::decode($hash);
 
-        $billOfPayment = BillOfPayment::with(['descBills'], ['client'])->findOrFail($id);
+        $billOfPayment = BillOfPayment::with(['descBills'], ['client.clientCompany'])->findOrFail($id);
 
         return view('bill-of-payments.edit', compact('billOfPayment'));
     }

@@ -11,6 +11,11 @@ class ClientCompany extends Model
     protected $table = 'client_company';
     protected $fillable = ['company_name'];
 
+    public function clients()
+    {
+        return $this->hasMany(Clients::class, 'client_company_id', 'id');
+    }
+
     public function paymentDetails()
     {
         return $this->hasMany(PaymentDetail::class, 'id_client_company', 'id');

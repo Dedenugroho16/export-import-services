@@ -74,7 +74,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p id="no-inv-display">{{ $billOfPayment->client->company_name }}</p>
+                                                    <p id="no-inv-display">{{ $billOfPayment->client->clientCompany->company_name }}</p>
                                                 </div>
                                             </div>
                                         </div>
