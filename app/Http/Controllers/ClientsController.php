@@ -49,6 +49,9 @@ class ClientsController extends Controller
             ->addColumn('company_name', function ($row) {
                 return $row->company->company_name ?? 'N/A';
             })
+            ->addColumn('company_id', function ($row) {
+                return $row->company->id ?? '';
+            })
             ->rawColumns(['action'])
             ->make(true);
     }

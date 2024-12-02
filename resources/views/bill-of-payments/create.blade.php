@@ -221,6 +221,7 @@
                                 <input type="" id="month" name="month">
                                 <input type="" id="no_inv" name="no_inv">
                                 <input type="" id="selectedClientId" name="id_client">
+                                <input type="" id="selectedClientCompanyId" name="id_client_company">
                                 <input type="" id="total" name="total">
                             </form>
 
@@ -251,6 +252,7 @@
                                 <th class="text-center">No</th>
                                 <th class="text-center">Nama</th>
                                 <th class="text-center">Nama Perusahaan</th>
+                                <th class="text-center">ID Perusahaan</th>
                                 <th class="text-center">Alamat</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
@@ -322,19 +324,28 @@
                     {
                         data: 'name',
                         name: 'name',
+                        class: 'text-center'
                     },
                     {
                         data: 'company_name',
                         name: 'company_name',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'company_id',
+                        name: 'company_id',
+                        class: 'text-center'
                     },
                     {
                         data: 'address',
                         name: 'address',
+                        class: 'text-center'
                     },
                     {
                         data: null,
                         render: function(data, type, row) {
-                            return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}" data-company="${row.company_name}">Pilih</button>`;
+                            console.log(row);
+                            return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}" data-company="${row.company_name}" data-idcompany="${row.company_id}">Pilih</button>`;
                         },
                         class: 'text-center',
                         orderable: false,
@@ -374,8 +385,10 @@
                 var clientId = $(this).data('id');
                 var clientName = $(this).data('name');
                 var companyName = $(this).data('company');
+                var companyID = $(this).data('idcompany');
 
                 $('#selectedClientId').val(clientId);
+                $('#selectedClientCompanyId').val(companyID);
                 $('#selectedClientName').val(clientName);
                 $('#selectedClientCompanyName').val(companyName);
                 $('#clientsModal').modal('hide');
