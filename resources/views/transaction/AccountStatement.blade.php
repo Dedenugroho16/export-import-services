@@ -22,9 +22,9 @@
 
                     <!-- Select Nama Perusahaan -->
                     <div class="col-sm-12 col-md-4">
-                        <label for="company_name" class="form-label mb-0" style="font-size: 0.9rem;">Pilih
+                        <label for="company_id" class="form-label mb-0" style="font-size: 0.9rem;">Pilih
                             Perusahaan</label>
-                        <select name="company_name" id="company_name" class="form-select">
+                        <select name="company_id" id="company_id" class="form-select">
                         </select>
                     </div>
 
@@ -176,7 +176,7 @@
                         width: '100%' // Membuat Select2 full size
                     });
 
-                    $('#company_name').select2({
+                    $('#company_id').select2({
                         placeholder: 'Select a Company',
                         ajax: {
                             url: '{{ route('client-companies.get') }}',
@@ -196,7 +196,7 @@
                         },
                     });
 
-                    $('#company_name').on('select2:select', function(e) {
+                    $('#company_id').on('select2:select', function(e) {
                         let companyName = e.params.data.text; // Ambil nama perusahaan dari Select2
                         let year = $('#yearSelect').val(); // Ambil tahun dari input
 
@@ -207,7 +207,7 @@
                     });
 
                     // Tangani saat Select2 di-clear
-                    $('#company_name').on('select2:clear', function() {
+                    $('#company_id').on('select2:clear', function() {
                         let year = $('#yearSelect').val();
                         $('#companyStatement').html(
                             `PT PSN STATEMENT - <br>YEAR OF ${year}`
@@ -216,7 +216,7 @@
 
                     $('#yearSelect').on('input', function() {
                         let year = $(this).val(); // Ambil nilai input tahun
-                        let companyName = $('#company_name').select2('data')[0]?.text ||
+                        let companyName = $('#company_id').select2('data')[0]?.text ||
                             ''; // Ambil nama perusahaan atau default
 
                         // Update teks pada elemen
@@ -232,7 +232,7 @@
                             url: '{{ url('/transactions/AccountStatement/invoices-data') }}',
                             data: function(d) {
                                 d.year = $('#yearSelect').val();
-                                d.company_name = $('#company_name').val();
+                                d.company_id = $('#company_id').val();
                             }
                         },
                         columns: [{
@@ -291,7 +291,7 @@
                             url: '{{ url('/transactions/AccountStatement/payments-data') }}',
                             data: function(d) {
                                 d.year = $('#yearSelect').val(); // Ambil nilai tahun dari input
-                                d.company_name = $('#company_name')
+                                d.company_id = $('#company_id')
                                     .val(); // Ambil nilai nama perusahaan dari input
                             }
                         },
@@ -348,9 +348,9 @@
                     // Filter button
                     $('#filterBtn').click(function() {
                         let year = $('#yearSelect').val();
-                        let company_name = $('#company_name').val();
+                        let company_id = $('#company_id').val();
 
-                        if (!year || !company_name) {
+                        if (!year || !company_id) {
                             $('#error-message').show();
 
                             setTimeout(function() {
@@ -368,7 +368,7 @@
                     // Reset button
                     $('#resetBtn').click(function() {
                         $('#yearSelect').val(null).trigger('change'); // Reset Select2
-                        $('#company_name').val(null).trigger('change'); // Reset Select2
+                        $('#company_id').val(null).trigger('change'); // Reset Select2
 
                         $('#companyStatement').html(
                             `PT PSN STATEMENT - <br>YEAR OF` // Hanya tampilkan tahun tanpa nama perusahaan

@@ -566,10 +566,10 @@ class TransactionController extends Controller
     {
         if ($request->ajax()) {
             $year = $request->input('year');
-            $company_name = $request->input('company_name');
+            $company_id = $request->input('company_id');
 
             // Ambil data client berdasarkan nama perusahaan
-            $clientIds = Client::where('client_company_id', $company_name)->pluck('id');
+            $clientIds = Client::where('client_company_id', $company_id)->pluck('id');
 
             // Query transaksi dengan filter tahun dan id_client yang sesuai
             $transactions = Transaction::query()
@@ -597,14 +597,11 @@ class TransactionController extends Controller
     {
         if ($request->ajax()) {
             $year = $request->input('year');
-            $company_name = $request->input('company_name');
-
-            // Ambil data client berdasarkan nama perusahaan
-            $clientIds = Client::where('client_company_id', $company_name)->pluck('id');
+            $company_id = $request->input('company_id');
 
                 $payments = PaymentDetail::query()
                 ->select(['date', 'payment_number', 'total'])
-                ->whereIn('id_client', $clientIds) // Filter hanya transaksi dengan id_client sesuai
+                ->where('id_client_company', $company_id) // Filter hanya transaksi dengan id_client sesuai
                 ->when($year, function ($query, $year) {
                     return $query->whereYear('date', $year);
                 })
