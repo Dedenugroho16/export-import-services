@@ -51,8 +51,8 @@
                         Ekspor/Download
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('account.statement.pdf', ['year' => $year, 'company_name' => $company_name]) }}" target="_blank">Export PDF</a></li>
-                        <li><a class="dropdown-item" href="#">Download PDF</a></li>
+                        <li><a class="dropdown-item" href="#" id="exporPdf" target="_blank">Export PDF</a></li>
+                        <li><a class="dropdown-item" href="#" id="downloadPdf">Download PDF</a></li>
                     </ul>
                 </div>
             </div>
@@ -376,6 +376,50 @@
 
                         table.ajax.reload(); // Reload data tanpa filter
                         tableP.ajax.reload(); // Reload data tanpa filter
+                    });
+
+                    // Event listener untuk stream PDF
+                    $('#exporPdf').click(function (e) {
+                        e.preventDefault();
+
+                        let year = $('#yearSelect').val();
+                        let company_id = $('#company_id').val();
+
+                        if (!year || !company_id) {
+                            $('#error-message').show();
+
+                            setTimeout(function() {
+                                $('#error-message').hide();
+                            }, 3000);
+
+                            return;
+                        }
+                        $('#error-message').hide();
+
+                        let url = `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
+                        window.open(url, '_blank');
+                    });
+
+                    // Event listener untuk download PDF
+                    $('#downloadPdf').click(function (e) {
+                        e.preventDefault();
+
+                        let year = $('#yearSelect').val();
+                        let company_id = $('#company_id').val();
+
+                        if (!year || !company_id) {
+                            $('#error-message').show();
+
+                            setTimeout(function() {
+                                $('#error-message').hide();
+                            }, 3000);
+
+                            return;
+                        }
+                        $('#error-message').hide();
+
+                        let url = `{{ route('account.statement.download') }}?yearSelect=${year}&company_id=${company_id}`;
+                        window.open(url, '_blank');
                     });
                 });
             </script>

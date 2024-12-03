@@ -27,7 +27,7 @@
 <body>
     <div style="text-align: center">
         <img src="{{ $logo ?? '' }}" alt="Logo" style="width: 230px;">
-        <h4 style="margin: 0;">PT. PSN STATEMENT - {{ $year }}<br>{{ $company_name }}</h4>
+        <h4 style="margin: 0;">PT. PSN STATEMENT - MYA <br>YEAR OF {{ $year }}</h4>
     </div>
     
     <div class="table-wrapper">
@@ -45,12 +45,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($invoices as $invoice)
+                        @foreach($transactions as $invoice)
                             <tr>
-                                <td>{{ date('d/m/Y', strtotime($invoice->date)) }}</td>
-                                <td>{{ $invoice->number }}</td>
-                                <td>{{ number_format($invoice->total, 2) }}</td>
-                                <td>{{ number_format($invoice->balance, 2) }}</td>
+                                <td class="text-center">{{ $invoice->date }}</td>
+                                <td class="text-center">{{ $invoice->number }}</td>
+                                <td class="text-center">{{ number_format($invoice->total) }}</td>
+                                <td class="text-center">{{ number_format($invoice->balance) }}</td>
                             </tr>
                         @endforeach
                     </tbody>     
@@ -59,7 +59,7 @@
                             <td class="text-center">TOTAL</td>
                             <td colspan="2"></td>
                             <td class="text-center" id="totalBalanceInvoice">
-                                {{ number_format($invoices->sum('total'), 2) }}
+                                {{ number_format($transactions->sum('total')) }}
                             </td>
                         </tr>
                     </tfoot>
@@ -83,10 +83,10 @@
                     <tbody>
                         @foreach($payments as $payment)
                             <tr>
-                                <td>{{ date('d/m/Y', strtotime($payment->date)) }}</td>
-                                <td>{{ $payment->payment_number }}</td>
-                                <td>{{ number_format($payment->total, 2) }}</td>
-                                <td>{{ number_format($payment->balance, 2) }}</td>
+                                <td class="text-center">{{ $payment->date }}</td>
+                                <td class="text-center">{{ $payment->payment_number }}</td>
+                                <td class="text-center">{{ number_format($payment->total) }}</td>
+                                <td class="text-center">{{ number_format($payment->balance) }}</td>
                             </tr>
                         @endforeach
                     </tbody>                    
@@ -95,7 +95,7 @@
                             <td class="text-center">TOTAL</td>
                             <td colspan="2"></td>
                             <td class="text-center" id="totalBalancePayment">
-                                {{ number_format($payments->sum('total'), 2) }}
+                                {{ number_format($payments->sum('total')) }}
                             </td>
                         </tr>
                     </tfoot>
@@ -107,20 +107,9 @@
     <div class="d-flex justify-content-center align-items-center mt-6">
         <div class="border border-dark px-1 py-1 bg-light text-center">
             <h4 class="m-0">BALANCE: 
-                {{ number_format($invoices->sum('total') - $payments->sum('total'), 2) }}
+                {{ number_format($transactions->sum('total') - $payments->sum('total')) }}
             </h4>
         </div>
     </div>
-
-    <script>
-        // Script untuk menghitung saldo kumulatif dan menampilkan data dengan format yang benar
-        let totalBalanceInvoice = {{ $invoices->sum('total') }};
-        let totalBalancePayment = {{ $payments->sum('total') }};
-        let balance = totalBalanceInvoice - totalBalancePayment;
-
-        document.getElementById("totalBalanceInvoice").innerText = new Intl.NumberFormat('en-US', { style: 'decimal' }).format(totalBalanceInvoice);
-        document.getElementById("totalBalancePayment").innerText = new Intl.NumberFormat('en-US', { style: 'decimal' }).format(totalBalancePayment);
-        document.getElementById("balanceValue").innerText = new Intl.NumberFormat('en-US', { style: 'decimal' }).format(balance);
-    </script>
 </body>
 </html>
