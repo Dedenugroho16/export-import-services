@@ -51,7 +51,7 @@
                         Ekspor/Download
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" target="_blank">Expor PDF</a></li>
+                        <li><a class="dropdown-item" href="{{ route('account.statement.pdf', ['year' => $year, 'company_name' => $company_name]) }}" target="_blank">Export PDF</a></li>
                         <li><a class="dropdown-item" href="#">Download PDF</a></li>
                     </ul>
                 </div>

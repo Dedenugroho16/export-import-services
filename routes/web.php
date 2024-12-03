@@ -173,6 +173,7 @@ Route::get('/transactions/AccountStatement/invoices-data', [TransactionControlle
 Route::get('/transactions/AccountStatement/payments-data', [TransactionController::class, 'getAccountStatementPaymentsData'])->name('transactions.getAccountStatementPaymentsData');
 Route::get('/transactions/rekap-pdf', [TransactionController::class, 'rekapPdf'])->name('transactions.rekapPdf');
 Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('transactions.downloadRekapPdf');
+Route::get('/account-statement/pdf', [TransactionController::class, 'accountStatementPdf'])->name('account.statement.pdf');
 
 // mencari company_name
 Route::get('/client-companies/get', [ClientsController::class, 'getClientCompanies'])->name('client-companies.get');

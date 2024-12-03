@@ -627,10 +627,78 @@ class TransactionController extends Controller
         }
     }
 
-    public function AccountStatement()
+    public function AccountStatement(Request $request)
     {
-        return view('transaction.AccountStatement');
+        $year = $request->input('year');
+        $company_name = $request->input('company_name');
+
+        return view('transaction.AccountStatement', compact('year', 'company_name'));
     }
+
+    public function accountStatementPdf()
+{
+    // Tetapkan nilai year dan company_name secara langsung
+    $year = 2024; // Tahun yang diinginkan
+    $company_name = 1; // ID perusahaan yang diinginkan (sesuaikan dengan nilai di database)
+    
+    $logo = ImageHelper::getBase64Image('storage/logo1.png');
+
+    // Ambil data client berdasarkan company_name (misalnya, nama perusahaan yang dipilih)
+    $clientIds = Client::where('client_company_id', $company_name)->pluck('id');
+    
+    // Ambil data transaksi dengan filter tahun dan client_id yang sesuai
+    $transactions = Transaction::query()
+        ->select(['date', 'number', 'total'])
+        ->whereIn('id_client', $clientIds)
+        ->when($year, function ($query, $year) {
+            return $query->whereYear('date', $year);
+        })
+        ->get();
+
+    // Menyiapkan variabel untuk saldo kumulatif transaksi
+    $cumulativeBalanceTransactions = 0;
+    foreach ($transactions as $transaction) {
+        $transaction->balance = $cumulativeBalanceTransactions += $transaction->total;
+        // Format tanggal transaksi
+        $transaction->date = date('d/m/Y', strtotime($transaction->date));
+    }
+
+    // Ambil data pembayaran dengan filter tahun dan client_id yang sesuai
+    $payments = PaymentDetail::query()
+        ->select(['date', 'payment_number', 'total'])
+        ->whereIn('id_client', $clientIds)
+        ->when($year, function ($query, $year) {
+            return $query->whereYear('date', $year);
+        })
+        ->orderByRaw("CASE WHEN payment_number LIKE '%OPENING BALANCE%' THEN 1 ELSE 2 END")
+        ->orderBy('date', 'asc')
+        ->get();
+
+    // Menyiapkan variabel untuk saldo kumulatif pembayaran
+    $cumulativeBalancePayments = 0;
+    foreach ($payments as $payment) {
+        $payment->balance = $cumulativeBalancePayments += $payment->total ?: 0;
+        // Format tanggal pembayaran
+        $payment->date = date('d/m/Y', strtotime($payment->date));
+    }
+
+    // Menyiapkan data untuk ditampilkan di PDF
+    $data = [
+        'logo' => $logo,
+        'year' => $year,
+        'company_name' => $company_name,
+        'invoices' => $transactions,  // Mengirim data transaksi (Invoices)
+        'payments' => $payments,      // Mengirim data pembayaran (Payments)
+    ];
+
+    // Load view untuk membuat PDF dengan data yang sudah diproses
+    $pdf = PDF::loadView('transaction.AccountStatementPdf', $data);
+    $pdf->setPaper('A4', 'landscape');
+    
+    // Download PDF
+    return $pdf->stream('account_statement.pdf');
+}
+
 
     public function rekapSales(Request $request)
     {
