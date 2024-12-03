@@ -343,10 +343,25 @@ class PaymentDetailController extends Controller
         return $pdf->download('payment-details_' . $hashedId . '.pdf');
     }
 
-    public function openingBalanceIndex()
+    public function openingBalanceIndex(Request $request)
     {
+        
+        if ($request->ajax()) {
+            $paymentDetails = PaymentDetail::select(['id', 'payment_number', 'date', 'id_client', 'id_client_company', 'total', 'created_by'])
+                ->paginate($request->get('length'), ['*'], 'page', $request->get('start') / $request->get('length') + 1);
+
+            return response()->json([
+                'draw' => intval($request->get('draw')),
+                'recordsTotal' => PaymentDetail::count(), 
+                'recordsFiltered' => $paymentDetails->total(),
+                'data' => $paymentDetails->items(), 
+            ]);
+        }
+
+       
         return view('opening-balance.index');
     }
+
 
 
     public function openingBalanceCreate()
@@ -377,7 +392,7 @@ class PaymentDetailController extends Controller
         ]);
 
         // Redirect atau memberikan respons sesuai kebutuhan
-        return redirect()->route('opening-balance.create')
+        return redirect()->route('opening-balance.index')
             ->with('success', 'Payment Detail successfully created.');
     }
 }

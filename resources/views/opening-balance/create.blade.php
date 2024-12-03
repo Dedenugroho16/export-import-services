@@ -12,13 +12,6 @@
                             <h3 class="card-title">Form Opening Balance</h3>
                         </div>
                         <div class="card-body">
-                            <!-- Display Success Message -->
-                            @if (session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-
                             @if ($errors->any())
                                 <div class="alert alert-danger">
                                     <ul>
