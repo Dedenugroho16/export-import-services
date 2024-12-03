@@ -68,7 +68,7 @@
                             <path d="M12 8v4" />
                             <path d="M12 16h.01" />
                         </svg></div>
-                    <div>Tolong pilih tanggal terlebih dahulu.</div>
+                    <div>Tolong atur filter terlebih dahulu.</div>
                 </div>
                 <a class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="close"></a>
             </div>
