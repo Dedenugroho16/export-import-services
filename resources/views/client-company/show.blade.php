@@ -24,15 +24,17 @@
                 <div class="card mb-5">
                     <div class="card-header shadow-sm p-3 d-flex justify-content-between align-items-center">
                         <h3 class="card-title">Informasi Perusahaan Client</h3>
-                        <a class="btn btn-light" href="{{ url('/client-companies/' . App\Helpers\IdHashHelper::encode($client_company->id) . '/edit') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                <path d="M16 5l3 3" />
-                            </svg>
-                            Edit
-                        </a>    
+                        @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                            <a class="btn btn-light" href="{{ url('/client-companies/' . App\Helpers\IdHashHelper::encode($client_company->id) . '/edit') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                    <path d="M16 5l3 3" />
+                                </svg>
+                                Edit
+                            </a>    
+                        @endif
                     </div>
 
                     <div class="card">
