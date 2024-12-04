@@ -190,7 +190,7 @@
                                 <span class="nav-link-title">Dashboard</span>
                             </a>
                         </li>
-                        @if (auth()->user()->role === 'admin')
+                        @if (in_array(auth()->user()->role, ['admin', 'operator', 'director', 'finance']))
 
                             <li class="nav-item {{ Request::is('client-company*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('client-companies.index') }}">
@@ -257,20 +257,22 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('users*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('users.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <circle cx="12" cy="7" r="4" />
-                                            <path d="M20 21l-2 -2a5 5 0 0 0 -7 -7l-5 5" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">Data User</span>
-                                </a>
-                            </li>
+                            @if(auth()->user()->role === 'admin')
+                                <li class="nav-item {{ Request::is('users*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('users.index') }}">
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                stroke="currentColor" fill="none" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <circle cx="12" cy="7" r="4" />
+                                                <path d="M20 21l-2 -2a5 5 0 0 0 -7 -7l-5 5" />
+                                            </svg>
+                                        </span>
+                                        <span class="nav-link-title">Data User</span>
+                                    </a>
+                                </li>
+                            @endif
                             <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('company.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -368,171 +370,6 @@
                                 </a>
                             </li>
                         @endif
-                        @if (auth()->user()->role === 'director')
-
-                            <li class="nav-item {{ Request::is('client-company*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('client-companies.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-buildings"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 21v-15c0 -1 1 -2 2 -2h5c1 0 2 1 2 2v15" /><path d="M16 8h2c1 0 2 1 2 2v11" /><path d="M3 21h18" /><path d="M10 12v0" /><path d="M10 16v0" /><path d="M10 8v0" /><path d="M7 12v0" /><path d="M7 16v0" /><path d="M7 8v0" /><path d="M17 12v0" /><path d="M17 16v0" /></svg>
-                                    </span>
-                                    <span class="nav-link-title">Client Company</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('clients*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('clients.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
-                                    </span>
-                                    <span class="nav-link-title">Client</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('products*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ url('/products') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="3" y="4" width="18" height="16" rx="2" />
-                                            <path d="M3 6h18" />
-                                            <path d="M7 10h10" />
-                                            <path d="M7 14h10" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">Produk</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('commodities*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ url('/commodities') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="9" />
-                                            <path d="M9 12h6m-3 -3v6" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">Komoditas</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('countries*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ url('/countries') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <circle cx="12" cy="12" r="9" />
-                                            <line x1="3.6" y1="9" x2="20.4" y2="9" />
-                                            <line x1="3.6" y1="15" x2="20.4" y2="15" />
-                                            <path d="M11.5 3a17 17 0 0 0 0 18" />
-                                            <path d="M12.5 3a17 17 0 0 1 0 18" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">
-                                        Negara
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('company.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-databricks"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l9 5l9 -5v-3l-9 5l-9 -5v-3l9 5l9 -5v-3l-9 5l-9 -5l9 -5l5.418 3.01" /></svg>
-                                    </span>
-                                    <span class="nav-link-title">
-                                        Data Perusahaan
-                                    </span>
-                                </a>
-                            </li>
-                            <li
-                                class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
-                                <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}"
-                                    href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <circle cx="6" cy="19" r="2" />
-                                            <circle cx="17" cy="19" r="2" />
-                                            <path d="M17 17h-11v-14h-2" />
-                                            <path d="M6 5l14 1l-1 7h-13" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">Transaksi</span>
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li>
-                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}"
-                                            href="{{ route('proforma.index') }}">
-                                            Proforma Invoices
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
-                                            href="{{ url('/incomplete-invoice') }}">
-                                            Unconfirmed Invoices
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
-                                            href="{{ url('/transaction') }}">
-                                            Final Invoice
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item {{ Request::is('bill-of-payment*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('bill-of-payment.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-dollar"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" /><path d="M12 17v1m0 -8v1" /></svg>
-                                    </span>
-                                    <span class="nav-link-title">Bill Of Payment</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('transactions.rekap') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chart-bar-popular"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M9 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M15 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M4 20h14" /></svg>
-                                    </span>
-                                    <span class="nav-link-title">Rekap Sales</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('opening-balance*') ? 'active' : '' }}"> 
-                                <a class="nav-link" href="{{ route('opening-balance.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-cash">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                        <rect x="7" y="9" width="14" height="10" rx="2" />
-                                        <circle cx="14" cy="14" r="2" />
-                                        <path d="M17 9v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v2" />
-                                        <path d="M10 14h-6" />
-                                        <path d="M12 17v.01" />
-                                    </svg>
-                                    </span>
-                                    <span class="nav-link-title">Opening Balance</span> 
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-banknote">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M2 6h20" />
-                                            <path d="M2 12h20" />
-                                            <path d="M2 18h20" />
-                                            <path d="M12 6v12" />
-                                            <path d="M12 6h0" />
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title">Account Statement</span>
-                                </a>
-                            </li>
-                        @endif
-
                 </div>
             </div>
         </aside>

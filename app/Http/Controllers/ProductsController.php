@@ -16,27 +16,34 @@ class ProductsController extends Controller
         if ($request->ajax()) {
             // Mengambil semua data produk dengan relasi 'detailProducts'
             $products = Product::with('detailProducts')->select('products.*');
-
+        
             return DataTables::of($products)
                 ->addColumn('action', function ($row) {
                     // Encode ID untuk keamanan
                     $hashId = IdHashHelper::encode($row->id);
-
+        
+                    // Check if the user role is 'admin' or 'operator'
+                    $userRole = auth()->user()->role;
+        
                     // Generate action buttons
                     $actionBtn = '
-                <div class="dropdown">
-                <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">
-                Aksi
-                </button>
-                <div class="dropdown-menu dropdown-menu-end">
-                            <a href="' . route('products.details', $hashId) . '" class="dropdown-item">
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">
+                                Aksi
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="' . route('products.details', $hashId) . '" class="dropdown-item">
                             <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
                             Lihat Detail Produk
                             </a>
                             <a class="dropdown-item" href="' . route('products.show', $hashId) . '">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
                             Tampilkan
-                            </a>
+                            </a>';
+        
+                    // Check if the user role is 'admin' or 'operator' to show edit and delete options
+                    if (in_array($userRole, ['admin', 'operator'])) {
+                        $actionBtn .= '
                             <a class="dropdown-item" href="' . route('products.edit', $hashId) . '">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
                             Edit
@@ -44,9 +51,14 @@ class ProductsController extends Controller
                             <a href="javascript:void(0);" class="dropdown-item text-danger" onclick="confirmDelete(\'' . route('products.destroy', $hashId) . '\')">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
                                 Hapus
-                            </a>
+                            </a>';
+                    }
+        
+                    // Close the dropdown
+                    $actionBtn .= '
+                            </div>
                         </div>';
-
+        
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -145,28 +157,46 @@ class ProductsController extends Controller
 
         if ($request->ajax()) {
             $detailProducts = DetailProduct::where('id_product', $productId);
-
+        
             return DataTables::of($detailProducts)
                 ->addColumn('action', function ($row) {
                     $hashId = IdHashHelper::encode($row->id);
+        
+                    // Get the current user's role
+                    $userRole = auth()->user()->role;
+        
+                    // Generate the action buttons
                     $actionBtn = '
                         <div class="dropdown">
                             <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" href="' . route('detail-products.show', $hashId) . '">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M17 7l-10 10" />
+                                        <path d="M8 7l9 0l0 9" />
+                                    </svg>
                                     Tampilkan
-                                </a>
-                                <a class="dropdown-item" href="' . route('detail-products.edit', $hashId) . '">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
-                                    Edit
-                                </a>
-                                <a href="javascript:void(0);" class="dropdown-item text-danger" onclick="confirmDelete(\'' . route('detail-products.destroy', $hashId) . '\')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                                        Hapus
-                                    </a>
-                                </div>
-                            </div>';
+                                </a>';
+        
+                    // Check if the user's role is either 'admin' or 'operator'
+                    if (in_array($userRole, ['admin', 'operator'])) {
+                        $actionBtn .= '
+                            <a class="dropdown-item" href="' . route('detail-products.edit', $hashId) . '">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                                Edit
+                            </a>
+                            <a href="javascript:void(0);" class="dropdown-item text-danger" onclick="confirmDelete(\'' . route('detail-products.destroy', $hashId) . '\')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-trash me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                                Hapus
+                            </a>';
+                    }
+        
+                    // Close the dropdown
+                    $actionBtn .= '
+                            </div>
+                        </div>';
+        
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
