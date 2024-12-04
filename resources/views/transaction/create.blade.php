@@ -473,7 +473,7 @@
                                         </p>
                                         <p id="error-message-carton" style="color: red; display:none">Nilai maksimum
                                             Carton adalah
-                                            empat digit</p>
+                                            enam digit</p>
                                         <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
                                                 id="tableDetailTransaction">
@@ -1121,6 +1121,22 @@
 
                         if (response.length > 0) {
                             response.forEach(function(data) {
+                                let qty = parseFloat(data.qty || 0);
+                                let formattedQty = qty.toLocaleString('en-US');
+
+                                let carton = parseFloat(data.carton || 0);
+                                let formattedCarton = carton.toLocaleString('en-US');
+
+                                let innerQtyCarton = parseFloat(data.inner_qty_carton || 0);
+                                let formattedInnerQtyCarton = innerQtyCarton.toLocaleString(
+                                    'en-US');
+
+                                let netWeight = parseFloat(data.net_weight || 0);
+                                let formattedNetWeight = innerQtyCarton.toLocaleString('en-US');
+
+                                let priceAmount = parseFloat(data.price_amount || 0);
+                                let formattedPriceAmount = priceAmount.toLocaleString('en-US');
+
                                 var deleteUrl =
                                     `/detail-transaction/delete/${data.detail_transaction_id}/${data.id_detail_product}`;
 
@@ -1130,14 +1146,14 @@
                             <td class="text-center id-detail-product" style="display: none;">${data.id_detail_product}</td>
                             <td class="text-center">
                                 <strong>${data.product_name} ${data.pcs} PCS / 
-                                <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${data.qty}" /> KG</strong><br>
+                                <input type="text" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" value="${formattedQty}" /> KG</strong><br>
                                 ${data.dimension} ${data.color} - ${data.type}
                             </td>
-                            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" min="1" value="${data.carton}" /></td>
-                            <td class="text-center inner-result">${data.inner_qty_carton}</td>
+                            <td class="text-center"><input type="text" class="form-control carton-input" style="width: 100px; display: inline-block;" min="1" value="${formattedCarton}" /></td>
+                            <td class="text-center inner-result">${formattedInnerQtyCarton}</td>
                             <td class="text-center price" data-price="${data.unit_price}">${data.unit_price}</td>
-                            <td class="text-center net-weight">${data.net_weight}</td>
-                            <td class="text-center price-result">${data.price_amount}</td>
+                            <td class="text-center net-weight">${formattedNetWeight}</td>
+                            <td class="text-center price-result">${formattedPriceAmount}</td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-danger btn-sm old-remove-btn" data-url="${deleteUrl}">Hapus</button>
                             </td>
@@ -1197,14 +1213,16 @@
                 // Event listener for qty and carton input changes in #loadedData (related to formDetailTransaction)
                 $('#loadedData').on('input', '.qty-input, .carton-input', function() {
                     var row = $(this).closest('tr'); // Get the row where the input is located
-                    var qty = parseFloat(row.find('.qty-input').val()) || 0; // Get qty value
-                    var carton = parseFloat(row.find('.carton-input').val()) || 0; // Get carton value
+                    var qty = parseFloat(row.find('.qty-input').val().replace(/,/g, '')) ||
+                        0; // Get qty value
+                    var carton = parseFloat(row.find('.carton-input').val().replace(/,/g, '')) ||
+                        0; // Get carton value
                     var unitPrice = parseFloat(row.find('.price').data('price')) ||
                         0; // Get unit price from data attribute
 
                     // Batas maksimum untuk qty dan carton
                     var maxQty = 999; // Maksimum 3 digit
-                    var maxCarton = 9999; // Maksimum 4 digit
+                    var maxCarton = 999999; // Maksimum 4 digit
 
                     // Flag to track if input exceeds limits
                     var exceedsLimit = false;
@@ -1234,14 +1252,21 @@
 
                     // Perform calculations based on qty and carton
                     var innerResult = qty * carton; // Example logic, adjust as needed
-                    var netWeight = innerResult; // Assume net weight is the same as innerResult
+                    var formattedInnerResult = innerResult.toLocaleString('en-US');
                     var totalPrice = innerResult *
                         unitPrice; // Calculate total price based on result and unit price
+                    var rounded = Math.round(totalPrice);
+                    var formattedTotalPrice = rounded.toLocaleString('en-US');
+                    var formattedCartonInput = carton.toLocaleString('en-US');
+                    var formattedQty = qty.toLocaleString('en-US');
+
 
                     // Update the relevant columns in the row
-                    row.find('.inner-result').text(innerResult); // Update inner result
-                    row.find('.net-weight').text(netWeight); // Update net weight
-                    row.find('.price-result').text(Math.round(totalPrice)); // Update total price (rounded)
+                    row.find('.inner-result').text(formattedInnerResult); // Update inner result
+                    row.find('.net-weight').text(formattedInnerResult); // Update net weight
+                    row.find('.price-result').text(formattedTotalPrice); // Update total price (rounded)
+                    row.find('.carton-input').val(formattedCartonInput); // Update total price (rounded)
+                    row.find('.qty-input').val(formattedQty); // Update total price (rounded)
 
                     // Update total amounts and form for loadedData
                     updateAmounts();
@@ -1274,11 +1299,11 @@
                         .trim(); // Ambil ID Detail Transaction
                     var idDetailProduct = $(row).find('.id-detail-product').text().trim();
                     var qty = $(row).find('.qty-input').val();
-                    var carton = $(row).find('.carton-input').val();
-                    var inner = $(row).find('.inner-result').text().trim();
+                    var carton = $(row).find('.carton-input').val().replace(/,/g, '');
+                    var inner = $(row).find('.inner-result').text().trim().replace(/,/g, '');
                     var unitPrice = $(row).find('.price').text().trim();
-                    var netWeight = $(row).find('.net-weight').text().trim();
-                    var priceAmount = $(row).find('.price-result').text().trim();
+                    var netWeight = $(row).find('.net-weight').text().trim().replace(/,/g, '');
+                    var priceAmount = $(row).find('.price-result').text().trim().replace(/,/g, '');
 
                     // Create hidden inputs and append to the form
                     $('#formDetailTransaction').append(`
@@ -1313,10 +1338,11 @@
                 // Fungsi untuk menghitung total dari tbody tertentu
                 function calculateTotals(tbody) {
                     tbody.find('tr').each(function() {
-                        var carton = parseFloat($(this).find('.carton-input').val()) || 0;
-                        var inner = parseFloat($(this).find('.inner-result').text()) || 0;
-                        var netWeight = parseFloat($(this).find('.net-weight').text()) || 0;
-                        var price = parseFloat($(this).find('.price-result').text()) || 0;
+                        var carton = parseFloat($(this).find('.carton-input').val().replace(/,/g, '')) || 0;
+                        var inner = parseFloat($(this).find('.inner-result').text().replace(/,/g, '')) || 0;
+                        var netWeight = parseFloat($(this).find('.net-weight').text().replace(/,/g, '')) ||
+                            0;
+                        var price = parseFloat($(this).find('.price-result').text().replace(/,/g, '')) || 0;
 
                         totalCarton += carton;
                         totalInner += inner;
@@ -1395,12 +1421,12 @@
                 // Loop untuk setiap baris valid dan tambahkan input hidden untuk data transaksi baru
                 validRows.each(function(index, row) {
                     var idDetailProduct = $(row).find('.id-detail-product').text().trim();
-                    var qty = $(row).find('.qty-input').val();
-                    var carton = $(row).find('.carton-input').val();
-                    var inner = $(row).find('.inner-result').text().trim();
-                    var unitPrice = $(row).find('.price').text().trim();
-                    var netWeight = $(row).find('.net-weight').text().trim();
-                    var priceAmount = $(row).find('.price-result').text().trim();
+                    var qty = $(row).find('.qty-input').val().replace(/,/g, '');
+                    var carton = $(row).find('.carton-input').val().replace(/,/g, '');
+                    var inner = $(row).find('.inner-result').text().trim().replace(/,/g, '');
+                    var unitPrice = $(row).find('.price').text().trim().replace(/,/g, '');
+                    var netWeight = $(row).find('.net-weight').text().trim().replace(/,/g, '');
+                    var priceAmount = $(row).find('.price-result').text().trim().replace(/,/g, '');
 
                     // Append hidden inputs untuk setiap transaksi baru
                     $('#newFormDetailTransaction').append(`
@@ -1460,10 +1486,14 @@
             <td class="text-center id-detail-product" style="display: none;">${data.id}</td>
             <td class="text-center">
                 <strong>${data.name} ${data.pcs} PCS / 
-                <input type="number" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
+                <input type="text" class="form-control qty-input" style="width: 70px; display: inline-block;" placeholder="Qty" min="1" /> KG</strong><br>
                 ${data.dimension} ${data.color} - ${data.type}
+                <input type="hidden" class="qty_input" name="qty_input">
             </td>
-            <td class="text-center"><input type="number" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" /></td>
+            <td class="text-center">
+                <input type="text" class="form-control carton-input" style="width: 100px; display: inline-block;" placeholder="Carton" min="1" />
+                <input type="hidden" class="carton_input" name="carton_input">
+                </td>
             <td class="text-center inner-result">0</td>
             <td class="text-center price">${data.price}</td>
             <td class="text-center net-weight">0</td>
@@ -1483,16 +1513,58 @@
                 // Menghapus baris "Tidak ada barang" di tbody #selectedData jika ada
                 $('#nullDetailTransaction').remove();
 
+                $(document).on('input', '.carton-input', function(e) {
+                    // Ambil nilai yang dimasukkan pengguna dan hilangkan karakter yang tidak diinginkan
+                    let value = e.target.value.replace(/[^.\d]/g, '');
+
+                    // Temukan input hidden terkait di dalam elemen yang sama
+                    let hiddenInput = $(this).closest('td').find('.carton_input');
+
+                    // Set nilai pada input hidden tanpa koma
+                    hiddenInput.val(value.replace(/,/g, ''));
+
+                    // Format nilai yang terlihat dengan pemisah ribuan
+                    e.target.value = formatCarton(value);
+
+                    // Fungsi untuk memformat angka dengan pemisah ribuan dan titik desimal
+                    function formatCarton(angka) {
+                        let parts = angka.split('.');
+                        let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
+                    }
+                });
+                
+                $(document).on('input', '.qty-input', function(e) {
+                    // Ambil nilai yang dimasukkan pengguna dan hilangkan karakter yang tidak diinginkan
+                    let valueQty = e.target.value.replace(/[^.\d]/g, '');
+
+                    // Temukan input hidden terkait di dalam elemen yang sama
+                    let hiddenQtyInput = $(this).closest('td').find('.qty_input');
+
+                    // Set nilai pada input hidden tanpa koma
+                    hiddenQtyInput.val(valueQty.replace(/,/g, ''));
+
+                    // Format nilai yang terlihat dengan pemisah ribuan
+                    e.target.value = formatCarton(valueQty);
+
+                    // Fungsi untuk memformat angka dengan pemisah ribuan dan titik desimal
+                    function formatCarton(angka) {
+                        let parts = angka.split('.');
+                        let sisa = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        return parts[1] !== undefined ? sisa + '.' + parts[1] : sisa;
+                    }
+                });
+
                 // Event listener to calculate the result on input change
                 $('#selectedData').on('input', '.qty-input, .carton-input', function() {
                     var row = $(this).closest('tr');
-                    var qty = parseFloat(row.find('.qty-input').val()) || 0;
-                    var carton = parseFloat(row.find('.carton-input').val()) || 0;
-                    var price = parseFloat(row.find('.price').text()) || 0;
+                    var qty = parseFloat(row.find('.qty-input').val().replace(/,/g, '')) || 0;
+                    var carton = parseFloat(row.find('.carton-input').val().replace(/,/g, '')) || 0;
+                    var price = parseFloat(row.find('.price').text().replace(/,/g, '')) || 0;
 
                     // Batas maksimum untuk qty dan carton
                     var maxQty = 999; // Maksimum 3 digit
-                    var maxCarton = 9999; // Maksimum 4 digit
+                    var maxCarton = 999999; // Maksimum 4 digit
 
                     // Flag to track if input exceeds limits
                     var exceedsLimit = false;
@@ -1522,14 +1594,16 @@
 
                     // Multiply qty by carton and update the result
                     var result = qty * carton;
-                    row.find('.inner-result').text(result);
-                    row.find('.net-weight').text(result);
+                    var formattedResult = result.toLocaleString('en-US');
+                    row.find('.inner-result').text(formattedResult);
+                    row.find('.net-weight').text(formattedResult);
 
                     // Update the price based on result * data.price
                     var totalPrice = result * price;
                     var roundedPrice = Math.round(
                         totalPrice); // Round the total price to nearest integer
-                    row.find('.price-result').text(roundedPrice);
+                    var formattedRoundedPrice = roundedPrice.toLocaleString('en-US');
+                    row.find('.price-result').text(formattedRoundedPrice);
 
                     updateAmounts();
                     updateTotals();
