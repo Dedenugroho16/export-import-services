@@ -420,7 +420,7 @@
                                         </p>
                                         <p id="error-message-carton" style="color: red; display:none">Nilai maksimum
                                             Carton adalah
-                                            empat digit</p>
+                                            enam digit</p>
                                         <div class="table-responsive pb-2 border-top">
                                             <table class="table table-bordered table-hover table-striped table-sm"
                                                 id="tableDetailTransaction">
@@ -1153,7 +1153,7 @@
 
                     // Batas maksimum untuk qty dan carton
                     var maxQty = 999; // Maksimum 3 digit
-                    var maxCarton = 9999; // Maksimum 4 digit
+                    var maxCarton = 999999; // Maksimum 4 digit
 
                     // Flag to track if input exceeds limits
                     var exceedsLimit = false;
@@ -1441,7 +1441,7 @@
 
                     // Batas maksimum untuk qty dan carton
                     var maxQty = 999; // Maksimum 3 digit
-                    var maxCarton = 9999; // Maksimum 4 digit
+                    var maxCarton = 999999; // Maksimum 4 digit
 
                     // Flag to track if input exceeds limits
                     var exceedsLimit = false;
