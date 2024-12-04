@@ -130,7 +130,6 @@ class BillOfPaymentController extends Controller
             'month' => 'required',
             'no_inv' => 'required',
             'id_client' => 'required',
-            'id_client_company' => 'required|exists:client_company,id',
             'total' => 'required|numeric|gte:0',
         ], [
             'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
