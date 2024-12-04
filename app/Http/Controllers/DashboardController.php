@@ -32,6 +32,7 @@ class DashboardController extends Controller
         $finalInvoice = Transaction::whereNotNull('stuffing_date')->count();
         $lunasCount = BillOfPayment::where('status', 1)->count();
         $belumLunasCount = BillOfPayment::where('status', 0)->count();
+        $bopCount = BillOfPayment::count();
 
 
 
@@ -50,7 +51,8 @@ class DashboardController extends Controller
             'unconfirmedInvoice',
             'finalInvoice',
             'lunasCount',
-            'belumLunasCount'
+            'belumLunasCount',
+            'bopCount',
         ));
     }
 }

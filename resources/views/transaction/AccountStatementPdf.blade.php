@@ -107,7 +107,7 @@
     <div class="d-flex justify-content-center align-items-center mt-6">
         <div class="border border-dark px-1 py-1 bg-light text-center">
             <h4 class="m-0">BALANCE: 
-                {{ number_format($transactions->sum('total') - $payments->sum('total')) }}
+                {{ number_format($payments->sum('total') - $transactions->sum('total')) }}
             </h4>
         </div>
     </div>
