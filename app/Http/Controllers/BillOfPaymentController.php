@@ -27,7 +27,8 @@ class BillOfPaymentController extends Controller
     public function getBillOfPayment()
     {
         $billOfPayments = BillOfPayment::with(['client.clientCompany'])
-            ->select(['id', 'month', 'no_inv', 'id_client', 'status']);
+            ->select(['id', 'month', 'no_inv', 'id_client', 'status'])
+            ->orderBy('status', 'asc');
 
         return DataTables::of($billOfPayments)
             ->addIndexColumn()
@@ -39,37 +40,49 @@ class BillOfPaymentController extends Controller
                     ? $row->client->clientCompany->company_name
                     : '-';
             })
+            ->addColumn('status', function ($row) {
+                $statusText = $row->status == 1 ? 'Lunas' : 'Belum Lunas';
+                $dotColor = $row->status == 1 ? 'green' : 'red';
+
+                return '
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="' . $dotColor . '" class="bi bi-circle-fill me-1" viewBox="0 0 16 16">
+                        <circle cx="8" cy="8" r="8"/>
+                    </svg>
+                    ' . $statusText . '
+                </span>';
+            })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
                 return '
-                <div class="dropdown">
-                    <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
-                        Aksi
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end">
-                            <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
-                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card-pay me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5" /><path d="M3 10h18" /><path d="M16 19h6" /><path d="M19 16l3 3l-3 3" /><path d="M7.005 15h.005" /><path d="M11 15h2" /></svg>
-                                Lihat Payment Details
-                            </a>
-                            <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
-                                Tampilkan
-                            </a>
-                            ' . (in_array(auth()->user()->role, ['admin', 'finance']) ? '
-                            <a href="' . route('bill-of-payment.edit', $hashId) . '" class="dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/>
-                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/>
-                                    <path d="M16 5l3 3"/>
-                                </svg>
-                                Edit
-                            </a>
-                        ' : '') . '
-                    </div>
-                </div>';
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
+                    Aksi
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                        <a href="' . route('bill-of-payments.details', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-outline icon-tabler-credit-card-pay me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5" /><path d="M3 10h18" /><path d="M16 19h6" /><path d="M19 16l3 3l-3 3" /><path d="M7.005 15h.005" /><path d="M11 15h2" /></svg>
+                            Lihat Payment Details
+                        </a>
+                        <a href="' . route('bill-of-payment.show', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                            Tampilkan
+                        </a>
+                        ' . (in_array(auth()->user()->role, ['admin', 'finance']) ? '
+                        <a href="' . route('bill-of-payment.edit', $hashId) . '" class="dropdown-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/>
+                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/>
+                                <path d="M16 5l3 3"/>
+                            </svg>
+                            Edit
+                        </a>
+                    ' : '') . '
+                </div>
+            </div>';
             })
-            ->rawColumns(['aksi'])
+            ->rawColumns(['status', 'aksi'])
             ->make(true);
     }
 
@@ -180,9 +193,9 @@ class BillOfPaymentController extends Controller
             $payment_details = PaymentDetail::where('id_bill_of_payment', $billId);
 
             return DataTables::of($payment_details)
-            ->addColumn('action', function ($row) {
-                $hashId = IdHashHelper::encode($row->id);
-                $actionBtn = '
+                ->addColumn('action', function ($row) {
+                    $hashId = IdHashHelper::encode($row->id);
+                    $actionBtn = '
                     <div class="dropdown">
                         <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
                         <div class="dropdown-menu dropdown-menu-end">
@@ -194,8 +207,8 @@ class BillOfPaymentController extends Controller
                                 </svg>
                                 Tampilkan
                             </a>';
-                if (in_array(auth()->user()->role, ['admin', 'finance'])) {
-                    $actionBtn .= '
+                    if (in_array(auth()->user()->role, ['admin', 'finance'])) {
+                        $actionBtn .= '
                         <a class="dropdown-item" href="' . route('payment-details.edit', $hashId) . '">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -205,14 +218,14 @@ class BillOfPaymentController extends Controller
                             </svg>
                             Edit
                         </a>';
-                }
-                $actionBtn .= '
+                    }
+                    $actionBtn .= '
                         </div>
                     </div>';
-                return $actionBtn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
 
         }
 
