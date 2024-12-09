@@ -348,7 +348,7 @@ class PaymentDetailController extends Controller
         if ($request->ajax()) {
             $paymentDetails = PaymentDetail::with(['client', 'clientCompany', 'createdBy']) 
                 ->select(['id', 'payment_number', 'date', 'id_client', 'id_client_company', 'total', 'created_by'])
-                
+                ->where('payment_number', 'like', '%(OPENING BALANCE)%')
                 ->paginate($request->get('length'), ['*'], 'page', $request->get('start') / $request->get('length') + 1);
 
            
@@ -370,8 +370,6 @@ class PaymentDetailController extends Controller
 
         return view('opening-balance.index');
     }
-
-    
     public function openingBalanceCreate()
     {
         return view('opening-balance.create');
