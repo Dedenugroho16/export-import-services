@@ -54,6 +54,8 @@ Route::resource('consignees', ConsigneesController::class);
 Route::get('consignees/create/{hash}', [ConsigneesController::class, 'create'])->name('consignees.create');
 
 // Product Routes using resource
+Route::post('products/import-process', [ProductsController::class, 'importProcess'])->name('products.import-process');
+Route::get('products/import', [ProductsController::class, 'import'])->name('products.import');
 Route::resource('products', ProductsController::class);
 
 // Use id_hash for product routes
