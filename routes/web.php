@@ -216,3 +216,5 @@ Route::post('/payment-details/update/{id}', [PaymentDetailController::class, 'up
 // Client Company Route
 Route::resource('client-companies', ClientCompanyController::class);
 Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
+
+Route::get('/invoice-data', [DashboardController::class, 'getInvoiceData']);
