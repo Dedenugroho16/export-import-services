@@ -6,6 +6,8 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\DetailProduct;
+use App\Imports\ProductsImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProductsController extends Controller
@@ -16,15 +18,15 @@ class ProductsController extends Controller
         if ($request->ajax()) {
             // Mengambil semua data produk dengan relasi 'detailProducts'
             $products = Product::with('detailProducts')->select('products.*');
-        
+
             return DataTables::of($products)
                 ->addColumn('action', function ($row) {
                     // Encode ID untuk keamanan
                     $hashId = IdHashHelper::encode($row->id);
-        
+
                     // Check if the user role is 'admin' or 'operator'
                     $userRole = auth()->user()->role;
-        
+
                     // Generate action buttons
                     $actionBtn = '
                         <div class="dropdown">
@@ -40,7 +42,7 @@ class ProductsController extends Controller
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
                             Tampilkan
                             </a>';
-        
+
                     // Check if the user role is 'admin' or 'operator' to show edit and delete options
                     if (in_array($userRole, ['admin', 'operator'])) {
                         $actionBtn .= '
@@ -53,12 +55,12 @@ class ProductsController extends Controller
                                 Hapus
                             </a>';
                     }
-        
+
                     // Close the dropdown
                     $actionBtn .= '
                             </div>
                         </div>';
-        
+
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -73,6 +75,23 @@ class ProductsController extends Controller
     public function create()
     {
         return view('products.create');
+    }
+
+    public function import()
+    {
+        return view('products.import');
+    }
+
+    public function importProcess(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new ProductsImport, $request->file('file'));
+
+        return redirect()->route('products.index')
+            ->with('success', 'Data berhasil ditambahkan.');
     }
 
     // Store a newly created product in storage
@@ -134,7 +153,7 @@ class ProductsController extends Controller
         ]);
 
         return redirect($request->input('previous_url', route('products.index')))
-        ->with('success', 'Data berhasil diperbarui.');
+            ->with('success', 'Data berhasil diperbarui.');
     }
 
     // Remove the specified product from storage
@@ -157,14 +176,14 @@ class ProductsController extends Controller
 
         if ($request->ajax()) {
             $detailProducts = DetailProduct::where('id_product', $productId);
-        
+
             return DataTables::of($detailProducts)
                 ->addColumn('action', function ($row) {
                     $hashId = IdHashHelper::encode($row->id);
-        
+
                     // Get the current user's role
                     $userRole = auth()->user()->role;
-        
+
                     // Generate the action buttons
                     $actionBtn = '
                         <div class="dropdown">
@@ -178,7 +197,7 @@ class ProductsController extends Controller
                                     </svg>
                                     Tampilkan
                                 </a>';
-        
+
                     // Check if the user's role is either 'admin' or 'operator'
                     if (in_array($userRole, ['admin', 'operator'])) {
                         $actionBtn .= '
@@ -191,12 +210,12 @@ class ProductsController extends Controller
                                 Hapus
                             </a>';
                     }
-        
+
                     // Close the dropdown
                     $actionBtn .= '
                             </div>
                         </div>';
-        
+
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
