@@ -33,8 +33,8 @@
                                 <th class="text-center">#</th>
                                 <th class="text-center">Nomor Pembayaran</th>
                                 <th class="text-center">Tanggal</th>
-                                <th class="text-center">Client ID</th>
-                                <th class="text-center">Client Company ID</th>
+                                <th class="text-center">Client Name</th>
+                                <th class="text-center">Client Company Name</th>
                                 <th class="text-center">Total</th>
                                 <th class="text-center">Dibuat Oleh</th>
                             </tr>
@@ -53,23 +53,23 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#openingBalanceTable').DataTable({
-            processing: false,
-            serverSide: true, 
-            ajax: "{{ route('opening-balance.index') }}",
+            processing: true, // Menampilkan loading saat data diproses
+            serverSide: true, // Menyatakan DataTables akan menggunakan server side processing
+            ajax: "{{ route('opening-balance.index') }}", // URL untuk request data
             columns: [
                 { 
-                    data: null, 
+                    data: null,  // Kolom nomor urut, dihitung di frontend
                     class: 'text-center',
                     render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut
+                        return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut berdasarkan posisi data
                     },
-                    orderable: false,
-                    searchable: false
+                    orderable: false, // Kolom ini tidak dapat diurutkan
+                    searchable: false // Kolom ini tidak dapat dicari
                 },
                 { data: 'payment_number', name: 'payment_number', class: 'text-center' },
                 { data: 'date', name: 'date', class: 'text-center' },
-                { data: 'id_client', name: 'id_client', class: 'text-center' },
-                { data: 'id_client_company', name: 'id_client_company', class: 'text-center' },
+                { data: 'client_name', name: 'client_name', class: 'text-center' },
+                { data: 'client_company_name', name: 'client_company_name', class: 'text-center' },
                 { 
                     data: 'total', 
                     name: 'total', 
@@ -78,7 +78,7 @@
                         return parseFloat(data).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     }
                 },
-                { data: 'created_by', name: 'created_by', class: 'text-center' }
+                { data: 'created_by_name', name: 'created_by_name', class: 'text-center' }
             ],
             language: {
                 lengthMenu: "Tampilkan _MENU_ Data",
@@ -93,48 +93,8 @@
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50],
-            pageLength: 10,
-
-            drawCallback: function() {
-                $('#openingBalanceTable td:nth-child(2), #openingBalanceTable th:nth-child(2)').css({
-                    'max-width': '200px',
-                    'white-space': 'normal',
-                    'word-wrap': 'break-word'
-                });
-            }
+            pageLength: 10
         });
     });
-</script>
-
-<!-- Script Validasi Form dan Alert -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function (e) {
-            const inputs = form.querySelectorAll('input, select, textarea');
-            let isValid = true;
-
-            inputs.forEach(input => {
-                if (input.required && !input.value.trim()) {
-                    isValid = false;
-                    input.classList.add('is-invalid');
-                } else {
-                    input.classList.remove('is-invalid');
-                }
-            });
-
-            if (!isValid) {
-                e.preventDefault(); // Stop form from submitting
-                alert('Harap isi semua field yang diperlukan.');
-            }
-        });
-    });
-
-    // Menghilangkan alert setelah 3 detik
-    setTimeout(function() {
-        $('.alert-dismissible').fadeOut();
-    }, 3000);
-});
 </script>
 @endsection

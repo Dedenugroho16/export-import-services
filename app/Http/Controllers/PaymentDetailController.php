@@ -345,25 +345,33 @@ class PaymentDetailController extends Controller
 
     public function openingBalanceIndex(Request $request)
     {
-        
         if ($request->ajax()) {
-            $paymentDetails = PaymentDetail::select(['id', 'payment_number', 'date', 'id_client', 'id_client_company', 'total', 'created_by'])
+            $paymentDetails = PaymentDetail::with(['client', 'clientCompany', 'createdBy']) 
+                ->select(['id', 'payment_number', 'date', 'id_client', 'id_client_company', 'total', 'created_by'])
+                
                 ->paginate($request->get('length'), ['*'], 'page', $request->get('start') / $request->get('length') + 1);
+
+           
+            $paymentDetails->getCollection()->transform(function ($paymentDetail) {
+                
+                $paymentDetail->client_name = $paymentDetail->client ? $paymentDetail->client->name : 'N/A';
+                $paymentDetail->client_company_name = $paymentDetail->clientCompany ? $paymentDetail->clientCompany->company_name : 'N/A';
+                $paymentDetail->created_by_name = $paymentDetail->createdBy ? $paymentDetail->createdBy->name : 'N/A'; 
+                return $paymentDetail;
+            });
 
             return response()->json([
                 'draw' => intval($request->get('draw')),
-                'recordsTotal' => PaymentDetail::count(), 
+                'recordsTotal' => PaymentDetail::count(),
                 'recordsFiltered' => $paymentDetails->total(),
-                'data' => $paymentDetails->items(), 
+                'data' => $paymentDetails->items(),
             ]);
         }
 
-       
         return view('opening-balance.index');
     }
 
-
-
+    
     public function openingBalanceCreate()
     {
         return view('opening-balance.create');
@@ -382,13 +390,13 @@ class PaymentDetailController extends Controller
 
         // Membuat data baru di tabel 'payment_details'
         $paymentDetail = PaymentDetail::create([
-            'payment_number' => $validatedData['no_inv'], // Nomor pembayaran/invoice
+            'payment_number' => $validatedData['no_inv'], 
             'date' => now(),
             'id_client' => $validatedData['id_client'],
-            'id_client_company' => $validatedData['id_client_company'],
+            'id_client_company' => $validatedData['id_client_company'], 
             'total' => $validatedData['total'],
-            'created_by' => auth()->user()->id, // Mendapatkan ID pengguna yang sedang login
-            'id_bill_of_payment' => null, // Sesuaikan logika untuk ID terkait jika diperlukan
+            'created_by' => auth()->user()->id, 
+            'id_bill_of_payment' => null, 
         ]);
 
         // Redirect atau memberikan respons sesuai kebutuhan
