@@ -346,17 +346,38 @@ class PaymentDetailController extends Controller
     public function openingBalanceIndex(Request $request)
     {
         if ($request->ajax()) {
-            $paymentDetails = PaymentDetail::with(['client', 'clientCompany', 'createdBy']) 
+            $paymentDetails = PaymentDetail::with(['client', 'clientCompany', 'createdBy'])
                 ->select(['id', 'payment_number', 'date', 'id_client', 'id_client_company', 'total', 'created_by'])
                 ->where('payment_number', 'like', '%(OPENING BALANCE)%')
-                ->paginate($request->get('length'), ['*'], 'page', $request->get('start') / $request->get('length') + 1);
+                ->paginate(
+                    $request->get('length'),
+                    ['*'],
+                    'page',
+                    $request->get('start') / $request->get('length') + 1
+                );
 
-           
+            
             $paymentDetails->getCollection()->transform(function ($paymentDetail) {
+               
+                $hashedId = IdHashHelper::encode($paymentDetail->id);
+
                 
                 $paymentDetail->client_name = $paymentDetail->client ? $paymentDetail->client->name : 'N/A';
                 $paymentDetail->client_company_name = $paymentDetail->clientCompany ? $paymentDetail->clientCompany->company_name : 'N/A';
-                $paymentDetail->created_by_name = $paymentDetail->createdBy ? $paymentDetail->createdBy->name : 'N/A'; 
+                $paymentDetail->created_by_name = $paymentDetail->createdBy ? $paymentDetail->createdBy->name : 'N/A';
+
+               
+                $paymentDetail->action = '
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">
+                            Aksi
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="' . route('opening-balance.edit', $hashedId) . '">Edit</a>
+                        </div>
+                    </div>
+                ';
+
                 return $paymentDetail;
             });
 
@@ -370,6 +391,7 @@ class PaymentDetailController extends Controller
 
         return view('opening-balance.index');
     }
+
     public function openingBalanceCreate()
     {
         return view('opening-balance.create');
@@ -377,7 +399,7 @@ class PaymentDetailController extends Controller
 
     public function openingBalanceStore(Request $request)
     {
-        // Validasi data yang diterima
+        
         $validatedData = $request->validate([
             'no_inv' => 'required|string|max:255',
             'total' => 'required|numeric|min:0',
@@ -386,19 +408,60 @@ class PaymentDetailController extends Controller
             'id_client_company' => 'required|exists:client_company,id',
         ]);
 
-        // Membuat data baru di tabel 'payment_details'
+        
         $paymentDetail = PaymentDetail::create([
-            'payment_number' => $validatedData['no_inv'], 
+            'payment_number' => $validatedData['no_inv'],
             'date' => now(),
             'id_client' => $validatedData['id_client'],
-            'id_client_company' => $validatedData['id_client_company'], 
+            'id_client_company' => $validatedData['id_client_company'],
             'total' => $validatedData['total'],
-            'created_by' => auth()->user()->id, 
-            'id_bill_of_payment' => null, 
+            'created_by' => auth()->user()->id,
+            'id_bill_of_payment' => null,
         ]);
 
-        // Redirect atau memberikan respons sesuai kebutuhan
         return redirect()->route('opening-balance.index')
             ->with('success', 'Payment Detail successfully created.');
     }
+
+    public function openingBalanceEdit($hashId)
+    {
+        
+        $id = IdHashHelper::decode($hashId);
+
+        $paymentDetail = PaymentDetail::findOrFail($id);
+
+        return view('opening-balance.edit', compact('paymentDetail', 'hashId'));
+    }
+
+    public function openingBalanceUpdate(Request $request, $hashId)
+    {
+    
+        $id = IdHashHelper::decode($hashId);
+
+        $validatedData = $request->validate([
+            'no_inv' => 'required|string|max:255',
+            'total' => 'required|numeric|min:0',
+            'month' => 'required|string',
+            'id_client' => 'required|integer|exists:clients,id',
+            'id_client_company' => 'required|exists:client_company,id',
+        ]);
+
+
+        $paymentDetail = PaymentDetail::findOrFail($id);
+
+    
+        $paymentDetail->update([
+            'payment_number' => $validatedData['no_inv'],
+            'date' => now(),
+            'id_client' => $validatedData['id_client'],
+            'id_client_company' => $validatedData['id_client_company'],
+            'total' => $validatedData['total'],
+            'created_by' => auth()->user()->id,
+        ]);
+
+    
+        return redirect()->route('opening-balance.index')
+            ->with('success', 'Payment Detail successfully updated.');
+    }
+
 }
