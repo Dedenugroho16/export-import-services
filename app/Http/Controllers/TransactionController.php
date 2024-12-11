@@ -639,6 +639,9 @@ class TransactionController extends Controller
         $company_id = $request->input('company_id');
         $logo = ImageHelper::getBase64Image('storage/logo1.png');
         $clientIds = Client::where('client_company_id', $company_id)->pluck('id');
+        $user = Auth::user();
+        $signatureUrl = $user->signature_url;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
         // Query transaksi dengan filter tahun dan id_client yang sesuai
         $transactions = Transaction::query()
@@ -682,6 +685,8 @@ class TransactionController extends Controller
             'company_id' => $company_id,
             'transactions' => $transactions,
             'payments' => $payments,
+            'user' => $user,
+            'signature' => $signature,
         ];
 
         // Load view untuk membuat PDF
@@ -697,6 +702,9 @@ class TransactionController extends Controller
         $company_id = $request->input('company_id');
         $logo = ImageHelper::getBase64Image('storage/logo1.png');
         $clientIds = Client::where('client_company_id', $company_id)->pluck('id');
+        $user = Auth::user();
+        $signatureUrl = $user->signature_url;
+        $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
         // Query transaksi dengan filter tahun dan id_client yang sesuai
         $transactions = Transaction::query()
@@ -740,6 +748,8 @@ class TransactionController extends Controller
             'company_id' => $company_id,
             'transactions' => $transactions,
             'payments' => $payments,
+            'user' => $user,
+            'signature' => $signature,
         ];
 
         // Load view untuk membuat PDF
