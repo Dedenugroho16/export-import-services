@@ -200,6 +200,8 @@ Route::get('/payment-details/{hash}/create', [PaymentDetailController::class, 'c
 Route::get('/opening-balance/create', [PaymentDetailController::class, 'openingBalanceCreate'])->name('opening-balance.create');
 Route::post('/opening-balance/store', [PaymentDetailController::class, 'openingBalanceStore'])->name('opening-balance.store');
 Route::get('/opening-balance', [PaymentDetailController::class, 'openingBalanceIndex'])->name('opening-balance.index');
+Route::get('/opening-balance/{hashId}/edit', [PaymentDetailController::class, 'openingBalanceEdit'])->name('opening-balance.edit');
+Route::put('/opening-balance/{hashId}', [PaymentDetailController::class, 'openingBalanceUpdate'])->name('opening-balance.update');
 Route::get('/payment-details/{hash}/edit', [PaymentDetailController::class, 'edit'])->name('payment-details.edit');
 Route::get('/payment-details/{hash}', [PaymentDetailController::class, 'show'])->name('payment-details.show');
 Route::get('/payment-details/{hashedId}/export-pdf', [PaymentDetailController::class, 'exportPdf'])->name('payment-details.exportPdf');
