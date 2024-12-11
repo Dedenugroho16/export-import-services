@@ -91,7 +91,7 @@
 
                                 <div class="mb-3">
                                     <label for="total" class="form-label">Payment</label>
-                                    <input type="number" class="form-control" id="total" name="total"
+                                    <input type="text" class="form-control" id="total" name="total"
                                         placeholder="Enter Payment">
                                 </div>
 
@@ -357,5 +357,19 @@
             // Menetapkan nilai input #month
             $('#month').val(monthYear);
         });
+        $(document).ready(function() {
+        // Format the 'total' input value with commas as the user types
+        $('#total').on('input', function() {
+            var value = $(this).val().replace(/\D/g, ''); // Remove non-numeric characters
+            $(this).val(value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')); // Add commas as thousands separator
+        });
+
+        // Optional: When submitting the form, remove commas
+        $('#formBOP').on('submit', function() {
+            var paymentValue = $('#total').val();
+            var formattedValue = paymentValue.replace(/,/g, ''); // Remove commas
+            $('#total').val(formattedValue); // Set the raw value without commas
+        });
+    });
     </script>
 @endsection
