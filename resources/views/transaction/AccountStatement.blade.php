@@ -345,25 +345,44 @@
                         }
                     });
 
-                    // Filter button
-                    $('#filterBtn').click(function() {
-                        let year = $('#yearSelect').val();
-                        let company_id = $('#company_id').val();
+                    $('#filterBtn').click(function () {
+                    let year = $('#yearSelect').val();
+                    let company_id = $('#company_id').val();
+                    var authUser = @json(Auth::user());
 
-                        if (!year || !company_id) {
-                            $('#error-message').show();
+                    // Periksa apakah signature_url pengguna sudah terisi
+                    if (!authUser.signature_url) {
+                        Swal.fire({
+                            title: 'Lengkapi Profil Anda',
+                            text: "Tanda tangan belum diunggah. Lengkapi profil untuk melanjutkan pembuatan dokumen.",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ke Profil',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '{{ route("profile.show") }}';
+                            }
+                        });
+                        return; // Hentikan proses filter
+                    }
 
-                            setTimeout(function() {
-                                $('#error-message').hide();
-                            }, 3000);
+                    if (!year || !company_id) {
+                        $('#error-message').show();
 
-                            return;
-                        }
+                        setTimeout(function () {
+                            $('#error-message').hide();
+                        }, 3000);
 
-                        $('#error-message').hide();
-                        table.ajax.reload(); // Reload data sesuai filter
-                        tableP.ajax.reload(); // Reload data sesuai filter
-                    });
+                        return;
+                    }
+
+                    $('#error-message').hide();
+                    table.ajax.reload(); // Reload data sesuai filter
+                    tableP.ajax.reload(); // Reload data sesuai filter
+                });
 
                     // Reset button
                     $('#resetBtn').click(function() {
