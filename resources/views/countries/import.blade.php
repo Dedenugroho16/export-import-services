@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Import Products')
+@section('title', 'Import Countries')
 
 @section('content')
     <div class="page-body">
@@ -22,6 +22,7 @@
                                         });
                                     </script>
                                 @endif
+                                
 
                                 @if (session('error'))
                                     <script>
@@ -33,7 +34,8 @@
                                         });
                                     </script>
                                 @endif
-                                <form action="{{ route('products.import-process') }}" method="POST"
+
+                                <form action="{{ route('countries.import-process') }}" method="POST"
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="mb-3">

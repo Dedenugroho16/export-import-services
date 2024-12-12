@@ -3,24 +3,24 @@
 namespace App\Imports;
 
 use Exception;
-use App\Models\Product;
+use App\Models\Country;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ProductsImport implements ToCollection, WithHeadingRow
+class CountriesImport implements ToCollection, WithHeadingRow
 {
     /**
-     * @param Collection $collection
-     */
+    * @param Collection $collection
+    */
     public function collection(Collection $rows)
     {
+        // dd($rows->all());
         foreach ($rows as $row) {
             try {
-                Product::create([
+                Country::create([
                     'code' => $row['code'],
                     'name' => $row['name'],
-                    'abbreviation' => $row['abbreviation'],
                 ]);
             } catch (Exception $e) {
                 // Lempar pengecualian dengan pesan error

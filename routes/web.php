@@ -81,6 +81,8 @@ Route::get('detail-products/create/{hash}', [DetailProductController::class, 'cr
 
 
 // Country Routes using resource
+Route::get('countries/import', [CountryController::class, 'import'])->name('countries.import');
+Route::post('countries/import-process', [CountryController::class, 'importProcess'])->name('countries.import-process');
 Route::resource('countries', CountryController::class);
 
 // Company Routes using resource
