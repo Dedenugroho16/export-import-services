@@ -86,12 +86,20 @@ class ProductsController extends Controller
     {
         $request->validate([
             'file' => 'required|mimes:xlsx,xls',
+        ], [
+            'file.required' => 'File wajib diunggah.',
+            'file.mimes' => 'File harus berupa Excel dengan format xlsx atau xls.',
         ]);
 
-        Excel::import(new ProductsImport, $request->file('file'));
+        try {
+            Excel::import(new ProductsImport, $request->file('file'));
 
-        return redirect()->route('products.index')
-            ->with('success', 'Data berhasil diimpor.');
+            return redirect()->route('products.index')
+                ->with('success', 'Data berhasil diimpor.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', $e->getMessage());
+        }
     }
 
     // Store a newly created product in storage

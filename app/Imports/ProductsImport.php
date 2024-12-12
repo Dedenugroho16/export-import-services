@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use Exception;
 use App\Models\Product;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -15,11 +16,16 @@ class ProductsImport implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            Product::create([
-                'code' => $row['code'],
-                'name' => $row['name'],
-                'abbreviation' => $row['abbreviation'],
-            ]);
+            try {
+                Product::create([
+                    'code' => $row['code'],
+                    'name' => $row['name'],
+                    'abbreviation' => $row['abbreviation'],
+                ]);
+            } catch (Exception $e) {
+                // Lempar pengecualian dengan pesan error
+                throw new Exception('Terjadi kesalahan saat memproses data: ' . $e->getMessage());
+            }
         }
     }
 }
