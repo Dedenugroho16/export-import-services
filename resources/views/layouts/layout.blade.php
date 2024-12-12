@@ -178,218 +178,156 @@
                         <li class="nav-item {{ Request::is('/*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('home') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
-                                        <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-                                        <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
-                                    </svg>
+                                    <!-- SVG icon for Dashboard -->
                                 </span>
                                 <span class="nav-link-title">Dashboard</span>
                             </a>
                         </li>
+        
                         @if (in_array(auth()->user()->role, ['admin', 'operator', 'director', 'finance']))
-
                             <li class="nav-item dropdown {{ Request::is('client-companies*') || Request::is('clients*') ? 'show' : '' }}">
                                 <a class="nav-link dropdown-toggle {{ Request::is('client-companies*') || Request::is('clients*') ? 'active' : '' }}"
                                     href="#" id="clientsDropdown" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="{{ Request::is('client-companies*') || Request::is('clients*') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" 
-                                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="7" r="4" />
-                                            <path d="M3 21v-2a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v2" />
-                                        </svg>
+                                        <!-- SVG icon for Client -->
                                     </span>
                                     <span class="nav-link-title">Client</span>
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="clientsDropdown">
+                                <ul class="dropdown-menu {{ Request::is('client-companies*') || Request::is('clients*') ? 'show' : '' }}" aria-labelledby="clientsDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('client-companies*') ? 'active-item' : '' }}" 
-                                            href="{{ route('client-companies.index') }}">
-                                            Client Companies
+                                        <a class="dropdown-item {{ Request::is('clients*') ? 'active-item' : '' }}" href="{{ route('clients.index') }}">
+                                            Client
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('clients*') ? 'active-item' : '' }}" 
-                                            href="{{ route('clients.index') }}">
-                                            Client
+                                        <a class="dropdown-item {{ Request::is('client-companies*') ? 'active-item' : '' }}" href="{{ route('client-companies.index') }}">
+                                            Client Companies
                                         </a>
                                     </li>
                                 </ul>
                             </li>
+        
                             <li class="nav-item {{ Request::is('products*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/products') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="3" y="4" width="18" height="16" rx="2" />
-                                            <path d="M3 6h18" />
-                                            <path d="M7 10h10" />
-                                            <path d="M7 14h10" />
-                                        </svg>
+                                        <!-- SVG icon for Produk -->
                                     </span>
                                     <span class="nav-link-title">Produk</span>
                                 </a>
                             </li>
+        
                             <li class="nav-item {{ Request::is('commodities*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/commodities') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="9" />
-                                            <path d="M9 12h6m-3 -3v6" />
-                                        </svg>
+                                        <!-- SVG icon for Komoditas -->
                                     </span>
                                     <span class="nav-link-title">Komoditas</span>
                                 </a>
                             </li>
+        
                             <li class="nav-item {{ Request::is('countries*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/countries') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <circle cx="12" cy="12" r="9" />
-                                            <line x1="3.6" y1="9" x2="20.4" y2="9" />
-                                            <line x1="3.6" y1="15" x2="20.4" y2="15" />
-                                            <path d="M11.5 3a17 17 0 0 0 0 18" />
-                                            <path d="M12.5 3a17 17 0 0 1 0 18" />
-                                        </svg>
+                                        <!-- SVG icon for Negara -->
                                     </span>
-                                    <span class="nav-link-title">
-                                        Negara
-                                    </span>
+                                    <span class="nav-link-title">Negara</span>
                                 </a>
                             </li>
+        
                             @if(auth()->user()->role === 'admin')
                                 <li class="nav-item {{ Request::is('users*') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('users.index') }}">
                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                                height="24" viewBox="0 0 24 24" stroke-width="2"
-                                                stroke="currentColor" fill="none" stroke-linecap="round"
-                                                stroke-linejoin="round">
-                                                <circle cx="12" cy="7" r="4" />
-                                                <path d="M20 21l-2 -2a5 5 0 0 0 -7 -7l-5 5" />
-                                            </svg>
+                                            <!-- SVG icon for Data User -->
                                         </span>
                                         <span class="nav-link-title">Data User</span>
                                     </a>
                                 </li>
                             @endif
+        
                             <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('company.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-databricks"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l9 5l9 -5v-3l-9 5l-9 -5v-3l9 5l9 -5v-3l-9 5l-9 -5l9 -5l5.418 3.01" /></svg>
+                                        <!-- SVG icon for Data Perusahaan -->
                                     </span>
-                                    <span class="nav-link-title">
-                                        Data Perusahaan
-                                    </span>
+                                    <span class="nav-link-title">Data Perusahaan</span>
                                 </a>
                             </li>
-                            <li
-                                class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
+        
+                            <li class="nav-item dropdown {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}">
                                 <a class="nav-link dropdown-toggle {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'active' : '' }}"
                                     href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <circle cx="6" cy="19" r="2" />
-                                            <circle cx="17" cy="19" r="2" />
-                                            <path d="M17 17h-11v-14h-2" />
-                                            <path d="M6 5l14 1l-1 7h-13" />
-                                        </svg>
+                                        <!-- SVG icon for Transaksi -->
                                     </span>
                                     <span class="nav-link-title">Transaksi</span>
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <ul class="dropdown-menu {{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'show' : '' }}" aria-labelledby="navbarDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}"
-                                            href="{{ route('proforma.index') }}">
+                                        <a class="dropdown-item {{ Request::is('proforma*') ? 'active-item' : '' }}" href="{{ route('proforma.index') }}">
                                             Proforma Invoices
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
-                                            href="{{ url('/incomplete-invoice') }}">
+                                        <a class="dropdown-item {{ Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/incomplete-invoice') }}">
                                             Unconfirmed Invoices
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}"
-                                            href="{{ url('/transaction') }}">
+                                        <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
                                             Final Invoice
                                         </a>
                                     </li>
                                 </ul>
                             </li>
+        
                             <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('transactions.rekap') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chart-bar-popular"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M9 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M15 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M4 20h14" /></svg>
+                                        <!-- SVG icon for Rekap Sales -->
                                     </span>
                                     <span class="nav-link-title">Rekap Sales</span>
                                 </a>
                             </li>
+        
                             <li class="nav-item dropdown {{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'show' : '' }}">
                                 <a class="nav-link dropdown-toggle {{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'active' : '' }}"
                                     href="#" id="paymentsDropdown" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="{{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-                                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="3" y="11" width="18" height="10" rx="2" />
-                                            <path d="M7 11v-4a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4" />
-                                        </svg>
+                                        <!-- SVG icon for Pembayaran -->
                                     </span>
                                     <span class="nav-link-title">Pembayaran</span>
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="paymentsDropdown">
+                                <ul class="dropdown-menu {{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'show' : '' }}" aria-labelledby="paymentsDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('bill-of-payment*') ? 'active-item' : '' }}"
-                                            href="{{ route('bill-of-payment.index', ['dropdown_open' => true]) }}">
+                                        <a class="dropdown-item {{ Request::is('bill-of-payment*') ? 'active-item' : '' }}" href="{{ route('bill-of-payment.index', ['dropdown_open' => true]) }}">
                                             Bill of Payment
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('opening-balance*') ? 'active-item' : '' }}"
-                                            href="{{ route('opening-balance.index', ['dropdown_open' => true]) }}">
+                                        <a class="dropdown-item {{ Request::is('opening-balance*') ? 'active-item' : '' }}" href="{{ route('opening-balance.index', ['dropdown_open' => true]) }}">
                                             Opening Balance
                                         </a>
                                     </li>
                                 </ul>
                             </li>
+        
                             <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-banknote">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M2 6h20" />
-                                            <path d="M2 12h20" />
-                                            <path d="M2 18h20" />
-                                            <path d="M12 6v12" />
-                                            <path d="M12 6h0" />
-                                        </svg>
+                                        <!-- SVG icon for Account Statement -->
                                     </span>
                                     <span class="nav-link-title">Account Statement</span>
                                 </a>
                             </li>
                         @endif
+                    </ul>
                 </div>
             </div>
-        </aside>
+        </aside>        
 
 
         <div class="page-wrapper">
