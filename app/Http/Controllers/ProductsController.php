@@ -91,7 +91,7 @@ class ProductsController extends Controller
         Excel::import(new ProductsImport, $request->file('file'));
 
         return redirect()->route('products.index')
-            ->with('success', 'Data berhasil ditambahkan.');
+            ->with('success', 'Data berhasil diimpor.');
     }
 
     // Store a newly created product in storage

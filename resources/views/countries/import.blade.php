@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Import Products')
+@section('title', 'Import Countries')
 
 @section('content')
     <div class="page-body">
@@ -12,7 +12,31 @@
                                 <h4 class="mb-0">Import Data Excel</h4>
                             </div>
                             <div class="card-body">
-                                <form action="{{ route('products.import-process') }}" method="POST" enctype="multipart/form-data">
+                                @if ($errors->any())
+                                    <script>
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: '{{ $errors->first() }}',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    </script>
+                                @endif
+                                
+
+                                @if (session('error'))
+                                    <script>
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: '{{ session('error') }}',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    </script>
+                                @endif
+
+                                <form action="{{ route('countries.import-process') }}" method="POST"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     <div class="mb-3">
                                         <label for="excelFile" class="form-label">Pilih File Excel</label>

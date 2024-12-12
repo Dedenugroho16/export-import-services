@@ -192,17 +192,17 @@
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <!-- SVG icon for Client -->
                                     </span>
-                                    <span class="nav-link-title">Client</span>
+                                    <span class="nav-link-title">Klien</span>
                                 </a>
                                 <ul class="dropdown-menu {{ Request::is('client-companies*') || Request::is('clients*') ? 'show' : '' }}" aria-labelledby="clientsDropdown">
                                     <li>
                                         <a class="dropdown-item {{ Request::is('clients*') ? 'active-item' : '' }}" href="{{ route('clients.index') }}">
-                                            Client
+                                            Klien
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item {{ Request::is('client-companies*') ? 'active-item' : '' }}" href="{{ route('client-companies.index') }}">
-                                            Client Companies
+                                            Perusahaan Klien
                                         </a>
                                     </li>
                                 </ul>
