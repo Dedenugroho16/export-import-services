@@ -178,7 +178,7 @@
                         <li class="nav-item {{ Request::is('/*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('home') }}">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <!-- SVG icon for Dashboard -->
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
                                 </span>
                                 <span class="nav-link-title">Dashboard</span>
                             </a>
@@ -190,7 +190,7 @@
                                     href="#" id="clientsDropdown" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="{{ Request::is('client-companies*') || Request::is('clients*') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- SVG icon for Client -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
                                     </span>
                                     <span class="nav-link-title">Client</span>
                                 </a>
@@ -211,7 +211,7 @@
                             <li class="nav-item {{ Request::is('products*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/products') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- SVG icon for Produk -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.5 21h-2.926a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304h11.339a2 2 0 0 1 1.977 2.304l-.117 .761" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" /><path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M20.2 20.2l1.8 1.8" /></svg>
                                     </span>
                                     <span class="nav-link-title">Produk</span>
                                 </a>
@@ -220,7 +220,7 @@
                             <li class="nav-item {{ Request::is('commodities*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/commodities') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- SVG icon for Komoditas -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-packages"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" /><path d="M2 13.5v5.5l5 3" /><path d="M7 16.545l5 -3.03" /><path d="M17 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" /><path d="M12 19l5 3" /><path d="M17 16.5l5 -3" /><path d="M12 13.5v-5.5l-5 -3l5 -3l5 3v5.5" /><path d="M7 5.03v5.455" /><path d="M12 8l5 -3" /></svg>
                                     </span>
                                     <span class="nav-link-title">Komoditas</span>
                                 </a>
@@ -229,7 +229,7 @@
                             <li class="nav-item {{ Request::is('countries*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ url('/countries') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- SVG icon for Negara -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-world"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M3.6 9h16.8" /><path d="M3.6 15h16.8" /><path d="M11.5 3a17 17 0 0 0 0 18" /><path d="M12.5 3a17 17 0 0 1 0 18" /></svg>
                                     </span>
                                     <span class="nav-link-title">Negara</span>
                                 </a>
@@ -239,7 +239,7 @@
                                 <li class="nav-item {{ Request::is('users*') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('users.index') }}">
                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                            <!-- SVG icon for Data User -->
+                                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
                                         </span>
                                         <span class="nav-link-title">Data User</span>
                                     </a>
@@ -249,7 +249,7 @@
                             <li class="nav-item {{ Request::is('company*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('company.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- SVG icon for Data Perusahaan -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-databricks"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l9 5l9 -5v-3l-9 5l-9 -5v-3l9 5l9 -5v-3l-9 5l-9 -5l9 -5l5.418 3.01" /></svg>
                                     </span>
                                     <span class="nav-link-title">Data Perusahaan</span>
                                 </a>
@@ -260,7 +260,7 @@
                                     href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="{{ Request::is('proforma*') || Request::is('incomplete-invoice*') || Request::is('transaction') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- SVG icon for Transaksi -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cash-register"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M21 15h-2.5c-.398 0 -.779 .158 -1.061 .439c-.281 .281 -.439 .663 -.439 1.061c0 .398 .158 .779 .439 1.061c.281 .281 .663 .439 1.061 .439h1c.398 0 .779 .158 1.061 .439c.281 .281 .439 .663 .439 1.061c0 .398 -.158 .779 -.439 1.061c-.281 .281 -.663 .439 -1.061 .439h-2.5" /><path d="M19 21v1m0 -8v1" /><path d="M13 21h-7c-.53 0 -1.039 -.211 -1.414 -.586c-.375 -.375 -.586 -.884 -.586 -1.414v-10c0 -.53 .211 -1.039 .586 -1.414c.375 -.375 .884 -.586 1.414 -.586h2m12 3.12v-1.12c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2" /><path d="M16 10v-6c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-4c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414v6m8 0h-8m8 0h1m-9 0h-1" /><path d="M8 14v.01" /><path d="M8 17v.01" /><path d="M12 13.99v.01" /><path d="M12 17v.01" /></svg>
                                     </span>
                                     <span class="nav-link-title">Transaksi</span>
                                 </a>
@@ -286,7 +286,7 @@
                             <li class="nav-item {{ Request::is('transactions/rekap') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('transactions.rekap') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- SVG icon for Rekap Sales -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-report-analytics"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 17v-5" /><path d="M12 17v-1" /><path d="M15 17v-3" /></svg>
                                     </span>
                                     <span class="nav-link-title">Rekap Sales</span>
                                 </a>
@@ -297,7 +297,7 @@
                                     href="#" id="paymentsDropdown" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="{{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'true' : 'false' }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- SVG icon for Pembayaran -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" /><path d="M14 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" /></svg>
                                     </span>
                                     <span class="nav-link-title">Pembayaran</span>
                                 </a>
@@ -318,7 +318,7 @@
                             <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- SVG icon for Account Statement -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-report-money"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" /><path d="M12 17v1m0 -8v1" /></svg>
                                     </span>
                                     <span class="nav-link-title">Account Statement</span>
                                 </a>

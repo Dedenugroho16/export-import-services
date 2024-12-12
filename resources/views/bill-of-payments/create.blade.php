@@ -218,11 +218,11 @@
                             <form id="formBOP" class="mt-2" method="POST"
                                 action="{{ route('bill-of-payment.store') }}">
                                 @csrf
-                                <input type="" id="month" name="month">
-                                <input type="" id="no_inv" name="no_inv">
-                                <input type="" id="selectedClientId" name="id_client">
-                                <input type="" id="selectedClientCompanyId" name="id_client_company">
-                                <input type="" id="total" name="total">
+                                <input type="hidden" id="month" name="month">
+                                <input type="hidden" id="no_inv" name="no_inv">
+                                <input type="hidden" id="selectedClientId" name="id_client">
+                                <input type="hidden" id="selectedClientCompanyId" name="id_client_company">
+                                <input type="hidden" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
