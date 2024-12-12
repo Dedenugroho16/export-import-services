@@ -40,7 +40,8 @@ class DashboardController extends Controller
         $bopCount = BillOfPayment::count();
         $lunasCount = BillOfPayment::where('status', 1)->count();
         $belumLunasCount = BillOfPayment::where('status', 0)->count();
-
+        $totalLunas = BillOfPayment::where('status', 1)->sum('total');
+        $totalBelumLunas = BillOfPayment::where('status', 0)->sum('total');
 
 
         return view('dashboard.index', compact(
@@ -63,7 +64,9 @@ class DashboardController extends Controller
             'formattedTotalInvoice',
             'totalBOP',
             'paymentDetail',
-            'packingListCount'
+            'packingListCount',
+            'totalLunas',
+            'totalBelumLunas',
         ));
     }
 
