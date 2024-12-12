@@ -66,7 +66,7 @@
             </div>            
             <p class="fw-bold" style="font-size: 25px;">
               ${{ $formattedTotalInvoice }}
-              <span style="font-size: 14px; font-weight: normal;">/Day</span>
+              <span style="font-size: 14px; font-weight: normal;">/Today</span>
             </p>            
           </div>
         </div>
@@ -249,6 +249,12 @@
   </div>
 </div>
 
+<style>
+  .card{
+    border-radius: 15px;
+  }
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/libs/apexcharts/dist/apexcharts.min.js" defer></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -368,7 +374,7 @@
           axisBorder: {
             show: false,
           },
-          type: 'datetime', // Gunakan tipe datetime
+          type: 'datetime',
         },
         yaxis: {
           labels: {
