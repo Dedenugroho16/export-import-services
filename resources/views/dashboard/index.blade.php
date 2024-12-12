@@ -197,54 +197,62 @@
                   </svg>
                 </a>
               </div>
-              <p class="fw-bold" style="font-size: 25px;">{{ $bopCount }}</p>
               <div id="chart-demo-pie" class="chart-lg"></div>
             </div>
           </div>
         </div>
-      </div>      
-      {{-- <div class="mt-3">
-        <table class="table  table-bordered table-vcenter">
-          <tbody>
-            <tr>
-              <td>Produk</td>
-              <td>{{ $productsCount }}</td>
-              <td>
-                <a href="{{ url('/products') }}" class="text-success">
-                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>Komoditas</td>
-              <td>{{ $commoditiesCount }}</td>
-              <td>
-                <a href="{{ url('/commodities') }}" class="text-success">
-                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>User</td>
-              <td>{{ $usersCount }}</td>
-              <td>
-                <a href="{{ route('clients.index') }}" class="text-success">
-                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>Negara</td>
-              <td>{{ $countriesCount }}</td>
-              <td>
-                <a href="{{ url('/countries') }}" class="text-success">
-                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> --}}
+      </div>
+      <div class="d-flex mt-3" style="gap: 1rem;">
+        <div class="card finalInvoice chart" style="flex: 6;">
+          <table class="table  table-bordered table-vcenter">
+            <tbody>
+              <tr>
+                <td>Produk</td>
+                <td>{{ $productsCount }}</td>
+                <td>
+                  <a href="{{ url('/products') }}" class="text-success">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Komoditas</td>
+                <td>{{ $commoditiesCount }}</td>
+                <td>
+                  <a href="{{ url('/commodities') }}" class="text-success">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>User</td>
+                <td>{{ $usersCount }}</td>
+                <td>
+                  <a href="{{ route('clients.index') }}" class="text-success">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Negara</td>
+                <td>{{ $countriesCount }}</td>
+                <td>
+                  <a href="{{ url('/countries') }}" class="text-success">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card bop chart" style="flex: 6;">
+          <div class="card">
+            <div class="card-body">
+              <div id="chart-horizontal-bar" style="height: 240px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -257,49 +265,70 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/libs/apexcharts/dist/apexcharts.min.js" defer></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    window.ApexCharts && (new ApexCharts(document.getElementById('chart-demo-pie'), {
-      chart: {
-        type: "donut",
-        fontFamily: 'inherit',
-        height: 220,
-        sparkline: {
-          enabled: true
+  document.addEventListener("DOMContentLoaded", function () {
+    window.ApexCharts &&
+      new ApexCharts(document.getElementById("chart-demo-pie"), {
+        chart: {
+          type: "donut",
+          fontFamily: "inherit",
+          height: 230,
+          sparkline: {
+            enabled: true
+          },
+          animations: {
+            enabled: false
+          },
         },
-        animations: {
-          enabled: false
+        fill: {
+          opacity: 1,
         },
-      },
-      fill: {
-        opacity: 1,
-      },
-      series: [<?php echo $lunasCount; ?>, <?php echo $belumLunasCount; ?>],
-      labels: ["Lunas", "Belum Lunas"],
-      tooltip: {
-        theme: 'dark'
-      },
-      grid: {
-        strokeDashArray: 4,
-      },
-      colors: [tabler.getColor("primary"), tabler.getColor("danger")],
-      legend: {
-        show: true,
-        position: 'bottom',
-        offsetY: 12,
-        markers: {
-          width: 10,
-          height: 10,
-          radius: 100,
+        series: [<?php echo $lunasCount; ?>, <?php echo $belumLunasCount; ?>],
+        labels: ["Lunas", "Belum Lunas"],
+        tooltip: {
+          theme: "dark"
         },
-        itemMargin: {
-          horizontal: 8,
-          vertical: 8
+        grid: {
+          strokeDashArray: 4,
         },
-      },
-      tooltip: {
-        fillSeriesColor: false
-      },
-    })).render();
+        colors: [tabler.getColor("primary"), tabler.getColor("danger")],
+        legend: {
+          show: true,
+          position: "bottom",
+          offsetY: 12,
+          markers: {
+            width: 10,
+            height: 10,
+            radius: 100,
+          },
+          itemMargin: {
+            horizontal: 8,
+            vertical: 8
+          },
+        },
+        plotOptions: {
+          pie: {
+            donut: {
+              size: "65%", // Ukuran lingkaran dalam
+              labels: {
+                show: true,
+                total: {
+                  show: true,
+                  label: "Total",
+                  fontSize: "14px",
+                  fontFamily: "inherit",
+                  color: "#373d3f",
+                  formatter: function () {
+                    return "<?php echo $lunasCount + $belumLunasCount; ?>"; // Menampilkan jumlah total
+                  },
+                },
+              },
+            },
+          },
+        },
+        tooltip: {
+          fillSeriesColor: false
+        },
+      }).render();
   });
 </script>
 
@@ -391,5 +420,71 @@
     // Panggil fungsi untuk memuat data
     fetchInvoiceData();
   });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        window.ApexCharts && (new ApexCharts(document.getElementById('chart-horizontal-bar'), {
+            chart: {
+                type: "bar",
+                fontFamily: 'inherit',
+                height: 200,
+                parentHeightOffset: 0,
+                toolbar: {
+                    show: false,
+                },
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    barHeight: '70%',
+                    // Membuat distribusi batang lebih terpisah
+                    distributed: true, // Agar batang didistribusikan dengan jarak yang jelas
+                },
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '14px',
+                    colors: ['#000'],
+                },
+                formatter: function (val) {
+                    return val; // Format nilai dengan 'k'
+                }
+            },
+            series: [{
+                name: "Total Lunas",
+                data: [{{ $totalLunas }}] // Data yang diteruskan dari controller untuk total lunas
+            }, {
+                name: "Total Belum Lunas",
+                data: [{{ $totalBelumLunas }}] // Data yang diteruskan dari controller untuk total belum lunas
+            }],
+            grid: {
+                padding: {
+                    top: -10,
+                    right: 10,
+                    left: 10,
+                    bottom: 0,
+                },
+            },
+            xaxis: {
+                labels: {
+                    formatter: function (val) {
+                        return val;
+                    },
+                },
+                categories: ['Sudah Lunas', 'Belum Lunas'], // Kategori dengan label 'Lunas' dan 'Belum Lunas'
+                // Menambahkan jarak antar kategori
+                tickAmount: 2,
+                tickPlacement: 'between', // Memastikan jarak di antara kategori
+            },
+            yaxis: {
+                labels: {
+                    show: true,
+                },
+            },
+            colors: ['#7367F0', '#FF5733'], // Menentukan warna batang
+        })).render();
+    });
 </script>
 @endsection
