@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Client Company')
+@section('title', 'Perusahaan Client')
 @section('content')
 <div class="page-body">
     <div class="container-xl">

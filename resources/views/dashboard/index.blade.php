@@ -1,5 +1,8 @@
 @extends('layouts.layout')
-@section('title', $title)
+@section('title', 'Dashboard')
+@section('navbar-title')
+    Halo {{$userName}}
+@endsection
 @section('content')
 <div class="page-body">
   <div class="container">

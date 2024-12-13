@@ -52,6 +52,7 @@ class DashboardController extends Controller
 
 
         return view('dashboard.index', compact(
+            'userName',
             'clientsCount',
             'totalFinalInvoice', 
             'productsCount', 
@@ -77,7 +78,7 @@ class DashboardController extends Controller
             'sumTotalBop',
             'sumTotalPayment',
             'consigneeCount',
-        ))->with('title', "Hallo, $userName");
+        ));
     }
 
     public function getInvoiceData()

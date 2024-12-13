@@ -334,10 +334,10 @@
             <div class="mb-3">
                 <header class="navbar navbar-expand-md d-print-none">
                     <div class="container-xl">
-                        <h1 id="page-title"
-                            class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3"
-                            style="font-size: 1.5rem;">
-                            @yield('title', 'Default Title')
+                        <h1 id="page-title" class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3" style="font-size: 1.5rem;">
+                            @section('navbar-title')
+                                @yield('title', 'Default Title')
+                            @show
                         </h1>
                         <div class="navbar-nav flex-row order-md-last">
                             <div class="d-none d-md-flex">
