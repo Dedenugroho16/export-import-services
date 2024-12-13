@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Dashboard')
+@section('title', $title)
 @section('content')
 <div class="page-body">
   <div class="container">
@@ -11,7 +11,7 @@
             <div class="d-flex align-items-center justify-content-between">
               <h3 class="card-title">Clients</h3>
               <a href="{{ route('proforma.index') }}">
-                <span class="avatar" style="border-radius: 50%;">
+                <span class="avatar" style="border-radius: 50%; color: #377ff3">
                   <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
                 </span>
               </a> 
@@ -25,14 +25,17 @@
         <div class="card">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
-              <h3 class="card-title">Products</h3>
-              <a href="{{ route('proforma.index') }}">
-                <span class="avatar" style="border-radius: 50%;">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 6h18" /> <path d="M7 10h10" /><path d="M7 14h10" /></svg>
+              <h3 class="card-title"> Total Final Invoice</h3>
+              <a href="{{ url('/transaction') }}">
+                <span class="avatar" style="border-radius: 50%; color: #377ff3">
+                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-invoice"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 7l1 0" /><path d="M9 13l6 0" /><path d="M13 17l2 0" /></svg>
                 </span>
-              </a> 
+              </a>
             </div>            
-            <p class="fw-bold" style="font-size: 25px;">{{ $productsCount}}</p>
+            <p class="fw-bold" style="font-size: 25px;">
+              ${{ number_format($totalFinalInvoice, 0, '.', ',') }}
+              <span style="font-size: 14px; font-weight: normal;">/Today</span>
+            </p>            
           </div>
         </div>
       </div>
@@ -41,14 +44,14 @@
         <div class="card">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
-              <h3 class="card-title">Packing List</h3>
+              <h3 class="card-title">Total Bill Of Payment</h3>
               <a href="{{ route('proforma.index') }}">
-                <span class="avatar" style="border-radius: 50%;">
-                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-package"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" /><path d="M12 12l8 -4.5" /><path d="M12 12l0 9" /><path d="M12 12l-8 -4.5" /><path d="M16 5.25l-8 4.5" /></svg>
+                <span class="avatar" style="border-radius: 50%; color: #377ff3">
+                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-dollar"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" /><path d="M12 17v1m0 -8v1" /></svg>
                 </span>
               </a> 
             </div>            
-            <p class="fw-bold" style="font-size: 25px;">{{ $packingListCount }}</p>
+            <p class="fw-bold" style="font-size: 25px;">${{ number_format($sumTotalBop, 0, '.', ',') }}</p>
           </div>
         </div>
       </div>
@@ -57,21 +60,18 @@
         <div class="card">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
-              <h3 class="card-title"> Total Final Invoice</h3>
+              <h3 class="card-title"> Total Payment Detail</h3>
               <a href="{{ url('/transaction') }}">
-                <span class="avatar" style="border-radius: 50%;">
+                <span class="avatar" style="border-radius: 50%; color: #377ff3">
                   <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" /><path d="M14 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" /></svg>
                 </span>
               </a>
             </div>            
-            <p class="fw-bold" style="font-size: 25px;">
-              ${{ $formattedTotalInvoice }}
-              <span style="font-size: 14px; font-weight: normal;">/Today</span>
-            </p>            
+            <p class="fw-bold" style="font-size: 25px;">${{ number_format($sumTotalPayment, 0, '.', ',') }}</p>           
           </div>
         </div>
       </div>
-      <div class="col-12 mt-2">
+      <div class="col-12 mt-3">
         <div class="row row-cards">
           <div class="col-sm-6 col-lg-3">
             <div class="card card-sm">
@@ -79,7 +79,7 @@
                 <div class="row align-items-center">
                   <div class="col-auto">
                     <a href="{{ route('proforma.index') }}" title="Proforma Invoice">
-                      <span class="bg-red text-white avatar" style="border-radius: 50%;">
+                      <span class="text-white avatar" style="border-radius: 50%; background:#EF4444">
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-report"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5.697" /><path d="M18 14v4h4" /><path d="M18 11v-4a2 2 0 0 0 -2 -2h-2" /><path d="M8 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M18 18m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M8 11h4" /><path d="M8 15h3" /></svg>
                       </span>
                     </a>                          
@@ -103,7 +103,7 @@
                 <div class="row align-items-center">
                   <div class="col-auto">
                     <a href="{{ route('proforma.index') }}" title="Proforma Invoice">
-                      <span class="bg-green text-white avatar" style="border-radius: 50%;">
+                      <span class="text-white avatar" style="border-radius: 50%; background: #01bd7e">
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-checklist"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9.615 20h-2.615a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8" /><path d="M14 19l2 2l4 -4" /><path d="M9 8h4" /><path d="M9 12h2" /></svg>
                       </span>
                     </a> 
@@ -126,7 +126,7 @@
                 <div class="row align-items-center">
                   <div class="col-auto">
                     <a href="{{ url('/incomplete-invoice') }}" title="Unconfirmed Invoice">
-                      <span class="bg-warning text-white avatar" style="border-radius: 50%;">
+                      <span class="text-white avatar" style="border-radius: 50%; background: #F59E0B">
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-progress-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" /><path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" /><path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" /><path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" /><path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" /><path d="M9 12l2 2l4 -4" /></svg>
                       </span>
                     </a> 
@@ -202,53 +202,122 @@
           </div>
         </div>
       </div>
-      <div class="d-flex mt-3" style="gap: 1rem;">
-        <div class="card finalInvoice chart" style="flex: 6;">
-          <table class="table  table-bordered table-vcenter">
-            <tbody>
-              <tr>
-                <td>Produk</td>
-                <td>{{ $productsCount }}</td>
-                <td>
-                  <a href="{{ url('/products') }}" class="text-success">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>Komoditas</td>
-                <td>{{ $commoditiesCount }}</td>
-                <td>
-                  <a href="{{ url('/commodities') }}" class="text-success">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>User</td>
-                <td>{{ $usersCount }}</td>
-                <td>
-                  <a href="{{ route('clients.index') }}" class="text-success">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>Negara</td>
-                <td>{{ $countriesCount }}</td>
-                <td>
-                  <a href="{{ url('/countries') }}" class="text-success">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card bop chart" style="flex: 6;">
-          <div class="card">
-            <div class="card-body">
-              <div id="chart-horizontal-bar" style="height: 240px;"></div>
+      <div class="container py-4">
+        <div class="row g-4">
+          <!-- Section: Data Summary -->
+          <div class="col-lg-4">
+            <div class="card shadow-sm border-0">
+              <div class="card-header text-white" style="background: #2563EB">
+                <h5 class="mb-0">Data Summary</h5>
+              </div>
+              <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-buildings me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 21v-15c0 -1 1 -2 2 -2h5c1 0 2 1 2 2v15" /><path d="M16 8h2c1 0 2 1 2 2v11" /><path d="M3 21h18" /><path d="M10 12v0" /><path d="M10 16v0" /><path d="M10 8v0" /><path d="M7 12v0" /><path d="M7 16v0" /><path d="M7 8v0" /><path d="M17 12v0" /><path d="M17 16v0" /></svg>
+                        Client Company
+                      </td>
+                      <td class="text-end"><strong>{{ $clientCompany }}</strong></td>
+                      <td>
+                        <a href="{{ url('/products') }}" class="text-primary" title="Go to Products">
+                          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-package me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" /><path d="M12 12l8 -4.5" /><path d="M12 12l0 9" /><path d="M12 12l-8 -4.5" /><path d="M16 5.25l-8 4.5" /></svg>
+                        Packing List
+                      </td>
+                      <td class="text-end"><strong>{{ $packingListCount }}</strong></td>
+                      <td>
+                        <a href="{{ url('/products') }}" class="text-primary" title="Go to Products">
+                          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag-search me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.5 21h-2.926a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304h11.339a2 2 0 0 1 1.977 2.304l-.117 .761" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" /><path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M20.2 20.2l1.8 1.8" /></svg>
+                        Produk
+                      </td>
+                      <td class="text-end"><strong>{{ $productsCount }}</strong></td>
+                      <td>
+                        <a href="{{ url('/products') }}" class="text-primary" title="Go to Products">
+                          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-packages me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" /><path d="M2 13.5v5.5l5 3" /><path d="M7 16.545l5 -3.03" /><path d="M17 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" /><path d="M12 19l5 3" /><path d="M17 16.5l5 -3" /><path d="M12 13.5v-5.5l-5 -3l5 -3l5 3v5.5" /><path d="M7 5.03v5.455" /><path d="M12 8l5 -3" /></svg>
+                        Komoditas
+                      </td>
+                      <td class="text-end"><strong>{{ $commoditiesCount }}</strong></td>
+                      <td>
+                        <a href="{{ url('/commodities') }}" class="text-primary" title="Go to Commodities">
+                          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
+                        User
+                      </td>
+                      <td class="text-end"><strong>{{ $usersCount }}</strong></td>
+                      <td>
+                        <a href="{{ route('clients.index') }}" class="text-primary" title="Go to Users">
+                          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-world me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M3.6 9h16.8" /><path d="M3.6 15h16.8" /><path d="M11.5 3a17 17 0 0 0 0 18" /><path d="M12.5 3a17 17 0 0 1 0 18" /></svg>
+                        Negara
+                      </td>
+                      <td class="text-end"><strong>{{ $countriesCount }}</strong></td>
+                      <td>
+                        <a href="{{ url('/countries') }}" class="text-primary" title="Go to Countries">
+                          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Section: Chart -->
+          <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+              <div class="card-header text-white" style="background: #2563EB">
+                <h5 class="mb-0">Performance Chart</h5>
+              </div>
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <!-- Pie Chart -->
+                  <div id="chart-pie" style="height: 250; width: 60%;"></div>
+                  
+                  <!-- Data Summary -->
+                  <div class="d-flex flex-column align-items-start" style="width: 35%;">
+                    <div class="d-flex align-items-center mb-3">
+                      <span class="dot-indicator me-2" style="background-color: #10B981; width: 20px; height: 20px;"></span>
+                      <div>
+                        <span style="font-size: 18px; font-weight:bold;">${{ number_format($totalLunas, 0, '.', ',') }}</span>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span class="dot-indicator me-2" style="background-color: #FF5733; width: 20px; height: 20px;"></span>
+                      <div>
+                        <span style="font-size: 18px; font-weight:bold;">${{ number_format($totalBelumLunas, 0, '.', ',') }}</span>
+                      </div>
+                    </div>
+                  </div>                                   
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -290,7 +359,7 @@
         grid: {
           strokeDashArray: 4,
         },
-        colors: [tabler.getColor("primary"), tabler.getColor("danger")],
+        colors: ['#3B82F6', '#EF4444'],
         legend: {
           show: true,
           position: "bottom",
@@ -423,68 +492,39 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        window.ApexCharts && (new ApexCharts(document.getElementById('chart-horizontal-bar'), {
-            chart: {
-                type: "bar",
-                fontFamily: 'inherit',
-                height: 200,
-                parentHeightOffset: 0,
-                toolbar: {
-                    show: false,
-                },
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: true,
-                    barHeight: '70%',
-                    // Membuat distribusi batang lebih terpisah
-                    distributed: true, // Agar batang didistribusikan dengan jarak yang jelas
-                },
-            },
-            dataLabels: {
-                enabled: true,
-                style: {
-                    fontSize: '14px',
-                    colors: ['#000'],
-                },
-                formatter: function (val) {
-                    return val; // Format nilai dengan 'k'
-                }
-            },
-            series: [{
-                name: "Total Lunas",
-                data: [{{ $totalLunas }}] // Data yang diteruskan dari controller untuk total lunas
-            }, {
-                name: "Total Belum Lunas",
-                data: [{{ $totalBelumLunas }}] // Data yang diteruskan dari controller untuk total belum lunas
-            }],
-            grid: {
-                padding: {
-                    top: -10,
-                    right: 10,
-                    left: 10,
-                    bottom: 0,
-                },
-            },
-            xaxis: {
-                labels: {
-                    formatter: function (val) {
-                        return val;
-                    },
-                },
-                categories: ['Sudah Lunas', 'Belum Lunas'], // Kategori dengan label 'Lunas' dan 'Belum Lunas'
-                // Menambahkan jarak antar kategori
-                tickAmount: 2,
-                tickPlacement: 'between', // Memastikan jarak di antara kategori
-            },
-            yaxis: {
-                labels: {
-                    show: true,
-                },
-            },
-            colors: ['#7367F0', '#FF5733'], // Menentukan warna batang
-        })).render();
-    });
+  document.addEventListener("DOMContentLoaded", function () {
+    window.ApexCharts && (new ApexCharts(document.getElementById('chart-pie'), {
+      chart: {
+        type: "pie",
+        height: 260,
+        toolbar: {
+          show: false
+        }
+      },
+      labels: ['Sudah Lunas', 'Belum Lunas'],
+      series: [{{ $totalLunas }}, {{ $totalBelumLunas }}],
+      colors: ['#10B981', '#FF5733'],
+      legend: {
+        show: true,
+        position: 'bottom',
+        fontSize: '14px',
+        labels: {
+          colors: ['#000']
+        },
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+          return val.toFixed(1) + "%";
+        },
+        style: {
+          fontSize: '14px',
+          fontFamily: 'Arial, sans-serif',
+          fontWeight: 'bold',
+          colors: ['#000']
+        }
+      },
+    })).render();
+  });
 </script>
 @endsection
