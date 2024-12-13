@@ -168,36 +168,44 @@
           </div>
         </div>
       </div>
-      <div class="d-flex mt-3" style="gap: 1rem;">
-        <div class="card finalInvoice chart" style="flex: 12;">
-          <div class="card-body">
-            <div class="d-flex align-items-center justify-content-between">
-              <h3 class="card-title">Final Invoice</h3>
-              <a href="{{ url('/transaction') }}" title="Final Invoice">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                  <path d="M17 7l-10 10" />
-                  <path d="M8 7l9 0l0 9" />
-                </svg>
-              </a>
-            </div>
-            <div id="chart-completion-tasks" class="chart-lg"></div>
-          </div>
-        </div>
-        <div class="card bop chart" style="flex: 4;">
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex align-items-center justify-content-between">
-                <h3 class="card-title">Bill Of Payment</h3>
-                <a href="{{ route('bill-of-payment.index') }}" title="bill of payment">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M17 7l-10 10" />
-                    <path d="M8 7l9 0l0 9" />
-                  </svg>
-                </a>
+      <div class="col-12 mt-3">
+        <div class="row row-cards">
+          <div class="col-sm-6 col-lg-9">
+            <div class="card card-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h3 class="card-title">Final Invoice</h3>
+                    <a href="{{ url('/transaction') }}" title="Final Invoice">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M17 7l-10 10" />
+                        <path d="M8 7l9 0l0 9" />
+                      </svg>
+                    </a>                         
+                  </div>
+                  <div id="chart-completion-tasks" class="chart-lg"></div>
+                </div>
               </div>
-              <div id="chart-demo-pie" class="chart-lg"></div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card card-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h3 class="card-title">Bill Of Payment</h3>
+                    <a href="{{ route('bill-of-payment.index') }}" title="bill of payment">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up-right">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M17 7l-10 10" />
+                        <path d="M8 7l9 0l0 9" />
+                      </svg>
+                    </a>
+                  </div>
+                  <div id="chart-demo-pie" class="chart-lg"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -206,10 +214,7 @@
         <div class="row g-4">
           <!-- Section: Data Summary -->
           <div class="col-lg-4">
-            <div class="card shadow-sm border-0">
-              <div class="card-header text-white" style="background: #2563EB">
-                <h5 class="mb-0">Data Summary</h5>
-              </div>
+            <div class="card shadow-sm">
               <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                   <tbody>
@@ -292,27 +297,24 @@
           </div>
           <!-- Section: Chart -->
           <div class="col-lg-8">
-            <div class="card shadow-sm border-0">
-              <div class="card-header text-white" style="background: #2563EB">
-                <h5 class="mb-0">Performance Chart</h5>
-              </div>
+            <div class="card shadow-sm">
               <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
                   <!-- Pie Chart -->
                   <div id="chart-pie" style="height: 250; width: 60%;"></div>
-                  
                   <!-- Data Summary -->
                   <div class="d-flex flex-column align-items-start" style="width: 35%;">
+                    <p style="font-weight: bold;">Total Bill of Payment</p>
                     <div class="d-flex align-items-center mb-3">
-                      <span class="dot-indicator me-2" style="background-color: #10B981; width: 20px; height: 20px;"></span>
+                      <span class="dot-indicator me-2" style="background-color: #3B82F6; width: 20px; height: 20px;"></span>
                       <div>
-                        <span style="font-size: 18px; font-weight:bold;">${{ number_format($totalLunas, 0, '.', ',') }}</span>
+                        <span style="font-size: 18px;">${{ number_format($totalLunas, 0, '.', ',') }}</span>
                       </div>
                     </div>
                     <div class="d-flex align-items-center">
-                      <span class="dot-indicator me-2" style="background-color: #FF5733; width: 20px; height: 20px;"></span>
+                      <span class="dot-indicator me-2" style="background-color: #EF4444; width: 20px; height: 20px;"></span>
                       <div>
-                        <span style="font-size: 18px; font-weight:bold;">${{ number_format($totalBelumLunas, 0, '.', ',') }}</span>
+                        <span style="font-size: 18px;">${{ number_format($totalBelumLunas, 0, '.', ',') }}</span>
                       </div>
                     </div>
                   </div>                                   
@@ -340,7 +342,7 @@
         chart: {
           type: "donut",
           fontFamily: "inherit",
-          height: 230,
+          height: 250,
           sparkline: {
             enabled: true
           },
@@ -400,7 +402,6 @@
       }).render();
   });
 </script>
-
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // Fungsi untuk memuat data dari endpoint
@@ -490,7 +491,6 @@
     fetchInvoiceData();
   });
 </script>
-
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     window.ApexCharts && (new ApexCharts(document.getElementById('chart-pie'), {
@@ -503,7 +503,7 @@
       },
       labels: ['Sudah Lunas', 'Belum Lunas'],
       series: [{{ $totalLunas }}, {{ $totalBelumLunas }}],
-      colors: ['#10B981', '#FF5733'],
+      colors: ['#3B82F6', '#EF4444'],
       legend: {
         show: true,
         position: 'bottom',
