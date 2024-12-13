@@ -111,25 +111,35 @@
                         <img id="currentProfilePicture" src="{{ $user->profile_picture_url ? asset('storage/' . $user->profile_picture_url) : 'https://via.placeholder.com/200' }}" 
                              class="img-fluid rounded-circle shadow profile-image-preview" style="width: 120px; height: 120px;">
                     </div>
-                    <div class="mb-5">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" value="{{ $user->username }}" required>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
+                        </div>
                     </div>
-                    <div class="mb-5">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Upload Profile Picture</label>
+                            <input type="file" class="form-control" name="profile_picture" accept="image/*" onchange="previewProfilePicture(event)">
+                        </div>
                     </div>
-                    <div class="mb-5">
-                        <label class="form-label">Upload Profile Picture</label>
-                        <input type="file" class="form-control" name="profile_picture" accept="image/*" onchange="previewProfilePicture(event)">
-                    </div>
-                    <div class="mb-5">
-                        <label class="form-label">Upload Signature (PNG only)</label>
-                        <input type="file" class="form-control" name="signature" accept="image/png" onchange="previewSignature(event)">
-                    </div>
-                    <div class="mb-5">
-                        <img id="currentSignature" src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}" 
-                             class="img-fluid signature-image-preview" style="width: 200px">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Upload Signature (PNG only)</label>
+                            <input type="file" class="form-control" name="signature" accept="image/png" onchange="previewSignature(event)">
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <img id="currentSignature" src="{{ $user->signature_url ? asset('storage/' . $user->signature_url) : 'https://via.placeholder.com/200x100' }}" 
+                                 class="img-fluid signature-image-preview" style="width: 200px">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
