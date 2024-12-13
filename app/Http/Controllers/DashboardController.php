@@ -12,6 +12,7 @@ use App\Models\Country;
 use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Company;
+use App\Models\Consignee;
 use App\Models\PaymentDetail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,7 @@ class DashboardController extends Controller
     {
         $commoditiesCount = Commodity::count();
         $countriesCount = Country::count();
+        $consigneeCount = Consignee::count();
         $usersCount = User::count();
         $transactionsCount = Transaction::count();
         $companyCount = Company::count();
@@ -74,6 +76,7 @@ class DashboardController extends Controller
             'clientCompany',
             'sumTotalBop',
             'sumTotalPayment',
+            'consigneeCount',
         ))->with('title', "Hallo, $userName");
     }
 

@@ -214,18 +214,18 @@
         <div class="row g-4">
           <!-- Section: Data Summary -->
           <div class="col-lg-4">
-            <div class="card shadow-sm">
+            <div class="card">
               <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                   <tbody>
                     <tr>
                       <td>
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-buildings me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 21v-15c0 -1 1 -2 2 -2h5c1 0 2 1 2 2v15" /><path d="M16 8h2c1 0 2 1 2 2v11" /><path d="M3 21h18" /><path d="M10 12v0" /><path d="M10 16v0" /><path d="M10 8v0" /><path d="M7 12v0" /><path d="M7 16v0" /><path d="M7 8v0" /><path d="M17 12v0" /><path d="M17 16v0" /></svg>
-                        Client Company
+                        Perusahaan Client
                       </td>
                       <td class="text-end"><strong>{{ $clientCompany }}</strong></td>
                       <td>
-                        <a href="{{ url('/products') }}" class="text-primary" title="Go to Products">
+                        <a href="{{ route('client-companies.index') }}" class="text-primary" title="Perusahaan Client">
                           <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
                         </a>
                       </td>
@@ -237,7 +237,7 @@
                       </td>
                       <td class="text-end"><strong>{{ $packingListCount }}</strong></td>
                       <td>
-                        <a href="{{ url('/products') }}" class="text-primary" title="Go to Products">
+                        <a href="{{ url('/transaction') }}" class="text-primary" title="Packing List">
                           <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
                         </a>
                       </td>
@@ -249,7 +249,7 @@
                       </td>
                       <td class="text-end"><strong>{{ $productsCount }}</strong></td>
                       <td>
-                        <a href="{{ url('/products') }}" class="text-primary" title="Go to Products">
+                        <a href="{{ url('/products') }}" class="text-primary" title="Produk">
                           <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
                         </a>
                       </td>
@@ -261,23 +261,58 @@
                       </td>
                       <td class="text-end"><strong>{{ $commoditiesCount }}</strong></td>
                       <td>
-                        <a href="{{ url('/commodities') }}" class="text-primary" title="Go to Commodities">
+                        <a href="{{ url('/commodities') }}" class="text-primary" title="Komoditas">
                           <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
                         </a>
                       </td>
                     </tr>
-                    <tr>
-                      <td>
-                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
-                        User
-                      </td>
-                      <td class="text-end"><strong>{{ $usersCount }}</strong></td>
-                      <td>
-                        <a href="{{ route('clients.index') }}" class="text-primary" title="Go to Users">
-                          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
-                        </a>
-                      </td>
-                    </tr>
+                    @if (auth()->user()->role === 'admin')
+                  <tr>
+                    <td>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users me-2">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                      </svg>
+                      User
+                    </td>
+                    <td class="text-end"><strong>{{ $usersCount }}</strong></td>
+                    <td>
+                      <a href="{{ route('users.index') }}" class="text-primary" title="Data User">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M3 17l6 -6l4 4l8 -8" />
+                          <path d="M14 7l7 0l0 7" />
+                        </svg>
+                      </a>
+                    </td>
+                  </tr>
+                  @else
+                  <tr>
+                    <td>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                      </svg>
+                      Consignee
+                    </td>
+                    <td class="text-end"><strong>{{ $consigneeCount }}</strong></td>
+                    <td>
+                      <a href="{{ route('clients.index') }}" class="text-primary" title="Data Consignee">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M3 17l6 -6l4 4l8 -8" />
+                          <path d="M14 7l7 0l0 7" />
+                        </svg>
+                      </a>
+                    </td>
+                  </tr>
+                  @endif
                     <tr>
                       <td>
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-world me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M3.6 9h16.8" /><path d="M3.6 15h16.8" /><path d="M11.5 3a17 17 0 0 0 0 18" /><path d="M12.5 3a17 17 0 0 1 0 18" /></svg>
@@ -285,7 +320,7 @@
                       </td>
                       <td class="text-end"><strong>{{ $countriesCount }}</strong></td>
                       <td>
-                        <a href="{{ url('/countries') }}" class="text-primary" title="Go to Countries">
+                        <a href="{{ url('/countries') }}" class="text-primary" title="Negara">
                           <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
                         </a>
                       </td>
