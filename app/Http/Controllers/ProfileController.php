@@ -22,7 +22,7 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id, // Validasi untuk username
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'password' => 'nullable|string|min:3|confirmed',
             'signature' => 'nullable|image|mimes:png|max:2048',
             'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -30,8 +30,7 @@ class ProfileController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->username = $request->username; // Menyimpan perubahan username
-
+        $user->username = $request->username; 
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }
