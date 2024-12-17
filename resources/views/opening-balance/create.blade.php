@@ -100,10 +100,13 @@
                                 <input type="hidden" class="form-control" id="selectedClientCompanyId"
                                     name="id_client_company">
 
-                                <div class="text-end">
-                                    <button type="reset" class="btn btn-secondary">Reset</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </div>
+                                    <div class="mt-7 d-flex justify-content-between">
+                                        <a href="{{ route('opening-balance.index', ['dropdown_open' => true]) }}" class="btn btn-outline-primary me-3">Kembali</a>
+                                        <div class="d-flex gap-2">
+                                            <button type="reset" class="btn btn-secondary">Reset</button>
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </div>                                    
                             </form>
                         </div>
                     </div>
@@ -120,7 +123,7 @@
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body">
+                <div  id="rekap-table" class="modal-body">
                     <table class="table card-table table-vcenter text-nowrap" id="clientsModalTable">
                         <thead>
                             <tr>
