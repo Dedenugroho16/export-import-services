@@ -277,7 +277,7 @@
                                     </li>
                                     <li>
                                         <a class="dropdown-item {{ Request::is('transaction') && !Request::is('proforma*') && !Request::is('incomplete-invoice*') ? 'active-item' : '' }}" href="{{ url('/transaction') }}">
-                                            Final Invoice
+                                            Final Invoices
                                         </a>
                                     </li>
                                 </ul>
