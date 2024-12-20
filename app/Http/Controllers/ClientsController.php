@@ -6,6 +6,7 @@ use App\Models\Clients;
 use App\Models\Consignee;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
+use App\Models\Client;
 use App\Models\ClientCompany;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -80,14 +81,22 @@ class ClientsController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
+            'client_companies' => 'required|array',
+            'client_companies.*' => 'exists:client_company,id',
         ]);
 
-        Clients::create($request->all());
+        $client = Clients   ::create([
+            'name' => $validatedData['name'],
+        ]);
 
-        return redirect()->route('clients.index')->with('success', 'Data berhasil ditambahkan.');
+        // Simpan relasi dengan client_company di tabel pivot
+        $client->clientCompanies()->sync($validatedData['client_companies']);
+
+        return redirect()->route('clients.index')->with('success', 'Data client berhasil ditambahkan.');
     }
+
 
     public function show($hash)
     {

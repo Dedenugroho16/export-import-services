@@ -25,6 +25,11 @@
                                 <label for="name" class="form-label">Nama</label>
                                 <input type="text" id="name" name="name" class="form-control" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="client_companies" class="form-label">Pilih Perusahaan</label>
+                                <select id="client_companies" name="client_companies[]" class="form-control" multiple required>
+                                </select>
+                            </div>
                             <div class="text-end">
                                 <a href="{{ route('clients.index') }}" class="btn btn-outline-primary">Kembali</a>
                                 <button type="submit" class="btn btn-primary">Tambah</button>
@@ -38,36 +43,36 @@
 </div>
 
 <script>
-    // Inisialisasi Select2 untuk input company_name
-    $('#client_company_id').select2({
+    // Inisialisasi Select2 untuk input client_companies
+    $('#client_companies').select2({
         ajax: {
-            url: '{{ route('ajax-companies') }}',  // Menggunakan route yang sudah dibuat
+            url: '{{ route('ajax-companies') }}', // Route untuk mengambil data perusahaan
             dataType: 'json',
-            delay: 250,  // Mengatur delay sebelum melakukan pencarian
+            delay: 250,
             data: function(params) {
                 return {
-                    q: params.term  // Mengirimkan kata kunci pencarian ke server
+                    q: params.term // Kata kunci pencarian
                 };
             },
             processResults: function(data) {
                 return {
                     results: data.map(function(company) {
                         return {
-                            id: company.id,  // Menyimpan ID perusahaan
-                            text: company.company_name  // Menampilkan nama perusahaan
+                            id: company.id, // ID perusahaan
+                            text: company.company_name // Nama perusahaan
                         };
                     })
                 };
             },
             cache: true
         },
-        placeholder: "Pilih Nama Perusahaan",  // Placeholder saat belum ada pilihan
+        placeholder: "Pilih Nama Perusahaan",
         templateResult: function(company) {
-            if (company.loading) return company.text;  // Tampilkan saat loading
-            return $('<span>' + company.text + '</span>');  // Tampilkan nama perusahaan
+            if (company.loading) return company.text;
+            return $('<span>' + company.text + '</span>');
         },
         templateSelection: function(company) {
-            return $('<span>' + company.text + '</span>');  // Tampilkan nama perusahaan setelah dipilih
+            return $('<span>' + company.text + '</span>');
         }
     });
 </script>

@@ -4,22 +4,23 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateClientClientCompanyTable extends Migration
 {
-
     public function up()
     {
         Schema::create('client_client_company', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->foreignId('client_company_id')->constrained('client_company')->onDelete('cascade');
+            $table->unsignedBigInteger('client_id');
+            $table->unsignedBigInteger('client_company_id');
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('client_company_id')->references('id')->on('client_company')->onDelete('cascade');
         });
     }
 
-
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('client_client_company');
     }
-};
+}

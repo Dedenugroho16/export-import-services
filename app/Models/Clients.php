@@ -30,7 +30,7 @@ class Clients extends Model
 
     public function clientCompanies()
     {
-        return $this->belongsToMany(ClientCompany::class, 'client_client_company', 'client_id', 'client_company_id');
+        return $this->belongsToMany(ClientCompany::class, 'client_client_company', 'client_id', 'client_company_id')->withTimestamps();
     }
 
 }
