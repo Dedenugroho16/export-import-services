@@ -28,4 +28,9 @@ class Clients extends Model
         return $this->hasMany(BillOfPayment::class, 'id_client');
     }
 
+    public function clientCompanies()
+    {
+        return $this->belongsToMany(ClientCompany::class, 'client_client_company', 'client_id', 'client_company_id');
+    }
+
 }
