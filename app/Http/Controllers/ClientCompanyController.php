@@ -12,7 +12,7 @@ class ClientCompanyController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $client_company = ClientCompany::select('id', 'company_name');
+            $client_company = ClientCompany::query();
             return DataTables::of($client_company)
             ->addColumn('action', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
@@ -62,6 +62,10 @@ class ClientCompanyController extends Controller
     {
         $request->validate([
             'company_name' => 'required|max:255',
+            'address' => 'required|string',
+            'PO_BOX' => 'nullable|string',
+            'tel' => 'required|string|max:20',
+            'fax' => 'nullable|string|max:20',
         ]);
 
         ClientCompany::create($request->all());
@@ -90,6 +94,10 @@ class ClientCompanyController extends Controller
 
         $request->validate([
             'company_name' => 'required|max:255',
+            'address' => 'required|string',
+            'PO_BOX' => 'nullable|string',
+            'tel' => 'required|string|max:20',
+            'fax' => 'nullable|string|max:20',
         ]);
 
         $client_company = ClientCompany::findOrFail($id);

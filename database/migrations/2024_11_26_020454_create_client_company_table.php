@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('client_company', function (Blueprint $table) {
             $table->id();
             $table->string('company_name');
+            $table->text('address');
+            $table->string('PO_BOX')->nullable();
+            $table->string('tel');
+            $table->string('fax')->nullable();
             $table->timestamps();
 
         });

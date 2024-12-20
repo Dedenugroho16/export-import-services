@@ -29,26 +29,6 @@
                                 <th>Nama Client</th>
                                 <td>{{ $client->name }}</td>
                             </tr>
-                            <tr>
-                                <th>Nama Perusahaan</th>
-                                <td>{{ $client->company->company_name ?? 'N/A' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Alamat</th>
-                                <td>{{ $client->address }}</td>
-                            </tr>
-                            <tr>
-                                <th>PO BOX</th>
-                                <td>{{ $client->PO_BOX }}</td>
-                            </tr>
-                            <tr>
-                                <th>Telepon</th>
-                                <td>{{ $client->tel }}</td>
-                            </tr>
-                            <tr>
-                                <th>Fax</th>
-                                <td>{{ $client->fax }}</td> 
-                            </tr>
                         </tbody>
                     </table>                   
                     

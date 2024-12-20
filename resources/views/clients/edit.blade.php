@@ -30,27 +30,6 @@
                             </div>
                             <div class="mb-3">
                                 <label for="client_company_id" class="form-label">Nama Perusahaan</label>
-                                <select class="form-control" id="client_company_id" name="client_company_id" required>
-                                    @if($client->company)
-                                        <option value="{{ $client->company->id }}" selected>{{ $client->company->company_name }}</option>
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Alamat</label>
-                                <textarea id="address" name="address" class="form-control" required>{{ old('address', $client->address) }}</textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="PO_BOX" class="form-label">PO BOX</label>
-                                <input type="text" id="PO_BOX" name="PO_BOX" class="form-control" value="{{ old('PO_BOX', $client->PO_BOX) }}">
-                            </div>
-                            <div class="mb-3">
-                                <label for="tel" class="form-label">Telepon</label>
-                                <input type="text" id="tel" name="tel" class="form-control" value="{{ old('tel', $client->tel) }}" required>
-                            </div>
-                            <div class="mb-5">
-                                <label for="fax" class="form-label">Fax</label>
-                                <input type="text" id="fax" name="fax" class="form-control" value="{{ old('fax', $client->fax) }}">
                             </div>
                             <div class="text-end">
                                 <a href="javascript:void(0);" class="btn btn-outline-primary" onclick="window.history.back();">Kembali</a>

@@ -14,8 +14,7 @@ class ClientsController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $client = Clients::with('company')->get();
-
+            $client = Clients::query();
             return DataTables::of($client)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
@@ -83,10 +82,6 @@ class ClientsController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'PO_BOX' => 'nullable|string',
-            'tel' => 'required|string|max:20',
-            'fax' => 'nullable|string|max:20',
         ]);
 
         Clients::create($request->all());
@@ -114,10 +109,6 @@ class ClientsController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'PO_BOX' => 'nullable|string',
-            'tel' => 'required|string|max:20',
-            'fax' => 'nullable|string|max:20',
         ]);
 
         $client = Clients::findOrFail($id);

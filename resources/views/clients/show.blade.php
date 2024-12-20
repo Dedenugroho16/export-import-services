@@ -45,29 +45,8 @@
                                         <th>Nama Client</th>
                                         <td>{{ $client->name }}</td>
                                     </tr>
-                                    <tr>
-                                        <th>Nama Perusahaan</th>
-                                        <td>{{ $client->company->company_name ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Alamat</th>
-                                        <td style="word-wrap: break-word; max-width: 300px;">{{ $client->address }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>PO Box</th>
-                                        <td>{{ $client->PO_BOX }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Telepon</th>
-                                        <td>{{ $client->tel }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Fax</th>
-                                        <td>{{ $client->fax }}</td>
-                                    </tr>
                                 </tbody>
                             </table>
-
                             <div class="mt-5 d-flex justify-content-end">
                                 <a href="{{ route('clients.index') }}" class="btn btn-primary">Kembali</a>
                             </div>
