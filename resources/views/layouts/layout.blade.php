@@ -196,13 +196,13 @@
                                 </a>
                                 <ul class="dropdown-menu {{ Request::is('client-companies*') || Request::is('clients*') ? 'show' : '' }}" aria-labelledby="clientsDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('clients*') ? 'active-item' : '' }}" href="{{ route('clients.index') }}">
-                                            Client
+                                        <a class="dropdown-item {{ Request::is('client-companies*') ? 'active-item' : '' }}" href="{{ route('client-companies.index') }}">
+                                            Perusahaan Client
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item {{ Request::is('client-companies*') ? 'active-item' : '' }}" href="{{ route('client-companies.index') }}">
-                                            Perusahaan Client
+                                        <a class="dropdown-item {{ Request::is('clients*') ? 'active-item' : '' }}" href="{{ route('clients.index') }}">
+                                            Client
                                         </a>
                                     </li>
                                 </ul>
