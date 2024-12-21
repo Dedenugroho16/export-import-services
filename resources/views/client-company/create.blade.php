@@ -29,9 +29,25 @@
 
                         <form action="{{ route('client-companies.store') }}" method="POST">
                             @csrf
-                            <div class="mb-5">
+                            <div class="mb-3">
                                 <label for="company_name" class="form-label">Nama Perusahaan</label>
                                 <input type="text" id="company_name" name="company_name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Alamat</label>
+                                <textarea id="address" name="address" class="form-control" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="PO_BOX" class="form-label">PO BOX</label>
+                                <input type="text" id="PO_BOX" name="PO_BOX" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tel" class="form-label">Telepon</label>
+                                <input type="text" id="tel" name="tel" class="form-control" required>
+                            </div>
+                            <div class="mb-5">
+                                <label for="fax" class="form-label">Fax</label>
+                                <input type="text" id="fax" name="fax" class="form-control" required>
                             </div>
                             <div class="text-end">
                                 <a href="{{ route('client-companies.index') }}" class="btn btn-outline-primary">

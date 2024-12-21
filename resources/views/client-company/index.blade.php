@@ -44,6 +44,10 @@
                                     <tr>
                                         <th class="text-center">No</th>
                                         <th class="text-center">Nama Perusahaan</th>
+                                        <th class="text-center">Alamat</th>
+                                        <th class="text-center">PO BOX</th>
+                                        <th class="text-center">Telepon</th>
+                                        <th class="text-center">Fax</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -82,7 +86,11 @@
                     orderable: false,
                     searchable: false
                 },
-                { data: 'company_name', name: 'company_name', class: 'text-center' },
+                { data: 'company_name', name: 'company_name'},
+                { data: 'address', name: 'address' },
+                { data: 'PO_BOX', name: 'PO_BOX', class: 'text-center' },
+                { data: 'tel', name: 'tel', class: 'text-center' },
+                { data: 'fax', name: 'fax', class: 'text-center' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
             ],
             language: {
@@ -99,14 +107,11 @@
             },
             lengthMenu: [5, 10, 25, 50], // Tentukan jumlah data yang ditampilkan per halaman
             pageLength: 10,
-
-            drawCallback: function() {                              
-                $('#clientCompanyTable td:nth-child(2), #clientCompanyTable th:nth-child(2)').css({
-                    'width': '70%', 
-                   });
-                $('#clientCompanyTable td:nth-child(3), #clientCompanyTable th:nth-child(3)').css({
-                    'max-width': '30%',
-                    'text-align': 'right'
+            drawCallback: function() {
+                $('#clientCompanyTable td:nth-child(2), #clientCompanyTable td:nth-child(3)').css({
+                    'max-width': '250px',
+                    'white-space': 'normal',
+                    'word-wrap': 'break-word'
                 });
             }
         });

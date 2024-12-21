@@ -10,26 +10,13 @@ class Clients extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'address',
-        'PO_BOX',
-        'tel',
-        'fax',
-        'client_company_id', 
+        'name' 
     ];
-
-    
-    public function clientCompany()
-    {
-        return $this->belongsTo(ClientCompany::class, 'client_company_id');
-    }
-
 
     public function consignees()
     {
         return $this->hasMany(Consignee::class, 'id_client');
     }
-
 
     public function transactions()
     {
@@ -41,8 +28,9 @@ class Clients extends Model
         return $this->hasMany(BillOfPayment::class, 'id_client');
     }
 
-    public function company()
+    public function clientCompanies()
     {
-        return $this->belongsTo(ClientCompany::class, 'client_company_id');
+        return $this->belongsToMany(ClientCompany::class, 'client_client_company', 'client_id', 'client_company_id')->withTimestamps();
     }
+
 }
