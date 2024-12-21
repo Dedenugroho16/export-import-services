@@ -15,8 +15,8 @@ class CreateDetailProductsTable extends Migration
             $table->integer('pcs');
             $table->string('dimension');
             $table->string('type');
-            $table->string('color');
-            $table->decimal('price', 10, 2);
+            $table->string('color')->nullable();
+            $table->decimal('price', 10, 2)->nullable();
             $table->timestamps();
 
             $table->foreign('id_product')->references('id')->on('products')->onDelete('cascade');
