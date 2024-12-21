@@ -81,6 +81,8 @@ Route::get('detail-products/create/{hash}', [DetailProductController::class, 'cr
 
 
 // Country Routes using resource
+Route::get('countries/import', [CountryController::class, 'import'])->name('countries.import');
+Route::post('countries/import-process', [CountryController::class, 'importProcess'])->name('countries.import-process');
 Route::resource('countries', CountryController::class);
 
 // Company Routes using resource
@@ -200,6 +202,8 @@ Route::get('/payment-details/{hash}/create', [PaymentDetailController::class, 'c
 Route::get('/opening-balance/create', [PaymentDetailController::class, 'openingBalanceCreate'])->name('opening-balance.create');
 Route::post('/opening-balance/store', [PaymentDetailController::class, 'openingBalanceStore'])->name('opening-balance.store');
 Route::get('/opening-balance', [PaymentDetailController::class, 'openingBalanceIndex'])->name('opening-balance.index');
+Route::get('/opening-balance/{hashId}/edit', [PaymentDetailController::class, 'openingBalanceEdit'])->name('opening-balance.edit');
+Route::put('/opening-balance/{hashId}', [PaymentDetailController::class, 'openingBalanceUpdate'])->name('opening-balance.update');
 Route::get('/payment-details/{hash}/edit', [PaymentDetailController::class, 'edit'])->name('payment-details.edit');
 Route::get('/payment-details/{hash}', [PaymentDetailController::class, 'show'])->name('payment-details.show');
 Route::get('/payment-details/{hashedId}/export-pdf', [PaymentDetailController::class, 'exportPdf'])->name('payment-details.exportPdf');
@@ -218,3 +222,5 @@ Route::post('/payment-details/update/{id}', [PaymentDetailController::class, 'up
 // Client Company Route
 Route::resource('client-companies', ClientCompanyController::class);
 Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
+
+Route::get('/invoice-data', [DashboardController::class, 'getInvoiceData']);

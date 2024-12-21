@@ -91,7 +91,7 @@
 
                                 <div class="mb-3">
                                     <label for="total" class="form-label">Payment</label>
-                                    <input type="number" class="form-control" id="total" name="total"
+                                    <input type="text" class="form-control" id="total" name="total"
                                         placeholder="Enter Payment">
                                 </div>
 
@@ -100,10 +100,13 @@
                                 <input type="hidden" class="form-control" id="selectedClientCompanyId"
                                     name="id_client_company">
 
-                                <div class="text-end">
-                                    <button type="reset" class="btn btn-secondary">Reset</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </div>
+                                    <div class="mt-7 d-flex justify-content-between">
+                                        <a href="{{ route('opening-balance.index', ['dropdown_open' => true]) }}" class="btn btn-outline-primary me-3">Kembali</a>
+                                        <div class="d-flex gap-2">
+                                            <button type="reset" class="btn btn-secondary">Reset</button>
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </div>                                    
                             </form>
                         </div>
                     </div>
@@ -120,7 +123,7 @@
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body">
+                <div  id="rekap-table" class="modal-body">
                     <table class="table card-table table-vcenter text-nowrap" id="clientsModalTable">
                         <thead>
                             <tr>
@@ -357,5 +360,19 @@
             // Menetapkan nilai input #month
             $('#month').val(monthYear);
         });
+        $(document).ready(function() {
+        // Format the 'total' input value with commas as the user types
+        $('#total').on('input', function() {
+            var value = $(this).val().replace(/\D/g, ''); // Remove non-numeric characters
+            $(this).val(value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')); // Add commas as thousands separator
+        });
+
+        // Optional: When submitting the form, remove commas
+        $('#formBOP').on('submit', function() {
+            var paymentValue = $('#total').val();
+            var formattedValue = paymentValue.replace(/,/g, ''); // Remove commas
+            $('#total').val(formattedValue); // Set the raw value without commas
+        });
+    });
     </script>
 @endsection

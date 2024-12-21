@@ -22,6 +22,7 @@ class ClientsFactory extends Factory
             'PO_BOX' => $this->faker->postcode,
             'tel' => $this->faker->phoneNumber,
             'fax' => $this->faker->phoneNumber,
+            'client_company_id' => $this->faker->numberBetween(1, 10),
         ];
     }
 }

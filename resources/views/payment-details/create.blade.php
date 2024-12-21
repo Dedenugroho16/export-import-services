@@ -129,16 +129,16 @@
                             <form id="formPaymentDetails" class="mt-2" method="POST"
                                 action="{{ route('payment-details.store') }}">
                                 @csrf
-                                <input type="date" name="date" id="date">
-                                <input type="" id="id_bill_of_payment" name="id_bill_of_payment"
+                                <input type="hidden" name="date" id="date">
+                                <input type="hidden" id="id_bill_of_payment" name="id_bill_of_payment"
                                     value="{{ $billOfPayment->id }}">
-                                <input type="" id="payment_number" name="payment_number">
-                                <input type="" id="selectedClientId" name="id_client"
+                                <input type="hidden" id="payment_number" name="payment_number">
+                                <input type="hidden" id="selectedClientId" name="id_client"
                                     value="{{ $billOfPayment->client->id }}">
-                                <input type="" id="selectedCompanyId" name="id_client_company"
+                                <input type="hidden" id="selectedCompanyId" name="id_client_company"
                                     value="{{ $billOfPayment->client && $billOfPayment->client->clientCompany 
                                     ? $billOfPayment->client->clientCompany->id : '' }}">
-                                <input type="" id="total" name="total">
+                                <input type="hidden" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
@@ -218,7 +218,7 @@
                                                     <td class="text-center paid">${formattedPaid}</td>
                                                     <td class="text-center" style="width:150px;">
                                                         <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer">
-                                                        <input type="" name="transactions[${data.id}][transfered]" class="form-control transfered" placeholder="Uang ditransfer">
+                                                        <input type="hidden" name="transactions[${data.id}][transfered]" class="form-control transfered" placeholder="Uang ditransfer">
                                                     </td>
                                                     <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
                                                 </tr>

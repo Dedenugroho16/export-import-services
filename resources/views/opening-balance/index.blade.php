@@ -21,8 +21,17 @@
         <div class="card">
             <div class="card-body">
                 @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show">
-                        {{ session('success') }}
+                    <div class="alert alert-important alert-success alert-dismissible" role="alert">
+                        <div class="d-flex">
+                            <div>
+                                <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                            </div>
+                            <div>
+                                {{ session('success') }}
+                            </div>
+                        </div>
+                        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
                     </div>
                 @endif
                 <h3>Daftar Balance</h3>
@@ -37,6 +46,7 @@
                                 <th class="text-center">Client Company Name</th>
                                 <th class="text-center">Total</th>
                                 <th class="text-center">Dibuat Oleh</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,19 +62,19 @@
 <!-- Script DataTables -->
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#openingBalanceTable').DataTable({
-            processing: true, // Menampilkan loading saat data diproses
-            serverSide: true, // Menyatakan DataTables akan menggunakan server side processing
-            ajax: "{{ route('opening-balance.index') }}", // URL untuk request data
+        var table = $('#openingBalanceTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('opening-balance.index') }}",
             columns: [
                 { 
-                    data: null,  // Kolom nomor urut, dihitung di frontend
+                    data: null,
                     class: 'text-center',
                     render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut berdasarkan posisi data
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     },
-                    orderable: false, // Kolom ini tidak dapat diurutkan
-                    searchable: false // Kolom ini tidak dapat dicari
+                    orderable: false,
+                    searchable: false
                 },
                 { data: 'payment_number', name: 'payment_number', class: 'text-center' },
                 { data: 'date', name: 'date', class: 'text-center' },
@@ -78,7 +88,14 @@
                         return parseFloat(data).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     }
                 },
-                { data: 'created_by_name', name: 'created_by_name', class: 'text-center' }
+                { data: 'created_by_name', name: 'created_by_name', class: 'text-center' },
+                { 
+                    data: 'action', 
+                    name: 'action', 
+                    class: 'text-center',
+                    orderable: false,
+                    searchable: false
+                }
             ],
             language: {
                 lengthMenu: "Tampilkan _MENU_ Data",
@@ -95,6 +112,11 @@
             lengthMenu: [5, 10, 25, 50],
             pageLength: 10
         });
+    });
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('.alert-dismissible').fadeOut();
+        }, 3000);
     });
 </script>
 @endsection

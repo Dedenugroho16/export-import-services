@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Final Invoice')
+@section('title', 'Final Invoices')
 
 @section('content')
     <div class="page-body">
@@ -30,7 +30,7 @@
             @else
                 <div class="card">
                     <div class="card-body">
-                        <h3>Daftar Final Invoice</h3>
+                        <h3>Daftar Final Invoices</h3>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap" id="invoiceTable">
                                 <thead>

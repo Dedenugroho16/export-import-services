@@ -22,6 +22,17 @@
         .table-responsive {
             overflow-x: auto;
         }
+        .approve-section {
+        width: auto;
+        border: none;
+        text-align: center;
+        float: right;
+        margin-top: 10mm;
+        }
+        .approve-section th, .approve-section td {
+            border: none;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
@@ -111,5 +122,20 @@
             </h4>
         </div>
     </div>
+
+    <table class="approve-section">
+        <tr>
+            <td>Cianjur, {{ now()->format('F d, Y') }}</td>
+        </tr>
+        <tr>
+            <td><img src="{{ $signature }}" alt="Tanda Tangan" style="width: 100px; margin-top:5mm;"></td>
+        </tr>
+        <tr>
+            <td>{{ $user->name }}</td>
+        </tr>
+        <tr>
+            <td>{{ $user->role }}</td>
+        </tr>
+    </table>
 </body>
 </html>
