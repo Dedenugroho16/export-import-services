@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Import Client Companies')
+@section('title', 'Import Clients')
 
 @section('content')
     <div class="page-body">
@@ -9,7 +9,7 @@
                     <div class="col-md-6">
                         <div class="card shadow-sm">
                             <div class="card-header bg-primary text-white text-center">
-                                <a href="{{ route('client-companies.index') }}" class="text-secondary" title="Kembali">
+                                <a href="{{ route('clients.index') }}" class="text-secondary" title="Kembali">
                                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="white"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-left me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
                                 </a>
                                 <h4 class="mb-0">Import Data Excel</h4>
@@ -36,7 +36,7 @@
                                         });
                                     </script>
                                 @endif
-                                <form action="{{ route('client-companies.import-process') }}" method="POST"
+                                <form action="{{ route('clients.import-process') }}" method="POST"
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="mb-3">

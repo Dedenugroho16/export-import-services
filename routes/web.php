@@ -39,6 +39,8 @@ Route::get('/ajax-companies', function (Request $request) {
 
 
 // Client Routes using resource
+Route::get('clients/import', [ClientsController::class, 'import'])->name('clients.import');
+Route::post('clients/import-process', [ClientsController::class, 'importProcess'])->name('clients.import-process');
 Route::resource('clients', ClientsController::class);
 Route::get('clients', [ClientsController::class, 'index'])->name('clients.index');
 

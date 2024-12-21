@@ -7,6 +7,8 @@ use App\Models\Consignee;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\ClientCompany;
+use App\Imports\ClientsImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class ClientsController extends Controller
@@ -71,7 +73,30 @@ class ClientsController extends Controller
         return view('clients.index');
     }
 
+    public function import()
+    {
+        return view('clients.import');
+    }
 
+    public function importProcess(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ], [
+            'file.required' => 'File wajib diunggah.',
+            'file.mimes' => 'File harus berupa Excel dengan format xlsx atau xls.',
+        ]);
+
+        try {
+            Excel::import(new ClientsImport, $request->file('file'));
+
+            return redirect()->route('clients.index')
+                ->with('success', 'Data berhasil diimpor.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', $e->getMessage());
+        }
+    }
 
     public function create()
     {
