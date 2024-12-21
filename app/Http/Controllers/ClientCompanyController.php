@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\ClientCompany;
-use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ClientCompaniesImport;
 use Yajra\DataTables\Facades\DataTables;
 
 class ClientCompanyController extends Controller
@@ -51,7 +53,31 @@ class ClientCompanyController extends Controller
         return view('client-company.index');
     }
 
- 
+    public function import()
+    {
+        return view('client-company.import');
+    }
+
+    public function importProcess(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ], [
+            'file.required' => 'File wajib diunggah.',
+            'file.mimes' => 'File harus berupa Excel dengan format xlsx atau xls.',
+        ]);
+
+        try {
+            Excel::import(new ClientCompaniesImport, $request->file('file'));
+
+            return redirect()->route('client-companies.index')
+                ->with('success', 'Data berhasil diimpor.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', $e->getMessage());
+        }
+    }
+
     public function create()
     {
         return view('client-company.create');

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('company_name');
             $table->text('address');
             $table->string('PO_BOX')->nullable();
-            $table->string('tel');
+            $table->string('tel')->nullable();
             $table->string('fax')->nullable();
             $table->timestamps();
 

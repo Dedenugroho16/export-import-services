@@ -223,6 +223,8 @@ Route::post('/payments/update', [PaymentController::class, 'update'])->name('pay
 Route::post('/payment-details/store', [PaymentDetailController::class, 'store'])->name('payment-details.store');
 Route::post('/payment-details/update/{id}', [PaymentDetailController::class, 'update'])->name('payment-details.update');
 // Client Company Route
+Route::get('client-companies/import', [ClientCompanyController::class, 'import'])->name('client-companies.import');
+Route::post('client-companies/import-process', [ClientCompanyController::class, 'importProcess'])->name('client-companies.import-process');
 Route::resource('client-companies', ClientCompanyController::class);
 Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
 
