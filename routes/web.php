@@ -23,6 +23,7 @@ use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\PaymentDetailController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\DetailTransactionController;
+use Illuminate\Http\Request;
 
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
@@ -226,3 +227,9 @@ Route::resource('client-companies', ClientCompanyController::class);
 Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
 
 Route::get('/invoice-data', [DashboardController::class, 'getInvoiceData']);
+Route::get('/ajax-companies', function (Request $request) {
+    $query = $request->get('q');
+    $companies = \App\Models\ClientCompany::where('company_name', 'like', "%{$query}%")
+        ->get(['id', 'company_name']);
+    return response()->json($companies);
+})->name('ajax-companies');

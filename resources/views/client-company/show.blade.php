@@ -49,6 +49,32 @@
                                         <th>Nama Perusahaan</th>
                                         <td>{{ $client_company->company_name }}</td>
                                     </tr>
+                                    <tr>
+                                        <th>Alamat</th>
+                                        <td style="word-wrap: break-word; max-width: 300px;">{{ $client_company->address }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>PO Box</th>
+                                        <td>{{ $client_company->PO_BOX }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Telepon</th>
+                                        <td>{{ $client_company->tel }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fax</th>
+                                        <td>{{ $client_company->fax }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nama Client</th>
+                                        <td>
+                                            <ul>
+                                                @foreach($clients as $client)
+                                                    <li>{{ $client->name }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
 

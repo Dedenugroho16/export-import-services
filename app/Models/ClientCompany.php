@@ -9,12 +9,14 @@ class ClientCompany extends Model
 {
     use HasFactory;
     protected $table = 'client_company';
-    protected $fillable = ['company_name'];
-
-    public function clients()
-    {
-        return $this->hasMany(Clients::class, 'client_company_id', 'id');
-    }
+    protected $fillable = [
+        'company_name',
+        'address',
+        'PO_BOX',
+        'tel',
+        'fax',
+    ];
+    
 
     public function paymentDetails()
     {
@@ -25,4 +27,10 @@ class ClientCompany extends Model
     {
         return $this->hasMany(BillOfPayment::class, 'id_client_company', 'id');
     }
+
+    public function clients()
+    {
+        return $this->belongsToMany(Clients::class, 'client_client_company', 'client_company_id', 'client_id');
+    }
+
 }

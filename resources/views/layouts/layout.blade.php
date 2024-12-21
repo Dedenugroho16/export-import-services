@@ -291,38 +291,40 @@
                                     <span class="nav-link-title">Rekap Sales</span>
                                 </a>
                             </li>
-        
-                            <li class="nav-item dropdown {{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'show' : '' }}">
-                                <a class="nav-link dropdown-toggle {{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'active' : '' }}"
-                                    href="#" id="paymentsDropdown" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="{{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'true' : 'false' }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" /><path d="M14 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" /></svg>
-                                    </span>
-                                    <span class="nav-link-title">Pembayaran</span>
-                                </a>
-                                <ul class="dropdown-menu {{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'show' : '' }}" aria-labelledby="paymentsDropdown">
-                                    <li>
-                                        <a class="dropdown-item {{ Request::is('bill-of-payment*') ? 'active-item' : '' }}" href="{{ route('bill-of-payment.index', ['dropdown_open' => true]) }}">
-                                            Bill of Payment
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item {{ Request::is('opening-balance*') ? 'active-item' : '' }}" href="{{ route('opening-balance.index', ['dropdown_open' => true]) }}">
-                                            Opening Balance
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-        
-                            <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-report-money"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" /><path d="M12 17v1m0 -8v1" /></svg>
-                                    </span>
-                                    <span class="nav-link-title">Account Statement</span>
-                                </a>
-                            </li>
+                            
+                            @if(auth()->user()->role !== 'operator')
+                                <li class="nav-item dropdown {{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'show' : '' }}">
+                                    <a class="nav-link dropdown-toggle {{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'active' : '' }}"
+                                        href="#" id="paymentsDropdown" role="button" data-bs-toggle="dropdown"
+                                        aria-expanded="{{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'true' : 'false' }}">
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" /><path d="M14 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" /></svg>
+                                        </span>
+                                        <span class="nav-link-title">Pembayaran</span>
+                                    </a>
+                                    <ul class="dropdown-menu {{ Request::is('bill-of-payment*') || Request::is('opening-balance*') ? 'show' : '' }}" aria-labelledby="paymentsDropdown">
+                                        <li>
+                                            <a class="dropdown-item {{ Request::is('bill-of-payment*') ? 'active-item' : '' }}" href="{{ route('bill-of-payment.index', ['dropdown_open' => true]) }}">
+                                                Bill of Payment
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item {{ Request::is('opening-balance*') ? 'active-item' : '' }}" href="{{ route('opening-balance.index', ['dropdown_open' => true]) }}">
+                                                Opening Balance
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+            
+                                <li class="nav-item {{ Request::is('transactions/AccountStatement') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('transactions.AccountStatement') }}">
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-report-money"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" /><path d="M12 17v1m0 -8v1" /></svg>
+                                        </span>
+                                        <span class="nav-link-title">Account Statement</span>
+                                    </a>
+                                </li>
+                            @endif
                         @endif
                     </ul>
                 </div>

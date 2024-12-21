@@ -24,34 +24,22 @@
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="previous_url" value="{{ url()->previous() }}">
+                            
+                            <!-- Nama -->
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama</label>
                                 <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $client->name) }}" required>
                             </div>
+
+                            <!-- Perusahaan Client -->
                             <div class="mb-3">
-                                <label for="client_company_id" class="form-label">Nama Perusahaan</label>
-                                <select class="form-control" id="client_company_id" name="client_company_id" required>
-                                    @if($client->company)
-                                        <option value="{{ $client->company->id }}" selected>{{ $client->company->company_name }}</option>
-                                    @endif
+                                <label for="client_companies" class="form-label">Perusahaan Client</label>
+                                <select id="client_companies" name="client_companies[]" class="form-control" multiple required>
+                                    <!-- Old Values akan di-append melalui JavaScript -->
                                 </select>
                             </div>
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Alamat</label>
-                                <textarea id="address" name="address" class="form-control" required>{{ old('address', $client->address) }}</textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="PO_BOX" class="form-label">PO BOX</label>
-                                <input type="text" id="PO_BOX" name="PO_BOX" class="form-control" value="{{ old('PO_BOX', $client->PO_BOX) }}">
-                            </div>
-                            <div class="mb-3">
-                                <label for="tel" class="form-label">Telepon</label>
-                                <input type="text" id="tel" name="tel" class="form-control" value="{{ old('tel', $client->tel) }}" required>
-                            </div>
-                            <div class="mb-5">
-                                <label for="fax" class="form-label">Fax</label>
-                                <input type="text" id="fax" name="fax" class="form-control" value="{{ old('fax', $client->fax) }}">
-                            </div>
+
+                            <!-- Tombol -->
                             <div class="text-end">
                                 <a href="javascript:void(0);" class="btn btn-outline-primary" onclick="window.history.back();">Kembali</a>
                                 <button type="submit" class="btn btn-primary">Perbarui</button>
@@ -65,37 +53,47 @@
 </div>
 
 <script>
-    // Inisialisasi Select2 untuk input company_name
-    $('#client_company_id').select2({
-        ajax: {
-            url: '{{ route('ajax-companies') }}',  // Endpoint AJAX untuk mengambil data perusahaan
-            dataType: 'json',
-            delay: 250,
-            data: function(params) {
-                return {
-                    q: params.term  // Mengirimkan kata kunci pencarian ke server
-                };
+    $(document).ready(function() {
+        // Ambil data perusahaan lama (selected)
+        let selectedCompanies = @json($selectedCompanies);
+
+        $('#client_companies').select2({
+            ajax: {
+                url: '{{ route('ajax-companies') }}', // Route untuk mengambil data perusahaan
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term // Kata kunci pencarian
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: data.map(function(company) {
+                            return {
+                                id: company.id,
+                                text: company.company_name
+                            };
+                        })
+                    };
+                },
+                cache: true
             },
-            processResults: function(data) {
-                return {
-                    results: data.map(function(company) {
-                        return {
-                            id: company.id,  // Menyimpan ID perusahaan
-                            text: company.company_name  // Menampilkan nama perusahaan
-                        };
-                    })
-                };
+            placeholder: "Pilih Nama Perusahaan",
+            templateResult: function(company) {
+                if (company.loading) return company.text;
+                return $('<span>' + company.text + '</span>');
             },
-            cache: true
-        },
-        placeholder: "Pilih Nama Perusahaan",
-        templateResult: function(company) {
-            if (company.loading) return company.text;
-            return $('<span>' + company.text + '</span>');
-        },
-        templateSelection: function(company) {
-            return $('<span>' + company.text + '</span>');
-        }
+            templateSelection: function(company) {
+                return $('<span>' + company.text + '</span>');
+            }
+        });
+
+        // Tambahkan data perusahaan lama ke Select2
+        selectedCompanies.forEach(function(company) {
+            let option = new Option(company.text, company.id, true, true);
+            $('#client_companies').append(option).trigger('change');
+        });
     });
 </script>
 @endsection

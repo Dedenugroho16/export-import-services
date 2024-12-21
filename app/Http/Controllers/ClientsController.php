@@ -14,8 +14,7 @@ class ClientsController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $client = Clients::with('company')->get();
-
+            $client = Clients::query();
             return DataTables::of($client)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
@@ -81,18 +80,22 @@ class ClientsController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'PO_BOX' => 'nullable|string',
-            'tel' => 'required|string|max:20',
-            'fax' => 'nullable|string|max:20',
+            'client_companies' => 'required|array',
+            'client_companies.*' => 'exists:client_company,id',
         ]);
 
-        Clients::create($request->all());
+        $client = Clients   ::create([
+            'name' => $validatedData['name'],
+        ]);
 
-        return redirect()->route('clients.index')->with('success', 'Data berhasil ditambahkan.');
+        // Simpan relasi dengan client_company di tabel pivot
+        $client->clientCompanies()->sync($validatedData['client_companies']);
+
+        return redirect()->route('clients.index')->with('success', 'Data client berhasil ditambahkan.');
     }
+
 
     public function show($hash)
     {
@@ -101,12 +104,24 @@ class ClientsController extends Controller
         return view('clients.show', compact('client'));
     }
 
-    public function edit($hash)
+    public function edit($id)
     {
-        $id = IdHashHelper::decode($hash);
-        $client = Clients::findOrFail($id);
-        return view('clients.edit', compact('client'));
+        $clientId = IdHashHelper::decode($id);
+
+        // Ambil data client beserta perusahaan yang terkait
+        $client = Clients::with('clientCompanies')->findOrFail($clientId);
+
+        // Ambil ID dan nama perusahaan yang sudah terhubung dengan client
+        $selectedCompanies = $client->clientCompanies->map(function ($company) {
+            return [
+                'id' => $company->id,
+                'text' => $company->company_name,
+            ];
+        });
+
+        return view('clients.edit', compact('client', 'selectedCompanies'));
     }
+
 
     public function update(Request $request, $hash)
     {
@@ -114,14 +129,18 @@ class ClientsController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'PO_BOX' => 'nullable|string',
-            'tel' => 'required|string|max:20',
-            'fax' => 'nullable|string|max:20',
+            'client_companies' => 'required|array',
+            'client_companies.*' => 'exists:client_company,id',
         ]);
 
         $client = Clients::findOrFail($id);
-        $client->update($request->all());
+
+        $client->update([
+            'name' => $request->input('name'),
+        ]);
+
+        // Sinkronisasi perusahaan di tabel pivot
+        $client->clientCompanies()->sync($request->input('client_companies'));
 
         return redirect($request->input('previous_url', route('clients.index')))
             ->with('success', 'Data berhasil diperbarui.');
@@ -140,7 +159,7 @@ class ClientsController extends Controller
     {
         // Decode hash menjadi client_id
         $clientId = IdHashHelper::decode($hash);
-        $client = Clients::with('company')->find($clientId);
+        $client = Clients::with('clientCompanies')->find($clientId);
         $client = Clients::findOrFail($clientId);
 
         if ($request->ajax()) {

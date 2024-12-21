@@ -26,24 +26,9 @@
                                 <input type="text" id="name" name="name" class="form-control" required>
                             </div>
                             <div class="mb-3">
-                                <label for="client_company_id" class="form-label">Nama Perusahaan</label>
-                                <select class="form-control" id="client_company_id" name="client_company_id" required></select>
-                            </div>                            
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Alamat</label>
-                                <textarea id="address" name="address" class="form-control" required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="PO_BOX" class="form-label">PO BOX</label>
-                                <input type="text" id="PO_BOX" name="PO_BOX" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="tel" class="form-label">Telepon</label>
-                                <input type="text" id="tel" name="tel" class="form-control" required>
-                            </div>
-                            <div class="mb-5">
-                                <label for="fax" class="form-label">Fax</label>
-                                <input type="text" id="fax" name="fax" class="form-control" required>
+                                <label for="client_companies" class="form-label">Perusahaan Client</label>
+                                <select id="client_companies" name="client_companies[]" class="form-control" multiple required>
+                                </select>
                             </div>
                             <div class="text-end">
                                 <a href="{{ route('clients.index') }}" class="btn btn-outline-primary">Kembali</a>
@@ -58,36 +43,36 @@
 </div>
 
 <script>
-    // Inisialisasi Select2 untuk input company_name
-    $('#client_company_id').select2({
+    // Inisialisasi Select2 untuk input client_companies
+    $('#client_companies').select2({
         ajax: {
-            url: '{{ route('ajax-companies') }}',  // Menggunakan route yang sudah dibuat
+            url: '{{ route('ajax-companies') }}', // Route untuk mengambil data perusahaan
             dataType: 'json',
-            delay: 250,  // Mengatur delay sebelum melakukan pencarian
+            delay: 250,
             data: function(params) {
                 return {
-                    q: params.term  // Mengirimkan kata kunci pencarian ke server
+                    q: params.term // Kata kunci pencarian
                 };
             },
             processResults: function(data) {
                 return {
                     results: data.map(function(company) {
                         return {
-                            id: company.id,  // Menyimpan ID perusahaan
-                            text: company.company_name  // Menampilkan nama perusahaan
+                            id: company.id,
+                            text: company.company_name
                         };
                     })
                 };
             },
             cache: true
         },
-        placeholder: "Pilih Nama Perusahaan",  // Placeholder saat belum ada pilihan
+        placeholder: "Pilih Nama Perusahaan",
         templateResult: function(company) {
-            if (company.loading) return company.text;  // Tampilkan saat loading
-            return $('<span>' + company.text + '</span>');  // Tampilkan nama perusahaan
+            if (company.loading) return company.text;
+            return $('<span>' + company.text + '</span>');
         },
         templateSelection: function(company) {
-            return $('<span>' + company.text + '</span>');  // Tampilkan nama perusahaan setelah dipilih
+            return $('<span>' + company.text + '</span>');
         }
     });
 </script>
