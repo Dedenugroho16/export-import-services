@@ -29,6 +29,16 @@
                                 <th>Nama Client</th>
                                 <td>{{ $client->name }}</td>
                             </tr>
+                            <tr>
+                                <th>Perusahaan Client</th>
+                                <td>
+                                    <ul>
+                                        @foreach ($client->clientCompanies as $company)
+                                            <li>{{ $company->company_name }}</li>
+                                        @endforeach
+                                    </ul>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>                   
                     

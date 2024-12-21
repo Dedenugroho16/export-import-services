@@ -6,7 +6,6 @@ use App\Models\Clients;
 use App\Models\Consignee;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
-use App\Models\Client;
 use App\Models\ClientCompany;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -105,12 +104,24 @@ class ClientsController extends Controller
         return view('clients.show', compact('client'));
     }
 
-    public function edit($hash)
+    public function edit($id)
     {
-        $id = IdHashHelper::decode($hash);
-        $client = Clients::findOrFail($id);
-        return view('clients.edit', compact('client'));
+        $clientId = IdHashHelper::decode($id);
+
+        // Ambil data client beserta perusahaan yang terkait
+        $client = Clients::with('clientCompanies')->findOrFail($clientId);
+
+        // Ambil ID dan nama perusahaan yang sudah terhubung dengan client
+        $selectedCompanies = $client->clientCompanies->map(function ($company) {
+            return [
+                'id' => $company->id,
+                'text' => $company->company_name,
+            ];
+        });
+
+        return view('clients.edit', compact('client', 'selectedCompanies'));
     }
+
 
     public function update(Request $request, $hash)
     {
@@ -118,10 +129,18 @@ class ClientsController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'client_companies' => 'required|array',
+            'client_companies.*' => 'exists:client_company,id',
         ]);
 
         $client = Clients::findOrFail($id);
-        $client->update($request->all());
+
+        $client->update([
+            'name' => $request->input('name'),
+        ]);
+
+        // Sinkronisasi perusahaan di tabel pivot
+        $client->clientCompanies()->sync($request->input('client_companies'));
 
         return redirect($request->input('previous_url', route('clients.index')))
             ->with('success', 'Data berhasil diperbarui.');
@@ -140,7 +159,7 @@ class ClientsController extends Controller
     {
         // Decode hash menjadi client_id
         $clientId = IdHashHelper::decode($hash);
-        $client = Clients::with('company')->find($clientId);
+        $client = Clients::with('clientCompanies')->find($clientId);
         $client = Clients::findOrFail($clientId);
 
         if ($request->ajax()) {

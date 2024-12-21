@@ -73,12 +73,17 @@ class ClientCompanyController extends Controller
     }
 
     public function show($hash)
-    {
-        $id = IdHashHelper::decode($hash);
-        $client_company = ClientCompany::findOrFail($id);
-        return view('client-company.show', compact('client_company'));
-    }
+{
+    $id = IdHashHelper::decode($hash);
 
+    // Ambil data client_company berdasarkan ID
+    $client_company = ClientCompany::findOrFail($id);
+
+    // Ambil semua client yang terhubung dengan client_company ini
+    $clients = $client_company->clients;
+
+    return view('client-company.show', compact('client_company', 'clients'));
+}
 
     public function edit(string $hash)
     {

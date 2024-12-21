@@ -65,6 +65,16 @@
                                         <th>Fax</th>
                                         <td>{{ $client_company->fax }}</td>
                                     </tr>
+                                    <tr>
+                                        <th>Nama Client</th>
+                                        <td>
+                                            <ul>
+                                                @foreach($clients as $client)
+                                                    <li>{{ $client->name }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
 

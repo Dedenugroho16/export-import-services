@@ -26,7 +26,7 @@
                                 <input type="text" id="name" name="name" class="form-control" required>
                             </div>
                             <div class="mb-3">
-                                <label for="client_companies" class="form-label">Pilih Perusahaan</label>
+                                <label for="client_companies" class="form-label">Perusahaan Client</label>
                                 <select id="client_companies" name="client_companies[]" class="form-control" multiple required>
                                 </select>
                             </div>
@@ -58,8 +58,8 @@
                 return {
                     results: data.map(function(company) {
                         return {
-                            id: company.id, // ID perusahaan
-                            text: company.company_name // Nama perusahaan
+                            id: company.id,
+                            text: company.company_name
                         };
                     })
                 };
