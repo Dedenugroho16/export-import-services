@@ -67,13 +67,18 @@ class DetailProductController extends Controller
         ]);
 
         try {
-            Excel::import(new DetailProductsImport, $request->file('file'));
+            $import = new DetailProductsImport();
+            Excel::import($import, $request->file('file'));
 
-            return redirect()->route('products.index')
-                ->with('success', 'Data berhasil diimpor.');
+            $results = $import->getResults();
+
+            return redirect()->route('detail-products.index')
+                ->with('success', $results['success'])
+                ->with('failed', $results['failed'])
+                ->with('exists', $results['exists']);
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
