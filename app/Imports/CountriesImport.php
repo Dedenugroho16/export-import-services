@@ -10,22 +10,52 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class CountriesImport implements ToCollection, WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
+    public $results = [
+        'success' => [],
+        'failed' => [],
+        'exists' => []
+    ];
+
     public function collection(Collection $rows)
     {
-        // dd($rows->all());
         foreach ($rows as $row) {
             try {
+                // Cek apakah negara sudah ada berdasarkan kode
+                $existingCountry = Country::where('code', $row['code'])->first();
+
+                if ($existingCountry) {
+                    // Jika sudah ada, tambahkan ke daftar exists
+                    $this->results['exists'][] = [
+                        'code' => $row['code'],
+                        'name' => $row['name']
+                    ];
+                    continue;
+                }
+
+                // Buat negara baru
                 Country::create([
                     'code' => $row['code'],
                     'name' => $row['name'],
                 ]);
+
+                // Tambahkan ke daftar sukses
+                $this->results['success'][] = [
+                    'code' => $row['code'],
+                    'name' => $row['name']
+                ];
             } catch (Exception $e) {
-                // Lempar pengecualian dengan pesan error
-                throw new Exception('Terjadi kesalahan saat memproses data: ' . $e->getMessage());
+                // Tangani kesalahan dan tambahkan ke daftar gagal
+                $this->results['failed'][] = [
+                    'code' => $row['code'] ?? 'Tidak diketahui',
+                    'name' => $row['name'] ?? 'Tidak diketahui',
+                    'error' => $e->getMessage()
+                ];
             }
         }
+    }
+
+    public function getResults()
+    {
+        return $this->results;
     }
 }

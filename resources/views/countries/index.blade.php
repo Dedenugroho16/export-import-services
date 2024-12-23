@@ -35,12 +35,41 @@
                     <div class="card mb-5">
                         <div class="card-body">
                             <!-- Success Message for Deleting, Editing, or Adding Data -->
-                            @if (session('success'))
+                            @if (session('success') || session('failed') || session('exists'))
                                 <script>
+                                    let successData = @json(session('success') ?? []);
+                                    let failedData = @json(session('failed') ?? []);
+                                    let existsData = @json(session('exists') ?? []);
+
+                                    let message = "";
+
+                                    if (successData.length > 0) {
+                                        message += `<strong>Negara berhasil diimpor:</strong><br>`;
+                                        successData.forEach(country => {
+                                            message += `- Kode: ${country.code}, Nama: ${country.name}<br>`;
+                                        });
+                                        message += `<br>`;
+                                    }
+
+                                    if (existsData.length > 0) {
+                                        message += `<strong>Negara sudah ada di database:</strong><br>`;
+                                        existsData.forEach(country => {
+                                            message += `- Kode: ${country.code}, Nama: ${country.name}<br>`;
+                                        });
+                                        message += `<br>`;
+                                    }
+
+                                    if (failedData.length > 0) {
+                                        message += `<strong>Negara gagal diimpor:</strong><br>`;
+                                        failedData.forEach(country => {
+                                            message += `- Kode: ${country.code}, Nama: ${country.name} (Error: ${country.error})<br>`;
+                                        });
+                                    }
+
                                     Swal.fire({
-                                        icon: 'success',
-                                        title: 'Berhasil',
-                                        text: '{{ session('success') }}',
+                                        icon: 'info',
+                                        title: 'Hasil Impor',
+                                        html: message,
                                         confirmButtonText: 'OK'
                                     });
                                 </script>
