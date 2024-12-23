@@ -35,12 +35,31 @@
                     <div class="card mb-5">
                         <div class="card-body">
                             <!-- Success Message for Deleting, Editing, or Adding Data -->
-                            @if (session('success'))
+                            @if (session('success') || session('exists') || session('failed'))
                                 <script>
+                                    let successData = @json(session('success') ?? []);
+                                    let existsData = @json(session('exists') ?? []);
+                                    let failedData = @json(session('failed') ?? []);
+
+                                    let message = "";
+
+                                    if (successData.length > 0) {
+                                        message += `<strong>Berhasil diimpor:</strong><br>${successData.join(', ')}<br><br>`;
+                                    }
+
+                                    if (existsData.length > 0) {
+                                        message += `<strong>Sudah ada di database:</strong><br>${existsData.join(', ')}<br><br>`;
+                                    }
+
+                                    if (failedData.length > 0) {
+                                        let failedDetails = failedData.map(item => `${item.company_name} - Error: ${item.error}`).join('<br>');
+                                        message += `<strong>Gagal diimpor:</strong><br>${failedDetails}<br>`;
+                                    }
+
                                     Swal.fire({
-                                        icon: 'success',
-                                        title: 'Berhasil',
-                                        text: '{{ session('success') }}',
+                                        icon: 'info',
+                                        title: 'Hasil Impor',
+                                        html: message,
                                         confirmButtonText: 'OK'
                                     });
                                 </script>
