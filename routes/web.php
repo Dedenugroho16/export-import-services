@@ -68,6 +68,8 @@ Route::put('/products/{hash}', [ProductsController::class, 'update'])->name('pro
 Route::delete('/products/{hash}', [ProductsController::class, 'destroy'])->name('products.destroy');
 
 // Commodity Routes using resource
+Route::get('commodities/import', [CommoditiesController::class, 'import'])->name('commodities.import');
+Route::post('commodities/import-process', [CommoditiesController::class, 'importProcess'])->name('commodities.import-process');
 Route::resource('commodities', CommoditiesController::class);
 Route::get('/commodities/{hash}', [CommoditiesController::class, 'show'])->name('commodities.show');
 Route::get('/commodities/{hash}/edit', [CommoditiesController::class, 'edit'])->name('commodities.edit');

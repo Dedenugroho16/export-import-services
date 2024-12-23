@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commodity;
-use App\Helpers\IdHashHelper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Helpers\IdHashHelper;
 use Yajra\DataTables\DataTables;
+use App\Imports\CommoditiesImport;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CommoditiesController extends Controller
 {
@@ -53,6 +55,31 @@ class CommoditiesController extends Controller
         
 
         return view('commodities.index');
+    }
+
+    public function import()
+    {
+        return view('commodities.import');
+    }
+
+    public function importProcess(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ], [
+            'file.required' => 'File wajib diunggah.',
+            'file.mimes' => 'File harus berupa Excel dengan format xlsx atau xls.',
+        ]);
+
+        try {
+            Excel::import(new CommoditiesImport, $request->file('file'));
+
+            return redirect()->route('commodities.index')
+                ->with('success', 'Data berhasil diimpor.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', $e->getMessage());
+        }
     }
 
     // Method to return the create form view
