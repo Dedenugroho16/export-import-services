@@ -39,6 +39,8 @@ Route::get('/ajax-companies', function (Request $request) {
 
 
 // Client Routes using resource
+Route::get('clients/import', [ClientsController::class, 'import'])->name('clients.import');
+Route::post('clients/import-process', [ClientsController::class, 'importProcess'])->name('clients.import-process');
 Route::resource('clients', ClientsController::class);
 Route::get('clients', [ClientsController::class, 'index'])->name('clients.index');
 
@@ -66,6 +68,8 @@ Route::put('/products/{hash}', [ProductsController::class, 'update'])->name('pro
 Route::delete('/products/{hash}', [ProductsController::class, 'destroy'])->name('products.destroy');
 
 // Commodity Routes using resource
+Route::get('commodities/import', [CommoditiesController::class, 'import'])->name('commodities.import');
+Route::post('commodities/import-process', [CommoditiesController::class, 'importProcess'])->name('commodities.import-process');
 Route::resource('commodities', CommoditiesController::class);
 Route::get('/commodities/{hash}', [CommoditiesController::class, 'show'])->name('commodities.show');
 Route::get('/commodities/{hash}/edit', [CommoditiesController::class, 'edit'])->name('commodities.edit');
@@ -73,12 +77,14 @@ Route::put('/commodities/{hash}', [CommoditiesController::class, 'update'])->nam
 Route::delete('/commodities/{hash}', [CommoditiesController::class, 'destroy'])->name('commodities.destroy');
 
 // Detail Products Routes using resource
+Route::get('detail-products/import', [DetailProductController::class, 'import'])->name('detail-products.import');
+Route::post('detail-products/import-process', [DetailProductController::class, 'importProcess'])->name('detail-products.import-process');
 Route::resource('detail-products', DetailProductController::class);
 Route::get('/detail-products/{hash}', [DetailProductController::class, 'show'])->name('detail-products.show');
 Route::get('/detail-products/{hash}/edit', [DetailProductController::class, 'edit'])->name('detail-products.edit');
 Route::put('/detail-products/{hash}', [DetailProductController::class, 'update'])->name('detail-products.update');
 Route::delete('/detail-products/{hash}', [DetailProductController::class, 'destroy'])->name('detail-products.destroy');
-Route::get('detail-products/create/{hash}', [DetailProductController::class, 'create'])->name('detail-products.create');
+Route::get('detail-products/create/{hash?}', [DetailProductController::class, 'create'])->name('detail-products.create');
 
 
 // Country Routes using resource
@@ -221,6 +227,8 @@ Route::post('/payments/update', [PaymentController::class, 'update'])->name('pay
 Route::post('/payment-details/store', [PaymentDetailController::class, 'store'])->name('payment-details.store');
 Route::post('/payment-details/update/{id}', [PaymentDetailController::class, 'update'])->name('payment-details.update');
 // Client Company Route
+Route::get('client-companies/import', [ClientCompanyController::class, 'import'])->name('client-companies.import');
+Route::post('client-companies/import-process', [ClientCompanyController::class, 'importProcess'])->name('client-companies.import-process');
 Route::resource('client-companies', ClientCompanyController::class);
 Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
 

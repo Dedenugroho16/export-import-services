@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commodity;
-use App\Helpers\IdHashHelper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Helpers\IdHashHelper;
 use Yajra\DataTables\DataTables;
+use App\Imports\CommoditiesImport;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CommoditiesController extends Controller
 {
@@ -31,7 +33,7 @@ class CommoditiesController extends Controller
                                     </svg>
                                     Tampilkan
                                 </a>';
-        
+
                     // Add Edit and Delete actions only if the user is admin or operator
                     if (in_array($userRole, ['admin', 'operator'])) {
                         $actionBtn .= '
@@ -40,19 +42,49 @@ class CommoditiesController extends Controller
                                 Edit
                             </a>';
                     }
-        
+
                     $actionBtn .= '
                             </div>
                         </div>';
-        
+
                     return $actionBtn;
                 })
                 ->rawColumns(['action']) // Allows HTML in 'action' column
                 ->make(true);
         }
-        
+
 
         return view('commodities.index');
+    }
+
+    public function import()
+    {
+        return view('commodities.import');
+    }
+
+    public function importProcess(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ], [
+            'file.required' => 'File wajib diunggah.',
+            'file.mimes' => 'File harus berupa Excel dengan format xlsx atau xls.',
+        ]);
+
+        try {
+            $import = new CommoditiesImport();
+            Excel::import($import, $request->file('file'));
+
+            $results = $import->getResults();
+
+            return redirect()->route('commodities.index')
+                ->with('success', $results['success'])
+                ->with('exists', $results['exists'])
+                ->with('failed', $results['failed']);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     // Method to return the create form view
@@ -101,7 +133,7 @@ class CommoditiesController extends Controller
         $commodity->update($request->all());
 
         return redirect($request->input('previous_url', route('commodities.index')))
-        ->with('success', 'Data berhasil diperbarui.');
+            ->with('success', 'Data berhasil diperbarui.');
     }
 
     // Method to delete a specific commodity

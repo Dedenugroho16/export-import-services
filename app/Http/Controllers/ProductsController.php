@@ -88,13 +88,18 @@ class ProductsController extends Controller
         ]);
 
         try {
-            Excel::import(new ProductsImport, $request->file('file'));
+            $import = new ProductsImport();
+            Excel::import($import, $request->file('file'));
+
+            $results = $import->getResults();
 
             return redirect()->route('products.index')
-                ->with('success', 'Data berhasil diimpor.');
+                ->with('success', $results['success'])
+                ->with('failed', $results['failed'])
+                ->with('exists', $results['exists']);
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 

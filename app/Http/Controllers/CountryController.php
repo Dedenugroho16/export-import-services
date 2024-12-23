@@ -65,13 +65,18 @@ class CountryController extends Controller
         ]);
 
         try {
-            Excel::import(new CountriesImport, $request->file('file'));
+            $import = new CountriesImport();
+            Excel::import($import, $request->file('file'));
+
+            $results = $import->getResults();
 
             return redirect()->route('countries.index')
-                ->with('success', 'Data berhasil diimpor.');
+                ->with('success', $results['success'])
+                ->with('failed', $results['failed'])
+                ->with('exists', $results['exists']);
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
