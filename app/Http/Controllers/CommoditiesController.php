@@ -33,7 +33,7 @@ class CommoditiesController extends Controller
                                     </svg>
                                     Tampilkan
                                 </a>';
-        
+
                     // Add Edit and Delete actions only if the user is admin or operator
                     if (in_array($userRole, ['admin', 'operator'])) {
                         $actionBtn .= '
@@ -42,17 +42,17 @@ class CommoditiesController extends Controller
                                 Edit
                             </a>';
                     }
-        
+
                     $actionBtn .= '
                             </div>
                         </div>';
-        
+
                     return $actionBtn;
                 })
                 ->rawColumns(['action']) // Allows HTML in 'action' column
                 ->make(true);
         }
-        
+
 
         return view('commodities.index');
     }
@@ -72,13 +72,18 @@ class CommoditiesController extends Controller
         ]);
 
         try {
-            Excel::import(new CommoditiesImport, $request->file('file'));
+            $import = new CommoditiesImport();
+            Excel::import($import, $request->file('file'));
+
+            $results = $import->getResults();
 
             return redirect()->route('commodities.index')
-                ->with('success', 'Data berhasil diimpor.');
+                ->with('success', $results['success'])
+                ->with('exists', $results['exists'])
+                ->with('failed', $results['failed']);
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -128,7 +133,7 @@ class CommoditiesController extends Controller
         $commodity->update($request->all());
 
         return redirect($request->input('previous_url', route('commodities.index')))
-        ->with('success', 'Data berhasil diperbarui.');
+            ->with('success', 'Data berhasil diperbarui.');
     }
 
     // Method to delete a specific commodity

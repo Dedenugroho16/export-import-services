@@ -10,21 +10,41 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class CommoditiesImport implements ToCollection, WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
+    public $results = [
+        'success' => [],
+        'exists' => [],
+        'failed' => []
+    ];
+
     public function collection(Collection $rows)
     {
-        // dd($rows->all());
         foreach ($rows as $row) {
             try {
-                Commodity::create([
-                    'name' => $row['name'],
-                ]);
+                // Cek apakah data sudah ada
+                $commodity = Commodity::firstOrCreate(
+                    ['name' => $row['name']],
+                    ['name' => $row['name']]
+                );
+
+                if ($commodity->wasRecentlyCreated) {
+                    // Data baru berhasil ditambahkan
+                    $this->results['success'][] = $row['name'];
+                } else {
+                    // Data sudah ada
+                    $this->results['exists'][] = $row['name'];
+                }
             } catch (Exception $e) {
-                // Lempar pengecualian dengan pesan error
-                throw new Exception('Terjadi kesalahan saat memproses data: ' . $e->getMessage());
+                // Data gagal diproses
+                $this->results['failed'][] = [
+                    'name' => $row['name'],
+                    'error' => $e->getMessage()
+                ];
             }
         }
+    }
+
+    public function getResults()
+    {
+        return $this->results;
     }
 }

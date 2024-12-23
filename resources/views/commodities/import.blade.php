@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Import Clients')
+@section('title', 'Import Commodities')
 
 @section('content')
     <div class="page-body">
