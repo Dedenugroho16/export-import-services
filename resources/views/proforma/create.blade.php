@@ -491,10 +491,6 @@
                             <tr>
                                 <th class="text-center">No</th>
                                 <th class="text-center">Nama</th>
-                                <th class="text-center">Alamat</th>
-                                <th class="text-center">PO BOX</th>
-                                <th class="text-center">Telepon</th>
-                                <th class="text-center">Fax</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -1515,45 +1511,32 @@
                 processing: false,
                 serverSide: true,
                 ajax: "{{ route('clients.index') }}",
-                columns: [{
+                columns: [
+                    {
                         data: null,
-                        class: 'text-center',
+                        class: 'text-center align-middle',
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        width: '20%'
                     },
                     {
                         data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'address',
-                        name: 'address'
-                    },
-                    {
-                        data: 'PO_BOX',
-                        name: 'PO_BOX',
-                        class: 'text-center'
-                    },
-                    {
-                        data: 'tel',
-                        name: 'tel',
-                        class: 'text-center'
-                    },
-                    {
-                        data: 'fax',
-                        name: 'fax',
-                        class: 'text-center'
+                        name: 'name',
+                        class: 'text-center align-middle',
+                        width: 'auto'
                     },
                     {
                         data: null,
+                        class: 'text-center align-middle',
                         render: function(data, type, row) {
                             return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
                         },
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        width: '20%'
                     }
                 ],
                 language: {
