@@ -111,10 +111,6 @@
                                                                         <select name="id_client" id="client_id"
                                                                             class="form-control select2">
                                                                             <option value="">Pilih Client</option>
-                                                                            @foreach ($clients as $client)
-                                                                                <option value="{{ $client->id }}">
-                                                                                    {{ $client->name }}</option>
-                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                     <span class="error-message" id="selectedClientId_error"
@@ -122,6 +118,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                         <div class="row mt-2">
                                                             <div class="col-3">
                                                                 <p><strong>Perusahaan</strong></p>
@@ -620,7 +617,26 @@
         $(document).ready(function() {
             $('#client_id').select2({
                 placeholder: "Pilih Client",
-                width: '100%'
+                width: '100%',
+                ajax: {
+                    url: '{{ route('proforma.clients.select2') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term // Search query
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                }
             });
         });
 
