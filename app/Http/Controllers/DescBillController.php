@@ -21,6 +21,7 @@ class DescBillController extends Controller
                 'id_bill' => 'required|integer',
                 'description' => 'required|string',
                 'paid' => 'required|numeric|gte:0',
+                'bill' => 'required|numeric|gte:0',
             ]);
 
             // Jika validasi gagal, hentikan proses dan kembalikan respons error
@@ -38,6 +39,7 @@ class DescBillController extends Controller
                 'id_bill' => $data['id_bill'],
                 'description' => $data['description'],
                 'paid' => $data['paid'],
+                'bill' => $data['bill'],
             ]);
         }
 
@@ -59,6 +61,7 @@ class DescBillController extends Controller
                 'id_bill' => 'required|integer|exists:bill_of_payments,id',
                 'description' => 'required|string',
                 'paid' => 'required|numeric|gte:0',
+                'bill' => 'required|numeric|gte:0',
             ]);
 
             if ($validator->fails()) {
@@ -77,6 +80,7 @@ class DescBillController extends Controller
                 $descBill->update([
                     'description' => $data['description'],
                     'paid' => $data['paid'],
+                    'bill' => $data['bill'],
                 ]);
             } else {
                 // Jika tidak ada, beri respons bahwa data tidak ditemukan

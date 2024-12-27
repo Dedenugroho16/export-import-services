@@ -222,7 +222,7 @@
                                 <input type="hidden" id="no_inv" name="no_inv">
                                 <input type="hidden" id="selectedClientId" name="id_client">
                                 <input type="hidden" id="selectedClientCompanyId" name="id_client_company">
-                                <input type="hidden" id="total" name="total">
+                                <input type="" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
@@ -370,11 +370,12 @@
                         'white-space': 'normal',
                         'word-wrap': 'break-word'
                     });
-                    $('#clientsModalTable td:nth-child(3), #clientsModalTable td:nth-child(4), #clientsModalTable td:nth-child(5)').css({
-                        'max-width': '250px',
-                        'white-space': 'normal',
-                        'word-wrap': 'break-word'
-                    });
+                    $('#clientsModalTable td:nth-child(3), #clientsModalTable td:nth-child(4), #clientsModalTable td:nth-child(5)')
+                        .css({
+                            'max-width': '250px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
                 }
             });
 
@@ -516,8 +517,8 @@
 
                 // Iterasi setiap baris untuk mendapatkan nilai total
                 $('#billOfPaymentTable tbody tr').each(function() {
-                    var bill = parseFloat($(this).find('.pi-bill').text().replace(/,/g, '')) || 0;
-
+                    var bill = parseFloat($(this).find('.bill-hidden').val()) ||
+                    0; // Ambil nilai asli dari .bill-hidden
                     totalBill += bill;
                 });
 
@@ -576,7 +577,10 @@
                                         <input type="text" class="form-control" value="${data.paid?.toLocaleString('en-US')}" readonly>
                                         <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
                                     </td>
-                                    <td class="text-center pi-bill">${formattedBill}</td>
+                                    <td class="text-center pi-bill">
+                                        <input type="text" class="form-control bill-input" placeholder="Enter bill">
+                                        <input type="" name="transactions[${data.id}][bill]" class="form-control bill-hidden">
+                                    </td>
                                     <td class="text-center">
                                         <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
                                     </td>
@@ -605,6 +609,40 @@
                     totalBill();
                 });
                 totalBill();
+            });
+
+            $('#billOfPaymentTable tbody').on('input', '.bill-input', function() {
+                var row = $(this).closest('tr');
+                var billInput = $(this);
+
+                // Ambil nilai input dan hapus karakter selain angka
+                var value = billInput.val();
+                var numericValue = value.replace(/[^0-9]/g, '');
+
+                // Format nilai ke locale string
+                var formattedValue = parseFloat(numericValue || 0).toLocaleString('en-US');
+                billInput.val(formattedValue);
+
+                // Simpan nilai asli (angka saja) ke input .bill-hidden
+                row.find('.bill-hidden').val(numericValue);
+
+                // Perbarui jumlah jika diperlukan
+                totalBill();
+
+                // Validasi jika diperlukan (contoh kasus transfer lebih besar dari jumlah tagihan)
+                var piBill = parseFloat(row.find('.pi-bill input').val().replace(/,/g, '')) || 0;
+                var payment = parseFloat(numericValue) || 0;
+
+                if (payment > piBill) {
+                    $('#submitButton').prop('disabled', true); // Disable tombol submit
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Jumlah Transfer Tidak Valid',
+                        text: 'Nilai transfer tidak boleh lebih besar dari jumlah yang harus dibayar.',
+                    });
+                } else {
+                    $('#submitButton').prop('disabled', false); // Aktifkan tombol jika valid
+                }
             });
 
             function updateNumber() {
