@@ -493,7 +493,7 @@
         </div>
     </div>
 
-    {{-- modal Client --}}
+    {{-- modal Perusahaan Client --}}
     <div class="modal fade text-left" id="clientCompanyModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">

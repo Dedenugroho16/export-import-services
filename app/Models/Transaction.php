@@ -17,6 +17,7 @@ class Transaction extends Model
         'id_consignee',
         'notify',
         'id_client',
+        'id_client_company',
         'port_of_loading',
         'place_of_receipt',
         'port_of_discharge',
@@ -109,5 +110,10 @@ class Transaction extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class, 'id_transaction', 'id');
+    }
+
+    public function clientCompany()
+    {
+        return $this->belongsTo(ClientCompany::class, 'id_client_company');
     }
 }
