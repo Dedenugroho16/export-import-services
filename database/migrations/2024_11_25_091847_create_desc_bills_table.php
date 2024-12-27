@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_bill');
             $table->string('description');
             $table->decimal('paid', 10, 2);
+            $table->decimal('bill', 10, 2);
             $table->timestamps();
 
             $table->foreign('id_transaction')->references('id')->on('transactions')->onDelete('cascade');

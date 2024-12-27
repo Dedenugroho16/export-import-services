@@ -75,7 +75,7 @@ class TransactionController extends Controller
             ->whereNull('stuffing_date') // Hanya data yang stuffing_date bernilai null
             ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'stuffing_date']);
 
-            return DataTables::of($approvedInvoices)
+        return DataTables::of($approvedInvoices)
             ->addColumn('client', function ($row) {
                 return $row->client->name;  // Mengambil nama client dari relasi
             })
@@ -85,7 +85,7 @@ class TransactionController extends Controller
             ->addColumn('aksi', function ($row) {
                 // Menggunakan hash ID untuk tautan
                 $hashId = IdHashHelper::encode($row->id);
-        
+
                 // Membuat dropdown aksi
                 $dropdown = '
                     <div class="dropdown">
@@ -93,7 +93,7 @@ class TransactionController extends Controller
                             Aksi
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-        
+
                 // Cek jika stuffing_date bernilai null, tampilkan tombol "Konfirmasi" hanya untuk role admin dan director
                 if (is_null($row->stuffing_date)) {
                     if (in_array(auth()->user()->role, ['admin', 'operator'])) {
@@ -102,7 +102,7 @@ class TransactionController extends Controller
                         Konfirmasi</a></li>';
                     }
                 }
-        
+
                 // Menambahkan item lain dalam dropdown
                 $dropdown .= '
                     <li><a class="dropdown-item" href="' . route('transaction.show', $hashId) . '">
@@ -111,14 +111,14 @@ class TransactionController extends Controller
                     <li><a class="dropdown-item" href="' . route('packingList.show', $hashId) . '">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
                         Packing List</a></li>';
-        
+
                 $dropdown .= '</ul>
                     </div>';
-        
+
                 return $dropdown;
             })
             ->rawColumns(['aksi'])  // Agar kolom aksi dapat merender HTML
-            ->make(true);        
+            ->make(true);
     }
 
     public function incomplete()
@@ -243,16 +243,27 @@ class TransactionController extends Controller
                 ->make(true);
         }
 
-        // Query ke DetailProduct jika id_product ada
-        $query = DetailProduct::where('id_product', $request->id_product);
+        $query = DetailProduct::query();
+
+        if ($request->id_product == 1) {
+            // Jika id_product = 1, carikan DetailProduct dengan id_product = 1 dan 2
+            $query->whereIn('id_product', [1, 2])
+            ->orderByRaw('id_product = 1 DESC');
+        } else {
+            // Jika selain itu, jalankan query seperti biasa
+            $query->where('id_product', $request->id_product);
+        }
+
+        // Eksekusi query
+        $results = $query->get();
 
         // Jika query tidak mengembalikan data, DataTables akan tetap mengirimkan response
-        return datatables()->of($query)
-            ->addColumn('action', function ($row) {
-                $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
-                return $btn;
-            })
-            ->rawColumns(['action'])
+        return datatables()->of($results)
+            // ->addColumn('action', function ($row) {
+            //     $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
+            //     return $btn;
+            // })
+            // ->rawColumns(['action'])
             ->make(true);
     }
 
@@ -599,7 +610,7 @@ class TransactionController extends Controller
             $year = $request->input('year');
             $company_id = $request->input('company_id');
 
-                $payments = PaymentDetail::query()
+            $payments = PaymentDetail::query()
                 ->select(['date', 'payment_number', 'total'])
                 ->where('id_client_company', $company_id) // Filter hanya transaksi dengan id_client sesuai
                 ->when($year, function ($query, $year) {
@@ -678,7 +689,7 @@ class TransactionController extends Controller
             $payment->balance = $cumulativeBalancePayments += $paymentTotal;
             $payment->date = date('d/m/Y', strtotime($payment->date));
         }
-        
+
         $data = [
             'logo' => $logo,
             'year' => $year,
@@ -741,7 +752,7 @@ class TransactionController extends Controller
             $payment->balance = $cumulativeBalancePayments += $paymentTotal;
             $payment->date = date('d/m/Y', strtotime($payment->date));
         }
-        
+
         $data = [
             'logo' => $logo,
             'year' => $year,
