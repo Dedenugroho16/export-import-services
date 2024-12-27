@@ -167,16 +167,16 @@
                         <td style="font-weight: bold;">{{ $transaction->client->name }}</td>
                     </tr>
                     <tr>
-                        <td>{{ $transaction->client->address }}</td>
+                        <td>{{ $transaction->clientCompany->address }}</td>
                     </tr>
                     <tr>
-                        <td>P.O BOX : {{ $transaction->client->PO_BOX }}</td>
+                        <td>P.O BOX : {{ $transaction->clientCompany->PO_BOX }}</td>
                     </tr>
                     <tr>
-                        <td>TEL : {{ $transaction->client->tel }}</td>
+                        <td>TEL : {{ $transaction->clientCompany->tel }}</td>
                     </tr>
                     <tr>
-                        <td>FAX : {{ $transaction->client->fax }}</td>
+                        <td>FAX : {{ $transaction->clientCompany->fax }}</td>
                     </tr>
                 </table>
             </td>

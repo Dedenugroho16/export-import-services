@@ -251,9 +251,6 @@
                             <tr>
                                 <th class="text-center">No</th>
                                 <th class="text-center">Nama</th>
-                                <th class="text-center">Nama Perusahaan</th>
-                                <th class="text-center">ID Perusahaan</th>
-                                <th class="text-center">Alamat</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -319,25 +316,14 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        width: '20%'
                     },
                     {
                         data: 'name',
                         name: 'name',
-                    },
-                    {
-                        data: 'company_name',
-                        name: 'company_name',
-                        class: 'text-center'
-                    },
-                    {
-                        data: 'company_id',
-                        name: 'company_id',
-                        class: 'text-center'
-                    },
-                    {
-                        data: 'address',
-                        name: 'address',
+                        class: 'text-center align-middle',
+                        width: 'auto'
                     },
                     {
                         data: null,
@@ -345,9 +331,10 @@
                             console.log(row);
                             return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}" data-company="${row.company_name}" data-idcompany="${row.company_id}">Pilih</button>`;
                         },
-                        class: 'text-center',
+                        class: 'text-center align-middle',
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        width: '20%'
                     }
                 ],
                 language: {
