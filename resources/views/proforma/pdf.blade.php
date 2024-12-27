@@ -167,16 +167,16 @@
                         <td style="font-weight: bold;">{{ $proformaInvoice->client->name }}</td>
                     </tr>
                     <tr>
-                        <td>{{ $proformaInvoice->client->address }}</td>
+                        <td>{{ $proformaInvoice->clientCompany->address }}</td>
                     </tr>
                     <tr>
-                        <td>P.O BOX : {{ $proformaInvoice->client->PO_BOX }}</td>
+                        <td>P.O BOX : {{ $proformaInvoice->clientCompany->PO_BOX }}</td>
                     </tr>
                     <tr>
-                        <td>TEL : {{ $proformaInvoice->client->tel }}</td>
+                        <td>TEL : {{ $proformaInvoice->clientCompany->tel }}</td>
                     </tr>
                     <tr>
-                        <td>FAX : {{ $proformaInvoice->client->fax }}</td>
+                        <td>FAX : {{ $proformaInvoice->clientCompany->fax }}</td>
                     </tr>
                 </table>
             </td>

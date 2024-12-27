@@ -109,27 +109,58 @@
                                                             <div class="col-8">
                                                                 <div class="form-group">
                                                                     <div class="input-group">
-                                                                        <input type="text" class="form-control"
-                                                                            id="selectedClientName"
-                                                                            placeholder="Pilih Client"
-                                                                            value="{{ $transaction->client->name }}"
-                                                                            readonly>
-                                                                        <input type="hidden" id="selectedClientId"
-                                                                            name="id_client"
-                                                                            value="{{ $transaction->id_client }}">
-                                                                        <div class="btn-group">
-                                                                            <button type="button"
-                                                                                class="btn btn-primary btn-md"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#clientsModal">
-                                                                                <i data-feather="search"></i> Cari
-                                                                            </button>
+                                                                        <div class="input-group">
+                                                                            <select name="id_client" id="client_id" class="form-control">
+                                                                                <option value="">Pilih Client</option>
+                                                                                @foreach($clients as $client)
+                                                                                    <option value="{{ $client->id }}" 
+                                                                                        {{ old('id_client', $transaction->client->id ?? '') == $client->id ? 'selected' : '' }}>
+                                                                                        {{ $client->name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                     <span class="error-message" id="selectedClientId_error"
                                                                         style="color: red; display: none;"></span>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-3">
+                                                                <p><strong>Perusahaan</strong></p>
+                                                            </div>
+                                                            <div class="col-1 text-center">
+                                                                <span>:</span>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input 
+                                                                            type="text" 
+                                                                            class="form-control" 
+                                                                            id="selectedClientCompanyName" 
+                                                                            placeholder="Pilih Perusahaan Client" 
+                                                                            value="{{ old('client_company_name', $transaction->clientCompany->company_name ?? '') }}" 
+                                                                            readonly>
+                                                                        <input 
+                                                                            type="hidden" 
+                                                                            id="selectedClientCompanyId" 
+                                                                            name="id_client_company" 
+                                                                            value="{{ old('id_client_company', $transaction->clientCompany->id ?? '') }}">
+                                                                        <div class="btn-group">
+                                                                            <button 
+                                                                                type="button" 
+                                                                                class="btn btn-primary btn-md" 
+                                                                                data-bs-toggle="modal" 
+                                                                                data-bs-target="#clientCompanyModal">
+                                                                                <i data-feather="search"></i> Cari
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <span class="error-message" id="selectedConsigneeId_error" style="color: red; display: none;"></span>
+                                                                </div>
+                                                            </div>                                                            
                                                         </div>
                                                         <div class="row mt-2">
                                                             <div class="col-3">
@@ -575,20 +606,25 @@
         </div>
     </div>
 
-    <div class="modal fade text-left" id="clientsModal" tabindex="-1" role="dialog" aria-hidden="true">
+    {{-- modal Perusahaan Client --}}
+    <div class="modal fade text-left" id="clientCompanyModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="clientModalLabel">Pilih Client</h5>
+                    <h5 class="modal-title" id="companyModalLabel">Pilih Perusahaan Client</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table card-table table-vcenter text-nowrap" id="clientsModalTable">
+                    <table class="table card-table table-vcenter text-nowrap" id="clientCompanyModalTable">
                         <thead>
                             <tr>
-                                <th class="text-center">No.</th>
-                                <th class="text-center">Nama</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Nama Perusahaan</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">PO BOX</th>
+                                <th class="text-center">Telepon</th>
+                                <th class="text-center">Fax</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -621,7 +657,6 @@
                                 <th class="text-center">Nama</th>
                                 <th class="text-center">Alamat</th>
                                 <th class="text-center">Telepon</th>
-                                <th class="text-center">ID Client</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -1898,75 +1933,15 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#clientsModalTable').DataTable({
-                autoWidth: false,
-                processing: false,
-                serverSide: true,
-                ajax: "{{ route('clients.index') }}",
-                columns: [
-                    {
-                        data: null,
-                        class: 'text-center align-middle',
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        },
-                        orderable: false,
-                        searchable: false,
-                        width: '20%'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name',
-                        class: 'text-center align-middle',
-                        width: 'auto'
-                    },
-                    {
-                        data: null,
-                        class: 'text-center align-middle',
-                        render: function(data, type, row) {
-                            return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
-                        },
-                        orderable: false,
-                        searchable: false,
-                        width: '20%'
-                    }
-                ],
-                language: {
-                    lengthMenu: "Tampilkan _MENU_ entri",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                    paginate: {
-                        first: "Pertama",
-                        last: "Terakhir",
-                        next: "Selanjutnya",
-                        previous: "Sebelumnya"
-                    },
-                    search: "Cari :",
-                    infoFiltered: "(disaring dari total _MAX_ entri)"
-                },
-                lengthMenu: [5, 10, 25, 50],
-                pageLength: 10,
-                drawCallback: function() {
-                    $('#clientsModalTable td:nth-child(3), #clientsModalTable th:nth-child(3)').css({
-                        'max-width': '280px',
-                        'overflow': 'hidden',
-                        'text-overflow': 'ellipsis'
-                    });
-                }
-            });
-
-            // Event listener untuk tombol "Pilih" di tabel client
-            $('#clientsModalTable tbody').on('click', '.select-client', function() {
-                var clientId = $(this).data('id');
-                var clientName = $(this).data('name');
+            // Event listener untuk select client
+            $('#client_id').on('change', function() {
+                var clientId = $(this).val();
+                var clientName = $('#client_id option:selected').text();
 
                 $('#selectedClientId').val(clientId);
                 $('#selectedClientName').val(clientName);
                 $('#selectedConsigneeId').val(''); // Kosongkan nilai ID consignee
                 $('#selectedConsigneeName').val('');
-                $('#clientsModal').modal('hide');
-
-                // Hapus baris "Harap pilih client terlebih dahulu"
-                $('#nullConsignee').hide();
 
                 // Memuat data consignee berdasarkan ID client yang dipilih
                 loadConsignees(clientId);
@@ -1977,27 +1952,29 @@
                 processing: false,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('consignees.byClient', '0') }}", // Set ID client ke '0' atau gunakan route lain yang menghasilkan data kosong
+                    url: "{{ route('consignees.byClient', '0') }}",
                     dataSrc: function(json) {
                         if (json.data.length === 0) {
-                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
-                                '0') {
-                                // Jika client belum dipilih (clientId = 0 atau kosong), tampilkan pesan ini
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() === '0') {
                                 consigneeTable.settings()[0].oLanguage.sEmptyTable =
                                     "Harap pilih client terlebih dahulu";
                             } else {
-                                // Jika client sudah dipilih tetapi tidak ada consignee, tampilkan pesan ini
                                 consigneeTable.settings()[0].oLanguage.sEmptyTable =
                                     "Tidak ada consignee untuk client ini";
                             }
                         }
                         return json.data;
                     }
-                }, // diisi saat loadConsignees dipanggil
-                columns: [{
-                        data: 'id',
-                        name: 'id',
-                        class: 'text-center'
+                },
+                columns: [
+                    {
+                        data: null,
+                        class: 'text-center',
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'name',
@@ -2005,8 +1982,7 @@
                     },
                     {
                         data: 'address',
-                        name: 'address',
-                        class: 'text-center'
+                        name: 'address'
                     },
                     {
                         data: 'tel',
@@ -2014,14 +1990,11 @@
                         class: 'text-center'
                     },
                     {
-                        data: 'id_client',
-                        name: 'id_client',
-                        class: 'text-center'
-                    },
-                    {
                         data: null,
                         render: function(data, type, row) {
-                            return `<button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>`;
+                            return `<div class="text-center">
+                                        <button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>
+                                    </div>`;
                         },
                         orderable: false,
                         searchable: false
@@ -2038,22 +2011,48 @@
                     },
                     search: "Cari :",
                     infoFiltered: "(disaring dari total _MAX_ entri)",
-                    emptyTable: "Harap pilih client terlebih dahulu" // Ubah pesan saat tidak ada data
+                    emptyTable: "Harap pilih client terlebih dahulu"
                 },
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
+                drawCallback: function() {
+                    $('#consigneeModalTable td:nth-child(2), #consigneeModalTable th:nth-child(2)')
+                        .css({
+                            'max-width': '200px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
+                    $('#consigneeModalTable td:nth-child(3), #consigneeModalTable th:nth-child(3)')
+                        .css({
+                            'max-width': '250px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
+                }
             });
 
             // Fungsi untuk memuat data consignee berdasarkan ID client
             window.loadConsignees = function(clientId) {
                 if (!clientId) {
-                    $('#nullConsignee').show();
                     consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
                     return;
                 }
 
                 consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
             };
+
+            // Event listener untuk tombol buka modal consignee
+            $('#openConsigneeModal').on('click', function() {
+                var clientId = $('#selectedClientId').val();
+
+                if (!clientId) {
+                    // Tampilkan pesan "Harap pilih client terlebih dahulu" jika client belum dipilih
+                    consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
+                }
+
+                // Tampilkan modal consignee
+                $('#consigneeModal').modal('show');
+            });
 
             // Event listener untuk tombol "Pilih" di tabel consignee
             $('#consigneeModalTable tbody').on('click', '.select-consignee', function() {
@@ -2065,5 +2064,146 @@
                 $('#consigneeModal').modal('hide');
             });
         });
+
+        $(document).ready(function() {
+            // Event listener untuk select client
+            $('#client_id').on('change', function() {
+                var clientId = $(this).val();
+                var clientName = $('#client_id option:selected').text();
+
+                $('#selectedClientId').val(clientId);
+                $('#selectedClientName').val(clientName);
+                $('#selectedClientCompanyId').val('');
+                $('#selectedClientCompanyName').val('');
+
+                // Memuat data consignee berdasarkan ID client yang dipilih
+                loadClientCompanies(clientId);
+            });
+
+            var clientCompanyTable = $('#clientCompanyModalTable').DataTable({
+                autoWidth: false,
+                processing: false,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}", // Initial empty clientId
+                    dataSrc: function(json) {
+                        if (json.data.length === 0) {
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() === '0') {
+                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Harap pilih client terlebih dahulu";
+                            } else {
+                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Tidak ada client company untuk client ini";
+                            }
+                        }
+                        return json.data;
+                    }
+                },
+                columns: [
+                    {
+                        data: null,
+                        class: 'text-center',
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'company_name',
+                        name: 'company_name'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: 'PO_BOX',
+                        name: 'PO_BOX',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'fax',
+                        name: 'fax',
+                        class: 'text-center'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<div class="text-center">
+                                        <button class="btn btn-primary select-client-company" data-id="${row.id}" data-name="${row.company_name}">Pilih</button>
+                                    </div>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    search: "Cari :",
+                    infoFiltered: "(disaring dari total _MAX_ entri)",
+                    emptyTable: "Harap pilih client terlebih dahulu"
+                },
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10,
+                drawCallback: function() {
+                    $('#clientCompanyModalTable td:nth-child(2), #clientCompanyModalTable th:nth-child(2)')
+                        .css({
+                            'max-width': '200px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
+                    $('#clientCompanyModalTable td:nth-child(3), #clientCompanyModalTable th:nth-child(3)')
+                        .css({
+                            'max-width': '250px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
+                }
+            });
+
+            window.loadClientCompanies = function(clientId) {
+                if (!clientId || clientId === '0') {
+                    clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(':clientId', clientId)).load();
+                    return;
+                }
+
+                clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(':clientId', clientId)).load();
+            };
+
+
+            // Event listener for opening the client company modal
+            $('#openClientCompanyModal').on('click', function() {
+                var clientId = $('#selectedClientId').val();
+
+                if (!clientId) {
+                    clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => 0]) }}").load();
+                }
+
+                $('#clientCompanyModal').modal('show');
+            });
+
+            // Event listener for selecting a client company from the modal
+            $('#clientCompanyModalTable tbody').on('click', '.select-client-company', function() {
+                var clientCompanyId = $(this).data('id');
+                var clientCompanyName = $(this).data('name');
+
+                $('#selectedClientCompanyId').val(clientCompanyId);
+                $('#selectedClientCompanyName').val(clientCompanyName);
+                $('#clientCompanyModal').modal('hide');
+            });
+    });
     </script>
 @endsection

@@ -1874,279 +1874,279 @@
         });
     </script>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        // Event listener untuk select client
-        $('#client_id').on('change', function() {
-            var clientId = $(this).val();
-            var clientName = $('#client_id option:selected').text();
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Event listener untuk select client
+            $('#client_id').on('change', function() {
+                var clientId = $(this).val();
+                var clientName = $('#client_id option:selected').text();
 
-            $('#selectedClientId').val(clientId);
-            $('#selectedClientName').val(clientName);
-            $('#selectedConsigneeId').val(''); // Kosongkan nilai ID consignee
-            $('#selectedConsigneeName').val('');
+                $('#selectedClientId').val(clientId);
+                $('#selectedClientName').val(clientName);
+                $('#selectedConsigneeId').val(''); // Kosongkan nilai ID consignee
+                $('#selectedConsigneeName').val('');
 
-            // Memuat data consignee berdasarkan ID client yang dipilih
-            loadConsignees(clientId);
-        });
+                // Memuat data consignee berdasarkan ID client yang dipilih
+                loadConsignees(clientId);
+            });
 
-        var consigneeTable = $('#consigneeModalTable').DataTable({
-            autoWidth: false,
-            processing: false,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('consignees.byClient', '0') }}",
-                dataSrc: function(json) {
-                    if (json.data.length === 0) {
-                        if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() === '0') {
-                            consigneeTable.settings()[0].oLanguage.sEmptyTable =
-                                "Harap pilih client terlebih dahulu";
-                        } else {
-                            consigneeTable.settings()[0].oLanguage.sEmptyTable =
-                                "Tidak ada consignee untuk client ini";
+            var consigneeTable = $('#consigneeModalTable').DataTable({
+                autoWidth: false,
+                processing: false,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('consignees.byClient', '0') }}",
+                    dataSrc: function(json) {
+                        if (json.data.length === 0) {
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() === '0') {
+                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Harap pilih client terlebih dahulu";
+                            } else {
+                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Tidak ada consignee untuk client ini";
+                            }
                         }
+                        return json.data;
                     }
-                    return json.data;
-                }
-            },
-            columns: [
-                {
-                    data: null,
-                    class: 'text-center',
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
+                },
+                columns: [
+                    {
+                        data: null,
+                        class: 'text-center',
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'tel',
-                    name: 'tel',
-                    class: 'text-center'
-                },
-                {
-                    data: null,
-                    render: function(data, type, row) {
-                        return `<div class="text-center">
-                                    <button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>
-                                </div>`;
+                    {
+                        data: 'name',
+                        name: 'name'
                     },
-                    orderable: false,
-                    searchable: false
-                }
-            ],
-            language: {
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                paginate: {
-                    first: "Pertama",
-                    last: "Terakhir",
-                    next: "Selanjutnya",
-                    previous: "Sebelumnya"
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<div class="text-center">
+                                        <button class="btn btn-primary select-consignee" data-id="${row.id}" data-name="${row.name}">Pilih</button>
+                                    </div>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    search: "Cari :",
+                    infoFiltered: "(disaring dari total _MAX_ entri)",
+                    emptyTable: "Harap pilih client terlebih dahulu"
                 },
-                search: "Cari :",
-                infoFiltered: "(disaring dari total _MAX_ entri)",
-                emptyTable: "Harap pilih client terlebih dahulu"
-            },
-            lengthMenu: [5, 10, 25, 50],
-            pageLength: 10,
-            drawCallback: function() {
-                $('#consigneeModalTable td:nth-child(2), #consigneeModalTable th:nth-child(2)')
-                    .css({
-                        'max-width': '200px',
-                        'white-space': 'normal',
-                        'word-wrap': 'break-word'
-                    });
-                $('#consigneeModalTable td:nth-child(3), #consigneeModalTable th:nth-child(3)')
-                    .css({
-                        'max-width': '250px',
-                        'white-space': 'normal',
-                        'word-wrap': 'break-word'
-                    });
-            }
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10,
+                drawCallback: function() {
+                    $('#consigneeModalTable td:nth-child(2), #consigneeModalTable th:nth-child(2)')
+                        .css({
+                            'max-width': '200px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
+                    $('#consigneeModalTable td:nth-child(3), #consigneeModalTable th:nth-child(3)')
+                        .css({
+                            'max-width': '250px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
+                }
+            });
+
+            // Fungsi untuk memuat data consignee berdasarkan ID client
+            window.loadConsignees = function(clientId) {
+                if (!clientId) {
+                    consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
+                    return;
+                }
+
+                consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
+            };
+
+            // Event listener untuk tombol buka modal consignee
+            $('#openConsigneeModal').on('click', function() {
+                var clientId = $('#selectedClientId').val();
+
+                if (!clientId) {
+                    // Tampilkan pesan "Harap pilih client terlebih dahulu" jika client belum dipilih
+                    consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
+                }
+
+                // Tampilkan modal consignee
+                $('#consigneeModal').modal('show');
+            });
+
+            // Event listener untuk tombol "Pilih" di tabel consignee
+            $('#consigneeModalTable tbody').on('click', '.select-consignee', function() {
+                var consigneeId = $(this).data('id');
+                var consigneeName = $(this).data('name');
+
+                $('#selectedConsigneeId').val(consigneeId);
+                $('#selectedConsigneeName').val(consigneeName);
+                $('#consigneeModal').modal('hide');
+            });
         });
 
-        // Fungsi untuk memuat data consignee berdasarkan ID client
-        window.loadConsignees = function(clientId) {
-            if (!clientId) {
-                consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
-                return;
-            }
+        $(document).ready(function() {
+            // Event listener untuk select client
+            $('#client_id').on('change', function() {
+                var clientId = $(this).val();
+                var clientName = $('#client_id option:selected').text();
 
-            consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
-        };
+                $('#selectedClientId').val(clientId);
+                $('#selectedClientName').val(clientName);
+                $('#selectedClientCompanyId').val('');
+                $('#selectedClientCompanyName').val('');
 
-        // Event listener untuk tombol buka modal consignee
-        $('#openConsigneeModal').on('click', function() {
-            var clientId = $('#selectedClientId').val();
+                // Memuat data consignee berdasarkan ID client yang dipilih
+                loadClientCompanies(clientId);
+            });
 
-            if (!clientId) {
-                // Tampilkan pesan "Harap pilih client terlebih dahulu" jika client belum dipilih
-                consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
-            }
-
-            // Tampilkan modal consignee
-            $('#consigneeModal').modal('show');
-        });
-
-        // Event listener untuk tombol "Pilih" di tabel consignee
-        $('#consigneeModalTable tbody').on('click', '.select-consignee', function() {
-            var consigneeId = $(this).data('id');
-            var consigneeName = $(this).data('name');
-
-            $('#selectedConsigneeId').val(consigneeId);
-            $('#selectedConsigneeName').val(consigneeName);
-            $('#consigneeModal').modal('hide');
-        });
-    });
-
-   $(document).ready(function() {
-        // Event listener untuk select client
-        $('#client_id').on('change', function() {
-            var clientId = $(this).val();
-            var clientName = $('#client_id option:selected').text();
-
-            $('#selectedClientId').val(clientId);
-            $('#selectedClientName').val(clientName);
-            $('#selectedClientCompanyId').val('');
-            $('#selectedClientCompanyName').val('');
-
-            // Memuat data consignee berdasarkan ID client yang dipilih
-            loadClientCompanies(clientId);
-        });
-
-        var clientCompanyTable = $('#clientCompanyModalTable').DataTable({
-            autoWidth: false,
-            processing: false,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}", // Initial empty clientId
-                dataSrc: function(json) {
-                    if (json.data.length === 0) {
-                        if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() === '0') {
-                            clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
-                                "Harap pilih client terlebih dahulu";
-                        } else {
-                            clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
-                                "Tidak ada client company untuk client ini";
+            var clientCompanyTable = $('#clientCompanyModalTable').DataTable({
+                autoWidth: false,
+                processing: false,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}", // Initial empty clientId
+                    dataSrc: function(json) {
+                        if (json.data.length === 0) {
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() === '0') {
+                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Harap pilih client terlebih dahulu";
+                            } else {
+                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Tidak ada client company untuk client ini";
+                            }
                         }
+                        return json.data;
                     }
-                    return json.data;
-                }
-            },
-            columns: [
-                {
-                    data: null,
-                    class: 'text-center',
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
+                },
+                columns: [
+                    {
+                        data: null,
+                        class: 'text-center',
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'company_name',
-                    name: 'company_name'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'PO_BOX',
-                    name: 'PO_BOX',
-                    class: 'text-center'
-                },
-                {
-                    data: 'tel',
-                    name: 'tel',
-                    class: 'text-center'
-                },
-                {
-                    data: 'fax',
-                    name: 'fax',
-                    class: 'text-center'
-                },
-                {
-                    data: null,
-                    render: function(data, type, row) {
-                        return `<div class="text-center">
-                                    <button class="btn btn-primary select-client-company" data-id="${row.id}" data-name="${row.company_name}">Pilih</button>
-                                </div>`;
+                    {
+                        data: 'company_name',
+                        name: 'company_name'
                     },
-                    orderable: false,
-                    searchable: false
-                }
-            ],
-            language: {
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                paginate: {
-                    first: "Pertama",
-                    last: "Terakhir",
-                    next: "Selanjutnya",
-                    previous: "Sebelumnya"
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: 'PO_BOX',
+                        name: 'PO_BOX',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'fax',
+                        name: 'fax',
+                        class: 'text-center'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<div class="text-center">
+                                        <button class="btn btn-primary select-client-company" data-id="${row.id}" data-name="${row.company_name}">Pilih</button>
+                                    </div>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    },
+                    search: "Cari :",
+                    infoFiltered: "(disaring dari total _MAX_ entri)",
+                    emptyTable: "Harap pilih client terlebih dahulu"
                 },
-                search: "Cari :",
-                infoFiltered: "(disaring dari total _MAX_ entri)",
-                emptyTable: "Harap pilih client terlebih dahulu"
-            },
-            lengthMenu: [5, 10, 25, 50],
-            pageLength: 10,
-            drawCallback: function() {
-                $('#clientCompanyModalTable td:nth-child(2), #clientCompanyModalTable th:nth-child(2)')
-                    .css({
-                        'max-width': '200px',
-                        'white-space': 'normal',
-                        'word-wrap': 'break-word'
-                    });
-                $('#clientCompanyModalTable td:nth-child(3), #clientCompanyModalTable th:nth-child(3)')
-                    .css({
-                        'max-width': '250px',
-                        'white-space': 'normal',
-                        'word-wrap': 'break-word'
-                    });
-            }
-        });
+                lengthMenu: [5, 10, 25, 50],
+                pageLength: 10,
+                drawCallback: function() {
+                    $('#clientCompanyModalTable td:nth-child(2), #clientCompanyModalTable th:nth-child(2)')
+                        .css({
+                            'max-width': '200px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
+                    $('#clientCompanyModalTable td:nth-child(3), #clientCompanyModalTable th:nth-child(3)')
+                        .css({
+                            'max-width': '250px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
+                }
+            });
 
-        window.loadClientCompanies = function(clientId) {
-            if (!clientId || clientId === '0') {
+            window.loadClientCompanies = function(clientId) {
+                if (!clientId || clientId === '0') {
+                    clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(':clientId', clientId)).load();
+                    return;
+                }
+
                 clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(':clientId', clientId)).load();
-                return;
-            }
-
-            clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(':clientId', clientId)).load();
-        };
+            };
 
 
-        // Event listener for opening the client company modal
-        $('#openClientCompanyModal').on('click', function() {
-            var clientId = $('#selectedClientId').val();
+            // Event listener for opening the client company modal
+            $('#openClientCompanyModal').on('click', function() {
+                var clientId = $('#selectedClientId').val();
 
-            if (!clientId) {
-                clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => 0]) }}").load();
-            }
+                if (!clientId) {
+                    clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => 0]) }}").load();
+                }
 
-            $('#clientCompanyModal').modal('show');
-        });
+                $('#clientCompanyModal').modal('show');
+            });
 
-        // Event listener for selecting a client company from the modal
-        $('#clientCompanyModalTable tbody').on('click', '.select-client-company', function() {
-            var clientCompanyId = $(this).data('id');
-            var clientCompanyName = $(this).data('name');
+            // Event listener for selecting a client company from the modal
+            $('#clientCompanyModalTable tbody').on('click', '.select-client-company', function() {
+                var clientCompanyId = $(this).data('id');
+                var clientCompanyName = $(this).data('name');
 
-            $('#selectedClientCompanyId').val(clientCompanyId);
-            $('#selectedClientCompanyName').val(clientCompanyName);
-            $('#clientCompanyModal').modal('hide');
-        });
-   });
-</script>
+                $('#selectedClientCompanyId').val(clientCompanyId);
+                $('#selectedClientCompanyName').val(clientCompanyName);
+                $('#clientCompanyModal').modal('hide');
+            });
+    });
+    </script>
 @endsection

@@ -151,9 +151,11 @@
                                         </div>
                                         <div class="card-body p-1">
                                             <p>
-                                                {{ $transaction->client->name }} <br>
-                                                {{ $transaction->client->address }} <br>
-                                                {{ $transaction->client->tel }}
+                                                <strong>{{ $transaction->client->name }}</strong><br>
+                                                {{ $transaction->clientCompany->address }} <br>
+                                                PO BOX : {{ $transaction->clientCompany->PO_BOX }} <br>
+                                                TEL : {{ $transaction->clientCompany->tel }} <br>
+                                                FAX : {{ $transaction->clientCompany->fax }} <br>
                                             </p>
                                         </div>
                                     </div>

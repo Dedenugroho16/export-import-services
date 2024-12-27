@@ -132,7 +132,7 @@
                                         </div>
                                         <div class="card-body p-1">
                                             <p>
-                                                {{ $proformaInvoice->consignee->name }} <br>
+                                                <strong>{{ $proformaInvoice->consignee->name }}</strong><br>
                                                 {{ $proformaInvoice->consignee->address }} <br>
                                                 {{ $proformaInvoice->consignee->tel }}
                                             </p>
@@ -162,9 +162,11 @@
                                         </div>
                                         <div class="card-body p-1">
                                             <p>
-                                                {{ $proformaInvoice->client->name }} <br>
-                                                {{ $proformaInvoice->client->address }} <br>
-                                                {{ $proformaInvoice->client->tel }}
+                                                <strong>{{ $proformaInvoice->client->name }}</strong><br>
+                                                {{ $proformaInvoice->clientCompany->address }} <br>
+                                                PO BOX : {{ $proformaInvoice->clientCompany->PO_BOX }} <br>
+                                                TEL : {{ $proformaInvoice->clientCompany->tel }} <br>
+                                                FAX : {{ $proformaInvoice->clientCompany->fax }} <br>
                                             </p>
                                         </div>
                                     </div>

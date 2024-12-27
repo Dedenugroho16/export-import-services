@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
+use App\Models\ClientCompany;
 use App\Models\Clients;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\DetailTransaction;
@@ -335,15 +336,18 @@ class ProformaController extends Controller
         $clients = Client::all();
         $products = Product::all();
         $commodities = Commodity::all();
-        $countries = Country::all(); // Note: Changed to 'countries' for clarity
+        $countries = Country::all();
+        $clientCompany = ClientCompany::all();
 
         // Extract the selected product and commodity IDs
         $productSelectedID = $transaction->id_product;
         $commoditySelectedID = $transaction->id_commodity;
 
         // Retrieve the selected client and their address
-        $clientSelected = Client::findOrFail($transaction->id_client);
-        $clientSelectedAddress = $clientSelected->address;
+        $clientSelected = Clients::findOrFail($transaction->id_client);
+
+        $companySelected = ClientCompany::findOrFail($transaction->id_client_company);
+        $companySelectedAddress = $companySelected->address;
 
         // Retrieve the selected consignee and their address
         $consigneeSelected = Consignee::findOrFail($transaction->id_consignee);
@@ -388,10 +392,11 @@ class ProformaController extends Controller
             'countrySelected',
             'formattedNumber',
             'clientSelected', // Changed to send the whole object
-            'clientSelectedAddress',
             'consigneeSelected', // Changed to send the whole object
             'consigneeSelectedAddress',
             'selectedProductIds',
+            'companySelected',
+            'companySelectedAddress',
             'hash'
         ));
     }
@@ -406,6 +411,7 @@ class ProformaController extends Controller
             'id_consignee' => 'required|exists:consignees,id',
             'notify' => 'required|string|max:255',
             'id_client' => 'required|exists:clients,id',
+            'id_client_company' => 'required|exists:client_company,id',
             'port_of_loading' => 'required|string|max:255',
             'place_of_receipt' => 'required|string|max:255',
             'port_of_discharge' => 'required|string|max:255',
