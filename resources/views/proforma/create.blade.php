@@ -108,19 +108,16 @@
                                                             <div class="col-8">
                                                                 <div class="form-group">
                                                                     <div class="input-group">
-                                                                        <div class="input-group">
-                                                                            <select name="id_client" id="client_id" class="form-control">
-                                                                                <option value="">Pilih Client</option>
-                                                                                @foreach($clients as $client)
-                                                                                    <option value="{{ $client->id }}">{{ $client->name }}</option>
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
+                                                                        <select name="id_client" id="client_id" class="form-control select2">
+                                                                            <option value="">Pilih Client</option>
+                                                                            @foreach($clients as $client)
+                                                                                <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
                                                                     </div>
-                                                                    <span class="error-message" id="selectedClientId_error"
-                                                                        style="color: red; display: none;"></span>
+                                                                    <span class="error-message" id="selectedClientId_error" style="color: red; display: none;"></span>
                                                                 </div>
-                                                            </div>
+                                                            </div>                                                            
                                                         </div>
                                                         <div class="row mt-2">
                                                             <div class="col-3">
@@ -132,17 +129,25 @@
                                                             <div class="col-8">
                                                                 <div class="form-group">
                                                                     <div class="input-group">
-                                                                        <input type="text" class="form-control" id="selectedClientCompanyName" placeholder="Pilih Perusahaan Client" readonly>
-                                                                        <input type="hidden" id="selectedClientCompanyId" name="id_client_company">
+                                                                        <input type="text" class="form-control"
+                                                                            id="selectedClientCompanyName"
+                                                                            placeholder="Pilih Perusahaan Client" readonly>
+                                                                        <input type="hidden" id="selectedClientCompanyId"
+                                                                            name="id_client_company">
                                                                         <div class="btn-group">
-                                                                            <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#clientCompanyModal">
+                                                                            <button type="button"
+                                                                                class="btn btn-primary btn-md"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#clientCompanyModal">
                                                                                 <i data-feather="search"></i> Cari
                                                                             </button>
                                                                         </div>
                                                                     </div>
-                                                                    <span class="error-message" id="selectedConsigneeId_error" style="color: red; display: none;"></span>
+                                                                    <span class="error-message"
+                                                                        id="selectedConsigneeId_error"
+                                                                        style="color: red; display: none;"></span>
                                                                 </div>
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>
                                                         <div class="row mt-2">
                                                             <div class="col-3">
@@ -607,6 +612,14 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        // Initialize Select2 for client
+        $(document).ready(function() {
+                $('#client_id').select2({
+                    placeholder: "Pilih Client",
+                    width: '100%'
+                });
+            });
 
         $(document).ready(function() {
             $('#product').select2({
@@ -1136,7 +1149,7 @@
                 $(document).on('input', '.carton-input', function(e) {
                     // Ambil nilai yang dimasukkan pengguna dan hilangkan karakter yang tidak diinginkan
                     let value = e.target.value.replace(/[^.\d]/g, '');
-                    
+
                     // Temukan input hidden terkait di dalam elemen yang sama
                     let hiddenInput = $(this).closest('td').find('.carton_input');
 
@@ -1399,7 +1412,8 @@
 
                 var selectedClientId = $('#client_id').val(); // Ambil nilai dari select client
                 if (!selectedClientId) {
-                    $('#client_id_error').text('Client harus dipilih').show(); // Menampilkan pesan error di elemen dengan id client_id_error
+                    $('#client_id_error').text('Client harus dipilih')
+                .show(); // Menampilkan pesan error di elemen dengan id client_id_error
                     $('#client_id').addClass('is-invalid'); // Tambah border merah pada select
                     $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
                 }
@@ -1414,7 +1428,8 @@
                 var selectedClientCompanyId = $('#selectedClientCompanyId').val();
                 if (!selectedClientCompanyId) {
                     $('#selectedClientCompanyId_error').text('Consignee harus dipilih').show();
-                    $('#selectedClientCompanyName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('#selectedClientCompanyName').addClass(
+                    'is-invalid'); // Tambah border merah pada input
                     $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
                 }
 
@@ -1538,16 +1553,16 @@
             $('#client_id').on('change', function() {
                 var clientId = $(this).val();
                 var clientName = $('#client_id option:selected').text();
-    
+
                 $('#selectedClientId').val(clientId);
                 $('#selectedClientName').val(clientName);
                 $('#selectedConsigneeId').val(''); // Kosongkan nilai ID consignee
                 $('#selectedConsigneeName').val('');
-    
+
                 // Memuat data consignee berdasarkan ID client yang dipilih
                 loadConsignees(clientId);
             });
-    
+
             var consigneeTable = $('#consigneeModalTable').DataTable({
                 autoWidth: false,
                 processing: false,
@@ -1556,7 +1571,8 @@
                     url: "{{ route('consignees.byClient', '0') }}",
                     dataSrc: function(json) {
                         if (json.data.length === 0) {
-                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() === '0') {
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
+                                '0') {
                                 consigneeTable.settings()[0].oLanguage.sEmptyTable =
                                     "Harap pilih client terlebih dahulu";
                             } else {
@@ -1567,8 +1583,7 @@
                         return json.data;
                     }
                 },
-                columns: [
-                    {
+                columns: [{
                         data: null,
                         class: 'text-center',
                         render: function(data, type, row, meta) {
@@ -1631,42 +1646,42 @@
                         });
                 }
             });
-    
+
             // Fungsi untuk memuat data consignee berdasarkan ID client
             window.loadConsignees = function(clientId) {
                 if (!clientId) {
                     consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
                     return;
                 }
-    
+
                 consigneeTable.ajax.url("{{ route('consignees.byClient', '') }}/" + clientId).load();
             };
-    
+
             // Event listener untuk tombol buka modal consignee
             $('#openConsigneeModal').on('click', function() {
                 var clientId = $('#selectedClientId').val();
-    
+
                 if (!clientId) {
                     // Tampilkan pesan "Harap pilih client terlebih dahulu" jika client belum dipilih
                     consigneeTable.ajax.url("{{ route('consignees.byClient', '0') }}").load();
                 }
-    
+
                 // Tampilkan modal consignee
                 $('#consigneeModal').modal('show');
             });
-    
+
             // Event listener untuk tombol "Pilih" di tabel consignee
             $('#consigneeModalTable tbody').on('click', '.select-consignee', function() {
                 var consigneeId = $(this).data('id');
                 var consigneeName = $(this).data('name');
-    
+
                 $('#selectedConsigneeId').val(consigneeId);
                 $('#selectedConsigneeName').val(consigneeName);
                 $('#consigneeModal').modal('hide');
             });
         });
 
-       $(document).ready(function() {
+        $(document).ready(function() {
             // Event listener untuk select client
             $('#client_id').on('change', function() {
                 var clientId = $(this).val();
@@ -1689,7 +1704,8 @@
                     url: "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}", // Initial empty clientId
                     dataSrc: function(json) {
                         if (json.data.length === 0) {
-                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() === '0') {
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
+                                '0') {
                                 clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
                                     "Harap pilih client terlebih dahulu";
                             } else {
@@ -1700,8 +1716,7 @@
                         return json.data;
                     }
                 },
-                columns: [
-                    {
+                columns: [{
                         data: null,
                         class: 'text-center',
                         render: function(data, type, row, meta) {
@@ -1777,11 +1792,15 @@
 
             window.loadClientCompanies = function(clientId) {
                 if (!clientId || clientId === '0') {
-                    clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(':clientId', clientId)).load();
+                    clientCompanyTable.ajax.url(
+                        "{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(
+                            ':clientId', clientId)).load();
                     return;
                 }
 
-                clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(':clientId', clientId)).load();
+                clientCompanyTable.ajax.url(
+                    "{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(
+                        ':clientId', clientId)).load();
             };
 
 
@@ -1790,7 +1809,8 @@
                 var clientId = $('#selectedClientId').val();
 
                 if (!clientId) {
-                    clientCompanyTable.ajax.url("{{ route('clientCompanies.byClient', ['clientId' => 0]) }}").load();
+                    clientCompanyTable.ajax.url(
+                        "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}").load();
                 }
 
                 $('#clientCompanyModal').modal('show');
@@ -1805,6 +1825,6 @@
                 $('#selectedClientCompanyName').val(clientCompanyName);
                 $('#clientCompanyModal').modal('hide');
             });
-       });
-    </script>        
+        });
+    </script>
 @endsection

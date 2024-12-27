@@ -109,20 +109,16 @@
                                                             <div class="col-8">
                                                                 <div class="form-group">
                                                                     <div class="input-group">
-                                                                        <div class="input-group">
-                                                                            <select name="id_client" id="client_id" class="form-control">
-                                                                                <option value="">Pilih Client</option>
-                                                                                @foreach($clients as $client)
-                                                                                    <option value="{{ $client->id }}" 
-                                                                                        {{ old('id_client', $transaction->client->id ?? '') == $client->id ? 'selected' : '' }}>
-                                                                                        {{ $client->name }}
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
+                                                                        <select name="id_client" id="client_id" class="form-control select2">
+                                                                            <option value="">Pilih Client</option>
+                                                                            @foreach($clients as $client)
+                                                                                <option value="{{ $client->id }}" {{ old('id_client', $transaction->client->id ?? '') == $client->id ? 'selected' : '' }}>
+                                                                                    {{ $client->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
                                                                     </div>
-                                                                    <span class="error-message" id="selectedClientId_error"
-                                                                        style="color: red; display: none;"></span>
+                                                                    <span class="error-message" id="selectedClientId_error" style="color: red; display: none;"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -784,6 +780,14 @@
                     cache: true
                 },
                 placeholder: "Select a country",
+            });
+
+            // Initialize Select2 for client
+            $(document).ready(function() {
+                $('#client_id').select2({
+                    placeholder: "Pilih Client",
+                    width: '100%'
+                });
             });
 
             // Initialize Select2 for products
