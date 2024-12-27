@@ -575,17 +575,40 @@ class ProformaController extends Controller
     }
 
     public function getClientCompanies($clientId)
-{
-    $client = Clients::findOrFail($clientId);
-    $clientCompanies = $client->clientCompanies;
+    {
+        // Tangani kasus di mana $clientId adalah 0
+        if ($clientId == 0) {
+            return response()->json([
+                'draw' => intval(request()->get('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => []
+            ]);
+        }
 
-    // Mengembalikan data dalam format yang sesuai untuk DataTables
-    return response()->json([
-        'draw' => intval(request()->get('draw')),
-        'recordsTotal' => $clientCompanies->count(),
-        'recordsFiltered' => $clientCompanies->count(),
-        'data' => $clientCompanies
-    ]);
-}
+        // Cari client berdasarkan ID
+        $client = Clients::find($clientId);
+
+        // Jika client tidak ditemukan, kembalikan response kosong
+        if (!$client) {
+            return response()->json([
+                'draw' => intval(request()->get('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => []
+            ]);
+        }
+
+        // Ambil clientCompanies terkait
+        $clientCompanies = $client->clientCompanies;
+
+        // Mengembalikan data dalam format yang sesuai untuk DataTables
+        return response()->json([
+            'draw' => intval(request()->get('draw')),
+            'recordsTotal' => $clientCompanies->count(),
+            'recordsFiltered' => $clientCompanies->count(),
+            'data' => $clientCompanies
+        ]);
+    }
 
 }

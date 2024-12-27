@@ -108,16 +108,19 @@
                                                             <div class="col-8">
                                                                 <div class="form-group">
                                                                     <div class="input-group">
-                                                                        <select name="id_client" id="client_id" class="form-control select2">
+                                                                        <select name="id_client" id="client_id"
+                                                                            class="form-control select2">
                                                                             <option value="">Pilih Client</option>
-                                                                            @foreach($clients as $client)
-                                                                                <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                                                            @foreach ($clients as $client)
+                                                                                <option value="{{ $client->id }}">
+                                                                                    {{ $client->name }}</option>
                                                                             @endforeach
                                                                         </select>
                                                                     </div>
-                                                                    <span class="error-message" id="selectedClientId_error" style="color: red; display: none;"></span>
+                                                                    <span class="error-message" id="selectedClientId_error"
+                                                                        style="color: red; display: none;"></span>
                                                                 </div>
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>
                                                         <div class="row mt-2">
                                                             <div class="col-3">
@@ -615,11 +618,11 @@
 
         // Initialize Select2 for client
         $(document).ready(function() {
-                $('#client_id').select2({
-                    placeholder: "Pilih Client",
-                    width: '100%'
-                });
+            $('#client_id').select2({
+                placeholder: "Pilih Client",
+                width: '100%'
             });
+        });
 
         $(document).ready(function() {
             $('#product').select2({
@@ -1413,7 +1416,7 @@
                 var selectedClientId = $('#client_id').val(); // Ambil nilai dari select client
                 if (!selectedClientId) {
                     $('#client_id_error').text('Client harus dipilih')
-                .show(); // Menampilkan pesan error di elemen dengan id client_id_error
+                        .show(); // Menampilkan pesan error di elemen dengan id client_id_error
                     $('#client_id').addClass('is-invalid'); // Tambah border merah pada select
                     $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
                 }
@@ -1429,7 +1432,7 @@
                 if (!selectedClientCompanyId) {
                     $('#selectedClientCompanyId_error').text('Consignee harus dipilih').show();
                     $('#selectedClientCompanyName').addClass(
-                    'is-invalid'); // Tambah border merah pada input
+                        'is-invalid'); // Tambah border merah pada input
                     $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
                 }
 
