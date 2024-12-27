@@ -16,6 +16,7 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('id_consignee');
             $table->string('notify');
             $table->unsignedBigInteger('id_client');
+            $table->unsignedBigInteger('id_client_company');
             $table->string('port_of_loading');
             $table->string('place_of_receipt');
             $table->string('port_of_discharge');

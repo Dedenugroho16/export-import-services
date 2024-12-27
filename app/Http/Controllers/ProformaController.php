@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\DetailProduct;
 use App\Helpers\NumberToWords;
+use App\Models\Clients;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\DetailTransaction;
 use Illuminate\Support\Facades\Auth;
@@ -210,6 +211,7 @@ class ProformaController extends Controller
             'id_consignee' => 'required|exists:consignees,id',
             'notify' => 'required|string|max:255',
             'id_client' => 'required|exists:clients,id',
+            'id_client_company' => 'required|exists:client_company,id',
             'port_of_loading' => 'required|string|max:255',
             'place_of_receipt' => 'required|string|max:255',
             'port_of_discharge' => 'required|string|max:255',
@@ -565,4 +567,19 @@ class ProformaController extends Controller
             'data' => $consignees
         ]);
     }
+
+    public function getClientCompanies($clientId)
+{
+    $client = Clients::findOrFail($clientId);
+    $clientCompanies = $client->clientCompanies;
+
+    // Mengembalikan data dalam format yang sesuai untuk DataTables
+    return response()->json([
+        'draw' => intval(request()->get('draw')),
+        'recordsTotal' => $clientCompanies->count(),
+        'recordsFiltered' => $clientCompanies->count(),
+        'data' => $clientCompanies
+    ]);
+}
+
 }
