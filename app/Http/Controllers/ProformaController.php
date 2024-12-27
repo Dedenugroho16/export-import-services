@@ -36,7 +36,7 @@ class ProformaController extends Controller
             ->where('approved', 0) // Kondisi approved harus 0
             ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee']);
 
-            return DataTables::of($proformaInvoice)
+        return DataTables::of($proformaInvoice)
             ->addColumn('client', function ($row) {
                 return $row->client->name;
             })
@@ -45,14 +45,14 @@ class ProformaController extends Controller
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
-        
+
                 $actionBtn = '
                     <div class="dropdown">
                         <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
                             Aksi
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">';
-        
+
                 if (in_array(auth()->user()->role, ['director', 'admin'])) {
                     $actionBtn .= '
                         <button class="dropdown-item approve-btn text-success" data-id="' . $row->id . '">
@@ -60,7 +60,7 @@ class ProformaController extends Controller
                             Setujui
                         </button>';
                 }
-        
+
                 $actionBtn .= '
                     <a href="' . route('proforma.show', $hashId) . '" class="dropdown-item">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2">
@@ -83,15 +83,15 @@ class ProformaController extends Controller
                             Edit
                         </a>';
                 }
-        
+
                 $actionBtn .= '
                         </div>
                     </div>';
-        
+
                 return $actionBtn;
             })
             ->rawColumns(['aksi'])
-            ->make(true);        
+            ->make(true);
     }
 
     public function approveProforma($id)
@@ -128,12 +128,12 @@ class ProformaController extends Controller
             ->where('approved', 1)
             ->select(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'stuffing_date']);
 
-            return DataTables::of($approvedInvoices)
+        return DataTables::of($approvedInvoices)
             ->addColumn('client', function ($row) {
-                return $row->client->name; 
+                return $row->client->name;
             })
             ->addColumn('consignee', function ($row) {
-                return $row->consignee->name; 
+                return $row->consignee->name;
             })
             ->addColumn('aksi', function ($row) {
                 $hashId = IdHashHelper::encode($row->id);
@@ -143,13 +143,13 @@ class ProformaController extends Controller
                             Aksi
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">';
-        
+
                 $actionBtn .= '
                     <a href="' . route('proforma.show', $hashId) . '" class="dropdown-item">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
                         Lihat Detail
                     </a>';
-        
+
                 if (in_array(auth()->user()->role, ['admin', 'director', 'operator'])) {
                     $actionBtn .= '
                         <a href="' . route('proforma.edit', $hashId) . '" class="dropdown-item">
@@ -162,15 +162,15 @@ class ProformaController extends Controller
                             Edit
                         </a>';
                 }
-        
+
                 $actionBtn .= '
                         </div>
                     </div>';
-        
+
                 return $actionBtn;
             })
-            ->rawColumns(['aksi']) 
-            ->make(true);        
+            ->rawColumns(['aksi'])
+            ->make(true);
     }
 
     public function create()
@@ -232,11 +232,11 @@ class ProformaController extends Controller
         ]);
 
         $validatedData['created_by'] = Auth::id();
-        
+
         $transaction = Transaction::create($validatedData);
 
         // Kembalikan response JSON dengan ID transaksi yang baru
-         return response()->json(['id' => $transaction->id], 201);
+        return response()->json(['id' => $transaction->id], 201);
 
     }
 
@@ -265,16 +265,27 @@ class ProformaController extends Controller
                 ->make(true);
         }
 
-        // Query ke DetailProduct jika id_product ada
-        $query = DetailProduct::where('id_product', $request->id_product);
+        $query = DetailProduct::query();
+
+        if ($request->id_product == 1) {
+            // Jika id_product = 1, carikan DetailProduct dengan id_product = 1 dan 2
+            $query->whereIn('id_product', [1, 2])
+                ->orderByRaw('id_product = 1 DESC');
+        } else {
+            // Jika selain itu, jalankan query seperti biasa
+            $query->where('id_product', $request->id_product);
+        }
+
+        // Eksekusi query
+        $results = $query->get();
 
         // Jika query tidak mengembalikan data, DataTables akan tetap mengirimkan response
-        return datatables()->of($query)
-            ->addColumn('action', function ($row) {
-                $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
-                return $btn;
-            })
-            ->rawColumns(['action'])
+        return datatables()->of($results)
+            // ->addColumn('action', function ($row) {
+            //     $btn = '<button class="btn btn-primary btn-sm">Pilih <i class="bi bi-arrow-right"></i></button>';
+            //     return $btn;
+            // })
+            // ->rawColumns(['action'])
             ->make(true);
     }
 
