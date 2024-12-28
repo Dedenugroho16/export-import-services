@@ -22,14 +22,14 @@ class BillOfPaymentController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
+        $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_client_company', 'id_consignee', 'total']);
         return view('bill-of-payments.index', compact('transactions'));
     }
 
     public function getBillOfPayment()
     {
         $billOfPayments = BillOfPayment::with(['client.clientCompany'])
-            ->select(['id', 'month', 'no_inv', 'id_client', 'status'])
+            ->select(['id', 'month', 'no_inv', 'id_client', 'status', 'id_client_company'])
             ->orderBy('status', 'asc');
 
         return DataTables::of($billOfPayments)
@@ -38,10 +38,8 @@ class BillOfPaymentController extends Controller
                 return $row->client ? $row->client->name : '-';
             })
             ->addColumn('company_name', function ($row) {
-                return $row->client && $row->client->clientCompany
-                    ? $row->client->clientCompany->company_name
-                    : '-';
-            })
+                return $row->clientCompany ? $row->clientCompany->company_name : '-';
+            })                              
             ->addColumn('status', function ($row) {
                 $statusText = $row->status == 1 ? 'Lunas' : 'Belum Lunas';
                 $dotColor = $row->status == 1 ? 'green' : 'red';
@@ -286,6 +284,7 @@ class BillOfPaymentController extends Controller
             'month' => 'required',
             'no_inv' => 'required',
             'id_client' => 'required',
+            'id_client_company' => 'required',
             'total' => 'required|numeric|gte:0',
         ], [
             'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',

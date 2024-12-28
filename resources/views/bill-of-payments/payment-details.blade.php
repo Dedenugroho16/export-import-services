@@ -88,7 +88,7 @@
                                     <tr>
                                         <td>COMPANY NAME</td>
                                         <td>:</td>
-                                        <td style="font-weight: bold">{{ $billOfPayment->client->company_name}}</td>
+                                        <td style="font-weight: bold">{{ $billOfPayment->clientCompany->company_name}}</td>
                                     </tr>
                                 </table>
                                 <div>

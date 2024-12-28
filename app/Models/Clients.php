@@ -10,7 +10,7 @@ class Clients extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name' 
+        'name'
     ];
 
     public function consignees()
@@ -33,4 +33,8 @@ class Clients extends Model
         return $this->belongsToMany(ClientCompany::class, 'client_client_company', 'client_id', 'client_company_id')->withTimestamps();
     }
 
+    public function clientCompany()
+    {
+        return $this->belongsTo(ClientCompany::class, 'id_client_company', 'id');
+    }
 }
