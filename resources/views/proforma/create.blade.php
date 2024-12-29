@@ -111,10 +111,6 @@
                                                                         <select name="id_client" id="client_id"
                                                                             class="form-control select2">
                                                                             <option value="">Pilih Client</option>
-                                                                            @foreach ($clients as $client)
-                                                                                <option value="{{ $client->id }}">
-                                                                                    {{ $client->name }}</option>
-                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                     <span class="error-message" id="selectedClientId_error"
@@ -122,6 +118,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                         <div class="row mt-2">
                                                             <div class="col-3">
                                                                 <p><strong>Perusahaan</strong></p>
@@ -620,7 +617,26 @@
         $(document).ready(function() {
             $('#client_id').select2({
                 placeholder: "Pilih Client",
-                width: '100%'
+                width: '100%',
+                ajax: {
+                    url: '{{ route('proforma.clients.select2') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term // Search query
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                }
             });
         });
 
@@ -1573,16 +1589,6 @@
                 ajax: {
                     url: "{{ route('consignees.byClient', '0') }}",
                     dataSrc: function(json) {
-                        if (json.data.length === 0) {
-                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
-                                '0') {
-                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
-                                    "Harap pilih client terlebih dahulu";
-                            } else {
-                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
-                                    "Tidak ada consignee untuk client ini";
-                            }
-                        }
                         return json.data;
                     }
                 },
@@ -1630,7 +1636,12 @@
                     },
                     search: "Cari :",
                     infoFiltered: "(disaring dari total _MAX_ entri)",
-                    emptyTable: "Harap pilih client terlebih dahulu"
+                    emptyTable: function() {
+                        var clientSelected = $('#client_id').val();
+                        return clientSelected ?
+                            "Client yang Anda pilih tidak memiliki Consignee" :
+                            "Tolong pilih Client terlebih dahulu";
+                    },
                 },
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
@@ -1706,16 +1717,6 @@
                 ajax: {
                     url: "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}", // Initial empty clientId
                     dataSrc: function(json) {
-                        if (json.data.length === 0) {
-                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
-                                '0') {
-                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
-                                    "Harap pilih client terlebih dahulu";
-                            } else {
-                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
-                                    "Tidak ada client company untuk client ini";
-                            }
-                        }
                         return json.data;
                     }
                 },
@@ -1773,7 +1774,12 @@
                     },
                     search: "Cari :",
                     infoFiltered: "(disaring dari total _MAX_ entri)",
-                    emptyTable: "Harap pilih client terlebih dahulu"
+                    emptyTable: function() {
+                        var clientSelected = $('#client_id').val();
+                        return clientSelected ?
+                            "Client yang Anda pilih tidak memiliki Company" :
+                            "Tolong pilih Client terlebih dahulu";
+                    },
                 },
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,

@@ -225,7 +225,7 @@
                                     </li>
                                     <li>
                                         <a class="dropdown-item {{ Request::is('detail-products*') ? 'active-item' : '' }}" href="{{ url('/detail-products') }}">
-                                            Detail Produk
+                                            Import detail Produk
                                         </a>
                                     </li>
                                 </ul>

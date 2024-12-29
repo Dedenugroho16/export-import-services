@@ -75,8 +75,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p>{{ $billOfPayment->client && $billOfPayment->client->clientCompany 
-                                                    ? $billOfPayment->client->clientCompany->company_name : '-' }}</p>
+                                                    <p>{{ $billOfPayment->clientCompany->company_name}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -135,9 +134,7 @@
                                 <input type="hidden" id="payment_number" name="payment_number">
                                 <input type="hidden" id="selectedClientId" name="id_client"
                                     value="{{ $billOfPayment->client->id }}">
-                                <input type="hidden" id="selectedCompanyId" name="id_client_company"
-                                    value="{{ $billOfPayment->client && $billOfPayment->client->clientCompany 
-                                    ? $billOfPayment->client->clientCompany->id : '' }}">
+                                    <input type="hidden" id="selectedClientCompanyId" name="id_client_company" value="{{ $billOfPayment->clientCompany->id }}">
                                 <input type="hidden" id="total" name="total">
                             </form>
 
@@ -199,6 +196,7 @@
                             response.forEach(function(data) {
                                 let total = Number(data.total);
                                 var formattedPaid = parseFloat(data.paid).toLocaleString('en-US');
+                                var formattedBill = parseFloat(data.bill).toLocaleString('en-US');
                                 var newRow = `
                                                 <tr>
                                                     <td class="text-center" style="display: none;">
@@ -220,7 +218,7 @@
                                                         <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer">
                                                         <input type="hidden" name="transactions[${data.id}][transfered]" class="form-control transfered" placeholder="Uang ditransfer">
                                                     </td>
-                                                    <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center pi-bill">${formattedBill}</td>
                                                 </tr>
                                             `;
                                 $('#paymentDetailTable tbody').append(newRow);

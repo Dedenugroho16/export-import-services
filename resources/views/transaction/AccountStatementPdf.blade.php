@@ -38,7 +38,7 @@
 <body>
     <div style="text-align: center">
         <img src="{{ $logo ?? '' }}" alt="Logo" style="width: 230px;">
-        <h4 style="margin: 0;">PT. PSN STATEMENT - MYA <br>YEAR OF {{ $year }}</h4>
+        <h4 style="margin: 0;">PT. PSN STATEMENT - {{ $company_name }} <br>YEAR OF {{ $year }}</h4>
     </div>
     
     <div class="table-wrapper">

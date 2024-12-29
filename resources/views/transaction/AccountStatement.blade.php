@@ -6,33 +6,39 @@
         <div class="container-xl">
             <div
                 class="mb-4 mt-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                <form class="row align-items-center gy-2 gx-3 mb-3" method="GET" id="filterForm">
-                    <!-- Input Tahun -->
-                    <div class="col-sm-12 col-md-4">
-                        <label for="yearSelect" class="form-label mb-0" style="font-size: 0.9rem;">Pilih Tahun</label>
-                        <select name="year" id="yearSelect" class="form-select">
-                            <script>
-                                const yearSelect = $('#yearSelect');
-                                for (let year = new Date().getFullYear(); year <= new Date().getFullYear() + 99; year++) {
-                                    yearSelect.append(`<option value="${year}">${year}</option>`);
-                                }
-                            </script>
-                        </select>
-                    </div>
+                <form class="container mb-3" method="GET" id="filterForm">
+                    <div class="row align-items-center gy-2 gx-3">
+                        <!-- Input Tahun -->
+                        <div class="col-12 col-md-2">
+                            <label for="yearSelect" class="form-label mb-1" style="font-size: 0.9rem;">Pilih Tahun</label>
+                            <select name="year" id="yearSelect" class="form-select">
+                                <script>
+                                    const yearSelect = $('#yearSelect');
+                                    for (let year = new Date().getFullYear(); year <= new Date().getFullYear() + 99; year++) {
+                                        yearSelect.append(`<option value="${year}">${year}</option>`);
+                                    }
+                                </script>
+                            </select>
+                        </div>
 
-                    <!-- Select Nama Perusahaan -->
-                    <div class="col-sm-12 col-md-4">
-                        <label for="company_id" class="form-label mb-0" style="font-size: 0.9rem;">Pilih
-                            Perusahaan</label>
-                        <select name="company_id" id="company_id" class="form-select">
-                        </select>
-                    </div>
+                        <!-- Select Nama Perusahaan -->
+                        <div class="col-12 col-md-4">
+                            <label for="company_id" class="form-label mb-1" style="font-size: 0.9rem;">Pilih
+                                Perusahaan</label>
+                            <select name="company_id" id="company_id" class="form-select">
+                                <!-- Data akan dimuat melalui Select2 -->
+                            </select>
+                        </div>
 
-                    <!-- Tombol Filter dan Reset -->
-                    <div class="col-sm-12 col-md-4 d-flex align-items-end">
-                        <button type="button" id="filterBtn"
-                            class="btn btn-primary w-100 w-md-auto me-md-2">Filter</button>
-                        <a id="resetBtn" class="btn btn-secondary w-100 w-md-auto">Reset</a>
+                        <!-- Tombol Filter dan Reset -->
+                        <div class="row align-items-center gy-2 gx-3">
+                            <div class="col-12 col-md-4">
+                                <div class="d-flex gap-2">
+                                    <button type="button" id="filterBtn" class="btn btn-primary w-100">Filter</button>
+                                    <button type="button" id="resetBtn" class="btn btn-danger w-100">Reset</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
 
@@ -159,7 +165,7 @@
                         let totalPayment = parseFloat($('#totalBalancePayment').text().replace(/,/g, '')) || 0;
 
                         // Hitung balance
-                        let balance =  totalPayment - totalInvoice;
+                        let balance = totalPayment - totalInvoice;
 
                         // Format hasil menggunakan Intl.NumberFormat
                         let formattedBalance = new Intl.NumberFormat('en-US', {
@@ -193,7 +199,7 @@
                                 };
                             },
                             cache: true,
-                        },
+                        }
                     });
 
                     $('#company_id').on('select2:select', function(e) {
@@ -345,44 +351,44 @@
                         }
                     });
 
-                    $('#filterBtn').click(function () {
-                    let year = $('#yearSelect').val();
-                    let company_id = $('#company_id').val();
-                    var authUser = @json(Auth::user());
+                    $('#filterBtn').click(function() {
+                        let year = $('#yearSelect').val();
+                        let company_id = $('#company_id').val();
+                        var authUser = @json(Auth::user());
 
-                    // Periksa apakah signature_url pengguna sudah terisi
-                    if (!authUser.signature_url) {
-                        Swal.fire({
-                            title: 'Lengkapi Profil Anda',
-                            text: "Tanda tangan belum diunggah. Lengkapi profil untuk melanjutkan pembuatan dokumen.",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ke Profil',
-                            cancelButtonText: 'Batal'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '{{ route("profile.show") }}';
-                            }
-                        });
-                        return; // Hentikan proses filter
-                    }
+                        // Periksa apakah signature_url pengguna sudah terisi
+                        if (!authUser.signature_url) {
+                            Swal.fire({
+                                title: 'Lengkapi Profil Anda',
+                                text: "Tanda tangan belum diunggah. Lengkapi profil untuk melanjutkan pembuatan dokumen.",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ke Profil',
+                                cancelButtonText: 'Batal'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '{{ route('profile.show') }}';
+                                }
+                            });
+                            return; // Hentikan proses filter
+                        }
 
-                    if (!year || !company_id) {
-                        $('#error-message').show();
+                        if (!year || !company_id) {
+                            $('#error-message').show();
 
-                        setTimeout(function () {
-                            $('#error-message').hide();
-                        }, 3000);
+                            setTimeout(function() {
+                                $('#error-message').hide();
+                            }, 3000);
 
-                        return;
-                    }
+                            return;
+                        }
 
-                    $('#error-message').hide();
-                    table.ajax.reload(); // Reload data sesuai filter
-                    tableP.ajax.reload(); // Reload data sesuai filter
-                });
+                        $('#error-message').hide();
+                        table.ajax.reload(); // Reload data sesuai filter
+                        tableP.ajax.reload(); // Reload data sesuai filter
+                    });
 
                     // Reset button
                     $('#resetBtn').click(function() {
@@ -398,7 +404,7 @@
                     });
 
                     // Event listener untuk stream PDF
-                    $('#exporPdf').click(function (e) {
+                    $('#exporPdf').click(function(e) {
                         e.preventDefault();
 
                         let year = $('#yearSelect').val();
@@ -415,12 +421,13 @@
                         }
                         $('#error-message').hide();
 
-                        let url = `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
+                        let url =
+                            `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
                         window.open(url, '_blank');
                     });
 
                     // Event listener untuk download PDF
-                    $('#downloadPdf').click(function (e) {
+                    $('#downloadPdf').click(function(e) {
                         e.preventDefault();
 
                         let year = $('#yearSelect').val();
@@ -437,7 +444,8 @@
                         }
                         $('#error-message').hide();
 
-                        let url = `{{ route('account.statement.download') }}?yearSelect=${year}&company_id=${company_id}`;
+                        let url =
+                            `{{ route('account.statement.download') }}?yearSelect=${year}&company_id=${company_id}`;
                         window.open(url, '_blank');
                     });
                 });

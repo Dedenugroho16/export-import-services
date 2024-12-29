@@ -51,7 +51,6 @@ Route::get('/clients/{hash}/edit', [ClientsController::class, 'edit'])->name('cl
 Route::put('/clients/{hash}', [ClientsController::class, 'update'])->name('clients.update');
 Route::get('clients/details/{hash}', [ClientsController::class, 'details'])->name('clients.details');
 
-
 // Consignee Routes using resource
 Route::resource('consignees', ConsigneesController::class);
 Route::get('consignees/create/{hash}', [ConsigneesController::class, 'create'])->name('consignees.create');
@@ -176,7 +175,21 @@ Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaD
 
 // Route getConsigneeByid
 Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getConsigneesByClient'])->name('consignees.byClient');
+
+// Client Company Route
+// mencari company_name
+Route::get('/client-companies/get', [ClientsController::class, 'getClientCompanies'])->name('client-companies.get');
+Route::get('client-companies/import', [ClientCompanyController::class, 'import'])->name('client-companies.import');
+Route::post('client-companies/import-process', [ClientCompanyController::class, 'importProcess'])->name('client-companies.import-process');
+Route::get('client-companies/create', [ClientCompanyController::class, 'create'])->name('client-companies.create');
+
+// Route spesifik untuk clientId harus di atas Route::resource
 Route::get('/client-companies/{clientId}', [ProformaController::class, 'getClientCompanies'])->name('clientCompanies.byClient');
+
+// Route resource di bawah
+Route::resource('client-companies', ClientCompanyController::class);
+Route::get('/client-companies/{id}/show', [ClientCompanyController::class, 'show'])->name('client-companies.show');
+Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
 
 // Route Rekap Sales
 Route::get('/transactions/rekap', [TransactionController::class, 'rekapSales'])->name('transactions.rekap');
@@ -187,9 +200,6 @@ Route::get('/transactions/rekap-pdf', [TransactionController::class, 'rekapPdf']
 Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('transactions.downloadRekapPdf');
 Route::get('/account-statement/pdf', [TransactionController::class, 'accountStatementPdf'])->name('account.statement.pdf');
 Route::get('/account-statement/download', [TransactionController::class, 'accountStatementDownload'])->name('account.statement.download');
-
-// mencari company_name
-Route::get('/client-companies/get', [ClientsController::class, 'getClientCompanies'])->name('client-companies.get');
 
 // bill of payments
 Route::get('/bill-of-payment', [BillOfPaymentController::class, 'index'])->name('bill-of-payment.index');
@@ -227,11 +237,6 @@ Route::post('/payments/store', [PaymentController::class, 'store'])->name('payme
 Route::post('/payments/update', [PaymentController::class, 'update'])->name('payments.update');
 Route::post('/payment-details/store', [PaymentDetailController::class, 'store'])->name('payment-details.store');
 Route::post('/payment-details/update/{id}', [PaymentDetailController::class, 'update'])->name('payment-details.update');
-// Client Company Route
-Route::get('client-companies/import', [ClientCompanyController::class, 'import'])->name('client-companies.import');
-Route::post('client-companies/import-process', [ClientCompanyController::class, 'importProcess'])->name('client-companies.import-process');
-Route::resource('client-companies', ClientCompanyController::class);
-Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
 
 Route::get('/invoice-data', [DashboardController::class, 'getInvoiceData']);
 Route::get('/ajax-companies', function (Request $request) {
@@ -240,3 +245,5 @@ Route::get('/ajax-companies', function (Request $request) {
         ->get(['id', 'company_name']);
     return response()->json($companies);
 })->name('ajax-companies');
+Route::get('proforma/clients/select2', [ProformaController::class, 'getClients'])->name('proforma.clients.select2');
+Route::get('/bill-of-payment/client-company/{clientId}', [BillOfPaymentController::class, 'getClientCompanies'])->name('getClientCompanies.byClient');

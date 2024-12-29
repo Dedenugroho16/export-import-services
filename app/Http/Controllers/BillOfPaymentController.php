@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\BillOfPayment;
 use App\Helpers\NumberToWords;
+use App\Models\ClientCompany;
+use App\Models\Clients;
 use App\Models\PaymentDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -20,14 +22,14 @@ class BillOfPaymentController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
+        $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_client_company', 'id_consignee', 'total']);
         return view('bill-of-payments.index', compact('transactions'));
     }
 
     public function getBillOfPayment()
     {
         $billOfPayments = BillOfPayment::with(['client.clientCompany'])
-            ->select(['id', 'month', 'no_inv', 'id_client', 'status'])
+            ->select(['id', 'month', 'no_inv', 'id_client', 'status', 'id_client_company'])
             ->orderBy('status', 'asc');
 
         return DataTables::of($billOfPayments)
@@ -36,9 +38,7 @@ class BillOfPaymentController extends Controller
                 return $row->client ? $row->client->name : '-';
             })
             ->addColumn('company_name', function ($row) {
-                return $row->client && $row->client->clientCompany
-                    ? $row->client->clientCompany->company_name
-                    : '-';
+                return $row->clientCompany ? $row->clientCompany->company_name : '-';
             })
             ->addColumn('status', function ($row) {
                 $statusText = $row->status == 1 ? 'Lunas' : 'Belum Lunas';
@@ -111,12 +111,16 @@ class BillOfPaymentController extends Controller
 
     public function getProformaInvoices(Request $request)
     {
-        if (!$request->has('id_client') || empty($request->id_client)) {
-            return datatables()->of(collect([]))->make(true); // Data kosong jika `id_client` tidak ada
+        
+        if (
+            (!$request->has('id_client') || empty($request->id_client))
+        ) {
+            return datatables()->of(collect([]))->make(true); // Data kosong jika `id_client` dan `id_company` tidak ada atau kosong
         }
 
         $invoices = Transaction::where('approved', 1)
             ->where('id_client', $request->id_client)
+            ->where('id_client_company', $request->id_company)
             ->whereRaw('total <> (SELECT COALESCE(SUM(transfered), 0) FROM payments WHERE payments.id_transaction = transactions.id)')
             ->with('payments') // Pastikan relasi payments dimuat
             ->get();
@@ -143,6 +147,7 @@ class BillOfPaymentController extends Controller
             'month' => 'required',
             'no_inv' => 'required',
             'id_client' => 'required',
+            'id_client_company' => 'required',
             'total' => 'required|numeric|gte:0',
         ], [
             'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
@@ -173,9 +178,7 @@ class BillOfPaymentController extends Controller
         $totalBill = 0;
 
         foreach ($billOfPayment->descBills as $descBill) {
-            $transaction = $descBill->transaction;
-            $transaction->bill = $transaction->total - $descBill->paid;
-            $totalBill += $transaction->bill;
+            $totalBill += $descBill->bill;
         }
 
         $totalInWords = NumberToWords::convert($totalBill);
@@ -251,7 +254,7 @@ class BillOfPaymentController extends Controller
                 ->with([
                     'descBills' => function ($query) use ($idBill) {
                         $query->where('id_bill', $idBill) // Filter hanya untuk $idBill
-                            ->select('id_transaction', 'description', 'paid');
+                            ->select('id_transaction', 'description', 'paid', 'bill');
                     }
                 ])
                 ->select(
@@ -266,6 +269,7 @@ class BillOfPaymentController extends Controller
             $transactions = $transactions->map(function ($transaction) {
                 $transaction->description = $transaction->descBills->pluck('description');
                 $transaction->paid = $transaction->descBills->pluck('paid');
+                $transaction->bill = $transaction->descBills->pluck('bill');
                 return $transaction;
             });
 
@@ -283,6 +287,7 @@ class BillOfPaymentController extends Controller
             'month' => 'required',
             'no_inv' => 'required',
             'id_client' => 'required',
+            'id_client_company' => 'required',
             'total' => 'required|numeric|gte:0',
         ], [
             'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
@@ -317,9 +322,7 @@ class BillOfPaymentController extends Controller
         $totalBill = 0;
         foreach ($billOfPayment->descBills as $descBill) {
             if ($descBill->transaction) {
-                $transaction = $descBill->transaction;
-                $transaction->bill = $transaction->total - $descBill->paid;
-                $totalBill += $transaction->bill;
+                $totalBill += $descBill->bill;
             }
         }
 
@@ -372,9 +375,7 @@ class BillOfPaymentController extends Controller
         $totalBill = 0;
         foreach ($billOfPayment->descBills as $descBill) {
             if ($descBill->transaction) {
-                $transaction = $descBill->transaction;
-                $transaction->bill = $transaction->total - $descBill->paid;
-                $totalBill += $transaction->bill;
+                $totalBill += $descBill->bill;
             }
         }
 
@@ -446,5 +447,42 @@ class BillOfPaymentController extends Controller
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('payment-details_' . $hashId . '.pdf');
+    }
+
+    public function getClientCompanies($clientId)
+    {
+        // Tangani kasus di mana $clientId adalah 0
+        if ($clientId == 0) {
+            return response()->json([
+                'draw' => intval(request()->get('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => []
+            ]);
+        }
+
+        // Cari client berdasarkan ID
+        $client = Clients::find($clientId);
+
+        // Jika client tidak ditemukan, kembalikan response kosong
+        if (!$client) {
+            return response()->json([
+                'draw' => intval(request()->get('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => []
+            ]);
+        }
+
+        // Ambil clientCompanies terkait
+        $clientCompanies = $client->clientCompanies;
+
+        // Mengembalikan data dalam format yang sesuai untuk DataTables
+        return response()->json([
+            'draw' => intval(request()->get('draw')),
+            'recordsTotal' => $clientCompanies->count(),
+            'recordsFiltered' => $clientCompanies->count(),
+            'data' => $clientCompanies
+        ]);
     }
 }

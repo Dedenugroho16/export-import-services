@@ -66,7 +66,7 @@
                                                     <p id="no-inv-display">{{ $billOfPayment->client->name }}</p>
                                                 </div>
                                             </div>
-                                            <div class="row mt-2">
+                                            <div class="row">
                                                 <div class="col-4">
                                                     <p>Company Name</p>
                                                 </div>
@@ -74,7 +74,8 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p id="no-inv-display">{{ $billOfPayment->client->clientCompany->company_name }}</p>
+                                                    <p id="no-inv-display">{{ $billOfPayment->clientCompany->company_name }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -132,6 +133,8 @@
                                 <input type="hidden" id="no_inv" name="no_inv" value="{{ $billOfPayment->no_inv }}">
                                 <input type="hidden" id="selectedClientId" name="id_client"
                                     value="{{ $billOfPayment->client->id }}">
+                                <input type="hidden" id="selectedClientCompanyId" name="id_client_company"
+                                    value="{{ $billOfPayment->clientCompany->id }}">
                                 <input type="hidden" id="total" name="total">
                             </form>
 
@@ -182,6 +185,8 @@
                         if (response.length > 0) {
                             response.forEach(function(data) {
                                 let total = Number(data.total);
+                                let bill = parseFloat(data.bill || 0);
+                                let formattedBill = bill.toLocaleString('en-US');
                                 var newRow = `
                                                 <tr>
                                                     <td class="text-center" style="display: none;">
@@ -203,7 +208,10 @@
                                                         <input type="text" class="form-control" value="${data.paid?.toLocaleString('en-US') || '0'}" readonly>
                                                         <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
                                                     </td>
-                                                    <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center pi-bill">
+                                                        <input type="text" value="${formattedBill}" class="form-control bill-input" placeholder="Enter bill">
+                                                        <input type="hidden" value="${bill}" name="transactions[${data.id}][bill]" class="form-control bill-hidden">
+                                                    </td>
                                                 </tr>
                                             `;
                                 $('#billOfPaymentTable tbody').append(newRow);
@@ -223,6 +231,38 @@
                     }
                 });
             }
+
+            $('#billOfPaymentTable tbody').on('input', '.bill-input', function() {
+                var row = $(this).closest('tr');
+                var billInput = $(this);
+
+                // Ambil nilai input dan hapus karakter selain angka
+                var value = billInput.val();
+                var numericValue = value.replace(/[^0-9]/g, '');
+
+                // Format nilai ke locale string
+                var formattedValue = parseFloat(numericValue || 0).toLocaleString('en-US');
+                billInput.val(formattedValue);
+
+                // Simpan nilai asli (angka saja) ke dalam input hidden .bill-hidden
+                row.find('.bill-hidden').val(numericValue);
+
+                totalBill();
+                // Validasi jika diperlukan (contoh kasus transfer lebih besar dari jumlah tagihan)
+                var piBill = parseFloat(row.find('.amount').text().replace(/,/g, '')) || 0;
+                var payment = parseFloat(numericValue) || 0;
+
+                if (payment > piBill) {
+                    $('#submitButton').prop('disabled', true); // Disable tombol submit
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Jumlah Transfer Tidak Valid',
+                        text: 'Nilai transfer tidak boleh lebih besar dari jumlah yang harus dibayar.',
+                    });
+                } else {
+                    $('#submitButton').prop('disabled', false); // Aktifkan tombol jika valid
+                }
+            });
 
             // Pastikan idBillOfPayment tersedia untuk memuat data dari database
             var idBillOfPayment = "{{ $billOfPayment->id }}";
@@ -259,6 +299,14 @@
                 if (!selectedClientId) {
                     $('#selectedClientId_error').text('Data Buyer harus diisi').show();
                     $('#selectedClientName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var selectedClientCompanyId = $('#selectedClientCompanyId').val();
+                if (!selectedClientCompanyId) {
+                    $('#selectedClientCompanyId_error').text('Data perusahaan harus diisi').show();
+                    $('#selectedClientCompanyName').addClass(
+                        'is-invalid'); // Tambah border merah pada input
                     $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
                 }
 

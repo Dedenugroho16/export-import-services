@@ -240,7 +240,6 @@ class ProformaController extends Controller
 
         // Kembalikan response JSON dengan ID transaksi yang baru
         return response()->json(['id' => $transaction->id], 201);
-
     }
 
     public function show($hash)
@@ -622,4 +621,31 @@ class ProformaController extends Controller
         ]);
     }
 
+    public function getClients(Request $request)
+    {
+        $search = $request->get('q');
+
+        // Query untuk mencari client berdasarkan input
+        $clients = Clients::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->select('id', 'name') // Pilih hanya field yang diperlukan
+            ->paginate(10); // Batasi hasil per halaman
+
+        // Format response untuk Select2
+        $formattedClients = $clients->items();
+        $results = [];
+        foreach ($formattedClients as $client) {
+            $results[] = [
+                'id' => $client->id,
+                'text' => $client->name,
+            ];
+        }
+
+        return response()->json([
+            'results' => $results,
+            'pagination' => ['more' => $clients->hasMorePages()],
+        ]);
+    }
 }
