@@ -240,3 +240,6 @@ Route::get('/ajax-companies', function (Request $request) {
         ->get(['id', 'company_name']);
     return response()->json($companies);
 })->name('ajax-companies');
+Route::get('proforma/clients/select2', [ProformaController::class, 'getClients'])->name('proforma.clients.select2');
+Route::get('/bill-of-payment/client-company/{clientId}', [BillOfPaymentController::class, 'getClientCompanies'])->name('getClientCompanies.byClient');
+

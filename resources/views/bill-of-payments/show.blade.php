@@ -88,8 +88,7 @@
                                     <tr>
                                         <td>Company Name</td>
                                         <td>:</td>
-                                        <td style="font-weight: bold">{{ $billOfPayment->client && $billOfPayment->client->clientCompany 
-                                            ? $billOfPayment->client->clientCompany->company_name : '-' }}
+                                        <td style="font-weight: bold">{{ $billOfPayment->clientCompany->company_name }}
                                         </td>
                                     </tr>
                                 </table>

@@ -740,7 +740,26 @@
             $(document).ready(function() {
                 $('#client_id').select2({
                     placeholder: "Pilih Client",
-                    width: '100%'
+                    width: '100%',
+                    ajax: {
+                        url: '{{ route('proforma.clients.select2') }}',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                q: params.term // Search query
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: data.results,
+                                pagination: {
+                                    more: data.pagination.more
+                                }
+                            };
+                        },
+                        cache: true
+                    }
                 });
             });
 
@@ -2019,15 +2038,15 @@
         $(document).ready(function() {
             // Event listener untuk select client
             $('#client_id').on('change', function() {
-                const clientId = $(this).val();
-                const clientName = $('#client_id option:selected').text();
+                var clientId = $(this).val();
+                var clientName = $('#client_id option:selected').text();
 
                 $('#selectedClientId').val(clientId);
                 $('#selectedClientName').val(clientName);
-                $('#selectedClientCompanyId').val('');
+                $('#selectedClientCompanyId').val(''); // Kosongkan nilai ID client company
                 $('#selectedClientCompanyName').val('');
 
-                // Memuat data client companies berdasarkan ID client yang dipilih
+                // Memuat data client company berdasarkan ID client yang dipilih
                 loadClientCompanies(clientId);
             });
 
@@ -2037,13 +2056,18 @@
                 serverSide: true,
                 ajax: {
                     url: "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}", // Default clientId kosong
+                    data: function(d) {
+                        d.clientId = $('#selectedClientId').val();
+                    },
                     dataSrc: function(json) {
                         if (json.data.length === 0) {
-                            clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
-                                $('#selectedClientId').val() === '0' || $('#selectedClientId').val() ===
-                                '' ?
-                                "Harap pilih client terlebih dahulu" :
-                                "Tidak ada perusahaan untuk client ini";
+                            if ($('#selectedClientId').val() === '') {
+                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Harap pilih client terlebih dahulu";
+                            } else {
+                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Tidak ada perusahaan untuk client ini";
+                            }
                         }
                         return json.data;
                     }
@@ -2146,6 +2170,12 @@
                 $('#selectedClientCompanyName').val(clientCompanyName);
                 $('#clientCompanyModal').modal('hide');
             });
+
+            // Muat client company saat halaman dimuat
+            const initialClientId = $('#selectedClientId').val();
+            if (initialClientId) {
+                loadClientCompanies(initialClientId);
+            }
         });
     </script>
 @endsection

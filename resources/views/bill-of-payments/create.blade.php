@@ -65,15 +65,10 @@
                                                 <div class="col-7">
                                                     <div class="form-group">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control"
-                                                                id="selectedClientName" placeholder="Pilih Buyer" readonly>
-                                                            <br>
-                                                            <div class="btn-group">
-                                                                <button type="button" class="btn btn-primary btn-md"
-                                                                    data-bs-toggle="modal" data-bs-target="#clientsModal">
-                                                                    <i data-feather="search"></i> Cari
-                                                                </button>
-                                                            </div>
+                                                            <select name="id_client" id="client_id"
+                                                                class="form-control select2">
+                                                                <option value="">Pilih Buyer</option>
+                                                            </select>
                                                         </div>
                                                         <span class="error-message" id="selectedClientId_error"
                                                             style="color: red; display: none;"></span>
@@ -88,9 +83,23 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <input type="text" class="form-control"
-                                                        id="selectedClientCompanyName" placeholder="Nama Perusahaan"
-                                                        readonly>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control"
+                                                                id="selectedClientCompanyName"
+                                                                placeholder="Pilih Perusahaan Client" readonly>
+                                                            
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btn btn-primary btn-md"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#clientCompanyModal">
+                                                                    <i data-feather="search"></i> Cari
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <span class="error-message" id="selectedConsigneeId_error"
+                                                            style="color: red; display: none;"></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -222,7 +231,7 @@
                                 <input type="hidden" id="no_inv" name="no_inv">
                                 <input type="hidden" id="selectedClientId" name="id_client">
                                 <input type="hidden" id="selectedClientCompanyId" name="id_client_company">
-                                <input type="" id="total" name="total">
+                                <input type="hidden" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->
@@ -251,6 +260,41 @@
                             <tr>
                                 <th class="text-center">No</th>
                                 <th class="text-center">Nama</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- server side data --}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                        aria-label="Close">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- modal Perusahaan Client --}}
+    <div class="modal fade text-left" id="clientCompanyModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="companyModalLabel">Pilih Perusahaan Client</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table card-table table-vcenter text-nowrap" id="clientCompanyModalTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Nama Perusahaan</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">PO BOX</th>
+                                <th class="text-center">Telepon</th>
+                                <th class="text-center">Fax</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -303,12 +347,68 @@
     </div>
 
     <script>
+        // Initialize Select2 for client
         $(document).ready(function() {
-            $('#clientsModalTable').DataTable({
+            $('#client_id').select2({
+                placeholder: "Pilih Client",
+                width: '100%',
+                ajax: {
+                    url: '{{ route('proforma.clients.select2') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term // Search query
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            // Event listener untuk select client
+            $('#client_id').on('change', function() {
+                var clientId = $(this).val();
+                var clientName = $('#client_id option:selected').text();
+
+                $('#selectedClientId').val(clientId);
+                $('#selectedClientName').val(clientName);
+                $('#selectedClientCompanyId').val('');
+                $('#selectedClientCompanyName').val('');
+
+                // Memuat data consignee berdasarkan ID client yang dipilih
+                loadClientCompanies(clientId);
+            });
+
+            var clientCompanyTable = $('#clientCompanyModalTable').DataTable({
                 autoWidth: false,
                 processing: false,
                 serverSide: true,
-                ajax: "{{ route('clients.index') }}",
+                ajax: {
+                    url: "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}", // Initial empty clientId
+                    dataSrc: function(json) {
+                        if (json.data.length === 0) {
+                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
+                                '0') {
+                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Harap pilih client terlebih dahulu";
+                            } else {
+                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
+                                    "Tidak ada client company untuk client ini";
+                            }
+                        }
+                        return json.data;
+                    }
+                },
                 columns: [{
                         data: null,
                         class: 'text-center',
@@ -316,25 +416,40 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                         orderable: false,
-                        searchable: false,
-                        width: '20%'
+                        searchable: false
                     },
                     {
-                        data: 'name',
-                        name: 'name',
-                        class: 'text-center align-middle',
-                        width: 'auto'
+                        data: 'company_name',
+                        name: 'company_name'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: 'PO_BOX',
+                        name: 'PO_BOX',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'tel',
+                        name: 'tel',
+                        class: 'text-center'
+                    },
+                    {
+                        data: 'fax',
+                        name: 'fax',
+                        class: 'text-center'
                     },
                     {
                         data: null,
                         render: function(data, type, row) {
-                            console.log(row);
-                            return `<button class="btn btn-primary select-client" data-id="${row.id}" data-name="${row.name}" data-company="${row.company_name}" data-idcompany="${row.company_id}">Pilih</button>`;
+                            return `<div class="text-center">
+                                        <button class="btn btn-primary select-client-company" data-id="${row.id}" data-name="${row.company_name}">Pilih</button>
+                                    </div>`;
                         },
-                        class: 'text-center align-middle',
                         orderable: false,
-                        searchable: false,
-                        width: '20%'
+                        searchable: false
                     }
                 ],
                 language: {
@@ -347,17 +462,19 @@
                         previous: "Sebelumnya"
                     },
                     search: "Cari :",
-                    infoFiltered: "(disaring dari total _MAX_ entri)"
+                    infoFiltered: "(disaring dari total _MAX_ entri)",
+                    emptyTable: "Harap pilih client terlebih dahulu"
                 },
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
                 drawCallback: function() {
-                    $('#clientsModalTable td:nth-child(2), #clientsModalTable th:nth-child(2)').css({
-                        'max-width': '250px',
-                        'white-space': 'normal',
-                        'word-wrap': 'break-word'
-                    });
-                    $('#clientsModalTable td:nth-child(3), #clientsModalTable td:nth-child(4), #clientsModalTable td:nth-child(5)')
+                    $('#clientCompanyModalTable td:nth-child(2), #clientCompanyModalTable th:nth-child(2)')
+                        .css({
+                            'max-width': '200px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word'
+                        });
+                    $('#clientCompanyModalTable td:nth-child(3), #clientCompanyModalTable th:nth-child(3)')
                         .css({
                             'max-width': '250px',
                             'white-space': 'normal',
@@ -366,31 +483,67 @@
                 }
             });
 
-            // Event listener untuk tombol "Pilih" di tabel client
-            $('#clientsModalTable tbody').on('click', '.select-client', function() {
-                var clientId = $(this).data('id');
-                var clientName = $(this).data('name');
-                var companyName = $(this).data('company');
-                var companyID = $(this).data('idcompany');
+            window.loadClientCompanies = function(clientId) {
+                if (!clientId || clientId === '0') {
+                    clientCompanyTable.ajax.url(
+                        "{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(
+                            ':clientId', clientId)).load();
+                    return;
+                }
 
-                $('#selectedClientId').val(clientId);
-                $('#selectedClientCompanyId').val(companyID);
-                $('#selectedClientName').val(clientName);
-                $('#selectedClientCompanyName').val(companyName);
-                $('#clientsModal').modal('hide');
+                clientCompanyTable.ajax.url(
+                    "{{ route('clientCompanies.byClient', ['clientId' => ':clientId']) }}".replace(
+                        ':clientId', clientId)).load();
+            };
 
-                $('#selectedClientId_error').text('').hide(); // Sembunyikan pesan error
-                $('#selectedClientName').removeClass('is-invalid'); // Hapus border merah pada input
-                $('.input-group').removeClass('has-error'); // Hapus border merah pada grup input
 
-                selectedPI = [];
-                $('#billOfPaymentTable tbody').empty();
-                totalBill();
-                $('#PITable').DataTable().ajax.reload();
+            // Event listener for opening the client company modal
+            $('#openClientCompanyModal').on('click', function() {
+                var clientId = $('#selectedClientId').val();
+
+                if (!clientId) {
+                    clientCompanyTable.ajax.url(
+                        "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}").load();
+                }
+
+                $('#clientCompanyModal').modal('show');
             });
 
+            // Event listener for selecting a client company from the modal
+            $('#clientCompanyModalTable tbody').on('click', '.select-client-company', function() {
+                var clientCompanyId = $(this).data('id');
+                var clientCompanyName = $(this).data('name');
+
+                $('#selectedClientCompanyId').val(clientCompanyId);
+                $('#selectedClientCompanyName').val(clientCompanyName);
+                $('#clientCompanyModal').modal('hide');
+            });
+        });
+
+        $(document).ready(function() {
+            // Event listener untuk select client
+            $('#client_id').on('change', function() {
+                var clientId = $(this).val();
+                var clientName = $('#client_id option:selected').text();
+
+                // Menetapkan nilai pada inputan yang relevan
+                $('#selectedClientId').val(clientId);
+                $('#selectedClientName').val(clientName);
+                $('#selectedClientCompanyId').val('');
+                $('#selectedClientCompanyName').val('');
+
+                // Memuat data proforma invoice berdasarkan ID client yang dipilih
+                loadProformaInvoices(clientId);
+            });
+
+            // Function untuk memuat proforma invoices berdasarkan clientId
+            function loadProformaInvoices(clientId) {
+                $('#PITable').DataTable().ajax.url("{{ route('getProformaInvoices') }}?id_client=" + clientId)
+                    .load();
+            }
+
             // Inisialisasi DataTable untuk #PITable
-            $('#PITable').DataTable({
+            var proformaInvoiceTable = $('#PITable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -447,13 +600,13 @@
                         className: 'text-center',
                         render: function(data, type, row) {
                             return `<button class="btn btn-primary btn-sm pilih-btn" 
-            data-id="${row.id}" 
-            data-number="${row.number}"
-            data-paid="${row.total_paid}" 
-            data-code="${row.code}" 
-            data-amount="${row.amount}">
-            Pilih
-            </button>`;
+                    data-id="${row.id}" 
+                    data-number="${row.number}"
+                    data-paid="${row.total_paid}" 
+                    data-code="${row.code}" 
+                    data-amount="${row.amount}">
+                    Pilih
+                    </button>`;
                         }
                     }
                 ],
@@ -499,28 +652,6 @@
                 pageLength: 10
             });
 
-            function totalBill() {
-                var totalBill = 0;
-
-                // Iterasi setiap baris untuk mendapatkan nilai total
-                $('#billOfPaymentTable tbody tr').each(function() {
-                    var bill = parseFloat($(this).find('.bill-hidden').val()) ||
-                    0; // Ambil nilai asli dari .bill-hidden
-                    totalBill += bill;
-                });
-
-                // Hitung grandTotal
-                var grandTotal = totalBill;
-
-                var formattedGrandTotal = grandTotal.toLocaleString('en-US', {
-                    minimumFractionDigits: 2
-                });
-
-                // Update nilai total di elemen input total-display
-                $('.total-display').val(formattedGrandTotal);
-                $('#total').val(grandTotal);
-            }
-
             // Event listener untuk tombol "Pilih"
             var selectedPI = []; // Array untuk menyimpan ID yang sudah dipilih
 
@@ -547,32 +678,32 @@
                 var formattedAmount = parseFloat(data.amount).toLocaleString('en-US');
                 var formattedBill = parseFloat(data.amount - data.paid).toLocaleString('en-US');
                 var newRow = `
-                                <tr>
-                                    <td class="text-center" style="display: none;">
-                                        <input class="id-proforma" type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
-                                    </td>
-                                    <td class="text-center" style="display: none;">
-                                        <input type="hidden" id="id_bill" name="transactions[${data.id}][id_bill]">
-                                    </td>
-                                    <td class="text-center">${data.number}</td>
-                                    <td class="text-center">${data.code}</td>
-                                    <td class="text-center">
-                                        <input type="text" name="transactions[${data.id}][description]" class="form-control description-input" placeholder="Enter description">
-                                    </td>
-                                    <td class="text-center amount">${formattedAmount}</td>
-                                    <td class="text-center" style="width:150px;">
-                                        <input type="text" class="form-control" value="${data.paid?.toLocaleString('en-US')}" readonly>
-                                        <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
-                                    </td>
-                                    <td class="text-center pi-bill">
-                                        <input type="text" class="form-control bill-input" placeholder="Enter bill">
-                                        <input type="" name="transactions[${data.id}][bill]" class="form-control bill-hidden">
-                                    </td>
-                                    <td class="text-center">
-                                        <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
-                                    </td>
-                                </tr>
-                            `;
+            <tr>
+                <td class="text-center" style="display: none;">
+                    <input class="id-proforma" type="hidden" name="transactions[${data.id}][id]" value="${data.id}">
+                </td>
+                <td class="text-center" style="display: none;">
+                    <input type="hidden" id="id_bill" name="transactions[${data.id}][id_bill]">
+                </td>
+                <td class="text-center">${data.number}</td>
+                <td class="text-center">${data.code}</td>
+                <td class="text-center">
+                    <input type="text" name="transactions[${data.id}][description]" class="form-control description-input" placeholder="Enter description">
+                </td>
+                <td class="text-center amount">${formattedAmount}</td>
+                <td class="text-center" style="width:150px;">
+                    <input type="text" class="form-control" value="${data.paid?.toLocaleString('en-US')}" readonly>
+                    <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
+                </td>
+                <td class="text-center pi-bill">
+                    <input type="text" class="form-control bill-input" placeholder="Enter bill">
+                    <input type="hidden" name="transactions[${data.id}][bill]" class="form-control bill-hidden">
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-danger btn-sm delete-btn">Hapus</button>
+                </td>
+            </tr>
+        `;
 
                 // Append row ke #billOfPaymentTable
                 $('#billOfPaymentTable tbody').append(newRow);
@@ -586,7 +717,7 @@
                     var row = $(this).closest('tr');
                     var idToRemove = row.find('.id-proforma').val();
 
-                    // Hapus produk dari array newSelectedProductIds jika dihapus
+                    // Hapus produk dari array selectedPI jika dihapus
                     var index = selectedPI.indexOf(parseInt(idToRemove));
                     if (index !== -1) {
                         selectedPI.splice(index, 1);
@@ -595,9 +726,34 @@
                     row.remove(); // Hapus baris dari tabel
                     totalBill();
                 });
+
                 totalBill();
             });
 
+            // Function untuk menghitung total bill
+            function totalBill() {
+                var totalBill = 0;
+
+                // Iterasi setiap baris untuk mendapatkan nilai total
+                $('#billOfPaymentTable tbody tr').each(function() {
+                    var bill = parseFloat($(this).find('.bill-hidden').val()) ||
+                        0; // Ambil nilai asli dari .bill-hidden
+                    totalBill += bill;
+                });
+
+                // Hitung grandTotal
+                var grandTotal = totalBill;
+
+                var formattedGrandTotal = grandTotal.toLocaleString('en-US', {
+                    minimumFractionDigits: 2
+                });
+
+                // Update nilai total di elemen input total-display
+                $('.total-display').val(formattedGrandTotal);
+                $('#total').val(grandTotal);
+            }
+
+            // Event listener untuk input bill
             $('#billOfPaymentTable tbody').on('input', '.bill-input', function() {
                 var row = $(this).closest('tr');
                 var billInput = $(this);
@@ -610,12 +766,10 @@
                 var formattedValue = parseFloat(numericValue || 0).toLocaleString('en-US');
                 billInput.val(formattedValue);
 
-                // Simpan nilai asli (angka saja) ke input .bill-hidden
+                // Simpan nilai asli (angka saja) ke dalam input hidden .bill-hidden
                 row.find('.bill-hidden').val(numericValue);
 
-                // Perbarui jumlah jika diperlukan
                 totalBill();
-
                 // Validasi jika diperlukan (contoh kasus transfer lebih besar dari jumlah tagihan)
                 var piBill = parseFloat(row.find('.pi-bill input').val().replace(/,/g, '')) || 0;
                 var payment = parseFloat(numericValue) || 0;
@@ -661,7 +815,9 @@
 
             // Menetapkan nilai input #month
             $('#month').val(monthYear);
+
         });
+
 
         $(document).ready(function() {
             function validateTransactionForm() {
@@ -697,6 +853,13 @@
                 if (!selectedClientId) {
                     $('#selectedClientId_error').text('Data Buyer harus diisi').show();
                     $('#selectedClientName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var selectedClientCompanyId = $('#selectedClientCompanyId').val();
+                if (!selectedClientCompanyId) {
+                    $('#selectedClientCompanyId_error').text('Data perusahaan harus diisi').show();
+                    $('#selectedClientCompanyName').addClass('is-invalid'); // Tambah border merah pada input
                     $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
                 }
 

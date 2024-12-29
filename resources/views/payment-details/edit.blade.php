@@ -75,8 +75,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p>{{ $paymentDetails->client && $paymentDetails->client->clientCompany 
-                                                    ? $paymentDetails->client->clientCompany->company_name : '-' }}</p>
+                                                    <p>{{ $paymentDetails->clientCompany->company_name}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -129,14 +128,14 @@
                             <form id="formPaymentDetails" class="mt-2" method="POST"
                                 action="{{ route('payment-details.update', $paymentDetails->id) }}">
                                 @csrf
-                                <input type="date" name="date" id="date" value="{{ $paymentDetails->date }}">
-                                <input type="" id="id_bill_of_payment" name="id_bill_of_payment"
+                                <input type="hidden" name="date" id="date" value="{{ $paymentDetails->date }}">
+                                <input type="hidden" id="id_bill_of_payment" name="id_bill_of_payment"
                                     value="{{ $paymentDetails->billOfPayment->id }}">
-                                <input type="" id="payment_number" name="payment_number"
+                                <input type="hidden" id="payment_number" name="payment_number"
                                     value="{{ $paymentDetails->payment_number }}">
-                                <input type="" id="selectedClientId" name="id_client"
+                                <input type="hidden" id="selectedClientId" name="id_client"
                                     value="{{ $paymentDetails->client->id }}">
-                                <input type="" id="total" name="total">
+                                <input type="hidden" id="total" name="total">
                             </form>
 
                             <!-- Tombol Submit -->

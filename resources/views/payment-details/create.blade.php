@@ -75,8 +75,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p>{{ $billOfPayment->client && $billOfPayment->client->clientCompany 
-                                                    ? $billOfPayment->client->clientCompany->company_name : '-' }}</p>
+                                                    <p>{{ $billOfPayment->clientCompany->company_name}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -135,9 +134,7 @@
                                 <input type="hidden" id="payment_number" name="payment_number">
                                 <input type="hidden" id="selectedClientId" name="id_client"
                                     value="{{ $billOfPayment->client->id }}">
-                                <input type="hidden" id="selectedCompanyId" name="id_client_company"
-                                    value="{{ $billOfPayment->client && $billOfPayment->client->clientCompany 
-                                    ? $billOfPayment->client->clientCompany->id : '' }}">
+                                    <input type="hidden" id="selectedClientCompanyId" name="id_client_company" value="{{ $billOfPayment->clientCompany->id }}">
                                 <input type="hidden" id="total" name="total">
                             </form>
 

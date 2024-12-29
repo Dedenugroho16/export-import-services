@@ -66,7 +66,7 @@
                                                     <p id="no-inv-display">{{ $billOfPayment->client->name }}</p>
                                                 </div>
                                             </div>
-                                            <div class="row mt-2">
+                                            <div class="row">
                                                 <div class="col-4">
                                                     <p>Company Name</p>
                                                 </div>
@@ -74,7 +74,7 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p id="no-inv-display">{{ $billOfPayment->client->clientCompany->company_name }}</p>
+                                                    <p id="no-inv-display">{{ $billOfPayment->clientCompany->company_name}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -130,8 +130,8 @@
                                 @method('PATCH') <!-- Menentukan metode update -->
                                 <input type="hidden" id="month" name="month" value="{{ $billOfPayment->month }}">
                                 <input type="hidden" id="no_inv" name="no_inv" value="{{ $billOfPayment->no_inv }}">
-                                <input type="hidden" id="selectedClientId" name="id_client"
-                                    value="{{ $billOfPayment->client->id }}">
+                                <input type="hidden" id="selectedClientId" name="id_client" value="{{ $billOfPayment->client->id }}">
+                                <input type="hidden" id="selectedClientCompanyId" name="id_client_company" value="{{ $billOfPayment->clientCompany->id }}">
                                 <input type="hidden" id="total" name="total">
                             </form>
 
@@ -259,6 +259,13 @@
                 if (!selectedClientId) {
                     $('#selectedClientId_error').text('Data Buyer harus diisi').show();
                     $('#selectedClientName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
+                }
+
+                var selectedClientCompanyId = $('#selectedClientCompanyId').val();
+                if (!selectedClientCompanyId) {
+                    $('#selectedClientCompanyId_error').text('Data perusahaan harus diisi').show();
+                    $('#selectedClientCompanyName').addClass('is-invalid'); // Tambah border merah pada input
                     $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
                 }
 

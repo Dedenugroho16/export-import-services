@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\BillOfPayment;
 use App\Helpers\NumberToWords;
+use App\Models\ClientCompany;
+use App\Models\Clients;
 use App\Models\PaymentDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -20,14 +22,14 @@ class BillOfPaymentController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_consignee', 'total']);
+        $transactions = Transaction::all(['id', 'code', 'number', 'date', 'id_client', 'id_client_company', 'id_consignee', 'total']);
         return view('bill-of-payments.index', compact('transactions'));
     }
 
     public function getBillOfPayment()
     {
         $billOfPayments = BillOfPayment::with(['client.clientCompany'])
-            ->select(['id', 'month', 'no_inv', 'id_client', 'status'])
+            ->select(['id', 'month', 'no_inv', 'id_client', 'status', 'id_client_company'])
             ->orderBy('status', 'asc');
 
         return DataTables::of($billOfPayments)
@@ -36,10 +38,8 @@ class BillOfPaymentController extends Controller
                 return $row->client ? $row->client->name : '-';
             })
             ->addColumn('company_name', function ($row) {
-                return $row->client && $row->client->clientCompany
-                    ? $row->client->clientCompany->company_name
-                    : '-';
-            })
+                return $row->clientCompany ? $row->clientCompany->company_name : '-';
+            })                              
             ->addColumn('status', function ($row) {
                 $statusText = $row->status == 1 ? 'Lunas' : 'Belum Lunas';
                 $dotColor = $row->status == 1 ? 'green' : 'red';
@@ -143,6 +143,7 @@ class BillOfPaymentController extends Controller
             'month' => 'required',
             'no_inv' => 'required',
             'id_client' => 'required',
+            'id_client_company' => 'required',
             'total' => 'required|numeric|gte:0',
         ], [
             'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
@@ -283,6 +284,7 @@ class BillOfPaymentController extends Controller
             'month' => 'required',
             'no_inv' => 'required',
             'id_client' => 'required',
+            'id_client_company' => 'required',
             'total' => 'required|numeric|gte:0',
         ], [
             'total.gte' => 'Nilai paid tidak boleh melebihi nilai bill.',
@@ -446,5 +448,42 @@ class BillOfPaymentController extends Controller
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('payment-details_' . $hashId . '.pdf');
+    }
+
+    public function getClientCompanies($clientId)
+    {
+        // Tangani kasus di mana $clientId adalah 0
+        if ($clientId == 0) {
+            return response()->json([
+                'draw' => intval(request()->get('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => []
+            ]);
+        }
+
+        // Cari client berdasarkan ID
+        $client = Clients::find($clientId);
+
+        // Jika client tidak ditemukan, kembalikan response kosong
+        if (!$client) {
+            return response()->json([
+                'draw' => intval(request()->get('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => []
+            ]);
+        }
+
+        // Ambil clientCompanies terkait
+        $clientCompanies = $client->clientCompanies;
+
+        // Mengembalikan data dalam format yang sesuai untuk DataTables
+        return response()->json([
+            'draw' => intval(request()->get('draw')),
+            'recordsTotal' => $clientCompanies->count(),
+            'recordsFiltered' => $clientCompanies->count(),
+            'data' => $clientCompanies
+        ]);
     }
 }
