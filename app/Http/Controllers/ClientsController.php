@@ -245,7 +245,7 @@ class ClientsController extends Controller
             $query->where('company_name', 'like', '%' . $search . '%');
         }
 
-        $clientCompanies = $query->paginate(10);
+        $clientCompanies = $query->get();
 
         return response()->json([
             'results' => $clientCompanies->map(function ($company) {
@@ -253,8 +253,7 @@ class ClientsController extends Controller
                     'id' => $company->id,
                     'text' => $company->company_name, // Key 'text' sesuai kebutuhan Select2
                 ];
-            }),
-            'pagination' => ['more' => $clientCompanies->hasMorePages()]
+            })
         ]);
     }
 }

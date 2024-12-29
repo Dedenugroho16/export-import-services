@@ -6,33 +6,39 @@
         <div class="container-xl">
             <div
                 class="mb-4 mt-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                <form class="row align-items-center gy-2 gx-3 mb-3" method="GET" id="filterForm">
-                    <!-- Input Tahun -->
-                    <div class="col-sm-12 col-md-4">
-                        <label for="yearSelect" class="form-label mb-0" style="font-size: 0.9rem;">Pilih Tahun</label>
-                        <select name="year" id="yearSelect" class="form-select">
-                            <script>
-                                const yearSelect = $('#yearSelect');
-                                for (let year = new Date().getFullYear(); year <= new Date().getFullYear() + 99; year++) {
-                                    yearSelect.append(`<option value="${year}">${year}</option>`);
-                                }
-                            </script>
-                        </select>
-                    </div>
+                <form class="container mb-3" method="GET" id="filterForm">
+                    <div class="row align-items-center gy-2 gx-3">
+                        <!-- Input Tahun -->
+                        <div class="col-12 col-md-2">
+                            <label for="yearSelect" class="form-label mb-1" style="font-size: 0.9rem;">Pilih Tahun</label>
+                            <select name="year" id="yearSelect" class="form-select">
+                                <script>
+                                    const yearSelect = $('#yearSelect');
+                                    for (let year = new Date().getFullYear(); year <= new Date().getFullYear() + 99; year++) {
+                                        yearSelect.append(`<option value="${year}">${year}</option>`);
+                                    }
+                                </script>
+                            </select>
+                        </div>
 
-                    <!-- Select Nama Perusahaan -->
-                    <div class="col-sm-12 col-md-4">
-                        <label for="company_id" class="form-label mb-0" style="font-size: 0.9rem;">Pilih
-                            Perusahaan</label>
-                        <select name="company_id" id="company_id" class="form-select">
-                        </select>
-                    </div>
+                        <!-- Select Nama Perusahaan -->
+                        <div class="col-12 col-md-4">
+                            <label for="company_id" class="form-label mb-1" style="font-size: 0.9rem;">Pilih
+                                Perusahaan</label>
+                            <select name="company_id" id="company_id" class="form-select">
+                                <!-- Data akan dimuat melalui Select2 -->
+                            </select>
+                        </div>
 
-                    <!-- Tombol Filter dan Reset -->
-                    <div class="col-sm-12 col-md-4 d-flex align-items-end">
-                        <button type="button" id="filterBtn"
-                            class="btn btn-primary w-100 w-md-auto me-md-2">Filter</button>
-                        <a id="resetBtn" class="btn btn-secondary w-100 w-md-auto">Reset</a>
+                        <!-- Tombol Filter dan Reset -->
+                        <div class="row align-items-center gy-2 gx-3">
+                            <div class="col-12 col-md-4">
+                                <div class="d-flex gap-2">
+                                    <button type="button" id="filterBtn" class="btn btn-primary w-100">Filter</button>
+                                    <button type="button" id="resetBtn" class="btn btn-danger w-100">Reset</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
 
@@ -416,7 +422,7 @@
                         $('#error-message').hide();
 
                         let url =
-                        `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
+                            `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
                         window.open(url, '_blank');
                     });
 

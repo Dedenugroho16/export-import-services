@@ -15,6 +15,7 @@ use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Helpers\IdHashHelper;
 use App\Models\BillOfPayment;
+use App\Models\ClientCompany;
 use App\Models\DetailProduct;
 use App\Models\PaymentDetail;
 use App\Helpers\NumberToWords;
@@ -248,7 +249,7 @@ class TransactionController extends Controller
         if ($request->id_product == 1) {
             // Jika id_product = 1, carikan DetailProduct dengan id_product = 1 dan 2
             $query->whereIn('id_product', [1, 2])
-            ->orderByRaw('id_product = 1 DESC');
+                ->orderByRaw('id_product = 1 DESC');
         } else {
             // Jika selain itu, jalankan query seperti biasa
             $query->where('id_product', $request->id_product);
@@ -648,8 +649,10 @@ class TransactionController extends Controller
     {
         $year = $request->input('yearSelect');
         $company_id = $request->input('company_id');
+        $company_name = ClientCompany::query()
+            ->where('id', $company_id)
+            ->value('company_name');
         $logo = ImageHelper::getBase64Image('storage/logo1.png');
-        $clientIds = Client::where('client_company_id', $company_id)->pluck('id');
         $user = Auth::user();
         $signatureUrl = $user->signature_url;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
@@ -658,7 +661,7 @@ class TransactionController extends Controller
         $transactions = Transaction::query()
             ->select(['date', 'number', 'total'])
             ->where('approved', 1)
-            ->whereIn('id_client', $clientIds)
+            ->where('id_client_company', $company_id)
             ->when($year, function ($query, $year) {
                 return $query->whereYear('date', $year);
             })
@@ -694,6 +697,7 @@ class TransactionController extends Controller
             'logo' => $logo,
             'year' => $year,
             'company_id' => $company_id,
+            'company_name' => $company_name,
             'transactions' => $transactions,
             'payments' => $payments,
             'user' => $user,
@@ -712,8 +716,10 @@ class TransactionController extends Controller
         $year = $request->input('yearSelect');
         $company_id = $request->input('company_id');
         $logo = ImageHelper::getBase64Image('storage/logo1.png');
-        $clientIds = Client::where('client_company_id', $company_id)->pluck('id');
         $user = Auth::user();
+        $company_name = ClientCompany::query()
+        ->where('id', $company_id)
+        ->value('company_name');
         $signatureUrl = $user->signature_url;
         $signature = $signatureUrl ? ImageHelper::getBase64Image('storage/' . $signatureUrl) : null;
 
@@ -721,7 +727,7 @@ class TransactionController extends Controller
         $transactions = Transaction::query()
             ->select(['date', 'number', 'total'])
             ->where('approved', 1)
-            ->whereIn('id_client', $clientIds)
+            ->where('id_client_company', $company_id)
             ->when($year, function ($query, $year) {
                 return $query->whereYear('date', $year);
             })
@@ -757,6 +763,7 @@ class TransactionController extends Controller
             'logo' => $logo,
             'year' => $year,
             'company_id' => $company_id,
+            'company_name' => $company_name,
             'transactions' => $transactions,
             'payments' => $payments,
             'user' => $user,
