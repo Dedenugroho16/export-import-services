@@ -654,10 +654,34 @@
                 year: 'numeric',
                 month: 'long'
             };
-            var monthYear = currentDate.toLocaleDateString('id-ID', options).toUpperCase();
+
+            // Mendapatkan bulan dan tahun dalam format 'long' (misalnya "Januari 2024")
+            var monthYear = currentDate.toLocaleDateString('id-ID', options);
+
+            // Mengonversi bulan dalam bahasa Indonesia menjadi bahasa Inggris
+            var monthsIndoToEng = {
+                "Januari": "January",
+                "Februari": "February",
+                "Maret": "March",
+                "April": "April",
+                "Mei": "May",
+                "Juni": "June",
+                "Juli": "July",
+                "Agustus": "August",
+                "September": "September",
+                "Oktober": "October",
+                "November": "November",
+                "Desember": "December"
+            };
+
+            // Mengambil nama bulan dan mengonversinya
+            var monthInEnglish = monthsIndoToEng[monthYear.split(' ')[0]];
+
+            // Mengonversi bulan dan tahun ke format yang dapat diterima oleh Carbon
+            var convertedMonthYear = monthInEnglish + ' ' + monthYear.split(' ')[1];
 
             // Menetapkan nilai input #month
-            $('#month').val(monthYear);
+            $('#month').val(convertedMonthYear);
         });
 
         $(document).ready(function() {
@@ -702,7 +726,7 @@
                         if (data.success) {
                             // Handle success (e.g., redirect or show success message)
                             window.location.href =
-                            "{{ route('opening-balance.index') }}"; // Redirect on success
+                                "{{ route('opening-balance.index') }}"; // Redirect on success
                         }
                     },
                     error: function(xhr) {
@@ -713,7 +737,7 @@
                                 let errorElement = $('#' + field + '_error');
                                 if (errorElement.length) {
                                     errorElement.show().text(messages[
-                                    0]); // Display the first error message
+                                        0]); // Display the first error message
                                     hasError = true; // Set error flag to true
                                 }
                             });
@@ -736,6 +760,26 @@
                                     // Handle successful submission (e.g., show success message or redirect)
                                     window.location.href =
                                         "{{ route('opening-balance.index') }}"; // Redirect on success
+                                },
+                                error: function(xhr) {
+                                    // Cek apakah response memiliki success: false
+                                    var response = xhr.responseJSON;
+
+                                    if (response && response.success === false) {
+                                        // Menampilkan pesan error dari response menggunakan SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: response.message
+                                        });
+                                    } else {
+                                        // Menangani error lainnya (jika ada)
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Something went wrong!',
+                                            text: response.message
+                                        });
+                                    }
                                 }
                             });
                         }

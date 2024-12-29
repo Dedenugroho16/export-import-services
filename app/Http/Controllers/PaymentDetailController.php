@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Company;
 use App\Models\Transaction;
 use App\Helpers\ImageHelper;
@@ -425,6 +426,19 @@ class PaymentDetailController extends Controller
             ]
         );
 
+        $year = Carbon::createFromFormat('F Y', $validatedData['month'])->year;
+        $existingOpeningBalance = PaymentDetail::where('id_client_company', $validatedData['id_client_company'])
+            ->where('payment_number', 'like', '%(OPENING BALANCE)%')
+            ->whereYear('date', $year)
+            ->exists(); // Mengecek apakah sudah ada data dengan kondisi tersebut
+
+        if ($existingOpeningBalance) {
+            // Jika sudah ada, tampilkan alert menggunakan SweetAlert dan batalkan penyimpanan
+            return response()->json([
+                'success' => false,
+                'message' => 'Perusahaan tersebut sudah memiliki opening balance pada tahun ini.'
+            ], 400);
+        }
 
         $paymentDetail = PaymentDetail::create([
             'payment_number' => $validatedData['no_inv'],
@@ -483,7 +497,6 @@ class PaymentDetailController extends Controller
 
         $paymentDetail->update([
             'payment_number' => $validatedData['no_inv'],
-            'date' => now(),
             'id_client' => $validatedData['id_client'],
             'id_client_company' => $validatedData['id_client_company'],
             'total' => $validatedData['total'],
