@@ -580,13 +580,13 @@ class TransactionController extends Controller
             $company_id = $request->input('company_id');
 
             // Ambil data client berdasarkan nama perusahaan
-            $clientIds = Client::where('client_company_id', $company_id)->pluck('id');
+            // $clientIds = Client::where('client_company_id', $company_id)->pluck('id');
 
             // Query transaksi dengan filter tahun dan id_client yang sesuai
             $transactions = Transaction::query()
                 ->select(['date', 'number', 'total'])
                 ->where('approved', 1)
-                ->whereIn('id_client', $clientIds) // Filter hanya transaksi dengan id_client sesuai
+                ->where('id_client_company', $company_id) // Filter hanya transaksi dengan id_client sesuai
                 ->when($year, function ($query, $year) {
                     return $query->whereYear('date', $year);
                 });

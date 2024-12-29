@@ -159,7 +159,7 @@
                         let totalPayment = parseFloat($('#totalBalancePayment').text().replace(/,/g, '')) || 0;
 
                         // Hitung balance
-                        let balance =  totalPayment - totalInvoice;
+                        let balance = totalPayment - totalInvoice;
 
                         // Format hasil menggunakan Intl.NumberFormat
                         let formattedBalance = new Intl.NumberFormat('en-US', {
@@ -193,7 +193,7 @@
                                 };
                             },
                             cache: true,
-                        },
+                        }
                     });
 
                     $('#company_id').on('select2:select', function(e) {
@@ -345,44 +345,44 @@
                         }
                     });
 
-                    $('#filterBtn').click(function () {
-                    let year = $('#yearSelect').val();
-                    let company_id = $('#company_id').val();
-                    var authUser = @json(Auth::user());
+                    $('#filterBtn').click(function() {
+                        let year = $('#yearSelect').val();
+                        let company_id = $('#company_id').val();
+                        var authUser = @json(Auth::user());
 
-                    // Periksa apakah signature_url pengguna sudah terisi
-                    if (!authUser.signature_url) {
-                        Swal.fire({
-                            title: 'Lengkapi Profil Anda',
-                            text: "Tanda tangan belum diunggah. Lengkapi profil untuk melanjutkan pembuatan dokumen.",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ke Profil',
-                            cancelButtonText: 'Batal'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '{{ route("profile.show") }}';
-                            }
-                        });
-                        return; // Hentikan proses filter
-                    }
+                        // Periksa apakah signature_url pengguna sudah terisi
+                        if (!authUser.signature_url) {
+                            Swal.fire({
+                                title: 'Lengkapi Profil Anda',
+                                text: "Tanda tangan belum diunggah. Lengkapi profil untuk melanjutkan pembuatan dokumen.",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ke Profil',
+                                cancelButtonText: 'Batal'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '{{ route('profile.show') }}';
+                                }
+                            });
+                            return; // Hentikan proses filter
+                        }
 
-                    if (!year || !company_id) {
-                        $('#error-message').show();
+                        if (!year || !company_id) {
+                            $('#error-message').show();
 
-                        setTimeout(function () {
-                            $('#error-message').hide();
-                        }, 3000);
+                            setTimeout(function() {
+                                $('#error-message').hide();
+                            }, 3000);
 
-                        return;
-                    }
+                            return;
+                        }
 
-                    $('#error-message').hide();
-                    table.ajax.reload(); // Reload data sesuai filter
-                    tableP.ajax.reload(); // Reload data sesuai filter
-                });
+                        $('#error-message').hide();
+                        table.ajax.reload(); // Reload data sesuai filter
+                        tableP.ajax.reload(); // Reload data sesuai filter
+                    });
 
                     // Reset button
                     $('#resetBtn').click(function() {
@@ -398,7 +398,7 @@
                     });
 
                     // Event listener untuk stream PDF
-                    $('#exporPdf').click(function (e) {
+                    $('#exporPdf').click(function(e) {
                         e.preventDefault();
 
                         let year = $('#yearSelect').val();
@@ -415,12 +415,13 @@
                         }
                         $('#error-message').hide();
 
-                        let url = `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
+                        let url =
+                        `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
                         window.open(url, '_blank');
                     });
 
                     // Event listener untuk download PDF
-                    $('#downloadPdf').click(function (e) {
+                    $('#downloadPdf').click(function(e) {
                         e.preventDefault();
 
                         let year = $('#yearSelect').val();
@@ -437,7 +438,8 @@
                         }
                         $('#error-message').hide();
 
-                        let url = `{{ route('account.statement.download') }}?yearSelect=${year}&company_id=${company_id}`;
+                        let url =
+                            `{{ route('account.statement.download') }}?yearSelect=${year}&company_id=${company_id}`;
                         window.open(url, '_blank');
                     });
                 });

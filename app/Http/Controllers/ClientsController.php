@@ -237,21 +237,21 @@ class ClientsController extends Controller
         $search = $request->input('search');
 
         // Query untuk filter data berdasarkan client_company_name
-        $query = ClientCompany::query();
+        $query = ClientCompany::query()
+            ->select('id', 'company_name') // Ambil hanya kolom yang diperlukan
+            ->orderBy('company_name', 'asc');
 
         if (!empty($search)) {
             $query->where('company_name', 'like', '%' . $search . '%');
         }
 
-        $clientCompanies = $query->select('id', 'company_name') // Ambil ID dan Nama Perusahaan
-            ->orderBy('company_name', 'asc')
-            ->paginate(10);
+        $clientCompanies = $query->paginate(10);
 
         return response()->json([
             'results' => $clientCompanies->map(function ($company) {
                 return [
-                    'id' => $company->id, // ID sebagai value
-                    'text' => $company->company_name // Nama perusahaan sebagai teks
+                    'id' => $company->id,
+                    'text' => $company->company_name, // Key 'text' sesuai kebutuhan Select2
                 ];
             }),
             'pagination' => ['more' => $clientCompanies->hasMorePages()]

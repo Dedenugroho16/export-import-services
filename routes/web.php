@@ -177,6 +177,8 @@ Route::get('/proforma/{id}/download-pdf', [ProformaController::class, 'proformaD
 Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getConsigneesByClient'])->name('consignees.byClient');
 
 // Client Company Route
+// mencari company_name
+Route::get('/client-companies/get', [ClientsController::class, 'getClientCompanies'])->name('client-companies.get');
 Route::get('client-companies/import', [ClientCompanyController::class, 'import'])->name('client-companies.import');
 Route::post('client-companies/import-process', [ClientCompanyController::class, 'importProcess'])->name('client-companies.import-process');
 Route::get('/client-companies/{clientId}', [ProformaController::class, 'getClientCompanies'])->name('clientCompanies.byClient');
@@ -192,9 +194,6 @@ Route::get('/transactions/rekap-pdf', [TransactionController::class, 'rekapPdf']
 Route::get('/transactions/download-rekap-pdf', [TransactionController::class, 'downloadRekapPdf'])->name('transactions.downloadRekapPdf');
 Route::get('/account-statement/pdf', [TransactionController::class, 'accountStatementPdf'])->name('account.statement.pdf');
 Route::get('/account-statement/download', [TransactionController::class, 'accountStatementDownload'])->name('account.statement.download');
-
-// mencari company_name
-Route::get('/client-companies/get', [ClientsController::class, 'getClientCompanies'])->name('client-companies.get');
 
 // bill of payments
 Route::get('/bill-of-payment', [BillOfPaymentController::class, 'index'])->name('bill-of-payment.index');
