@@ -119,7 +119,7 @@ class ProductsController extends Controller
         ]);
 
         return redirect()->route('products.index')
-            ->with('success', 'Data berhasil ditambahkan.');
+            ->with('store_success', 'Data berhasil ditambahkan.');
     }
 
     // Display the specified product
