@@ -181,8 +181,14 @@ Route::get('/consignees/by-client/{clientId}', [ProformaController::class, 'getC
 Route::get('/client-companies/get', [ClientsController::class, 'getClientCompanies'])->name('client-companies.get');
 Route::get('client-companies/import', [ClientCompanyController::class, 'import'])->name('client-companies.import');
 Route::post('client-companies/import-process', [ClientCompanyController::class, 'importProcess'])->name('client-companies.import-process');
+Route::get('client-companies/create', [ClientCompanyController::class, 'create'])->name('client-companies.create');
+
+// Route spesifik untuk clientId harus di atas Route::resource
 Route::get('/client-companies/{clientId}', [ProformaController::class, 'getClientCompanies'])->name('clientCompanies.byClient');
+
+// Route resource di bawah
 Route::resource('client-companies', ClientCompanyController::class);
+Route::get('/client-companies/{id}/show', [ClientCompanyController::class, 'show'])->name('client-companies.show');
 Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
 
 // Route Rekap Sales
