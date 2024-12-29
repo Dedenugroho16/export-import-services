@@ -75,7 +75,7 @@
                             </table>
                             
                             <div class="mt-4 d-flex justify-content-end">
-                                <a href="{{ url('/detail-products') }}" class="btn btn-primary">Kembali</a>
+                                <a href="javascript:void(0);" onclick="history.back();" class="btn btn-primary">Kembali</a>
                             </div>
                         </div>
                     </div>
