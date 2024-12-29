@@ -161,7 +161,7 @@ class PaymentDetailController extends Controller
                 ->with([
                     'descBills' => function ($query) use ($idBill) {
                         $query->where('id_bill', $idBill)
-                            ->select('id_transaction', 'description', 'paid');
+                            ->select('id_transaction', 'description', 'paid', 'bill');
                     },
                     'payments' => function ($query) use ($idPaymentDetail) {
                         $query->where('id_payment_detail', $idPaymentDetail)
@@ -181,6 +181,7 @@ class PaymentDetailController extends Controller
                 // Ambil deskripsi dari descBills
                 $transaction->description = $transaction->descBills->where('id_transaction', $transaction->id)->pluck('description')->implode(', ');
                 $transaction->paid = $transaction->descBills->where('id_transaction', $transaction->id)->pluck('paid')->implode(', ');
+                $transaction->bill = $transaction->descBills->where('id_transaction', $transaction->id)->pluck('bill')->implode(', ');
 
                 // Ambil deskripsi dari payments dengan filter id_payment_detail
                 $transaction->descriptionPayments = $transaction->payments

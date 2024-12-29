@@ -178,9 +178,7 @@ class BillOfPaymentController extends Controller
         $totalBill = 0;
 
         foreach ($billOfPayment->descBills as $descBill) {
-            $transaction = $descBill->transaction;
-            $transaction->bill = $transaction->total - $descBill->paid;
-            $totalBill += $transaction->bill;
+            $totalBill += $descBill->bill;
         }
 
         $totalInWords = NumberToWords::convert($totalBill);
@@ -324,9 +322,7 @@ class BillOfPaymentController extends Controller
         $totalBill = 0;
         foreach ($billOfPayment->descBills as $descBill) {
             if ($descBill->transaction) {
-                $transaction = $descBill->transaction;
-                $transaction->bill = $transaction->total - $descBill->paid;
-                $totalBill += $transaction->bill;
+                $totalBill += $descBill->bill;
             }
         }
 
@@ -379,9 +375,7 @@ class BillOfPaymentController extends Controller
         $totalBill = 0;
         foreach ($billOfPayment->descBills as $descBill) {
             if ($descBill->transaction) {
-                $transaction = $descBill->transaction;
-                $transaction->bill = $transaction->total - $descBill->paid;
-                $totalBill += $transaction->bill;
+                $totalBill += $descBill->bill;
             }
         }
 
