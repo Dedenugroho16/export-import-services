@@ -51,6 +51,11 @@ Route::get('/clients/{hash}/edit', [ClientsController::class, 'edit'])->name('cl
 Route::put('/clients/{hash}', [ClientsController::class, 'update'])->name('clients.update');
 Route::get('clients/details/{hash}', [ClientsController::class, 'details'])->name('clients.details');
 
+// Client Company Route
+Route::get('client-companies/import', [ClientCompanyController::class, 'import'])->name('client-companies.import');
+Route::post('client-companies/import-process', [ClientCompanyController::class, 'importProcess'])->name('client-companies.import-process');
+Route::resource('client-companies', ClientCompanyController::class);
+Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
 
 // Consignee Routes using resource
 Route::resource('consignees', ConsigneesController::class);
@@ -227,11 +232,6 @@ Route::post('/payments/store', [PaymentController::class, 'store'])->name('payme
 Route::post('/payments/update', [PaymentController::class, 'update'])->name('payments.update');
 Route::post('/payment-details/store', [PaymentDetailController::class, 'store'])->name('payment-details.store');
 Route::post('/payment-details/update/{id}', [PaymentDetailController::class, 'update'])->name('payment-details.update');
-// Client Company Route
-Route::get('client-companies/import', [ClientCompanyController::class, 'import'])->name('client-companies.import');
-Route::post('client-companies/import-process', [ClientCompanyController::class, 'importProcess'])->name('client-companies.import-process');
-Route::resource('client-companies', ClientCompanyController::class);
-Route::get('ajax-companies', [ClientCompanyController::class, 'ajaxCompanies'])->name('ajax-companies');
 
 Route::get('/invoice-data', [DashboardController::class, 'getInvoiceData']);
 Route::get('/ajax-companies', function (Request $request) {
@@ -242,4 +242,3 @@ Route::get('/ajax-companies', function (Request $request) {
 })->name('ajax-companies');
 Route::get('proforma/clients/select2', [ProformaController::class, 'getClients'])->name('proforma.clients.select2');
 Route::get('/bill-of-payment/client-company/{clientId}', [BillOfPaymentController::class, 'getClientCompanies'])->name('getClientCompanies.byClient');
-
