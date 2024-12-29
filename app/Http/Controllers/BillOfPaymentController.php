@@ -252,7 +252,7 @@ class BillOfPaymentController extends Controller
                 ->with([
                     'descBills' => function ($query) use ($idBill) {
                         $query->where('id_bill', $idBill) // Filter hanya untuk $idBill
-                            ->select('id_transaction', 'description', 'paid');
+                            ->select('id_transaction', 'description', 'paid', 'bill');
                     }
                 ])
                 ->select(
@@ -267,6 +267,7 @@ class BillOfPaymentController extends Controller
             $transactions = $transactions->map(function ($transaction) {
                 $transaction->description = $transaction->descBills->pluck('description');
                 $transaction->paid = $transaction->descBills->pluck('paid');
+                $transaction->bill = $transaction->descBills->pluck('bill');
                 return $transaction;
             });
 

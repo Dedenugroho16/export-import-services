@@ -74,7 +74,8 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <p id="no-inv-display">{{ $billOfPayment->clientCompany->company_name}}</p>
+                                                    <p id="no-inv-display">{{ $billOfPayment->clientCompany->company_name }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -130,8 +131,10 @@
                                 @method('PATCH') <!-- Menentukan metode update -->
                                 <input type="hidden" id="month" name="month" value="{{ $billOfPayment->month }}">
                                 <input type="hidden" id="no_inv" name="no_inv" value="{{ $billOfPayment->no_inv }}">
-                                <input type="hidden" id="selectedClientId" name="id_client" value="{{ $billOfPayment->client->id }}">
-                                <input type="hidden" id="selectedClientCompanyId" name="id_client_company" value="{{ $billOfPayment->clientCompany->id }}">
+                                <input type="hidden" id="selectedClientId" name="id_client"
+                                    value="{{ $billOfPayment->client->id }}">
+                                <input type="hidden" id="selectedClientCompanyId" name="id_client_company"
+                                    value="{{ $billOfPayment->clientCompany->id }}">
                                 <input type="hidden" id="total" name="total">
                             </form>
 
@@ -203,7 +206,10 @@
                                                         <input type="text" class="form-control" value="${data.paid?.toLocaleString('en-US') || '0'}" readonly>
                                                         <input type="hidden" name="transactions[${data.id}][paid]" class="form-control" value="${data.paid}">
                                                     </td>
-                                                    <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center pi-bill">
+                                                        <input type="text" value="${data.bill || ''}" class="form-control bill-input" placeholder="Enter bill">
+                                                        <input type="" name="transactions[${data.id}][bill]" class="form-control bill-hidden">
+                                                    </td>
                                                 </tr>
                                             `;
                                 $('#billOfPaymentTable tbody').append(newRow);
@@ -265,7 +271,8 @@
                 var selectedClientCompanyId = $('#selectedClientCompanyId').val();
                 if (!selectedClientCompanyId) {
                     $('#selectedClientCompanyId_error').text('Data perusahaan harus diisi').show();
-                    $('#selectedClientCompanyName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('#selectedClientCompanyName').addClass(
+                    'is-invalid'); // Tambah border merah pada input
                     $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
                 }
 
