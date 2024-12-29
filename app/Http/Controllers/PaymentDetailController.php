@@ -455,13 +455,27 @@ class PaymentDetailController extends Controller
 
         $id = IdHashHelper::decode($hashId);
 
-        $validatedData = $request->validate([
-            'no_inv' => 'required|string|max:255',
-            'total' => 'required|numeric|min:0',
-            'month' => 'required|string',
-            'id_client' => 'required|integer|exists:clients,id',
-            'id_client_company' => 'required|exists:client_company,id',
-        ]);
+        $validatedData = $request->validate(
+            [
+                'no_inv' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/\(OPENING BALANCE\)/',
+                ],
+                'total' => 'required|numeric|min:0',
+                'month' => 'required|string',
+                'id_client' => 'required|integer|exists:clients,id',
+                'id_client_company' => 'required|exists:client_company,id',
+            ],
+            [
+                'no_inv.regex' => 'Description harus mengandung teks "(OPENING BALANCE)".',
+                'total.required' => 'Payment wajib diisi.',
+                'no_inv.required' => 'Description wajib diisi.',
+                'id_client.required' => 'Buyer wajib diisi.',
+                'id_client_company.required' => 'Company wajib diisi.',
+            ]
+        );
 
 
         $paymentDetail = PaymentDetail::findOrFail($id);
@@ -477,8 +491,8 @@ class PaymentDetailController extends Controller
         ]);
 
 
-        return redirect()->route('opening-balance.index')
-            ->with('success', 'Payment Detail successfully updated.');
+        session()->flash('success', 'Data berhasil diperbarui!');
+        return response()->json(['success' => true]);
     }
 
 }

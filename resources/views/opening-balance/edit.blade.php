@@ -12,16 +12,17 @@
                             <h3 class="card-title">Form Edit Opening Balance</h3>
                         </div>
                         <div class="card-body">
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            @if (session('success'))
+                                <script>
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: '{{ session('success') }}', // Pesan sukses yang disertakan di session
+                                        showConfirmButton: true,
+                                    });
+                                </script>
                             @endif
-
+                            
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row">
@@ -48,10 +49,8 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <input type="text" class="form-control" 
-                                                           id="selectedClientName" 
-                                                           value="{{ $paymentDetail->client->name }}" 
-                                                           readonly>
+                                                    <input type="text" class="form-control" id="selectedClientName"
+                                                        value="{{ $paymentDetail->client->name }}" readonly>
                                                 </div>
                                             </div>
 
@@ -64,9 +63,9 @@
                                                     <span>:</span>
                                                 </div>
                                                 <div class="col-7">
-                                                    <input type="text" class="form-control" 
-                                                        id="selectedClientCompanyName" 
-                                                        value="{{ $paymentDetail->clientCompany ? $paymentDetail->clientCompany->company_name : 'N/A' }}" 
+                                                    <input type="text" class="form-control"
+                                                        id="selectedClientCompanyName"
+                                                        value="{{ $paymentDetail->clientCompany ? $paymentDetail->clientCompany->company_name : 'N/A' }}"
                                                         readonly>
                                                 </div>
                                             </div>
@@ -77,7 +76,8 @@
                             </div>
 
                             <!-- Form for Editing Description and Payment -->
-                            <form method="POST" action="{{ route('opening-balance.update', $hashId) }}" class="mt-3 p-3 bg-light rounded shadow-sm">
+                            <form id="formBOP" method="POST" action="{{ route('opening-balance.update', $hashId) }}"
+                                class="mt-3 p-3 bg-light rounded shadow-sm">
                                 @csrf
                                 @method('PUT')
 
@@ -85,7 +85,9 @@
                                 <div class="mb-3">
                                     <label for="no_inv" class="form-label">Description</label>
                                     <input type="text" class="form-control" id="no_inv" name="no_inv"
-                                        value="{{ old('no_inv', $paymentDetail->payment_number) }}" placeholder="Enter Invoice Number">
+                                        value="{{ old('no_inv', $paymentDetail->payment_number) }}"
+                                        placeholder="Enter Invoice Number">
+                                    <span class="error-message text-danger" id="no_inv_error" style="display: none;"></span>
                                 </div>
 
                                 <!-- Editable Payment Field -->
@@ -93,18 +95,23 @@
                                     <label for="total" class="form-label">Payment</label>
                                     <!-- Change input type to text to allow formatting with commas -->
                                     <input type="text" class="form-control" id="total" name="total"
-                                        value="{{ old('total', number_format($paymentDetail->total, 0, ',', '.')) }}" placeholder="Enter Payment">
+                                        value="{{ old('total', number_format($paymentDetail->total, 0, ',', '.')) }}"
+                                        placeholder="Enter Payment">
+                                    <span class="error-message text-danger" id="total_error" style="display: none;"></span>
                                 </div>
 
                                 <!-- Hidden Fields for Month and Client Data -->
                                 <input type="hidden" id="month" name="month" value="{{ strtoupper(date('F Y')) }}">
-                                <input type="hidden" class="form-control" id="selectedClientId" name="id_client" value="{{ $paymentDetail->id_client }}">
-                                <input type="hidden" class="form-control" id="selectedClientCompanyId" name="id_client_company" value="{{ $paymentDetail->id_client_company }}">
+                                <input type="hidden" class="form-control" id="selectedClientId" name="id_client"
+                                    value="{{ $paymentDetail->id_client }}">
+                                <input type="hidden" class="form-control" id="selectedClientCompanyId"
+                                    name="id_client_company" value="{{ $paymentDetail->id_client_company }}">
 
                                 <!-- Submit and Reset Buttons -->
                                 <div class="text-end">
                                     {{-- <button type="reset" class="btn btn-secondary">Reset</button> --}}
-                                    <a href="{{ route('opening-balance.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                    <a href="{{ route('opening-balance.index') }}"
+                                        class="btn btn-outline-primary">Kembali</a>
                                     <button type="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </form>
@@ -143,7 +150,8 @@
             // Format the 'total' input value with commas as the user types
             $('#total').on('input', function() {
                 var value = $(this).val().replace(/\D/g, ''); // Remove non-numeric characters
-                $(this).val(value.replace(/\B(?=(\d{3})+(?!\d))/g, '.')); // Add commas as thousands separator
+                $(this).val(value.replace(/\B(?=(\d{3})+(?!\d))/g,
+                    '.')); // Add commas as thousands separator
             });
 
             // Optional: When submitting the form, remove commas
@@ -151,6 +159,73 @@
                 var paymentValue = $('#total').val();
                 var formattedValue = paymentValue.replace(/\./g, ''); // Remove commas
                 $('#total').val(formattedValue); // Set the raw value without commas
+            });
+        });
+
+        $(document).ready(function() {
+            $('#formBOP').on('submit', function(e) {
+                e.preventDefault(); // Prevent the form from submitting normally
+
+                let formData = new FormData(this);
+
+                // Clear previous error messages
+                $('.error-message').hide().text('');
+
+                // Variable to track if there are any errors
+                let hasError = false;
+
+                // Send the form data via AJAX
+                $.ajax({
+                    url: "{{ route('opening-balance.update', $hashId) }}", // Route to handle the form submission
+                    method: 'POST',
+                    data: formData,
+                    processData: false, // Don't process the data
+                    contentType: false, // Don't set content type
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            // Handle success (e.g., redirect or show success message)
+                            window.location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        // Handle validation errors
+                        var errors = xhr.responseJSON.errors;
+                        if (errors) {
+                            $.each(errors, function(field, messages) {
+                                let errorElement = $('#' + field + '_error');
+                                if (errorElement.length) {
+                                    errorElement.show().text(messages[
+                                        0]); // Display the first error message
+                                    hasError = true; // Set error flag to true
+                                }
+                            });
+                        }
+
+                        // If no errors were found, proceed with form submission
+                        if (!hasError) {
+                            // Proceed with the AJAX submission (optional)
+                            $.ajax({
+                                url: "{{ route('opening-balance.update', $hashId) }}", // Your form submission route
+                                method: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
+                                },
+                                success: function(response) {
+                                    // Handle successful submission (e.g., show success message or redirect)
+                                    window.location.href =
+                                        "{{ route('opening-balance.index') }}"; // Redirect on success
+                                }
+                            });
+                        }
+                    }
+                });
             });
         });
     </script>
