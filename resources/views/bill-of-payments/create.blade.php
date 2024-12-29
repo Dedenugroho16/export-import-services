@@ -704,7 +704,7 @@
 
                 totalBill();
                 // Validasi jika diperlukan (contoh kasus transfer lebih besar dari jumlah tagihan)
-                var piBill = parseFloat(row.find('.pi-bill input').val().replace(/,/g, '')) || 0;
+                var piBill = parseFloat(row.find('.amount').text().replace(/,/g, '')) || 0;
                 var payment = parseFloat(numericValue) || 0;
 
                 if (payment > piBill) {
