@@ -52,8 +52,8 @@
                                                                 <option value="">Pilih Buyer</option>
                                                             </select>
                                                         </div>
-                                                        <span class="error-message" id="selectedClientId_error"
-                                                            style="color: red; display: none;"></span>
+                                                        <span class="error-message text-danger" id="id_client_error"
+                                                            style="display: none;"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -79,8 +79,8 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <span class="error-message" id="selectedConsigneeId_error"
-                                                            style="color: red; display: none;"></span>
+                                                        <span class="error-message text-danger" id="id_client_company_error"
+                                                            style="display: none;"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -96,12 +96,14 @@
                                     <label for="no_inv" class="form-label">Description</label>
                                     <input type="text" class="form-control" id="no_inv" name="no_inv"
                                         placeholder="Enter Invoice Number">
+                                    <span class="error-message text-danger" id="no_inv_error" style="display: none;"></span>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="total" class="form-label">Payment</label>
                                     <input type="text" class="form-control" id="total" name="total"
                                         placeholder="Enter Payment">
+                                    <span class="error-message text-danger" id="total_error" style="display: none;"></span>
                                 </div>
 
                                 <input type="hidden" id="month" name="month">
@@ -113,7 +115,7 @@
                                     <a href="{{ route('opening-balance.index', ['dropdown_open' => true]) }}"
                                         class="btn btn-outline-primary me-3">Kembali</a>
                                     <div class="d-flex gap-2">
-                                        <button type="reset" class="btn btn-secondary">Reset</button>
+                                        <button type="reset" class="btn btn-danger">Reset</button>
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>
@@ -310,13 +312,13 @@
         //                 className: 'text-center',
         //                 render: function(data, type, row) {
         //                     return `<button class="btn btn-primary btn-sm pilih-btn" 
-        //     data-id="${row.id}" 
-        //     data-number="${row.number}"
-        //     data-paid="${row.total_paid}" 
-        //     data-code="${row.code}" 
-        //     data-amount="${row.amount}">
-        //     Pilih
-        //     </button>`;
+    //     data-id="${row.id}" 
+    //     data-number="${row.number}"
+    //     data-paid="${row.total_paid}" 
+    //     data-code="${row.code}" 
+    //     data-amount="${row.amount}">
+    //     Pilih
+    //     </button>`;
         //                 }
         //             }
         //         ],
@@ -672,7 +674,7 @@
             $('#total').on('input', function() {
                 var value = $(this).val().replace(/\D/g, ''); // Remove non-numeric characters
                 $(this).val(value.replace(/\B(?=(\d{3})+(?!\d))/g,
-                ',')); // Add commas as thousands separator
+                    ',')); // Add commas as thousands separator
             });
 
             // Optional: When submitting the form, remove commas
@@ -680,6 +682,74 @@
                 var paymentValue = $('#total').val();
                 var formattedValue = paymentValue.replace(/,/g, ''); // Remove commas
                 $('#total').val(formattedValue); // Set the raw value without commas
+            });
+        });
+
+        $(document).ready(function() {
+            $('#formBOP').on('submit', function(e) {
+                e.preventDefault(); // Prevent the form from submitting normally
+
+                let formData = new FormData(this);
+
+                // Clear previous error messages
+                $('.error-message').hide().text('');
+
+                // Variable to track if there are any errors
+                let hasError = false;
+
+                // Send the form data via AJAX
+                $.ajax({
+                    url: "{{ route('opening-balance.store') }}", // Route to handle the form submission
+                    method: 'POST',
+                    data: formData,
+                    processData: false, // Don't process the data
+                    contentType: false, // Don't set content type
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            // Handle success (e.g., redirect or show success message)
+                            window.location.href =
+                            "{{ route('opening-balance.index') }}"; // Redirect on success
+                        }
+                    },
+                    error: function(xhr) {
+                        // Handle validation errors
+                        var errors = xhr.responseJSON.errors;
+                        if (errors) {
+                            $.each(errors, function(field, messages) {
+                                let errorElement = $('#' + field + '_error');
+                                if (errorElement.length) {
+                                    errorElement.show().text(messages[
+                                    0]); // Display the first error message
+                                    hasError = true; // Set error flag to true
+                                }
+                            });
+                        }
+
+                        // If no errors were found, proceed with form submission
+                        if (!hasError) {
+                            // Proceed with the AJAX submission (optional)
+                            $.ajax({
+                                url: "{{ route('opening-balance.store') }}", // Your form submission route
+                                method: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
+                                },
+                                success: function(response) {
+                                    // Handle successful submission (e.g., show success message or redirect)
+                                    window.location.href =
+                                        "{{ route('opening-balance.index') }}"; // Redirect on success
+                                }
+                            });
+                        }
+                    }
+                });
             });
         });
     </script>

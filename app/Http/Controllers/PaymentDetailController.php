@@ -357,17 +357,17 @@ class PaymentDetailController extends Controller
                     $request->get('start') / $request->get('length') + 1
                 );
 
-            
+
             $paymentDetails->getCollection()->transform(function ($paymentDetail) {
-               
+
                 $hashedId = IdHashHelper::encode($paymentDetail->id);
 
-                
+
                 $paymentDetail->client_name = $paymentDetail->client ? $paymentDetail->client->name : 'N/A';
                 $paymentDetail->client_company_name = $paymentDetail->clientCompany ? $paymentDetail->clientCompany->company_name : 'N/A';
                 $paymentDetail->created_by_name = $paymentDetail->createdBy ? $paymentDetail->createdBy->name : 'N/A';
 
-               
+
                 $paymentDetail->action = '
                     <div class="dropdown">
                         <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">
@@ -402,16 +402,30 @@ class PaymentDetailController extends Controller
 
     public function openingBalanceStore(Request $request)
     {
-        
-        $validatedData = $request->validate([
-            'no_inv' => 'required|string|max:255',
-            'total' => 'required|numeric|min:0',
-            'month' => 'required|string',
-            'id_client' => 'required|integer|exists:clients,id',
-            'id_client_company' => 'required|exists:client_company,id',
-        ]);
 
-        
+        $validatedData = $request->validate(
+            [
+                'no_inv' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/\(OPENING BALANCE\)/',
+                ],
+                'total' => 'required|numeric|min:0',
+                'month' => 'required|string',
+                'id_client' => 'required|integer|exists:clients,id',
+                'id_client_company' => 'required|exists:client_company,id',
+            ],
+            [
+                'no_inv.regex' => 'Description harus mengandung teks "(OPENING BALANCE)".',
+                'total.required' => 'Payment wajib diisi.',
+                'no_inv.required' => 'Description wajib diisi.',
+                'id_client.required' => 'Buyer wajib diisi.',
+                'id_client_company.required' => 'Company wajib diisi.',
+            ]
+        );
+
+
         $paymentDetail = PaymentDetail::create([
             'payment_number' => $validatedData['no_inv'],
             'date' => now(),
@@ -422,13 +436,13 @@ class PaymentDetailController extends Controller
             'id_bill_of_payment' => null,
         ]);
 
-        return redirect()->route('opening-balance.index')
-            ->with('success', 'Payment Detail successfully created.');
+        session()->flash('success', 'Data berhasil disimpan!');
+        return response()->json(['success' => true]);
     }
 
     public function openingBalanceEdit($hashId)
     {
-        
+
         $id = IdHashHelper::decode($hashId);
 
         $paymentDetail = PaymentDetail::findOrFail($id);
@@ -438,7 +452,7 @@ class PaymentDetailController extends Controller
 
     public function openingBalanceUpdate(Request $request, $hashId)
     {
-    
+
         $id = IdHashHelper::decode($hashId);
 
         $validatedData = $request->validate([
@@ -452,7 +466,7 @@ class PaymentDetailController extends Controller
 
         $paymentDetail = PaymentDetail::findOrFail($id);
 
-    
+
         $paymentDetail->update([
             'payment_number' => $validatedData['no_inv'],
             'date' => now(),
@@ -462,7 +476,7 @@ class PaymentDetailController extends Controller
             'created_by' => auth()->user()->id,
         ]);
 
-    
+
         return redirect()->route('opening-balance.index')
             ->with('success', 'Payment Detail successfully updated.');
     }
