@@ -108,7 +108,8 @@ class DetailProductController extends Controller
         $product = Product::findOrFail($request->id_product);
         $productName = $product->name;
 
-        return redirect($request->input('previous_url', route('products.index')))->with('success', 'Data berhasil ditambahkan.');
+        return redirect($request->input('previous_url', route('products.index')))
+            ->with('success', 'Data berhasil ditambahkan.');
     }
 
     // Display the specified detail product
