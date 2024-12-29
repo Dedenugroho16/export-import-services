@@ -1589,16 +1589,6 @@
                 ajax: {
                     url: "{{ route('consignees.byClient', '0') }}",
                     dataSrc: function(json) {
-                        if (json.data.length === 0) {
-                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
-                                '0') {
-                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
-                                    "Harap pilih client terlebih dahulu";
-                            } else {
-                                consigneeTable.settings()[0].oLanguage.sEmptyTable =
-                                    "Tidak ada consignee untuk client ini";
-                            }
-                        }
                         return json.data;
                     }
                 },
@@ -1646,7 +1636,12 @@
                     },
                     search: "Cari :",
                     infoFiltered: "(disaring dari total _MAX_ entri)",
-                    emptyTable: "Harap pilih client terlebih dahulu"
+                    emptyTable: function() {
+                        var clientSelected = $('#client_id').val();
+                        return clientSelected ?
+                            "Client yang Anda pilih tidak memiliki Consignee" :
+                            "Tolong pilih Client terlebih dahulu";
+                    },
                 },
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
@@ -1722,16 +1717,6 @@
                 ajax: {
                     url: "{{ route('clientCompanies.byClient', ['clientId' => 0]) }}", // Initial empty clientId
                     dataSrc: function(json) {
-                        if (json.data.length === 0) {
-                            if ($('#selectedClientId').val() === '' || $('#selectedClientId').val() ===
-                                '0') {
-                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
-                                    "Harap pilih client terlebih dahulu";
-                            } else {
-                                clientCompanyTable.settings()[0].oLanguage.sEmptyTable =
-                                    "Tidak ada client company untuk client ini";
-                            }
-                        }
                         return json.data;
                     }
                 },
@@ -1789,7 +1774,12 @@
                     },
                     search: "Cari :",
                     infoFiltered: "(disaring dari total _MAX_ entri)",
-                    emptyTable: "Harap pilih client terlebih dahulu"
+                    emptyTable: function() {
+                        var clientSelected = $('#client_id').val();
+                        return clientSelected ?
+                            "Client yang Anda pilih tidak memiliki Company" :
+                            "Tolong pilih Client terlebih dahulu";
+                    },
                 },
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
