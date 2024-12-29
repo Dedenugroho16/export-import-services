@@ -162,7 +162,7 @@ class ProductsController extends Controller
         ]);
 
         return redirect($request->input('previous_url', route('products.index')))
-            ->with('success', 'Data berhasil diperbarui.');
+            ->with('success_store', 'Data berhasil diperbarui.');
     }
 
     // Remove the specified product from storage

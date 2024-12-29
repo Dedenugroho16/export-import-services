@@ -95,7 +95,7 @@ class CountryController extends Controller
             'code' => $request->code,
         ]);
 
-        return redirect()->route('countries.index')->with('success', 'Data berhasil ditambahkan.');
+        return redirect()->route('countries.index')->with('success_store', 'Data berhasil ditambahkan.');
     }
 
     public function edit($hash)
@@ -118,6 +118,6 @@ class CountryController extends Controller
         $country = Country::findOrFail($id);
         $country->update($request->all());
 
-        return redirect()->route('countries.index')->with('success', 'Data berhasil diperbarui.');
+        return redirect()->route('countries.index')->with('success_store', 'Data berhasil diperbarui.');
     }
 }
