@@ -55,7 +55,7 @@
                                                     <p id="no-inv-display">-</p>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row mt-2">
                                                 <div class="col-4">
                                                     <p>Buyer Name</p>
                                                 </div>

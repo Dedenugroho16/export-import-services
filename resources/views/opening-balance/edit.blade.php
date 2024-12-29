@@ -103,7 +103,8 @@
 
                                 <!-- Submit and Reset Buttons -->
                                 <div class="text-end">
-                                    <button type="reset" class="btn btn-secondary">Reset</button>
+                                    {{-- <button type="reset" class="btn btn-secondary">Reset</button> --}}
+                                    <a href="{{ route('opening-balance.index') }}" class="btn btn-outline-primary">Kembali</a>
                                     <button type="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </form>
