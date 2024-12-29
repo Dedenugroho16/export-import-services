@@ -4,57 +4,51 @@
 @section('content')
     <div class="page-body">
         <div class="container-xl">
-            <div
-                class="mb-4 mt-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                <form class="row align-items-center gy-2 gx-3 mb-3" method="GET" id="filterForm">
-                    <!-- Input Tahun -->
-                    <div class="col-sm-12 col-md-4">
-                        <label for="yearSelect" class="form-label mb-0" style="font-size: 0.9rem;">Pilih Tahun</label>
-                        <select name="year" id="yearSelect" class="form-select">
-                            <script>
-                                const yearSelect = $('#yearSelect');
-                                for (let year = new Date().getFullYear(); year <= new Date().getFullYear() + 99; year++) {
-                                    yearSelect.append(`<option value="${year}">${year}</option>`);
-                                }
-                            </script>
-                        </select>
-                    </div>
+            <div class="mb-5">
+                <table>
+                    <tr style="border: none">
+                        <td style="width: 110px">
+                            <select name="year" id="yearSelect" class="form-select">
+                                <script>
+                                    const yearSelect = $('#yearSelect');
+                                    for (let year = new Date().getFullYear(); year <= new Date().getFullYear() + 99; year++) {
+                                        yearSelect.append(`<option value="${year}">${year}</option>`);
+                                    }
+                                </script>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="company_id" id="company_id" class="form-select" style="width: 160px"></select>
+                            <button type="button" id="filterBtn" class="btn btn-primary">Filter</button>
+                            <a id="resetBtn" class="btn btn-secondary">Reset</a>
+                        </td>
+                        <td class="text-end">
+                            <div class="dropdown">
+                                <button type="button"
+                                    class="btn btn-warning dropdown-toggle d-flex align-items-center ms-auto"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path
+                                            d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                                        <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                                        <path
+                                            d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                                    </svg>
+                                    Ekspor/Download
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" id="exporPdf" target="_blank">Export
+                                            PDF</a></li>
+                                    <li><a class="dropdown-item" href="#" id="downloadPdf">Download PDF</a></li>
+                                </ul>
+                            </div>
+                        </td>
 
-                    <!-- Select Nama Perusahaan -->
-                    <div class="col-sm-12 col-md-4">
-                        <label for="company_id" class="form-label mb-0" style="font-size: 0.9rem;">Pilih
-                            Perusahaan</label>
-                        <select name="company_id" id="company_id" class="form-select">
-                        </select>
-                    </div>
-
-                    <!-- Tombol Filter dan Reset -->
-                    <div class="col-sm-12 col-md-4 d-flex align-items-end">
-                        <button type="button" id="filterBtn"
-                            class="btn btn-primary w-100 w-md-auto me-md-2">Filter</button>
-                        <a id="resetBtn" class="btn btn-secondary w-100 w-md-auto">Reset</a>
-                    </div>
-                </form>
-
-                <!-- Export/Download Button -->
-                <div class="dropdown">
-                    <button type="button" class="btn btn-warning dropdown-toggle d-flex align-items-center"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="me-2">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
-                            <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
-                            <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
-                        </svg>
-                        Ekspor/Download
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" id="exporPdf" target="_blank">Export PDF</a></li>
-                        <li><a class="dropdown-item" href="#" id="downloadPdf">Download PDF</a></li>
-                    </ul>
-                </div>
+                    </tr>
+                </table>
             </div>
             <div id="error-message" class="alert alert-important alert-danger alert-dismissible" role="alert"
                 style="display: none;">
@@ -177,7 +171,7 @@
                     });
 
                     $('#company_id').select2({
-                        placeholder: 'Select a Company',
+                        placeholder: 'Pilih Perusahaan',
                         ajax: {
                             url: '{{ route('client-companies.get') }}',
                             dataType: 'json',
@@ -416,7 +410,7 @@
                         $('#error-message').hide();
 
                         let url =
-                        `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
+                            `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
                         window.open(url, '_blank');
                     });
 

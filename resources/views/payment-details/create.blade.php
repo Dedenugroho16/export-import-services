@@ -67,7 +67,7 @@
                                                     <p>{{ $billOfPayment->client->name }}</p>
                                                 </div>
                                             </div>
-                                            <div class="row mt-2">
+                                            <div class="row">
                                                 <div class="col-4">
                                                     <p>Company Name</p>
                                                 </div>

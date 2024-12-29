@@ -16,7 +16,7 @@
                         </svg>
                         Tambah
                     </a>
-                    <a href="{{ route('client-companies.import') }}" class="btn btn-warning ms-3">
+                    <a href="{{ route('client-companies.import') }}" class="btn btn-warning ms-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
@@ -159,10 +159,16 @@
                 lengthMenu: [5, 10, 25, 50], // Tentukan jumlah data yang ditampilkan per halaman
                 pageLength: 10,
                 drawCallback: function() {
-                    $('#clientCompanyTable td:nth-child(2), #clientCompanyTable td:nth-child(3)').css({
+                    $('#clientCompanyTable td:nth-child(2)').css({
                         'max-width': '250px',
                         'white-space': 'normal',
                         'word-wrap': 'break-word'
+                    });
+                    $('#clientCompanyTable td:nth-child(3)').css({
+                        'max-width': '250px',
+                        'overflow': 'hidden',
+                        'text-overflow': 'ellipsis',
+                        'white-space': 'nowrap' // Untuk satu baris
                     });
                 }
             });

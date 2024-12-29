@@ -34,16 +34,16 @@
                         <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
                     </div>
                 @endif
-                <h3>Daftar Balance</h3>
+                <h3>Daftar Opening Balance</h3>
                 <div class="table-responsive">
                     <table id="openingBalanceTable" class="table card-table table-hover table-vcenter text-nowrap">
                         <thead>
                             <tr>
-                                <th class="text-center">#</th>
-                                <th class="text-center">Nomor Pembayaran</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Deskripsi</th>
                                 <th class="text-center">Tanggal</th>
-                                <th class="text-center">Client Name</th>
-                                <th class="text-center">Client Company Name</th>
+                                <th class="text-center">Nama Client</th>
+                                <th class="text-center">Nama Perusahaan</th>
                                 <th class="text-center">Total</th>
                                 <th class="text-center">Dibuat Oleh</th>
                                 <th class="text-center">Aksi</th>
@@ -76,16 +76,19 @@
                     orderable: false,
                     searchable: false
                 },
-                { data: 'payment_number', name: 'payment_number', class: 'text-center' },
+                { data: 'payment_number', name: 'payment_number'},
                 { data: 'date', name: 'date', class: 'text-center' },
-                { data: 'client_name', name: 'client_name', class: 'text-center' },
-                { data: 'client_company_name', name: 'client_company_name', class: 'text-center' },
+                { data: 'client_name', name: 'client_name'},
+                { data: 'client_company_name', name: 'client_company_name'},
                 { 
                     data: 'total', 
                     name: 'total', 
                     class: 'text-center',
-                    render: function(data) {
-                        return parseFloat(data).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    render: function(data, type, row) {
+                        return new Intl.NumberFormat('en-US', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        }).format(data);
                     }
                 },
                 { data: 'created_by_name', name: 'created_by_name', class: 'text-center' },
@@ -110,7 +113,20 @@
                 infoFiltered: "(disaring dari total _MAX_ entri)"
             },
             lengthMenu: [5, 10, 25, 50],
-            pageLength: 10
+            pageLength: 10,
+            drawCallback: function() {
+                    // Terapkan style khusus untuk kolom client dan consignee
+                    $('#openingBalanceTable td:nth-child(4), #openingBalanceTable td:nth-child(5)').css({
+                        'max-width': '200px',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                    $('#openingBalanceTable td:nth-child(2)').css({
+                        'max-width': '200',
+                        'white-space': 'normal',
+                        'word-wrap': 'break-word'
+                    });
+                }
         });
     });
     $(document).ready(function() {

@@ -50,11 +50,11 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-6">
-                                                        <div class="row">
-                                                            <div class="col-4">
+                                                        <div class="row mb-3">
+                                                            <div class="col-3">
                                                                 <p><strong>Set Country</strong></p>
                                                             </div>
-                                                            <div class="col-3 text-center">
+                                                            <div class="col-1 text-center">
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
@@ -62,22 +62,22 @@
                                                                     name="id_country" required></select>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-4">
+                                                        <div class="row mb-2">
+                                                            <div class="col-3">
                                                                 <p><strong>Date</strong></p>
                                                             </div>
-                                                            <div class="col-3 text-center">
+                                                            <div class="col-1 text-center">
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
                                                                 <p>{{ date('F d, Y') }}</p>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-4">
+                                                        <div class="row mb-2">
+                                                            <div class="col-3">
                                                                 <p><strong>Code</strong></p>
                                                             </div>
-                                                            <div class="col-3 text-center">
+                                                            <div class="col-1 text-center">
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
@@ -85,10 +85,10 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-4">
+                                                            <div class="col-3">
                                                                 <p><strong>Number</strong></p>
                                                             </div>
-                                                            <div class="col-3 text-center">
+                                                            <div class="col-1 text-center">
                                                                 <span>:</span>
                                                             </div>
                                                             <div class="col-5">
@@ -897,7 +897,7 @@
                         var productSelected = $('#product').val();
                         return productSelected ?
                             "Produk yang Anda pilih tidak memiliki detail produk" :
-                            "Tolong pilih produk terlebih dahulu";
+                            "Harap pilih produk terlebih dahulu";
                     },
                     aria: {
                         sortAscending: ": aktifkan untuk mengurutkan kolom secara ascending",
@@ -1504,7 +1504,7 @@
                                 success: function(response) {
                                     Swal.fire({
                                         title: 'Berhasil!',
-                                        text: 'Proforma invoice berhasil ditambahkan.',
+                                        text: 'Proforma Invoice berhasil dibuat.',
                                         icon: 'success',
                                         confirmButtonText: 'OK'
                                     }).then((result) => {
@@ -1640,7 +1640,7 @@
                         var clientSelected = $('#client_id').val();
                         return clientSelected ?
                             "Client yang Anda pilih tidak memiliki Consignee" :
-                            "Tolong pilih Client terlebih dahulu";
+                            "Harap pilih Client terlebih dahulu";
                     },
                 },
                 lengthMenu: [5, 10, 25, 50],
@@ -1778,7 +1778,7 @@
                         var clientSelected = $('#client_id').val();
                         return clientSelected ?
                             "Client yang Anda pilih tidak memiliki Company" :
-                            "Tolong pilih Client terlebih dahulu";
+                            "Harap pilih Client terlebih dahulu";
                     },
                 },
                 lengthMenu: [5, 10, 25, 50],

@@ -5,7 +5,7 @@
 <div class="page-body">
     <div class="container-xl">
         <!-- Form Section -->
-        <div class="row row-deck row-cards">
+        <div class="d-flex justify-content-center align-items-center" style="margin: 20px;">
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-header text-white shadow-sm p-3" style="background-color: #0054a6;">
@@ -21,17 +21,17 @@
 
                         <form action="{{ route('clients.store') }}" method="POST">
                             @csrf
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="name" class="form-label">Nama</label>
                                 <input type="text" id="name" name="name" class="form-control" required>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-6">
                                 <label for="client_companies" class="form-label">Perusahaan Client</label>
                                 <select id="client_companies" name="client_companies[]" class="form-control" multiple required>
                                 </select>
                             </div>
                             <div class="text-end">
-                                <a href="{{ route('clients.index') }}" class="btn btn-outline-primary">Kembali</a>
+                                <a href="{{ route('clients.index') }}" class="btn btn-outline-primary me-1">Kembali</a>
                                 <button type="submit" class="btn btn-primary">Tambah</button>
                             </div>
                         </form>

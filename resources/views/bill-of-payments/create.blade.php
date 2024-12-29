@@ -33,7 +33,7 @@
                                 <div class="col-md-12">
                                     <div class="row">
                                         <div class="col-7">
-                                            <div class="row">
+                                            <div class="row mb-1">
                                                 <div class="col-4">
                                                     <p>Month</p>
                                                 </div>
@@ -88,7 +88,7 @@
                                                             <input type="text" class="form-control"
                                                                 id="selectedClientCompanyName"
                                                                 placeholder="Pilih Perusahaan Client" readonly>
-                                                            
+
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-primary btn-md"
                                                                     data-bs-toggle="modal"
@@ -792,7 +792,8 @@
                 var selectedClientCompanyId = $('#selectedClientCompanyId').val();
                 if (!selectedClientCompanyId) {
                     $('#selectedClientCompanyId_error').text('Data perusahaan harus diisi').show();
-                    $('#selectedClientCompanyName').addClass('is-invalid'); // Tambah border merah pada input
+                    $('#selectedClientCompanyName').addClass(
+                        'is-invalid'); // Tambah border merah pada input
                     $('.input-group').addClass('has-error'); // Tambah border merah pada grup input
                 }
 
@@ -846,6 +847,7 @@
                                         Swal.fire({
                                             icon: 'success',
                                             title: 'Berhasil!',
+                                            text: 'Bill Of Payment berhasil dibuat.',
                                             text: response
                                                 .message, // Menampilkan pesan dari server
                                         }).then(function() {
@@ -855,9 +857,9 @@
                                     } else {
                                         Swal.fire({
                                             icon: 'error',
-                                            title: 'Gagal Menyimpan Transaksi!',
+                                            title: 'Gagal Membuat Tagihan!',
                                             text: response.message ||
-                                                'Terjadi kesalahan saat menyimpan transaksi.',
+                                                'Terjadi kesalahan saat membuat tagihan.',
                                         });
                                     }
                                 },
@@ -865,7 +867,7 @@
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Terjadi Kesalahan!',
-                                        text: 'Gagal mengirimkan Proforma Invoice.',
+                                        text: 'Gagal membuat Bill Of Payment.',
                                     });
                                 }
                             });

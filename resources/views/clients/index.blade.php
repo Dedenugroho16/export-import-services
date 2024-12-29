@@ -17,7 +17,7 @@
                         </svg>
                         Tambah
                     </a>
-                    <a href="{{ route('clients.import') }}" class="btn btn-warning ms-3">
+                    <a href="{{ route('clients.import') }}" class="btn btn-warning ms-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
@@ -110,18 +110,22 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        width : '20%'
                     },
                     {
                         data: 'name',
-                        name: 'name'
+                        name: 'name',
+                        class: 'text-center',
+                        width : 'auto'
                     },
                     {
                         data: 'action',
                         name: 'action',
                         orderable: false,
                         searchable: false,
-                        class: 'text-center'
+                        class: 'text-center',
+                        width : '20%'
                     }
                 ],
                 language: {

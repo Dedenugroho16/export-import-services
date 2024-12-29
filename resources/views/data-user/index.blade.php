@@ -31,7 +31,7 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="addUserModalLabel">Tambah User</h5>
+                                        <h5 class="modal-title" id="addUserModalLabel">Tambah Data User</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <form id="addUserForm" method="POST">
@@ -40,7 +40,7 @@
                                             <div class="row g-3">
                                                 <div class="col-md-6 px-3">
                                                     <div class="mb-3">
-                                                        <label for="name" class="form-label">Nama</label>
+                                                        <label for="name" class="form-label">Name</label>
                                                         <input type="text" class="form-control" id="name" name="name" required>
                                                     </div>
                                                     <div class="mb-3">
@@ -58,7 +58,7 @@
                                                         <input type="text" class="form-control" id="username" name="username" required>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                                                        <label for="password_confirmation" class="form-label">Confirm Password</label>
                                                         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                                                     </div>
                                                     <div class="mb-3">
@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                            <button type="submit" class="btn btn-primary">Tambah User</button>
+                                            <button type="submit" class="btn btn-primary">Tambah</button>
                                         </div>
                                     </form>
                                 </div>
@@ -88,7 +88,7 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                                    <h5 class="modal-title" id="editUserModalLabel">Edit Data User</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <form id="editUserForm" method="POST">
@@ -117,7 +117,7 @@
                                                     <input type="text" class="form-control" id="edit_username" name="username" required>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="edit_password_confirmation" class="form-label">Konfirmasi Password</label>
+                                                    <label for="edit_password_confirmation" class="form-label">Confirm Password</label>
                                                     <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation">
                                                     <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password.</small>
                                                 </div>
@@ -148,15 +148,15 @@
                             <table class="table card-table table-vcenter text-nowrap" id="usersTable">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>USername</th>
-                                    <th>Email</th>
-                                    <th>Password</th>
-                                    <th>Role</th>
-                                    <th>Created At</th>
-                                    <th>Status</th> <!-- Kolom baru untuk status -->
-                                    <th>Aksi</th>
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Username</th>
+                                    <th class="text-center">Email</th>
+                                    <th class="text-center">Password</th>
+                                    <th class="text-center">Role</th>
+                                    <th class="text-center">Created At</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                                 <tbody>
@@ -180,7 +180,7 @@
             serverSide: true,
             ajax: "{{ route('users.index') }}",
             columns: [
-                { data: null, name: 'id', render: function(data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; } }, // Menampilkan nomor urut
+                { data: null, class: 'text-center', render: function(data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; } }, // Menampilkan nomor urut
                 { data: 'name', name: 'name' },
                 { data: 'username', name: 'username' },
                 { data: 'email', name: 'email' },
@@ -194,7 +194,7 @@
                         return data ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-danger">Nonaktif</span>';
                     }, class: 'text-center'
                 },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
+                { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
             ],
             language: {
                 lengthMenu: "Tampilkan _MENU_ Data",

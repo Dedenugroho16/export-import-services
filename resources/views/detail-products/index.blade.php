@@ -5,8 +5,8 @@
     <div class="page-body">
         <div class="container-xl">
             <!-- Dashboard Header and Add Detail Product Button -->
-            <div class="mb-4 d-flex justify-content-between align-items-center">
-                <a href="{{ route('detail-products.import') }}" class="btn btn-warning ms-3">
+            <div class="mb-4 align-items-center">
+                <a href="{{ route('detail-products.import') }}" class="btn btn-warning">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
@@ -69,14 +69,14 @@
                                 <table id="myTable" class="table card-table table-hover table-vcenter text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">ID Product</th>
-                                            <th class="text-center">Name</th>
-                                            <th class="text-center">Pcs</th>
-                                            <th class="text-center">Dimension</th>
-                                            <th class="text-center">Type</th>
-                                            <th class="text-center">Color</th>
-                                            <th class="text-center">Price</th>
-                                            <th class="text-center">Action</th>
+                                            <th class="text-center">NO</th>
+                                            <th class="text-center">NAMA</th>
+                                            <th class="text-center">PCS</th>
+                                            <th class="text-center">DIMENSI</th>
+                                            <th class="text-center">TIPE</th>
+                                            <th class="text-center">WARNA</th>
+                                            <th class="text-center">HARGA</th>
+                                            <th class="text-center">AKSI</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -95,9 +95,13 @@
                 serverSide: true,
                 ajax: '{{ route('detail-products.index') }}',
                 columns: [{
-                        data: 'id_product',
-                        name: 'id_product',
-                        className: 'text-center'
+                        data: null,
+                        class: 'text-center',
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'name',
@@ -106,22 +110,18 @@
                     {
                         data: 'pcs',
                         name: 'pcs',
-                        className: 'text-center'
                     },
                     {
                         data: 'dimension',
                         name: 'dimension',
-                        className: 'text-center'
                     },
                     {
                         data: 'type',
                         name: 'type',
-                        className: 'text-center'
                     },
                     {
                         data: 'color',
                         name: 'color',
-                        className: 'text-center'
                     },
                     {
                         data: 'price',

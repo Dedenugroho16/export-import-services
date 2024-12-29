@@ -44,7 +44,7 @@
                                                     <p>{{ $billOfPayment->month }}</p>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row mb-1">
                                                 <div class="col-4">
                                                     <p>No. Inv</p>
                                                 </div>
@@ -55,7 +55,7 @@
                                                     <p id="no-inv-display">{{ $billOfPayment->no_inv }}</p>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row mb-1">
                                                 <div class="col-4">
                                                     <p>Buyer Name</p>
                                                 </div>

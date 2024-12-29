@@ -46,7 +46,7 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-6">
-                                                        <div class="row">
+                                                        <div class="row mb-3">
                                                             <div class="col-3">
                                                                 <p><strong>Set Country</strong></p>
                                                             </div>
@@ -63,7 +63,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
+                                                        <div class="row mb-2">
                                                             <div class="col-3">
                                                                 <p><strong>Date</strong></p>
                                                             </div>
@@ -74,7 +74,7 @@
                                                                 <p>{{ $transaction->date }}</p>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
+                                                        <div class="row mb-2">
                                                             <div class="col-3">
                                                                 <p><strong>Code</strong></p>
                                                             </div>
@@ -1814,7 +1814,8 @@
                     success: function(response) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Proforma invoice berhasil dikonfirmasi',
+                            title: 'Berhasil!',
+                            text: 'Proforma Invoice berhasil dikonfirmasi.',
                             confirmButtonText: 'OK'
                         }).then(() => {
                             // Submit formDetailTransaction jika ada input di dalamnya

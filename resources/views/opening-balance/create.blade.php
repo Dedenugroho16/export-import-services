@@ -95,7 +95,7 @@
                                 <div class="mb-3">
                                     <label for="no_inv" class="form-label">Description</label>
                                     <input type="text" class="form-control" id="no_inv" name="no_inv"
-                                        placeholder="Enter Invoice Number">
+                                        placeholder='Harap sertakan teks "(OPENING BALANCE)" di dalam inputan ini.'>
                                 </div>
 
                                 <div class="mb-3">

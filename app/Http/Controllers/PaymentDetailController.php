@@ -356,29 +356,26 @@ class PaymentDetailController extends Controller
                     $request->get('start') / $request->get('length') + 1
                 );
 
-            
             $paymentDetails->getCollection()->transform(function ($paymentDetail) {
-               
                 $hashedId = IdHashHelper::encode($paymentDetail->id);
 
-                
                 $paymentDetail->client_name = $paymentDetail->client ? $paymentDetail->client->name : 'N/A';
                 $paymentDetail->client_company_name = $paymentDetail->clientCompany ? $paymentDetail->clientCompany->company_name : 'N/A';
                 $paymentDetail->created_by_name = $paymentDetail->createdBy ? $paymentDetail->createdBy->name : 'N/A';
 
-               
+                // Perubahan tombol menjadi tombol baru
+                $editUrl = route('opening-balance.edit', $hashedId);
                 $paymentDetail->action = '
-                    <div class="dropdown">
-                        <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">
-                            Aksi
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="' . route('opening-balance.edit', $hashedId) . '">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
-                            Edit</a>
-                        </div>
-                    </div>
-                ';
+                <a href="' . $editUrl . '" class="btn btn-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                        <path d="M16 5l3 3" />
+                    </svg>
+                    Edit
+                </a>
+            ';
 
                 return $paymentDetail;
             });
@@ -401,7 +398,7 @@ class PaymentDetailController extends Controller
 
     public function openingBalanceStore(Request $request)
     {
-        
+
         $validatedData = $request->validate([
             'no_inv' => 'required|string|max:255',
             'total' => 'required|numeric|min:0',
@@ -410,7 +407,7 @@ class PaymentDetailController extends Controller
             'id_client_company' => 'required|exists:client_company,id',
         ]);
 
-        
+
         $paymentDetail = PaymentDetail::create([
             'payment_number' => $validatedData['no_inv'],
             'date' => now(),
@@ -422,12 +419,12 @@ class PaymentDetailController extends Controller
         ]);
 
         return redirect()->route('opening-balance.index')
-            ->with('success', 'Payment Detail successfully created.');
+            ->with('success', 'Opening Balance berhasil dibuat.');
     }
 
     public function openingBalanceEdit($hashId)
     {
-        
+
         $id = IdHashHelper::decode($hashId);
 
         $paymentDetail = PaymentDetail::findOrFail($id);
@@ -437,7 +434,7 @@ class PaymentDetailController extends Controller
 
     public function openingBalanceUpdate(Request $request, $hashId)
     {
-    
+
         $id = IdHashHelper::decode($hashId);
 
         $validatedData = $request->validate([
@@ -451,7 +448,7 @@ class PaymentDetailController extends Controller
 
         $paymentDetail = PaymentDetail::findOrFail($id);
 
-    
+
         $paymentDetail->update([
             'payment_number' => $validatedData['no_inv'],
             'date' => now(),
@@ -461,9 +458,8 @@ class PaymentDetailController extends Controller
             'created_by' => auth()->user()->id,
         ]);
 
-    
-        return redirect()->route('opening-balance.index')
-            ->with('success', 'Payment Detail successfully updated.');
-    }
 
+        return redirect()->route('opening-balance.index')
+            ->with('success', 'Opening Balance berhasil diperbarui.');
+    }
 }

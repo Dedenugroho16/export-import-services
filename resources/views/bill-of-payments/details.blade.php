@@ -32,7 +32,7 @@
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <th>Bulan</th>
+                                <th style="width: 30%">Bulan</th>
                                 <td>{{ $billOfPayment->month }}</td>
                             </tr>
                             <tr>

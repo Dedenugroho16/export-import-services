@@ -218,7 +218,7 @@
                                                     <td class="text-center paid">${data.paid?.toLocaleString('en-US') || '0'}</td>
                                                     <td class="text-center" style="width:150px;">
                                                         <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer" value="${formattedTransfered}">
-                                                        <input type="" name="transactions[${data.id}][transfered]" class="form-control transfered" value="${transferedValue}">
+                                                        <input type="hidden" name="transactions[${data.id}][transfered]" class="form-control transfered" value="${transferedValue}">
                                                     </td>
                                                     <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
                                                 </tr>
