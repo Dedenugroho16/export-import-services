@@ -116,7 +116,7 @@
                                                         <td>{{ $descBill->description }}</td>
                                                         <td class="text-end amount">{{ number_format($descBill->transaction->total) }}</td>
                                                         <td class="text-end paid">{{ number_format($descBill->paid) }}</td>
-                                                        <td class="text-end bill">{{ number_format($descBill->transaction->bill) }}</td>
+                                                        <td class="text-end bill">{{ number_format($descBill->bill) }}</td>
                                                     </tr>
                                                 @endif
                                             @empty

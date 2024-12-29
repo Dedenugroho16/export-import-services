@@ -63,6 +63,16 @@
                                     });
                                 </script>
                             @endif
+                            @if (session('success'))
+                                <script>
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: '{{ session('success') }}',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    });
+                                </script>
+                            @endif
 
                             <!-- Data Table -->
                             <div class="table-responsive">

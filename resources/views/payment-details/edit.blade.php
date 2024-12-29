@@ -199,6 +199,7 @@
                                     0);
                                 let formattedTransfered = transferedValue.toLocaleString(
                                     'en-US');
+                                var formattedBill = parseFloat(data.bill).toLocaleString('en-US');
                                 var newRow = `
                                                 <tr>
                                                     <td class="text-center" style="display: none;">
@@ -220,7 +221,7 @@
                                                         <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer" value="${formattedTransfered}">
                                                         <input type="hidden" name="transactions[${data.id}][transfered]" class="form-control transfered" value="${transferedValue}">
                                                     </td>
-                                                    <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center pi-bill">${formattedBill}</td>
                                                 </tr>
                                             `;
                                 $('#paymentDetailTable tbody').append(newRow);

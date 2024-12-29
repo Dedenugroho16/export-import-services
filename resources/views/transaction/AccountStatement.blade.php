@@ -411,6 +411,7 @@
 
                         let url =
                             `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
+                            `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
                         window.open(url, '_blank');
                     });
 

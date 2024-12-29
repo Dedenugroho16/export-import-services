@@ -39,7 +39,7 @@ class BillOfPaymentController extends Controller
             })
             ->addColumn('company_name', function ($row) {
                 return $row->clientCompany ? $row->clientCompany->company_name : '-';
-            })                              
+            })
             ->addColumn('status', function ($row) {
                 $statusText = $row->status == 1 ? 'Lunas' : 'Belum Lunas';
                 $dotColor = $row->status == 1 ? 'green' : 'red';
@@ -111,12 +111,16 @@ class BillOfPaymentController extends Controller
 
     public function getProformaInvoices(Request $request)
     {
-        if (!$request->has('id_client') || empty($request->id_client)) {
-            return datatables()->of(collect([]))->make(true); // Data kosong jika `id_client` tidak ada
+        
+        if (
+            (!$request->has('id_client') || empty($request->id_client))
+        ) {
+            return datatables()->of(collect([]))->make(true); // Data kosong jika `id_client` dan `id_company` tidak ada atau kosong
         }
 
         $invoices = Transaction::where('approved', 1)
             ->where('id_client', $request->id_client)
+            ->where('id_client_company', $request->id_company)
             ->whereRaw('total <> (SELECT COALESCE(SUM(transfered), 0) FROM payments WHERE payments.id_transaction = transactions.id)')
             ->with('payments') // Pastikan relasi payments dimuat
             ->get();
@@ -174,9 +178,7 @@ class BillOfPaymentController extends Controller
         $totalBill = 0;
 
         foreach ($billOfPayment->descBills as $descBill) {
-            $transaction = $descBill->transaction;
-            $transaction->bill = $transaction->total - $descBill->paid;
-            $totalBill += $transaction->bill;
+            $totalBill += $descBill->bill;
         }
 
         $totalInWords = NumberToWords::convert($totalBill);
@@ -320,9 +322,7 @@ class BillOfPaymentController extends Controller
         $totalBill = 0;
         foreach ($billOfPayment->descBills as $descBill) {
             if ($descBill->transaction) {
-                $transaction = $descBill->transaction;
-                $transaction->bill = $transaction->total - $descBill->paid;
-                $totalBill += $transaction->bill;
+                $totalBill += $descBill->bill;
             }
         }
 
@@ -375,9 +375,7 @@ class BillOfPaymentController extends Controller
         $totalBill = 0;
         foreach ($billOfPayment->descBills as $descBill) {
             if ($descBill->transaction) {
-                $transaction = $descBill->transaction;
-                $transaction->bill = $transaction->total - $descBill->paid;
-                $totalBill += $transaction->bill;
+                $totalBill += $descBill->bill;
             }
         }
 

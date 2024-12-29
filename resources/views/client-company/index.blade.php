@@ -64,6 +64,16 @@
                                     });
                                 </script>
                             @endif
+                            @if (session('success'))
+                                <script>
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: '{{ session('success') }}',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    });
+                                </script>
+                            @endif
                             <!-- Tabel Komoditas -->
                             <div class="table-responsive">
                                 <table class="table card-table table-vcenter text-nowrap" id="clientCompanyTable">

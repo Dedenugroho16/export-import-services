@@ -196,6 +196,7 @@
                             response.forEach(function(data) {
                                 let total = Number(data.total);
                                 var formattedPaid = parseFloat(data.paid).toLocaleString('en-US');
+                                var formattedBill = parseFloat(data.bill).toLocaleString('en-US');
                                 var newRow = `
                                                 <tr>
                                                     <td class="text-center" style="display: none;">
@@ -217,7 +218,7 @@
                                                         <input type="text" class="form-control transfered-input" placeholder="Uang ditransfer">
                                                         <input type="hidden" name="transactions[${data.id}][transfered]" class="form-control transfered" placeholder="Uang ditransfer">
                                                     </td>
-                                                    <td class="text-center pi-bill">${(data.total - data.paid)?.toLocaleString('en-US') || '0'}</td>
+                                                    <td class="text-center pi-bill">${formattedBill}</td>
                                                 </tr>
                                             `;
                                 $('#paymentDetailTable tbody').append(newRow);

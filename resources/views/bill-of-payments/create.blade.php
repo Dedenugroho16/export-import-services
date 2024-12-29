@@ -441,16 +441,6 @@
 
                 $('#clientCompanyModal').modal('show');
             });
-
-            // Event listener for selecting a client company from the modal
-            $('#clientCompanyModalTable tbody').on('click', '.select-client-company', function() {
-                var clientCompanyId = $(this).data('id');
-                var clientCompanyName = $(this).data('name');
-
-                $('#selectedClientCompanyId').val(clientCompanyId);
-                $('#selectedClientCompanyName').val(clientCompanyName);
-                $('#clientCompanyModal').modal('hide');
-            });
         });
 
         $(document).ready(function() {
@@ -462,16 +452,29 @@
                 // Menetapkan nilai pada inputan yang relevan
                 $('#selectedClientId').val(clientId);
                 $('#selectedClientName').val(clientName);
-                $('#selectedClientCompanyId').val('');
-                $('#selectedClientCompanyName').val('');
 
                 // Memuat data proforma invoice berdasarkan ID client yang dipilih
-                loadProformaInvoices(clientId);
+                reloadProformaInvoices();
+            });
+
+            $('#clientCompanyModalTable tbody').on('click', '.select-client-company', function() {
+                var clientCompanyId = $(this).data('id');
+                var clientCompanyName = $(this).data('name');
+
+                $('#selectedClientCompanyId').val(clientCompanyId);
+                $('#selectedClientCompanyName').val(clientCompanyName);
+                $('#clientCompanyModal').modal('hide');
+                reloadProformaInvoices();
             });
 
             // Function untuk memuat proforma invoices berdasarkan clientId
-            function loadProformaInvoices(clientId) {
-                $('#PITable').DataTable().ajax.url("{{ route('getProformaInvoices') }}?id_client=" + clientId)
+            function reloadProformaInvoices() {
+                var clientId = $('#selectedClientId').val();
+                var companyId = $('#selectedClientCompanyId').val();
+
+                // Pastikan DataTable diperbarui dengan parameter clientId dan companyId
+                $('#PITable').DataTable().ajax.url("{{ route('getProformaInvoices') }}?id_client=" + clientId +
+                        "&id_company=" + companyId)
                     .load();
             }
 
@@ -484,7 +487,9 @@
                     type: 'GET',
                     data: function(d) {
                         var clientId = $('#selectedClientId').val();
+                        var companyId = $('#selectedClientCompanyId').val();
                         d.id_client = clientId ? clientId : null;
+                        d.id_company = companyId ? companyId : null;
                     }
                 },
                 columns: [{
@@ -562,9 +567,10 @@
                     processing: "Sedang memproses...",
                     emptyTable: function() {
                         var clientSelected = $('#selectedClientId').val();
-                        return clientSelected ?
+                        var companySelected = $('#selectedClientCompanyId').val();
+                        return clientSelected && companySelected ?
                             "Buyer yang Anda pilih tidak memiliki tagihan" :
-                            "Tolong pilih buyer terlebih dahulu";
+                            "Harap pilih buyer dan company terlebih dahulu";
                     },
                     aria: {
                         sortAscending: ": aktifkan untuk mengurutkan kolom secara ascending",
@@ -704,7 +710,7 @@
 
                 totalBill();
                 // Validasi jika diperlukan (contoh kasus transfer lebih besar dari jumlah tagihan)
-                var piBill = parseFloat(row.find('.pi-bill input').val().replace(/,/g, '')) || 0;
+                var piBill = parseFloat(row.find('.amount').text().replace(/,/g, '')) || 0;
                 var payment = parseFloat(numericValue) || 0;
 
                 if (payment > piBill) {
