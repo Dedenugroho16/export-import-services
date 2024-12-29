@@ -86,7 +86,8 @@
                                 <div class="mb-3">
                                     <label for="no_inv" class="form-label">Description</label>
                                     <input type="text" class="form-control" id="no_inv" name="no_inv"
-                                        placeholder='Harap sertakan teks "(OPENING BALANCE)" di dalam inputan ini.'>
+                                    placeholder='Harap sertakan teks "(OPENING BALANCE)" di dalam inputan ini.'>
+                                    <span class="error-message text-danger" id="no_inv_error" style="display: none;"></span>
                                 </div>
 
                                 <div class="mb-3">
