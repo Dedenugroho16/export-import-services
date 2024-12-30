@@ -74,11 +74,11 @@
                                     });
                                 </script>
                             @endif
-                            @if (session('success'))
+                            @if (session('store_success'))
                                 <script>
                                     Swal.fire({
                                         title: 'Berhasil!',
-                                        text: '{{ session('success') }}',
+                                        text: '{{ session('store_success') }}',
                                         icon: 'success',
                                         confirmButtonText: 'OK'
                                     });

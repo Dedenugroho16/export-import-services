@@ -101,7 +101,7 @@ class CommoditiesController extends Controller
         ]);
 
         Commodity::create($request->all());
-        return redirect()->route('commodities.index')->with('success', 'Data berhasil ditambahkan.');
+        return redirect()->route('commodities.index')->with('success_store', 'Data berhasil ditambahkan.');
     }
 
     // Method to show details of a specific commodity
@@ -133,7 +133,7 @@ class CommoditiesController extends Controller
         $commodity->update($request->all());
 
         return redirect($request->input('previous_url', route('commodities.index')))
-            ->with('success', 'Data berhasil diperbarui.');
+            ->with('success_store', 'Data berhasil diperbarui.');
     }
 
     // Method to delete a specific commodity

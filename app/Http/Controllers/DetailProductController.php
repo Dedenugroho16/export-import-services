@@ -109,7 +109,7 @@ class DetailProductController extends Controller
         $productName = $product->name;
 
         return redirect($request->input('previous_url', route('products.index')))
-            ->with('success', 'Data berhasil ditambahkan.');
+            ->with('success_store', 'Data berhasil ditambahkan.');
     }
 
     // Display the specified detail product
@@ -159,7 +159,7 @@ class DetailProductController extends Controller
         $detailProduct->update($request->all());
 
         return redirect($request->input('previous_url', route('products.index')))
-            ->with('success', 'Data berhasil diperbarui.');
+            ->with('success_store', 'Data berhasil diperbarui.');
     }
 
 

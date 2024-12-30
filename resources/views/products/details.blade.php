@@ -23,6 +23,16 @@
 
             <div class="card">
                 <div class="card-body">
+                    @if (session('success_store'))
+                                <script>
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: '{{ session('success_store') }}',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    });
+                                </script>
+                            @endif
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
