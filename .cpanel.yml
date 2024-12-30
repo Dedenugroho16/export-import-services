@@ -1,0 +1,11 @@
+---
+deployment:
+  tasks:
+    - export DEPLOY_PATH=/home/setianus/public_html
+    - /bin/cp -r . $DEPLOY_PATH
+    - cd $DEPLOY_PATH
+    - composer install --no-dev
+    - php artisan migrate --force
+    - php artisan config:cache
+    - php artisan route:cache
+    - php artisan storage:link
