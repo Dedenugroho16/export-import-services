@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Company;
 use App\Models\Consignee;
+use App\Models\DetailProduct;
 use App\Models\PaymentDetail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,7 @@ class DashboardController extends Controller
         $userName = Auth::user()->name;
         $clientsCount = Client::count();
         $productsCount = Product::count();
+        $detailProduk = DetailProduct::count();
         $packingListCount = Transaction::whereNotNull('stuffing_date')->count();
         $sumTotalPayment = PaymentDetail::sum('total');
         $totalBOP = BillOfPayment::sum('total');
@@ -78,6 +80,7 @@ class DashboardController extends Controller
             'sumTotalBop',
             'sumTotalPayment',
             'consigneeCount',
+            'detailProduk',
         ));
     }
 
