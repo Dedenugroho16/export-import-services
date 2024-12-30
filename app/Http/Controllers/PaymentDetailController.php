@@ -358,29 +358,29 @@ class PaymentDetailController extends Controller
                     $request->get('start') / $request->get('length') + 1
                 );
 
-
             $paymentDetails->getCollection()->transform(function ($paymentDetail) {
-
                 $hashedId = IdHashHelper::encode($paymentDetail->id);
-
 
                 $paymentDetail->client_name = $paymentDetail->client ? $paymentDetail->client->name : 'N/A';
                 $paymentDetail->client_company_name = $paymentDetail->clientCompany ? $paymentDetail->clientCompany->company_name : 'N/A';
                 $paymentDetail->created_by_name = $paymentDetail->createdBy ? $paymentDetail->createdBy->name : 'N/A';
 
-
-                $paymentDetail->action = '
-                    <div class="dropdown">
-                        <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">
-                            Aksi
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="' . route('opening-balance.edit', $hashedId) . '">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
-                            Edit</a>
-                        </div>
-                    </div>
+                // Ganti dropdown dengan tombol Edit untuk role admin dan finance
+                if (in_array(auth()->user()->role, ['admin', 'finance'])) {
+                    $paymentDetail->action = '
+                    <a href="' . route('opening-balance.edit', $hashedId) . '" class="btn btn-success">
+                        Edit
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-edit ms-1" style="margin: 0;">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/>
+                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/>
+                            <path d="M16 5l3 3"/>
+                        </svg>
+                    </a>
                 ';
+                } else {
+                    $paymentDetail->action = null; // Tidak ada kolom aksi untuk role lain
+                }
 
                 return $paymentDetail;
             });
@@ -395,6 +395,7 @@ class PaymentDetailController extends Controller
 
         return view('opening-balance.index');
     }
+
 
     public function openingBalanceCreate()
     {
@@ -507,5 +508,4 @@ class PaymentDetailController extends Controller
         session()->flash('success', 'Data berhasil diperbarui!');
         return response()->json(['success' => true]);
     }
-
 }

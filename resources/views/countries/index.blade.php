@@ -110,7 +110,13 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#countryTable').DataTable({
+            // Ambil role pengguna dari server (bisa dimasukkan ke dalam meta tag)
+            var userRole = "{{ auth()->user()->role }}";
+
+            // Tentukan apakah kolom Aksi harus ditampilkan
+            var showActionColumn = (userRole === 'admin' || userRole === 'finance');
+
+            var table = $('#countryTable').DataTable({
                 processing: false,
                 serverSide: true,
                 ajax: "{{ route('countries.index') }}",
@@ -142,7 +148,8 @@
                         orderable: false,
                         searchable: false,
                         class: 'text-center',
-                        width: '20%'
+                        width: '20%',
+                        visible: showActionColumn
                     }
                 ],
                 language: {
