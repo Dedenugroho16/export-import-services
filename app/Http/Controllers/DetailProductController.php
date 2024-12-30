@@ -19,9 +19,12 @@ class DetailProductController extends Controller
             $detailProducts = DetailProduct::with('product')->select('detail_products.*');
             return DataTables::of($detailProducts)
                 ->addColumn('action', function ($row) {
-                    $hashId = \App\Helpers\IdHashHelper::encode($row->id);
+                    $hashId = IdHashHelper::encode($row->id);
+                    $userRole = auth()->user()->role;
 
-                    $actionBtn = '
+                    // Jika pengguna adalah admin atau operator
+                    if (in_array($userRole, ['admin', 'operator'])) {
+                        $actionBtns = '
                     <div class="dropdown">
                         <button class="btn btn-success dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Aksi</button>
                         <div class="dropdown-menu dropdown-menu-end">
@@ -35,8 +38,16 @@ class DetailProductController extends Controller
                             </a>
                         </div>
                     </div>';
+                    } else {
+                        // Jika pengguna bukan admin atau operator
+                        $actionBtns = '
+                    <a href="' . route('detail-products.show', $hashId) . '" class="btn btn-success">
+                        Lihat
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-up-right ms-1" style="margin: 0;"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-10 10" /><path d="M8 7l9 0l0 9" /></svg>
+                    </a>';
+                    }
 
-                    return $actionBtn;
+                    return $actionBtns;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
