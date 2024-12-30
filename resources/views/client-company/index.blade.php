@@ -82,9 +82,7 @@
                                             <th class="text-center">No</th>
                                             <th class="text-center">Nama Perusahaan</th>
                                             <th class="text-center">Alamat</th>
-                                            <th class="text-center">PO BOX</th>
                                             <th class="text-center">Telepon</th>
-                                            <th class="text-center">Fax</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
@@ -132,18 +130,8 @@
                         name: 'address'
                     },
                     {
-                        data: 'PO_BOX',
-                        name: 'PO_BOX',
-                        class: 'text-center'
-                    },
-                    {
                         data: 'tel',
                         name: 'tel',
-                        class: 'text-center'
-                    },
-                    {
-                        data: 'fax',
-                        name: 'fax',
                         class: 'text-center'
                     },
                     {
@@ -169,16 +157,10 @@
                 lengthMenu: [5, 10, 25, 50], // Tentukan jumlah data yang ditampilkan per halaman
                 pageLength: 10,
                 drawCallback: function() {
-                    $('#clientCompanyTable td:nth-child(2)').css({
+                    $('#clientCompanyTable td:nth-child(2), #clientCompanyTable td:nth-child(3)').css({
                         'max-width': '250px',
                         'white-space': 'normal',
                         'word-wrap': 'break-word'
-                    });
-                    $('#clientCompanyTable td:nth-child(3)').css({
-                        'max-width': '250px',
-                        'overflow': 'hidden',
-                        'text-overflow': 'ellipsis',
-                        'white-space': 'nowrap' // Untuk satu baris
                     });
                 }
             });
