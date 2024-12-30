@@ -20,6 +20,17 @@ class CountriesImport implements ToCollection, WithHeadingRow
     {
         foreach ($rows as $row) {
             try {
+                // Validasi panjang kode
+                if (strlen($row['code']) > 3) {
+                    // Jika panjang kode lebih dari 3, tambahkan ke daftar gagal
+                    $this->results['failed'][] = [
+                        'code' => $row['code'],
+                        'name' => $row['name'],
+                        'error' => 'Kode negara tidak boleh lebih dari 3 karakter.'
+                    ];
+                    continue; // Lanjutkan ke baris berikutnya
+                }
+
                 // Cek apakah negara sudah ada berdasarkan kode
                 $existingCountry = Country::where('code', $row['code'])->first();
 
