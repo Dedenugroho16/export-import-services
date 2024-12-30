@@ -28,16 +28,6 @@ use Illuminate\Http\Request;
 // Dashboard Routes (hanya bisa diakses jika sudah login)
 Route::get('/', [DashboardController::class, 'index'])->name('home')->middleware('auth');
 
-Route::get('/ajax-companies', function (Request $request) {
-    $search = $request->get('q'); // Ambil kata kunci pencarian dari query string
-    $companies = ClientCompany::where('company_name', 'like', "%{$search}%") // Pencarian berdasarkan nama perusahaan
-                              ->select('id', 'company_name') // Pilih hanya id dan nama perusahaan
-                              ->get(); // Ambil hasilnya
-
-    return response()->json($companies); // Kirimkan hasil dalam format JSON
-})->name('ajax-companies');
-
-
 // Client Routes using resource
 Route::get('clients/import', [ClientsController::class, 'import'])->name('clients.import');
 Route::post('clients/import-process', [ClientsController::class, 'importProcess'])->name('clients.import-process');
@@ -239,11 +229,5 @@ Route::post('/payment-details/store', [PaymentDetailController::class, 'store'])
 Route::post('/payment-details/update/{id}', [PaymentDetailController::class, 'update'])->name('payment-details.update');
 
 Route::get('/invoice-data', [DashboardController::class, 'getInvoiceData']);
-Route::get('/ajax-companies', function (Request $request) {
-    $query = $request->get('q');
-    $companies = \App\Models\ClientCompany::where('company_name', 'like', "%{$query}%")
-        ->get(['id', 'company_name']);
-    return response()->json($companies);
-})->name('ajax-companies');
 Route::get('proforma/clients/select2', [ProformaController::class, 'getClients'])->name('proforma.clients.select2');
 Route::get('/bill-of-payment/client-company/{clientId}', [BillOfPaymentController::class, 'getClientCompanies'])->name('getClientCompanies.byClient');
