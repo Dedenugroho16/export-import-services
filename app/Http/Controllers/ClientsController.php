@@ -123,7 +123,7 @@ class ClientsController extends Controller
         // Simpan relasi dengan client_company di tabel pivot
         $client->clientCompanies()->sync($validatedData['client_companies']);
 
-        return redirect()->route('clients.index')->with('success', 'Data client berhasil ditambahkan.');
+        return redirect()->route('clients.index')->with('success_store', 'Data client berhasil ditambahkan.');
     }
 
 
@@ -173,7 +173,7 @@ class ClientsController extends Controller
         $client->clientCompanies()->sync($request->input('client_companies'));
 
         return redirect($request->input('previous_url', route('clients.index')))
-            ->with('success', 'Data berhasil diperbarui.');
+            ->with('success_store', 'Data berhasil diperbarui.');
     }
 
     public function destroy($hash)

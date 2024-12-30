@@ -100,7 +100,7 @@ class ClientCompanyController extends Controller
         ]);
 
         ClientCompany::create($request->all());
-        return redirect()->route('client-companies.index')->with('success', 'Data berhasil ditambahkan.');
+        return redirect()->route('client-companies.index')->with('success_store', 'Data berhasil ditambahkan.');
     }
 
     public function show($hash)
@@ -140,7 +140,7 @@ class ClientCompanyController extends Controller
         $client_company->update($request->all());
 
         return redirect($request->input('previous_url', route('client-companies.index')))
-            ->with('success', 'Data berhasil diperbarui.');
+            ->with('success_store', 'Data berhasil diperbarui.');
     }
 
 
