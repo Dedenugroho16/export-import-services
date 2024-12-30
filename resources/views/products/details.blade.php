@@ -26,7 +26,7 @@
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <th>Kode Produk</th>
+                                <th style="width: 20%">Kode Produk</th>
                                 <td>{{ $product->code }}</td>
                             </tr>
                             <tr>

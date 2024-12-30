@@ -26,7 +26,7 @@
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <th>Nama Client</th>
+                                <th style="width: 20%">Nama Client</th>
                                 <td>{{ $client->name }}</td>
                             </tr>
                             <tr>

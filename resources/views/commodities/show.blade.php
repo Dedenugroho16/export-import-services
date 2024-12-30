@@ -47,7 +47,7 @@
                                 <table class="table table-bordered">
                                     <tbody>
                                         <tr>
-                                            <th style="width: 30%;">Nama Komoditas</th>
+                                            <th style="width: 20%;">Nama Komoditas</th>
                                             <td>{{ $commodity->name }}</td>
                                         </tr>
                                     </tbody>

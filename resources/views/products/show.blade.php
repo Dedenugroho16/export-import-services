@@ -51,7 +51,7 @@
                                 <table class="table table-bordered">
                                     <tbody>
                                         <tr>
-                                            <th style="width: 30%;">ID</th>
+                                            <th style="width: 20%;">ID</th>
                                             <td>{{ $product->id }}</td>
                                         </tr>
                                         <tr>
