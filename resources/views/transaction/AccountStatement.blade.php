@@ -83,7 +83,7 @@
                         <!-- Tabel Invoices -->
                         <div class="col-md-6">
                             <h3 class="text-center mb-4" style="text-decoration: underline;"><strong>INVOICES</strong></h3>
-                            <div id="rekap-table" class="table-responsive" style="overflow: hidden; width: 100%;">
+                            <div id="rekap-table" class="table-responsive" style="width: 100%;">
                                 <table class="table table-borderless table-vcenter table-nowrap" id="invoicesTable"
                                     style="border-collapse: collapse;">
                                     <thead class="border-end border-dark">
@@ -320,6 +320,13 @@
                                 }
                             }
                         ],
+                        drawCallback: function() {
+                            $('#paymentsTable td:nth-child(2)').css({
+                                'max-width': '250px',
+                                'white-space': 'normal',
+                                'word-wrap': 'break-word'
+                            });
+                        },
                         footerCallback: function(row, data, start, end, display) {
                             // Hitung total balance untuk payments
                             let totalBalancePayment = 0;
@@ -411,7 +418,7 @@
 
                         let url =
                             `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
-                            `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
+                        `{{ route('account.statement.pdf') }}?yearSelect=${year}&company_id=${company_id}`;
                         window.open(url, '_blank');
                     });
 
