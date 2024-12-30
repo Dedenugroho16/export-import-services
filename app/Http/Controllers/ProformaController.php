@@ -365,17 +365,25 @@ class ProformaController extends Controller
 
         // Determine the selected country based on the transaction code
         $countrySelected = null;
-        $transactionCode = $transaction->code; // Example: RESTO ID2410
+        $transactionCode = $transaction->code;
+        
+        if (preg_match('/([A-Z]{2,3})(?=\d+)/', $transactionCode, $matches)) {
+            $countryCode = $matches[1]; // 'ID' atau 'HAM'
 
-        // Extract two uppercase letters before the numbers in the transaction code
-        // Fetch the selected country object based on the code
-        if (preg_match('/([A-Z]{2})(?=\d+)/', $transactionCode, $matches)) {
-            $countryCode = $matches[1]; // 'ID'
+            // Cari negara berdasarkan kode
+            $countryOld = Country::where('code', $countryCode)->first();
 
-            // Find the country based on the code
-            $countryOld = Country::where('code', $countryCode)->firstOrFail();
-            // Pass the whole country object instead of just the ID
-            $countrySelected = $countryOld; // This is now an object, not just an ID
+            if ($countryOld) {
+                // Pass the whole country object instead of just the ID
+                $countrySelected = $countryOld; // Ini adalah objek, bukan hanya ID
+            } else {
+                // Tindakan jika kode negara tidak ditemukan
+                \Log::warning("Country code not found: {$countryCode}");
+                $countrySelected = null; // Atau beri nilai default
+            }
+        } else {
+            \Log::error("Country code pattern not matched in transaction code: {$transactionCode}");
+            $countrySelected = null; // Atau beri nilai default
         }
 
         // Extract the transaction number
