@@ -88,14 +88,17 @@ class CountryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'code' => 'required|string|max:10',
+            'code' => 'required|string|max:3',
         ]);
         Country::create([
             'name' => $request->name,
             'code' => $request->code,
         ]);
 
-        return redirect()->route('countries.index')->with('success_store', 'Data berhasil ditambahkan.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil ditambahkan.'
+        ]);
     }
 
     public function edit($hash)
@@ -112,12 +115,15 @@ class CountryController extends Controller
 
         $request->validate([
             'name' => 'required|max:255',
-            'code' => 'required',
+            'code' => 'required|string|max:3',
         ]);
 
         $country = Country::findOrFail($id);
         $country->update($request->all());
 
-        return redirect()->route('countries.index')->with('success_store', 'Data berhasil diperbarui.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil diperbarui.'
+        ]);
     }
 }
