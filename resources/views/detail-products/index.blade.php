@@ -106,38 +106,51 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // Mendapatkan role user
+        const userRole = "{{ auth()->user()->role ?? '' }}";
+
+        // Konfigurasi kolom berdasarkan role user
+        const columnConfig = (userRole === 'admin') ? {
+            data: 'id',
+            class: 'text-center',
+            orderable: true,
+            searchable: true
+        } : {
+            data: null,
+            class: 'text-center',
+            render: function(data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            },
+            orderable: false,
+            searchable: false
+        };
+
+        $(function() {
+            // Inisialisasi DataTable setelah DOM siap
             $('#myTable').DataTable({
                 serverSide: true,
                 ajax: '{{ route('detail-products.index') }}',
-                columns: [{
-                        data: 'id',
-                        class: 'text-center',
-                        render: function(data, type, row, meta) {
-                            return row.id;
-                        },
-                        orderable: true,
-                        searchable: true
-                    },
+                columns: [
+                    columnConfig,
                     {
                         data: 'name',
                         name: 'name'
                     },
                     {
                         data: 'pcs',
-                        name: 'pcs',
+                        name: 'pcs'
                     },
                     {
                         data: 'dimension',
-                        name: 'dimension',
+                        name: 'dimension'
                     },
                     {
                         data: 'type',
-                        name: 'type',
+                        name: 'type'
                     },
                     {
                         data: 'color',
-                        name: 'color',
+                        name: 'color'
                     },
                     {
                         data: 'price',
@@ -165,14 +178,14 @@
                 },
                 lengthMenu: [5, 10, 25, 50],
                 pageLength: 10,
-
                 drawCallback: function() {
-                    // Terapkan style khusus untuk kolom kedua (name) dan kolom ketiga (address)
+                    // Terapkan style untuk kolom tertentu
                     $('#myTable td:nth-child(2)').css({
                         'white-space': 'normal',
                         'word-wrap': 'break-word'
                     });
 
+                    // Terapkan style untuk kolom ketiga dan ketujuh
                     $('#myTable td:nth-child(4), #myTable td:nth-child(7)').css({
                         'max-width': '200px',
                         'overflow': 'hidden',

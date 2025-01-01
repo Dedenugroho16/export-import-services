@@ -114,19 +114,32 @@
     </div>
 
     <script type="text/javascript">
+    const userRole = "{{ auth()->user()->role ?? '' }}";
+        const columnConfig = (userRole === 'admin') ?
+            {
+                data: 'id',
+                class: 'text-center',
+                render: function(data, type, row, meta) {
+                    return row.id;
+                },
+                orderable: true,
+                searchable: true
+            } :
+            {
+                data: null,
+                class: 'text-center',
+                render: function(data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+                orderable: false,
+                searchable: false
+            };
         $(document).ready(function() {
             $('#productTable').DataTable({
                 serverSide: true, // Mengambil data dari server
                 ajax: "{{ route('products.index') }}", // Endpoint untuk mengambil data
-                columns: [{
-                        data: 'id',
-                        class: 'text-center',
-                        render: function(data, type, row, meta) {
-                            return row.id;
-                        },
-                        orderable: true,
-                        searchable: true
-                    },
+                columns: [
+                    columnConfig,
                     {
                         data: 'code',
                         name: 'code',

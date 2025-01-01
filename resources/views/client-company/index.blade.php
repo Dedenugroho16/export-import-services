@@ -106,6 +106,27 @@
 
     <!-- Script DataTables -->
     <script type="text/javascript">
+        const userRole = "{{ auth()->user()->role ?? '' }}";
+        const columnConfig = (userRole === 'admin') ?
+            {
+                data: 'id',
+                class: 'text-center',
+                render: function(data, type, row, meta) {
+                    return row.id;
+                },
+                orderable: true,
+                searchable: true
+            } :
+            {
+                data: null,
+                class: 'text-center',
+                render: function(data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+                orderable: false,
+                searchable: false
+            };
+
         $(document).ready(function() {
             $('#clientCompanyTable').DataTable({
                 processing: false,
@@ -116,15 +137,8 @@
                     width: '200px',
                     targets: 1
                 }],
-                columns: [{
-                        data: 'id',
-                        class: 'text-center',
-                        render: function(data, type, row, meta) {
-                            return row.id;
-                        },
-                        orderable: true,
-                        searchable: true
-                    },
+                columns: [
+                    columnConfig,
                     {
                         data: 'company_name',
                         name: 'company_name'

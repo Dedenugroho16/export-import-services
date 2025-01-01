@@ -112,20 +112,30 @@
     </div>
 
     <script type="text/javascript">
+        const userRole = "{{ auth()->user()->role ?? '' }}";
+        const columnConfig = (userRole === 'admin') ? {
+            data: 'id',
+            class: 'text-center',
+            render: function(data, type, row, meta) {
+                return row.id;
+            },
+            orderable: true,
+            searchable: true
+        } : {
+            data: null,
+            class: 'text-center',
+            render: function(data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            },
+            orderable: false,
+            searchable: false
+        };
         $(document).ready(function() {
             $('#clientTable').DataTable({
                 processing: false,
                 serverSide: true,
                 ajax: "{{ route('clients.index') }}",
-                columns: [{
-                        data: 'id',
-                        class: 'text-center',
-                        render: function(data, type, row, meta) {
-                            return row.id;
-                        },
-                        orderable: true,
-                        searchable: true
-                    },
+                columns: [columnConfig,
                     {
                         data: 'name',
                         name: 'name',
