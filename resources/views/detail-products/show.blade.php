@@ -31,7 +31,7 @@
                             <h3 class="card-title">Informasi Detail Produk</h3>
                             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'operator')
                                 <a class="btn btn-light"
-                                href="{{ url('/detail-products/' . App\Helpers\IdHashHelper::encode($detailProduct->id) . '/edit') }}">
+                                    href="{{ url('/detail-products/' . App\Helpers\IdHashHelper::encode($detailProduct->id) . '/edit') }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
@@ -50,8 +50,14 @@
                             <div class="card-body">
                                 <table class="table table-bordered">
                                     <tbody>
+                                        @if (auth()->user()->role === 'admin')
+                                            <tr>
+                                                <th style="width: 20%;">ID</th>
+                                                <td>{{ $detailProduct->id }}</td>
+                                            </tr>
+                                        @endif
                                         <tr>
-                                            <th style="width: 20%;">Nama Produk</th>
+                                            <th>Nama Produk</th>
                                             <td>{{ $detailProduct->name }}</td>
                                         </tr>
                                         <tr>
