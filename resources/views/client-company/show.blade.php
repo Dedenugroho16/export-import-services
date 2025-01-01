@@ -49,14 +49,8 @@
                             <div class="card-body">
                                 <table class="table table-bordered">
                                     <tbody>
-                                        @if (auth()->user()->role === 'admin')
-                                            <tr>
-                                                <th style="width: 20%;">ID</th>
-                                                <td>{{ $client_company->id }}</td>
-                                            </tr>
-                                        @endif
                                         <tr>
-                                            <th>Nama Perusahaan</th>
+                                            <th style="width: 20%;">Nama Perusahaan</th>
                                             <td>{{ $client_company->company_name }}</td>
                                         </tr>
                                         <tr>

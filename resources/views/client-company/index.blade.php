@@ -79,7 +79,11 @@
                                 <table class="table card-table table-vcenter text-nowrap" id="clientCompanyTable">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">No</th>
+                                            @if (optional(auth()->user())->role === 'admin')
+                                                <th class="text-center">ID</th>
+                                            @else
+                                                <th class="text-center">No</th>
+                                            @endif
                                             <th class="text-center">Nama Perusahaan</th>
                                             <th class="text-center">Alamat</th>
                                             <th class="text-center">Telepon</th>
@@ -113,13 +117,13 @@
                     targets: 1
                 }],
                 columns: [{
-                        data: null,
+                        data: 'id',
                         class: 'text-center',
                         render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
+                            return row.id;
                         },
-                        orderable: false,
-                        searchable: false
+                        orderable: true,
+                        searchable: true
                     },
                     {
                         data: 'company_name',

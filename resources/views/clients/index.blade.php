@@ -89,7 +89,11 @@
                                 <table class="table card-table table-hover table-vcenter text-nowrap" id="clientTable">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">No</th>
+                                            @if (optional(auth()->user())->role === 'admin')
+                                                <th class="text-center">ID</th>
+                                            @else
+                                                <th class="text-center">No</th>
+                                            @endif
                                             <th class="text-center">Nama Client</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
@@ -114,20 +118,19 @@
                 serverSide: true,
                 ajax: "{{ route('clients.index') }}",
                 columns: [{
-                        data: null,
+                        data: 'id',
                         class: 'text-center',
                         render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
+                            return row.id;
                         },
-                        orderable: false,
-                        searchable: false,
-                        width : '20%'
+                        orderable: true,
+                        searchable: true
                     },
                     {
                         data: 'name',
                         name: 'name',
                         class: 'text-center',
-                        width : 'auto'
+                        width: 'auto'
                     },
                     {
                         data: 'action',
@@ -135,7 +138,7 @@
                         orderable: false,
                         searchable: false,
                         class: 'text-center',
-                        width : '20%'
+                        width: '20%'
                     }
                 ],
                 language: {

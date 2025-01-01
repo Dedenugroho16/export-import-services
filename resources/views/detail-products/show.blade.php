@@ -50,19 +50,13 @@
                             <div class="card-body">
                                 <table class="table table-bordered">
                                     <tbody>
-                                        @if (auth()->user()->role === 'admin')
-                                            <tr>
-                                                <th style="width: 20%;">ID</th>
-                                                <td>{{ $detailProduct->id }}</td>
-                                            </tr>
-                                        @endif
                                         <tr>
-                                            <th>Nama Produk</th>
-                                            <td>{{ $detailProduct->name }}</td>
+                                            <th style="width: 20%;">Nama Produk</th>
+                                            <td>{{ $detailProduct->product->name }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Produk</th>
-                                            <td>{{ $detailProduct->product->name }}</td>
+                                            <th>Nama Detail Produk</th>
+                                            <td>{{ $detailProduct->name }}</td>
                                         </tr>
                                         <tr>
                                             <th>PCS</th>

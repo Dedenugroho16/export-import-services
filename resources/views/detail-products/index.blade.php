@@ -81,7 +81,11 @@
                                 <table id="myTable" class="table card-table table-hover table-vcenter text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">NO</th>
+                                            @if (optional(auth()->user())->role === 'admin')
+                                                <th class="text-center">ID</th>
+                                            @else
+                                                <th class="text-center">No</th>
+                                            @endif
                                             <th class="text-center">NAMA</th>
                                             <th class="text-center">PCS</th>
                                             <th class="text-center">DIMENSI</th>
@@ -107,13 +111,13 @@
                 serverSide: true,
                 ajax: '{{ route('detail-products.index') }}',
                 columns: [{
-                        data: null,
+                        data: 'id',
                         class: 'text-center',
                         render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
+                            return row.id;
                         },
-                        orderable: false,
-                        searchable: false
+                        orderable: true,
+                        searchable: true
                     },
                     {
                         data: 'name',
