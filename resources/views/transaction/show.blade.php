@@ -393,7 +393,7 @@
                             </tr>
                             <tr>
                                 <th>Created At</th>
-                                <td>{{ $transaction->created_at->format('d-m-Y H:i:s') }}</td>
+                                <td>{{ $transaction->created_at->format('F d, Y') }}</td>
                             </tr>
                         </tbody>
                     </table>

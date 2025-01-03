@@ -387,7 +387,7 @@
                             </tr>
                             <tr>
                                 <th>Created At</th>
-                                <td>{{ $proformaInvoice->created_at->format('d-m-Y H:i:s') }}</td>
+                                <td>{{ $proformaInvoice->created_at->format('F d, Y') }}</td>
                             </tr>
                         </tbody>
                     </table>
